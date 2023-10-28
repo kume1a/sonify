@@ -1,6 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
+
+import 'pages/youtube_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((record) {
+    log('${record.level.name}: ${record.time}: ${record.message}');
+  });
+
   runApp(const App());
 }
 
@@ -19,21 +31,7 @@ class App extends StatelessWidget {
         useMaterial3: true,
         brightness: Brightness.dark,
       ),
-      home: const HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Home'),
-      ),
+      home: const YoutubePage(),
     );
   }
 }

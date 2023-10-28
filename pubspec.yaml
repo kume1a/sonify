@@ -12,6 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  logging: ^1.2.0
+  youtube_explode_dart: ^2.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
