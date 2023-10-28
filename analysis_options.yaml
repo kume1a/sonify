@@ -1,0 +1,42 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  errors:
+    missing_required_param: error
+    missing_return: error
+    prefer_relative_imports: warning
+    always_use_package_imports: ignore
+    public_member_api_docs: ignore
+    depend_on_referenced_packages: ignore
+    require_trailing_commas: ignore
+    asset_does_not_exist: ignore
+    library_private_types_in_public_api: ignore
+  exclude:
+    - lib/**/*.g.dart
+    - lib/**/*.config.dart
+    - lib/**/*.freezed.dart
+
+linter:
+  rules:
+    - avoid_print
+    - prefer_single_quotes
+    - camel_case_types
+    - library_names
+    - avoid_catching_errors
+    - avoid_empty_else
+    - unnecessary_brace_in_string_interps
+    - avoid_redundant_argument_values
+    - leading_newlines_in_multiline_strings
+    - curly_braces_in_flow_control_structures
+    - slash_for_doc_comments
+    - prefer_relative_imports
+    - sort_constructors_first
+    - cancel_subscriptions
+    - close_sinks
+    - empty_statements
+    - hash_and_equals
+    - always_put_control_body_on_new_line
+    - avoid_final_parameters
+    - avoid_shadowing_type_parameters
+    - avoid_escaping_inner_quotes
+    - directives_ordering
