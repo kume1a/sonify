@@ -1,17 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class YoutubePage extends StatefulWidget {
+import '../app/di/register_dependencies.dart';
+import '../features/youtube/state/youtube_home_videos_state.dart';
+import '../features/youtube/ui/youtube_home_videos.dart';
+
+class YoutubePage extends StatelessWidget {
   const YoutubePage({super.key});
 
   @override
-  State<YoutubePage> createState() => _YoutubePageState();
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => getIt<YoutubeHomeVideosCubit>(),
+        )
+      ],
+      child: const _Content(),
+    );
+  }
 }
 
-class _YoutubePageState extends State<YoutubePage> {
+class _Content extends StatelessWidget {
+  const _Content();
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(child: Text('Youtube')),
+      body: SafeArea(
+        child: YoutubeHomeVideos(),
+      ),
     );
   }
 }

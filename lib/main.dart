@@ -1,12 +1,17 @@
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
-import 'pages/youtube_page.dart';
+import 'app/app.dart';
+import 'app/di/register_dependencies.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
+  registerDependencies(kDebugMode ? Environment.dev : Environment.prod);
 
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
@@ -14,24 +19,4 @@ void main() {
   });
 
   runApp(const App());
-}
-
-class App extends StatelessWidget {
-  const App({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.dark,
-          seedColor: Colors.deepPurple,
-        ),
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      ),
-      home: const YoutubePage(),
-    );
-  }
 }

@@ -1,9 +1,10 @@
+import 'package:common_models/common_models.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-class YouTubeApi {
-  final YoutubeExplode yt = YoutubeExplode();
+import '../model/youtube_music_home_dto.dart';
 
-  Future<List<Video>> search(String query) async {
-    return yt.search.search(query);
-  }
+abstract interface class YoutubeApi {
+  Future<List<Video>> search(String query);
+
+  Future<Either<FetchFailure, YoutubeMusicHomeDto>> getMusicHome();
 }
