@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../pages/youtube_page.dart';
+import '../pages/main/main_page.dart';
+import '../shared/values/app_theme.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -10,15 +11,8 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Sonify',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.dark,
-          seedColor: Colors.deepPurple,
-        ),
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      ),
-      home: const YoutubePage(),
+      theme: AppTheme.darkTheme,
+      home: const MainPage(),
     );
   }
 }
