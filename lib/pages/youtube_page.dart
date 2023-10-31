@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../app/di/register_dependencies.dart';
 import '../features/youtube/state/youtube_home_videos_state.dart';
+import '../features/youtube/ui/youtube_home_top_bar.dart';
 import '../features/youtube/ui/youtube_home_videos.dart';
+import '../shared/ui/logo_header.dart';
 
 class YoutubePage extends StatelessWidget {
   const YoutubePage({super.key});
@@ -28,7 +30,12 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: SafeArea(
-        child: YoutubeHomeVideos(),
+        child: Column(
+          children: [
+            YoutubeHomeTopBar(),
+            Expanded(child: YoutubeHomeVideos()),
+          ],
+        ),
       ),
     );
   }

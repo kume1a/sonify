@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:common_widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
@@ -37,14 +38,34 @@ class _Success extends StatelessWidget {
       itemBuilder: (_, index) {
         final body = data.body![index];
 
+        if (body.playlists == null || body.playlists!.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(body.title ?? ''),
-            for (final playlist in body.playlists ?? [])
+            for (final playlist in body.playlists!)
               Container(
-                padding: const EdgeInsets.all(12),
-                child: Text(playlist.title ?? ''),
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: SafeImage(
+                        url: playlist.image,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      playlist.title ?? '',
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
               ),
           ],
         );
