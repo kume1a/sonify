@@ -7,4 +7,6 @@ abstract interface class YoutubeApi {
   Future<List<Video>> search(String query);
 
   Future<Either<FetchFailure, YoutubeMusicHomeDto>> getMusicHome();
+
+  Future<List<String>> searchSuggestions(String query);
 }

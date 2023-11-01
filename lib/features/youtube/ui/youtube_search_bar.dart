@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../../../shared/ui/default_back_button.dart';
+import '../state/youtube_search_state.dart';
 
 class YoutubeSearchBar extends StatelessWidget {
   const YoutubeSearchBar({super.key});
@@ -13,10 +14,13 @@ class YoutubeSearchBar extends StatelessWidget {
     return Row(
       children: [
         const DefaultBackButton(),
-        const SizedBox(width: 6),
-        TextField(
-          decoration: InputDecoration(
-            hintText: l.search,
+        const SizedBox(width: 10),
+        Expanded(
+          child: TextField(
+            onChanged: context.youtubeSearchCubit.onSearchQueryChanged,
+            decoration: InputDecoration(
+              hintText: l.search,
+            ),
           ),
         ),
       ],
