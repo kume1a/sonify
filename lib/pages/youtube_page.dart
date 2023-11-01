@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../app/di/register_dependencies.dart';
-import '../features/youtube/state/youtube_home_videos_state.dart';
+import '../features/youtube/state/youtube_videos_state.dart';
 import '../features/youtube/ui/youtube_home_top_bar.dart';
 import '../features/youtube/ui/youtube_home_videos.dart';
 

@@ -6,7 +6,7 @@ import '../../../shared/ui/logo_header.dart';
 import '../../../shared/util/color.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
-import '../state/youtube_home_videos_state.dart';
+import '../state/youtube_videos_state.dart';
 
 class YoutubeHomeTopBar extends StatelessWidget {
   const YoutubeHomeTopBar({super.key});

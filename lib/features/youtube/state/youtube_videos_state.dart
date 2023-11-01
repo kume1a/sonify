@@ -6,10 +6,11 @@ import 'package:injectable/injectable.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../../app/navigation/page_navigator.dart';
+import '../../../pages/youtube_video_page.dart';
 import '../api/youtube_api.dart';
 import '../model/youtube_music_home_dto.dart';
 
-part 'youtube_home_videos_state.freezed.dart';
+part 'youtube_videos_state.freezed.dart';
 
 @freezed
 class YoutubeVideosState with _$YoutubeVideosState {
@@ -79,5 +80,11 @@ class YoutubeVideosCubit extends Cubit<YoutubeVideosState> {
     emit(state.copyWith(musicHome: DataState.loading()));
     final res = await _youtubeApi.getMusicHome();
     emit(state.copyWith(musicHome: DataState.fromEither(res)));
+  }
+
+  Future<void> onVideoPressed(String videoId) async {
+    final args = YoutubeVideoPageArgs(videoId: videoId);
+
+    _pageNavigator.toYoutubeVideo(args);
   }
 }

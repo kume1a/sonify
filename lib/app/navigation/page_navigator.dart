@@ -3,6 +3,7 @@ import 'package:global_navigator/global_navigator.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../features/youtube/model/youtube_search_result.dart';
+import '../../pages/youtube_video_page.dart';
 import 'routes.dart';
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey();
@@ -22,4 +23,7 @@ class PageNavigator {
 
     return null;
   }
+
+  void toYoutubeVideo(YoutubeVideoPageArgs args) =>
+      GlobalNavigator.pushNamed(Routes.youtubeVideo, arguments: args);
 }

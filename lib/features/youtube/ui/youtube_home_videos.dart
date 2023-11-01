@@ -4,7 +4,7 @@ import 'package:logging/logging.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../model/youtube_music_home_dto.dart';
-import '../state/youtube_home_videos_state.dart';
+import '../state/youtube_videos_state.dart';
 import 'youtube_video_list_item.dart';
 
 class YoutubeHomeVideos extends StatelessWidget {
@@ -80,6 +80,7 @@ class _SearchResultsSuccess extends StatelessWidget {
         final video = data[index];
 
         return YoutubeVideoListItem(
+          videoId: video.id.value,
           imageUrl: video.thumbnails.mediumResUrl,
           title: video.title,
         );
