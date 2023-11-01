@@ -3,6 +3,7 @@ import 'package:global_navigator/global_navigator.dart';
 
 import '../pages/main/main_page.dart';
 import '../shared/values/app_theme.dart';
+import 'intl/app_localizations.dart';
 import 'navigation/page_navigator.dart';
 import 'navigation/route_factory.dart';
 import 'navigation/routes.dart';
@@ -21,6 +22,8 @@ class App extends StatelessWidget {
       navigatorObservers: [GNObserver()],
       onGenerateRoute: routeFactory,
       navigatorKey: navigatorKey,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }

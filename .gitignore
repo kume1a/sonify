@@ -48,3 +48,5 @@ lib/**/*.config.dart
 lib/**/*.freezed.dart
 
 .env.local
+
+lib/app/intl/**.dart
