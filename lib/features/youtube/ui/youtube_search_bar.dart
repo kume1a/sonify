@@ -17,6 +17,8 @@ class YoutubeSearchBar extends StatelessWidget {
         const SizedBox(width: 10),
         Expanded(
           child: TextField(
+            autofocus: true,
+            autocorrect: false,
             onChanged: context.youtubeSearchCubit.onSearchQueryChanged,
             decoration: InputDecoration(
               hintText: l.search,

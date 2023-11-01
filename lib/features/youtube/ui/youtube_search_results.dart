@@ -36,21 +36,26 @@ class _SuggestionList extends StatelessWidget {
       itemCount: data.length,
       padding: const EdgeInsets.only(bottom: 24, right: 16, left: 16),
       itemBuilder: (_, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            children: [
-              SvgPicture.asset(
-                Assets.svgHistory,
-                width: 20,
-                height: 20,
-              ),
-              const SizedBox(width: 10),
-              Text(
-                data[index],
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
+        final suggestion = data[index];
+
+        return InkWell(
+          onTap: () => context.youtubeSearchCubit.onSearchSuggestionPressed(suggestion),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            child: Row(
+              children: [
+                SvgPicture.asset(
+                  Assets.svgHistory,
+                  width: 20,
+                  height: 20,
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  suggestion,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
           ),
         );
       },
