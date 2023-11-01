@@ -32,7 +32,6 @@ class _Success extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Logger.root.info(json.encode(data));
     return ListView.builder(
       itemCount: data.body?.length ?? 0,
       itemBuilder: (_, index) {

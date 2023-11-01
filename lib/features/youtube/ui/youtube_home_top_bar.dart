@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../shared/ui/logo_header.dart';
 import '../../../shared/values/assets.dart';
+import '../state/youtube_home_videos_state.dart';
 
 class YoutubeHomeTopBar extends StatelessWidget {
   const YoutubeHomeTopBar({super.key});
@@ -15,10 +16,14 @@ class YoutubeHomeTopBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const LogoHeader(),
-          SvgPicture.asset(
-            Assets.svgSearch,
-            width: 24,
-            height: 24,
+          IconButton(
+            onPressed: context.youtubeHomeVideosCubit.onSearchPressed,
+            splashRadius: 24,
+            icon: SvgPicture.asset(
+              Assets.svgSearch,
+              width: 24,
+              height: 24,
+            ),
           ),
         ],
       ),
