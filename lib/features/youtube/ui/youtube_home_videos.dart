@@ -1,19 +1,31 @@
-import 'package:common_widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../model/youtube_music_home_dto.dart';
 import '../state/youtube_home_videos_state.dart';
+import 'youtube_video_list_item.dart';
 
 class YoutubeHomeVideos extends StatelessWidget {
   const YoutubeHomeVideos({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<YoutubeHomeVideosCubit, YoutubeHomeVideosState>(
-      builder: (context, state) {
-        return state.maybeWhen(
-          success: (data) => _Success(data),
+    return BlocBuilder<YoutubeVideosCubit, YoutubeVideosState>(
+      buildWhen: (previous, current) =>
+          previous.musicHome != current.musicHome || previous.searchResults != current.searchResults,
+      builder: (_, state) {
+        if (!state.musicHome.isIdle) {
+          return state.musicHome.maybeWhen(
+            success: (data) => _MusicHomeSuccess(data),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            orElse: () => const SizedBox.shrink(),
+          );
+        }
+
+        return state.searchResults.maybeWhen(
+          success: (data) => _SearchResultsSuccess(data),
           loading: () => const Center(child: CircularProgressIndicator()),
           orElse: () => const SizedBox.shrink(),
         );
@@ -22,8 +34,8 @@ class YoutubeHomeVideos extends StatelessWidget {
   }
 }
 
-class _Success extends StatelessWidget {
-  const _Success(this.data);
+class _MusicHomeSuccess extends StatelessWidget {
+  const _MusicHomeSuccess(this.data);
 
   final YoutubeMusicHomeDto data;
 
@@ -42,28 +54,34 @@ class _Success extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             for (final playlist in body.playlists!)
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: SafeImage(
-                        url: playlist.image,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      playlist.title ?? '',
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
+              YoutubeVideoListItem(
+                imageUrl: playlist.imageMedium,
+                title: playlist.title ?? '',
               ),
           ],
+        );
+      },
+    );
+  }
+}
+
+class _SearchResultsSuccess extends StatelessWidget {
+  const _SearchResultsSuccess(this.data);
+
+  final List<Video> data;
+
+  @override
+  Widget build(BuildContext context) {
+    Logger.root.info(data);
+
+    return ListView.builder(
+      itemCount: data.length,
+      itemBuilder: (_, index) {
+        final video = data[index];
+
+        return YoutubeVideoListItem(
+          imageUrl: video.thumbnails.mediumResUrl,
+          title: video.title,
         );
       },
     );

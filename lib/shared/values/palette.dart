@@ -5,7 +5,7 @@ class Palette {
   static const Color error = Color(0xFFFB3836);
   static const Color success = Color(0xFF60DA8C);
 
-  static const Color background = Color(0xFF140531);
+  static const Color background = Color(0xFF0D031F);
   static const Color primary = Color(0xFF140531);
   static const Color secondary = Color(0xFF7001FB);
   static const Color secondaryDark = Color(0xFF923DFD);

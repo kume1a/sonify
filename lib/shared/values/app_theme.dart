@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'app_theme_extension.dart';
 import 'palette.dart';
 
 abstract final class AppTheme {
@@ -11,6 +12,7 @@ abstract final class AppTheme {
     colorScheme: ColorScheme.fromSeed(
       brightness: Brightness.dark,
       seedColor: Palette.secondary,
+      primaryContainer: Palette.primaryContainer,
     ),
     scaffoldBackgroundColor: Palette.background,
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -42,5 +44,10 @@ abstract final class AppTheme {
       alignLabelWithHint: true,
       errorMaxLines: 2,
     ),
+    extensions: [
+      AppThemeExtension(
+        elSecondary: Palette.elSecondary,
+      ),
+    ],
   );
 }

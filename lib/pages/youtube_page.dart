@@ -14,7 +14,7 @@ class YoutubePage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => getIt<YoutubeHomeVideosCubit>(),
+          create: (_) => getIt<YoutubeVideosCubit>(),
         )
       ],
       child: const _Content(),
