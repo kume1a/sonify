@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:logging/logging.dart';
 
 import '../../../shared/values/assets.dart';
+import '../model/youtube_search_suggestions.dart';
 import '../state/youtube_search_state.dart';
 
 class YoutubeSearchResults extends StatelessWidget {
@@ -26,26 +26,24 @@ class YoutubeSearchResults extends StatelessWidget {
 class _SuggestionList extends StatelessWidget {
   const _SuggestionList(this.data);
 
-  final List<String> data;
+  final YoutubeSearchSuggestions data;
 
   @override
   Widget build(BuildContext context) {
-    Logger.root.info(data);
-
     return ListView.builder(
-      itemCount: data.length,
-      padding: const EdgeInsets.only(bottom: 24, right: 16, left: 16),
+      itemCount: data.suggestions.length,
+      padding: const EdgeInsets.only(bottom: 24),
       itemBuilder: (_, index) {
-        final suggestion = data[index];
+        final suggestion = data.suggestions[index];
 
         return InkWell(
           onTap: () => context.youtubeSearchCubit.onSearchSuggestionPressed(suggestion),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 14),
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
             child: Row(
               children: [
                 SvgPicture.asset(
-                  Assets.svgHistory,
+                  Assets.svgSearch,
                   width: 20,
                   height: 20,
                 ),

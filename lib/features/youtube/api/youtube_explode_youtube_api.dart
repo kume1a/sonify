@@ -7,7 +7,9 @@ import 'package:logging/logging.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../model/youtube_music_home_dto.dart';
+import '../model/youtube_search_suggestions.dart';
 import '../util/youtube_music_home_dto_parser.dart';
+import '../util/youtube_search_suggestions_mapper.dart';
 import 'youtube_api.dart';
 
 @LazySingleton(as: YoutubeApi)
@@ -15,10 +17,12 @@ class YoutubeExplodeYouTubeApi implements YoutubeApi {
   YoutubeExplodeYouTubeApi(
     this._yt,
     this._youtubeMusicHomeDtoParser,
+    this._youtubeSearchSuggestionsMapper,
   );
 
   final YoutubeExplode _yt;
   final YoutubeMusicHomeDtoParser _youtubeMusicHomeDtoParser;
+  final YoutubeSearchSuggestionsMapper _youtubeSearchSuggestionsMapper;
 
   static const Map<String, String> headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:96.0) Gecko/20100101 Firefox/96.0'
@@ -58,19 +62,22 @@ class YoutubeExplodeYouTubeApi implements YoutubeApi {
   }
 
   @override
-  Future<List<String>> searchSuggestions(String query) async {
+  Future<YoutubeSearchSuggestions> searchSuggestions(String query) async {
     final link = Uri.parse('https://invidious.snopyta.org/api/v1/search/suggestions?q=$query');
 
     try {
       final response = await http.get(link, headers: headers);
       if (response.statusCode != 200) {
-        return [];
+        return YoutubeSearchSuggestions.empty();
       }
-      final Map res = jsonDecode(response.body) as Map;
-      return (res['suggestions'] as List<dynamic>).cast<String>();
+
+      final res = json.decode(response.body) as Map<String, dynamic>;
+
+      return _youtubeSearchSuggestionsMapper.jsonToModel(res);
     } catch (e) {
       Logger.root.severe('Error in getSearchSuggestions: $e');
-      return [];
     }
+
+    return YoutubeSearchSuggestions.empty();
   }
 }

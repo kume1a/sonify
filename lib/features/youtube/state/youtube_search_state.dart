@@ -7,8 +7,9 @@ import '../../../app/navigation/page_navigator.dart';
 import '../../../shared/util/debounce.dart';
 import '../api/youtube_api.dart';
 import '../model/youtube_search_result.dart';
+import '../model/youtube_search_suggestions.dart';
 
-typedef YoutubeSearchState = DataState<Unit, List<String>>;
+typedef YoutubeSearchState = DataState<Unit, YoutubeSearchSuggestions>;
 
 extension YoutubeSearchCubitX on BuildContext {
   YoutubeSearchCubit get youtubeSearchCubit => read<YoutubeSearchCubit>();
