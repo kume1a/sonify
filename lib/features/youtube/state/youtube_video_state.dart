@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logging/logging.dart';
 
 import '../api/youtube_api.dart';
 
@@ -10,7 +9,7 @@ part 'youtube_video_state.freezed.dart';
 @freezed
 class YoutubeVideoState with _$YoutubeVideoState {
   const factory YoutubeVideoState({
-    String? videoId,
+    Uri? videoUri,
   }) = _YoutubeVideoState;
 
   factory YoutubeVideoState.initial() => const YoutubeVideoState();
@@ -25,19 +24,12 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
   final YoutubeApi _youtubeApi;
 
   void init(String videoId) {
-    Logger.root.info('init called');
-    emit(state.copyWith(videoId: videoId));
-
-    _loadVideo();
+    _loadVideo(videoId);
   }
 
-  Future<void> _loadVideo() async {
-    if (state.videoId == null) {
-      return;
-    }
+  Future<void> _loadVideo(String videoId) async {
+    final video = await _youtubeApi.getVideoStream(videoId);
 
-    final video = await _youtubeApi.getVideoStream(state.videoId!);
-
-    Logger.root.info(video.url);
+    emit(state.copyWith(videoUri: video.url));
   }
 }

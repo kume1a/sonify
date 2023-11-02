@@ -37,6 +37,9 @@ dependencies:
   # Util
   logging: ^1.2.0
 
+  sonify_video_player:
+    path: ./packages/sonify_video_player
+
   global_navigator:
     git:
       url: https://github.com/kume1a/flutter_global_navigator.git
@@ -52,6 +55,7 @@ dependencies:
     git:
       url: https://github.com/kume1a/flutter_common.git
       path: packages/common_models
+  video_player: ^2.8.1
 
 dev_dependencies:
   flutter_test:
