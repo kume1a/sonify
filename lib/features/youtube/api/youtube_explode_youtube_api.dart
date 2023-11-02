@@ -80,4 +80,11 @@ class YoutubeExplodeYouTubeApi implements YoutubeApi {
 
     return YoutubeSearchSuggestions.empty();
   }
+
+  @override
+  Future<MuxedStreamInfo> getVideoStream(String videoId) async {
+    final video = await _yt.videos.streamsClient.getManifest(videoId);
+
+    return video.muxed.withHighestBitrate();
+  }
 }

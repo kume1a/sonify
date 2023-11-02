@@ -10,4 +10,6 @@ abstract interface class YoutubeApi {
   Future<Either<FetchFailure, YoutubeMusicHomeDto>> getMusicHome();
 
   Future<YoutubeSearchSuggestions> searchSuggestions(String query);
+
+  Future<MuxedStreamInfo> getVideoStream(String videoId);
 }
