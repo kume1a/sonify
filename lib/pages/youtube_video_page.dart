@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../app/di/register_dependencies.dart';
 import '../features/youtube/state/youtube_video_state.dart';
+import '../features/youtube/ui/download_youtube_video_button.dart';
 import '../features/youtube/ui/youtube_video.dart';
+import '../features/youtube/ui/youtube_video_info.dart';
 
 class YoutubeVideoPageArgs {
   YoutubeVideoPageArgs({
@@ -36,13 +38,28 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const EdgeInsets padding = EdgeInsets.symmetric(horizontal: 16);
+
     return const Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AspectRatio(
           aspectRatio: 16 / 9,
           child: YoutubeVideo(),
         ),
-        Text('video title'),
+        SizedBox(height: 12),
+        Padding(
+          padding: padding,
+          child: YoutubeVideoInfo(),
+        ),
+        SizedBox(height: 20),
+        Padding(
+          padding: padding,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: DownloadYoutubeVideoButton(),
+          ),
+        ),
       ],
     );
   }

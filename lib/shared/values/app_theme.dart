@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'app_theme_extension.dart';
 import 'palette.dart';
 
-abstract final class AppTheme {
-  static final BorderRadius _defaultInputBorderRadius = BorderRadius.circular(32);
+final _defaultButtonShape = RoundedRectangleBorder(borderRadius: BorderRadius.circular(16));
+const _defaultButtonPadding = EdgeInsets.symmetric(vertical: 12, horizontal: 16);
 
+final _defaultInputBorderRadius = BorderRadius.circular(32);
+
+abstract final class AppTheme {
   static final darkTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
+    splashFactory: NoSplash.splashFactory,
     colorScheme: ColorScheme.fromSeed(
       brightness: Brightness.dark,
       seedColor: Palette.secondary,
@@ -43,6 +47,19 @@ abstract final class AppTheme {
       labelStyle: const TextStyle(fontSize: 14, color: Palette.elSecondary),
       alignLabelWithHint: true,
       errorMaxLines: 2,
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.resolveWith(
+          (states) => states.contains(MaterialState.disabled) ? Palette.secondaryLight : Palette.secondary,
+        ),
+        shape: MaterialStateProperty.all(_defaultButtonShape),
+        foregroundColor: MaterialStateProperty.all(Colors.white),
+        overlayColor: MaterialStateProperty.all(Palette.secondaryDark),
+        padding: MaterialStateProperty.all(_defaultButtonPadding),
+        splashFactory: NoSplash.splashFactory,
+        visualDensity: VisualDensity.compact,
+      ),
     ),
     extensions: [
       AppThemeExtension(

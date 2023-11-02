@@ -51,7 +51,7 @@ class _YoutubeVideoState extends State<YoutubeVideo> {
 
     _sonifyVideoPlayerController = SonifyVideoPlayerController(
       videoPlayerController: _videoPlayerController!,
-      autoPlay: true,
+      // autoPlay: true,
       looping: true,
       hideControlsTimer: const Duration(seconds: 2, milliseconds: 500),
     );

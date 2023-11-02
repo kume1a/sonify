@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
+import '../../../shared/model/pair.dart';
 import '../model/youtube_music_home_dto.dart';
 import '../model/youtube_search_suggestions.dart';
 import '../util/youtube_music_home_dto_parser.dart';
@@ -82,9 +83,10 @@ class YoutubeExplodeYouTubeApi implements YoutubeApi {
   }
 
   @override
-  Future<MuxedStreamInfo> getVideoStream(String videoId) async {
-    final video = await _yt.videos.streamsClient.getManifest(videoId);
+  Future<Pair<MuxedStreamInfo, Video>> getVideo(String videoId) async {
+    final streamInfo = await _yt.videos.streamsClient.getManifest(videoId);
+    final video = await _yt.videos.get(videoId);
 
-    return video.muxed.withHighestBitrate();
+    return Pair(streamInfo.muxed.withHighestBitrate(), video);
   }
 }

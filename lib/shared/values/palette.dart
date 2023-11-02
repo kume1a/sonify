@@ -9,6 +9,7 @@ class Palette {
   static const Color primary = Color(0xFF140531);
   static const Color secondary = Color(0xFF7001FB);
   static const Color secondaryDark = Color(0xFF923DFD);
+  static const Color secondaryLight = Color.fromARGB(255, 155, 83, 243);
 
   static const Color primaryContainer = Color(0xFF1B0E39);
   static const Color secondaryContainer = Color(0xFF231148);
