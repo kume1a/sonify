@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:logging/logging.dart';
 
@@ -57,7 +58,7 @@ class _DownloadYoutubeVideoBottomSheet extends StatelessWidget {
             l.audio,
             style: TextStyle(fontSize: 12, color: theme.appThemeExtension?.elSecondary),
           ),
-          const Divider(thickness: 1),
+          const Divider(thickness: 1, height: 1),
           const _AudioOptions(),
           const SizedBox(height: 32),
           TextButton(
@@ -70,18 +71,19 @@ class _DownloadYoutubeVideoBottomSheet extends StatelessWidget {
   }
 }
 
-class _AudioOptions extends StatelessWidget {
+class _AudioOptions extends HookWidget {
   const _AudioOptions();
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
 
+    final selectedTag = useState<int?>(null);
+
     return BlocBuilder<YoutubeVideoCubit, YoutubeVideoState>(
       buildWhen: (previous, current) =>
           notDeepEquals(previous.audioOnlyStreamInfos, current.audioOnlyStreamInfos),
       builder: (_, state) {
-        Logger.root.info(state.audioOnlyStreamInfos);
         return state.audioOnlyStreamInfos.maybeWhen(
           orElse: () => const SizedBox.shrink(),
           success: (data) => ListView.builder(
@@ -95,31 +97,34 @@ class _AudioOptions extends StatelessWidget {
 
               final audioLabel = formattedBitrate;
 
-              return Padding(
-                padding: const EdgeInsets.symmetric(),
-                child: Row(
-                  children: [
-                    SvgPicture.asset(
-                      Assets.svgMusicNote,
-                      width: 20,
-                      height: 20,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        audioLabel,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+              return InkWell(
+                onTap: () => selectedTag.value = audioStreamInfo.tag,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        Assets.svgMusicNote,
+                        width: 20,
+                        height: 20,
                       ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(formattedFileSize),
-                    Radio(
-                      value: true,
-                      groupValue: '',
-                      onChanged: (value) {},
-                    ),
-                  ],
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          audioLabel,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(formattedFileSize),
+                      Radio(
+                        value: audioStreamInfo.tag,
+                        groupValue: selectedTag.value,
+                        onChanged: null,
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

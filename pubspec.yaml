@@ -38,6 +38,7 @@ dependencies:
   logging: ^1.2.0
   timeago: ^3.6.0
   video_player: ^2.8.1
+  flutter_hooks: ^0.20.3
 
   sonify_video_player:
     path: ./packages/sonify_video_player

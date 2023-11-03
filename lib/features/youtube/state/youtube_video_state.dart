@@ -17,7 +17,7 @@ class YoutubeVideoState with _$YoutubeVideoState {
     Uri? videoUri,
     required SimpleDataState<Video> video,
     required SimpleDataState<MuxedStreamInfo> highQualityMuxedStreamInfo,
-    required SimpleDataState<UnmodifiableListView<AudioOnlyStreamInfo>> audioOnlyStreamInfos,
+    required SimpleDataState<List<AudioOnlyStreamInfo>> audioOnlyStreamInfos,
   }) = _YoutubeVideoState;
 
   factory YoutubeVideoState.initial() => YoutubeVideoState(
@@ -54,11 +54,13 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
     final audioOnlyStreams = await _youtubeApi.getAudioOnlyStreams(videoId);
     final highestBitrateVideo = await _youtubeApi.getHighestQualityMuxedStreamInfo(videoId);
 
+    final sortedAudioOnlyStreams = audioOnlyStreams.toList()..sort((a, b) => a.bitrate.compareTo(b.bitrate));
+
     emit(state.copyWith(
       videoUri: highestBitrateVideo.url,
       video: SimpleDataState.success(video),
       highQualityMuxedStreamInfo: SimpleDataState.success(highestBitrateVideo),
-      audioOnlyStreamInfos: SimpleDataState.success(audioOnlyStreams),
+      audioOnlyStreamInfos: SimpleDataState.success(sortedAudioOnlyStreams),
     ));
   }
 }
