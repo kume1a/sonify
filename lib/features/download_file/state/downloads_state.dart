@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -30,6 +31,10 @@ class DownloadsState with _$DownloadsState {
         downloaded: [],
         failed: [],
       );
+}
+
+extension DownloadsCubitX on BuildContext {
+  DownloadsCubit get downloadsCubit => read<DownloadsCubit>();
 }
 
 @injectable
@@ -61,13 +66,13 @@ class DownloadsCubit extends Cubit<DownloadsState> {
     return super.close();
   }
 
-  Future<void> enqueueAudio(String url) async {
+  Future<void> enqueueAudio(Uri uri) async {
     final applicationDocumentsPath = await getApplicationDocumentsDirectory();
     final fileName = '${_uuidFactory.generate()}.mp3';
 
     final downloadTask = DownloadTask(
       savePath: '${applicationDocumentsPath.path}/$fileName',
-      url: url,
+      uri: uri,
       progress: 0,
       state: DownloadTaskState.idle,
       fileType: FileType.audioMp3,
@@ -80,8 +85,8 @@ class DownloadsCubit extends Cubit<DownloadsState> {
     );
   }
 
-  Future<void> reEnqueueAudio(String url) async {
-    final failedDownloadTask = state.failed.firstWhereOrNull((e) => e.url == url);
+  Future<void> reEnqueueAudio(String uri) async {
+    final failedDownloadTask = state.failed.firstWhereOrNull((e) => e.uri == uri);
     if (failedDownloadTask == null) {
       return;
     }
@@ -117,7 +122,7 @@ class DownloadsCubit extends Cubit<DownloadsState> {
 
       try {
         await _downloader.download(
-          url: downloadTask.url,
+          uri: downloadTask.uri,
           savePath: downloadTask.savePath,
           onReceiveProgress: (int count, int total) {
             if (total < 0) {

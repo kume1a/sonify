@@ -14,13 +14,13 @@ class DioDownloader implements Downloader {
 
   @override
   Future<bool> download({
-    required String url,
+    required Uri uri,
     required String savePath,
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final res = await _dio.download(
-        url,
+      final res = await _dio.downloadUri(
+        uri,
         savePath,
         onReceiveProgress: onReceiveProgress,
       );

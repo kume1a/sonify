@@ -2,27 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:logging/logging.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../../../shared/util/equality.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
+import '../../download_file/state/downloads_state.dart';
 import '../state/youtube_video_state.dart';
 import '../util/format_bitrate.dart';
 import '../util/format_file_size.dart';
 
-class DownloadYoutubeVideoButton extends StatelessWidget {
+class DownloadYoutubeVideoButton extends HookWidget {
   const DownloadYoutubeVideoButton({super.key});
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
 
+    final isMounted = useIsMounted();
+
     return TextButton(
       child: Text(l.download),
-      onPressed: () {
-        showModalBottomSheet(
+      onPressed: () async {
+        final audioOnlyStreamInfo = await showModalBottomSheet<AudioOnlyStreamInfo?>(
           context: context,
           isScrollControlled: true,
           builder: (_) => BlocProvider.value(
@@ -30,6 +33,13 @@ class DownloadYoutubeVideoButton extends StatelessWidget {
             child: const _DownloadYoutubeVideoBottomSheet(),
           ),
         );
+
+        if (audioOnlyStreamInfo == null || !isMounted()) {
+          return;
+        }
+
+        // ignore: use_build_context_synchronously
+        context.downloadsCubit.enqueueAudio(audioOnlyStreamInfo.url);
       },
     );
   }

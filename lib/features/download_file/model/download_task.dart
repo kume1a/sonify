@@ -14,7 +14,7 @@ enum DownloadTaskState {
 @freezed
 class DownloadTask with _$DownloadTask {
   const factory DownloadTask({
-    required String url,
+    required Uri uri,
     required String savePath,
     required double progress,
     required FileType fileType,
