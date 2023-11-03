@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:common_models/common_models.dart';
@@ -6,7 +7,6 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-import '../../../shared/model/pair.dart';
 import '../model/youtube_music_home_dto.dart';
 import '../model/youtube_search_suggestions.dart';
 import '../util/youtube_music_home_dto_parser.dart';
@@ -83,10 +83,25 @@ class YoutubeExplodeYouTubeApi implements YoutubeApi {
   }
 
   @override
-  Future<Pair<MuxedStreamInfo, Video>> getVideo(String videoId) async {
-    final streamInfo = await _yt.videos.streamsClient.getManifest(videoId);
-    final video = await _yt.videos.get(videoId);
+  Future<Video> getVideo(String videoId) {
+    return _yt.videos.get(videoId);
+  }
 
-    return Pair(streamInfo.muxed.withHighestBitrate(), video);
+  @override
+  Future<UnmodifiableListView<AudioOnlyStreamInfo>> getAudioOnlyStreams(
+    String videoId,
+  ) async {
+    final manifest = await _yt.videos.streams.getManifest(videoId);
+
+    return manifest.audioOnly;
+  }
+
+  @override
+  Future<MuxedStreamInfo> getHighestQualityMuxedStreamInfo(
+    String videoId,
+  ) async {
+    final manifest = await _yt.videos.streams.getManifest(videoId);
+
+    return manifest.muxed.withHighestBitrate();
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logging/logging.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../model/youtube_music_home_dto.dart';
@@ -72,8 +71,6 @@ class _SearchResultsSuccess extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Logger.root.info(data);
-
     return ListView.builder(
       itemCount: data.length,
       itemBuilder: (_, index) {

@@ -25,6 +25,15 @@ abstract final class AppTheme {
       unselectedLabelStyle: TextStyle(fontSize: 12),
       backgroundColor: Palette.primaryContainer,
     ),
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor: Palette.background,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
+        ),
+      ),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: Palette.primaryContainer,
@@ -60,6 +69,12 @@ abstract final class AppTheme {
         splashFactory: NoSplash.splashFactory,
         visualDensity: VisualDensity.compact,
       ),
+    ),
+    radioTheme: RadioThemeData(
+      fillColor: MaterialStateProperty.resolveWith(
+        (states) => states.contains(MaterialState.selected) ? Palette.secondary : Palette.elSecondary,
+      ),
+      visualDensity: VisualDensity.compact,
     ),
     extensions: [
       AppThemeExtension(

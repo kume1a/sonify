@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:logging/logging.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -36,7 +35,6 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    Logger.root.info(data);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

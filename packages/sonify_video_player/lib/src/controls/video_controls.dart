@@ -29,7 +29,6 @@ class VideoControls extends StatefulWidget {
 class _VideoControlsState extends State<VideoControls> with SingleTickerProviderStateMixin {
   late PlayerNotifier notifier;
   late VideoPlayerValue _latestValue;
-  double? _latestVolume;
   Timer? _hideTimer;
   Timer? _initTimer;
   late var _subtitlesPosition = Duration.zero;

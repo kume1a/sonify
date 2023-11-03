@@ -1,4 +1,7 @@
+import 'dart:collection';
+
 import 'package:common_models/common_models.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -12,12 +15,20 @@ part 'youtube_video_state.freezed.dart';
 class YoutubeVideoState with _$YoutubeVideoState {
   const factory YoutubeVideoState({
     Uri? videoUri,
-    required DataState<Unit, Video> video,
+    required SimpleDataState<Video> video,
+    required SimpleDataState<MuxedStreamInfo> highQualityMuxedStreamInfo,
+    required SimpleDataState<UnmodifiableListView<AudioOnlyStreamInfo>> audioOnlyStreamInfos,
   }) = _YoutubeVideoState;
 
   factory YoutubeVideoState.initial() => YoutubeVideoState(
-        video: DataState.idle(),
+        video: SimpleDataState.idle(),
+        highQualityMuxedStreamInfo: SimpleDataState.idle(),
+        audioOnlyStreamInfos: SimpleDataState.idle(),
       );
+}
+
+extension YoutubeVideoCubitX on BuildContext {
+  YoutubeVideoCubit get youtubeVideoCubit => read<YoutubeVideoCubit>();
 }
 
 @injectable
@@ -33,16 +44,21 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
   }
 
   Future<void> _loadVideo(String videoId) async {
-    emit(state.copyWith(video: DataState.loading()));
+    emit(state.copyWith(
+      video: SimpleDataState.loading(),
+      highQualityMuxedStreamInfo: SimpleDataState.loading(),
+      audioOnlyStreamInfos: SimpleDataState.loading(),
+    ));
 
-    final videoRes = await _youtubeApi.getVideo(videoId);
-
-    final videoStream = videoRes.first;
-    final video = videoRes.second;
+    final video = await _youtubeApi.getVideo(videoId);
+    final audioOnlyStreams = await _youtubeApi.getAudioOnlyStreams(videoId);
+    final highestBitrateVideo = await _youtubeApi.getHighestQualityMuxedStreamInfo(videoId);
 
     emit(state.copyWith(
-      videoUri: videoStream.url,
-      video: DataState.success(video),
+      videoUri: highestBitrateVideo.url,
+      video: SimpleDataState.success(video),
+      highQualityMuxedStreamInfo: SimpleDataState.success(highestBitrateVideo),
+      audioOnlyStreamInfos: SimpleDataState.success(audioOnlyStreams),
     ));
   }
 }
