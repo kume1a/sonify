@@ -62,7 +62,9 @@ class _DownloadYoutubeVideoBottomSheet extends StatelessWidget {
           const _AudioOptions(),
           const SizedBox(height: 32),
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+            },
             child: Text(l.download),
           ),
         ],
