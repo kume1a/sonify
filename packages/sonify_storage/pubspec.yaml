@@ -1,0 +1,16 @@
+name: sonify_storage
+description: storage daos for the sonify app
+version: 1.0.0
+
+environment:
+  sdk: ^3.1.4
+
+dependencies:
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  path_provider: ^2.1.1
+
+dev_dependencies:
+  build_runner: ^2.4.6
+  flutter_lints: ^2.0.2
+  isar_generator: ^3.1.0+1
