@@ -8,7 +8,6 @@ import '../../../app/intl/app_localizations.dart';
 import '../../../shared/util/equality.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
-import '../../download_file/state/downloads_state.dart';
 import '../state/youtube_video_state.dart';
 import '../util/format_bitrate.dart';
 import '../util/format_file_size.dart';
@@ -22,24 +21,29 @@ class DownloadYoutubeVideoButton extends HookWidget {
 
     final isMounted = useIsMounted();
 
-    return TextButton(
-      child: Text(l.download),
-      onPressed: () async {
-        final audioOnlyStreamInfo = await showModalBottomSheet<AudioOnlyStreamInfo?>(
-          context: context,
-          isScrollControlled: true,
-          builder: (_) => BlocProvider.value(
-            value: context.youtubeVideoCubit,
-            child: const _DownloadYoutubeVideoBottomSheet(),
-          ),
+    return BlocBuilder<YoutubeVideoCubit, YoutubeVideoState>(
+      buildWhen: (previous, current) => previous.video != current.video,
+      builder: (_, state) {
+        return TextButton(
+          child: Text(l.download),
+          onPressed: () async {
+            final audioOnlyStreamInfo = await showModalBottomSheet<AudioOnlyStreamInfo?>(
+              context: context,
+              isScrollControlled: true,
+              builder: (_) => BlocProvider.value(
+                value: context.youtubeVideoCubit,
+                child: const _DownloadYoutubeVideoBottomSheet(),
+              ),
+            );
+
+            if (audioOnlyStreamInfo == null || !isMounted()) {
+              return;
+            }
+
+            // ignore: use_build_context_synchronously
+            context.youtubeVideoCubit.onDownloadAudioOnlyStreamInfo(audioOnlyStreamInfo);
+          },
         );
-
-        if (audioOnlyStreamInfo == null || !isMounted()) {
-          return;
-        }
-
-        // ignore: use_build_context_synchronously
-        context.downloadsCubit.enqueueAudio(audioOnlyStreamInfo.url);
       },
     );
   }

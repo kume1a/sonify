@@ -1,12 +1,13 @@
-import 'dart:collection';
-
 import 'package:common_models/common_models.dart';
+import 'package:common_utilities/common_utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
+import '../../../entities/remote_audio_file/util/youtube_audio_stream_to_remote_audio_file.dart';
+import '../../download_file/model/downloads_event.dart';
 import '../api/youtube_api.dart';
 
 part 'youtube_video_state.freezed.dart';
@@ -35,9 +36,13 @@ extension YoutubeVideoCubitX on BuildContext {
 class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
   YoutubeVideoCubit(
     this._youtubeApi,
+    this._youtubeAudioStreamToRemoteAudioFile,
+    this._eventBus,
   ) : super(YoutubeVideoState.initial());
 
   final YoutubeApi _youtubeApi;
+  final YoutubeAudioStreamToRemoteAudioFile _youtubeAudioStreamToRemoteAudioFile;
+  final EventBus _eventBus;
 
   void init(String videoId) {
     _loadVideo(videoId);
@@ -62,5 +67,17 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
       highQualityMuxedStreamInfo: SimpleDataState.success(highestBitrateVideo),
       audioOnlyStreamInfos: SimpleDataState.success(sortedAudioOnlyStreams),
     ));
+  }
+
+  Future<void> onDownloadAudioOnlyStreamInfo(AudioOnlyStreamInfo audioOnlyStreamInfo) async {
+    final video = state.video.getOrNull;
+
+    if (video == null) {
+      return;
+    }
+
+    final remoteAudioFile = _youtubeAudioStreamToRemoteAudioFile(audioOnlyStreamInfo, video);
+
+    _eventBus.fire(DownloadsEvent.enqueueRemoteAudioFile(remoteAudioFile));
   }
 }

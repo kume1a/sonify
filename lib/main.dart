@@ -10,10 +10,10 @@ import 'app/app.dart';
 import 'app/di/register_dependencies.dart';
 import 'app/navigation/page_navigator.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  registerDependencies(kDebugMode ? Environment.dev : Environment.prod);
+  await registerDependencies(kDebugMode ? Environment.dev : Environment.prod);
 
   GlobalNavigator.navigatorKey = navigatorKey;
 

@@ -81,6 +81,7 @@ class DioPrettyLogInterceptor extends Interceptor {
   }
 
   @override
+  // ignore: deprecated_member_use
   void onError(DioError err, ErrorInterceptorHandler handler) {
     if (error) {
       final StringBuffer output = StringBuffer();

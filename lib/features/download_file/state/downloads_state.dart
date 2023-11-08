@@ -2,17 +2,19 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:collection/collection.dart';
+import 'package:common_utilities/common_utilities.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:synchronized/synchronized.dart';
 
-import '../../../shared/util/uuid_factory.dart';
+import '../../../shared/util/subscription_composite.dart';
 import '../api/downloader.dart';
+import '../api/on_download_task_downloaded.dart';
 import '../model/download_task.dart';
-import '../model/file_type.dart';
+import '../model/downloads_event.dart';
+import '../util/download_task_factory.dart';
 
 part 'downloads_state.freezed.dart';
 
@@ -41,65 +43,68 @@ extension DownloadsCubitX on BuildContext {
 class DownloadsCubit extends Cubit<DownloadsState> {
   DownloadsCubit(
     this._downloader,
-    this._uuidFactory,
+    this._onDownloadTaskDownloaded,
+    this._eventBus,
+    this._downloadTaskFactory,
   ) : super(DownloadsState.initial()) {
     _init();
   }
 
   final Downloader _downloader;
-  final UuidFactory _uuidFactory;
+  final OnDownloadTaskDownloaded _onDownloadTaskDownloaded;
+  final EventBus _eventBus;
+  final DownloadTaskFactory _downloadTaskFactory;
 
   final _lock = Lock();
   Timer? _timer;
+
+  final _subscriptionComposite = SubscriptionComposite();
 
   Future<void> _init() async {
     _timer = Timer.periodic(
       const Duration(seconds: 2),
       (_) => _downloadFirstFromQueue(),
     );
+
+    _subscriptionComposite.add(
+      _eventBus.on<DownloadsEvent>().listen(_onDownloadsEvent),
+    );
   }
 
   @override
   Future<void> close() async {
     _timer?.cancel();
+    _subscriptionComposite.closeAll();
 
     return super.close();
   }
 
-  Future<void> enqueueAudio(Uri uri) async {
-    final applicationDocumentsPath = await getApplicationDocumentsDirectory();
-    final fileName = '${_uuidFactory.generate()}.mp3';
-
-    final downloadTask = DownloadTask(
-      savePath: '${applicationDocumentsPath.path}/$fileName',
-      uri: uri,
-      progress: 0,
-      state: DownloadTaskState.idle,
-      fileType: FileType.audioMp3,
+  Future<void> _onDownloadsEvent(DownloadsEvent event) async {
+    final downloadTask = await event.when(
+      enqueueRemoteAudioFile: _downloadTaskFactory.fromRemoteAudioFile,
     );
 
-    _lock.synchronized(
-      () => _mutateQueueAndEmit((queue) {
-        queue.add(downloadTask);
-      }),
-    );
-  }
+    final failedDownloadTask = state.failed.firstWhereOrNull((e) => e.uri == downloadTask.uri);
 
-  Future<void> reEnqueueAudio(String uri) async {
-    final failedDownloadTask = state.failed.firstWhereOrNull((e) => e.uri == uri);
-    if (failedDownloadTask == null) {
+    if (failedDownloadTask != null) {
+      final reEnqueuedDownloadTask = failedDownloadTask.copyWith(
+        state: DownloadTaskState.idle,
+        progress: 0,
+      );
+
+      await _lock.synchronized(() {
+        final queue = Queue.of(state.queue)..add(reEnqueuedDownloadTask);
+        final failed = List.of(state.failed)..remove(failedDownloadTask);
+
+        emit(state.copyWith(queue: queue, failed: failed));
+      });
+
       return;
     }
 
-    final reEnqueuedDownloadTask = failedDownloadTask.copyWith(
-      state: DownloadTaskState.idle,
-      progress: 0,
+    _lock.synchronized(
+      () => _mutateQueueAndEmit((queue) => queue.add(downloadTask)),
     );
-
-    final queue = Queue.of(state.queue)..add(reEnqueuedDownloadTask);
-    final failed = List.of(state.failed)..remove(failedDownloadTask);
-
-    emit(state.copyWith(queue: queue, failed: failed));
   }
 
   Future<void> _downloadFirstFromQueue() async {
@@ -142,6 +147,8 @@ class DownloadsCubit extends Cubit<DownloadsState> {
           progress: 1,
           state: DownloadTaskState.downloaded,
         );
+
+        await _onDownloadTaskDownloaded(downloadedTask);
 
         final queue = Queue.of(state.queue)..removeFirst();
         final downloaded = List.of(state.downloaded)..insert(0, downloadedTask);

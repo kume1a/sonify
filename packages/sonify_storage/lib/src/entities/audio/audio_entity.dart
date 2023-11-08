@@ -2,11 +2,11 @@ import 'package:isar/isar.dart';
 
 import '../../constant/collections.dart';
 
-part 'song_entity.g.dart';
+part 'audio_entity.g.dart';
 
 @collection
-@Name(SontEntity_.collectionName)
-class SongEntity {
+@Name(AudioEntity_.collectionName)
+class AudioEntity {
   Id id = Isar.autoIncrement;
 
   late String title;

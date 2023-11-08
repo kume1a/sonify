@@ -9,5 +9,5 @@ final GetIt getIt = GetIt.instance;
 Future<void> registerDependencies(
   String env,
 ) async {
-  getIt.init(environment: env);
+  await getIt.init(environment: env);
 }
