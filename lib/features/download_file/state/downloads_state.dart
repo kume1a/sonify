@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 import 'package:synchronized/synchronized.dart';
 
 import '../../../shared/util/subscription_composite.dart';
@@ -81,6 +82,8 @@ class DownloadsCubit extends Cubit<DownloadsState> {
   }
 
   Future<void> _onDownloadsEvent(DownloadsEvent event) async {
+    Logger.root.info('received download event');
+
     final downloadTask = await event.when(
       enqueueRemoteAudioFile: _downloadTaskFactory.fromRemoteAudioFile,
     );
@@ -103,13 +106,17 @@ class DownloadsCubit extends Cubit<DownloadsState> {
       return;
     }
 
+    Logger.root.info('enqueuing download task');
+
     _lock.synchronized(
       () => _mutateQueueAndEmit((queue) => queue.add(downloadTask)),
     );
   }
 
   Future<void> _downloadFirstFromQueue() async {
+    Logger.root.info('downloading first from queue');
     if (_lock.inLock) {
+      Logger.root.info('in lock, returning');
       return;
     }
 
@@ -142,6 +149,8 @@ class DownloadsCubit extends Cubit<DownloadsState> {
               )));
           },
         );
+
+        Logger.root.info('downloaded task  = $downloadedTask');
 
         if (downloadedTask != null) {
           await _onDownloadTaskDownloaded(downloadedTask);

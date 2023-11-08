@@ -5,6 +5,7 @@ import '../../jiosaavn_page.dart';
 import '../../library_page.dart';
 import '../../profile_page.dart';
 import '../../youtube_page.dart';
+import '../../youtube_video_page.dart';
 import '../state/main_page_state.dart';
 
 class PageContent extends StatelessWidget {
@@ -17,11 +18,12 @@ class PageContent extends StatelessWidget {
       builder: (_, state) {
         return IndexedStack(
           index: state.pageIndex,
-          children: const [
-            LibraryPage(),
-            YoutubePage(),
-            JiosaavnPage(),
-            ProfilePage(),
+          children: [
+            YoutubeVideoPage(args: YoutubeVideoPageArgs(videoId: 'EOnSh3QlpbQ')),
+            const LibraryPage(),
+            // YoutubePage(),
+            const JiosaavnPage(),
+            const ProfilePage(),
           ],
         );
       },

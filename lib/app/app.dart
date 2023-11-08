@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:global_navigator/global_navigator.dart';
 
+import '../features/download_file/state/downloads_state.dart';
 import '../pages/main/main_page.dart';
 import '../shared/values/app_theme.dart';
+import 'di/register_dependencies.dart';
 import 'intl/app_localizations.dart';
 import 'navigation/page_navigator.dart';
 import 'navigation/route_factory.dart';
@@ -13,17 +16,22 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Sonify',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
-      home: const MainPage(),
-      initialRoute: Routes.root,
-      navigatorObservers: [GNObserver()],
-      onGenerateRoute: routeFactory,
-      navigatorKey: navigatorKey,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => getIt<DownloadsCubit>(), lazy: false),
+      ],
+      child: MaterialApp(
+        title: 'Sonify',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.darkTheme,
+        home: const MainPage(),
+        initialRoute: Routes.root,
+        navigatorObservers: [GNObserver()],
+        onGenerateRoute: routeFactory,
+        navigatorKey: navigatorKey,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+      ),
     );
   }
 }

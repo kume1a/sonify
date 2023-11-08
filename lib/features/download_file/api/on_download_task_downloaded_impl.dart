@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
-import 'package:sonify_storage/sonify_storage.dart';
 
+import '../../../entities/audio/api/local_audio_file_repository.dart';
 import '../model/downloaded_task.dart';
 import '../model/file_type.dart';
 import 'on_download_task_downloaded.dart';
@@ -8,10 +8,10 @@ import 'on_download_task_downloaded.dart';
 @LazySingleton(as: OnDownloadTaskDownloaded)
 class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
   OnDownloadTaskDownloadedImpl(
-    this._audioEntityDao,
+    this._localAudioFileRepository,
   );
 
-  final AudioEntityDao _audioEntityDao;
+  final LocalAudioFileRepository _localAudioFileRepository;
 
   @override
   Future<void> call(DownloadedTask downloadedTask) async {
@@ -32,14 +32,7 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
       return;
     }
 
-    final entity = AudioEntity();
-
-    entity.path = localAudioFile.path;
-    entity.title = localAudioFile.title;
-    entity.sizeInKb = localAudioFile.sizeInKb;
-    entity.imagePath = localAudioFile.imagePath;
-
-    _audioEntityDao.insert(entity);
+    _localAudioFileRepository.save(localAudioFile);
   }
 
   Future<void> _handleVideoMp4Downloaded(DownloadedTask downloadTask) async {

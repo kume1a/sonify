@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../../entities/audio/util/youtube_audio_stream_to_remote_audio_file.dart';
@@ -77,6 +78,8 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
     }
 
     final remoteAudioFile = _youtubeAudioStreamToRemoteAudioFile(audioOnlyStreamInfo, video);
+
+    Logger.root.info('sending enqueue event');
 
     _eventBus.fire(DownloadsEvent.enqueueRemoteAudioFile(remoteAudioFile));
   }

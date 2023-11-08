@@ -11,6 +11,8 @@ class AudioEntity {
 
   late String title;
 
+  late String author;
+
   late String path;
 
   late int sizeInKb;
