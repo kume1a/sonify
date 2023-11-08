@@ -6,7 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-import '../../../entities/remote_audio_file/util/youtube_audio_stream_to_remote_audio_file.dart';
+import '../../../entities/audio/util/youtube_audio_stream_to_remote_audio_file.dart';
 import '../../download_file/model/downloads_event.dart';
 import '../api/youtube_api.dart';
 

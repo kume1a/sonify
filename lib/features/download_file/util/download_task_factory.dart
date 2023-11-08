@@ -1,4 +1,4 @@
-import '../../../entities/remote_audio_file/model/remote_audio_file.dart';
+import '../../../entities/audio/model/remote_audio_file.dart';
 import '../model/download_task.dart';
 
 abstract interface class DownloadTaskFactory {

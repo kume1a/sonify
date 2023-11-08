@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../entities/remote_audio_file/model/remote_audio_file.dart';
+import '../../../entities/audio/model/remote_audio_file.dart';
 import 'file_type.dart';
 
 part 'download_task.freezed.dart';

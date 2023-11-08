@@ -9,5 +9,6 @@ class RemoteAudioFile with _$RemoteAudioFile {
     required Uri uri,
     required int sizeInKb,
     required String author,
+    required Uri? imageUri,
   }) = _RemoteAudioFile;
 }

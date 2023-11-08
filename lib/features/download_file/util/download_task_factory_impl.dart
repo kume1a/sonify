@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
-import 'package:path_provider/path_provider.dart';
 
-import '../../../entities/remote_audio_file/model/remote_audio_file.dart';
+import '../../../entities/audio/model/remote_audio_file.dart';
+import '../../../shared/util/resource_save_path_provider.dart';
 import '../../../shared/util/uuid_factory.dart';
 import '../model/download_task.dart';
 import '../model/file_type.dart';
@@ -39,9 +39,9 @@ class DownloadTaskFactoryImpl implements DownloadTaskFactory {
       FileType.videoMp4 => 'mp4',
     };
 
-    final applicationDocumentsPath = await getApplicationDocumentsDirectory();
+    final dirPath = ResourceSavePathProvider.getAudioMp3SavePath();
     final fileName = _uuidFactory.generate();
 
-    return '${applicationDocumentsPath.path}/$fileName.$extension';
+    return '$dirPath/$fileName.$extension';
   }
 }

@@ -14,4 +14,6 @@ class AudioEntity {
   late String path;
 
   late int sizeInKb;
+
+  late String? imagePath;
 }

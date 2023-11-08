@@ -1,5 +1,5 @@
-import '../model/download_task.dart';
+import '../model/downloaded_task.dart';
 
 abstract interface class OnDownloadTaskDownloaded {
-  Future<void> call(DownloadTask downloadTask);
+  Future<void> call(DownloadedTask downloadedTask);
 }

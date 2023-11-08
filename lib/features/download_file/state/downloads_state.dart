@@ -10,9 +10,10 @@ import 'package:injectable/injectable.dart';
 import 'package:synchronized/synchronized.dart';
 
 import '../../../shared/util/subscription_composite.dart';
-import '../api/downloader.dart';
+import '../api/download_task_downloader.dart';
 import '../api/on_download_task_downloaded.dart';
 import '../model/download_task.dart';
+import '../model/downloaded_task.dart';
 import '../model/downloads_event.dart';
 import '../util/download_task_factory.dart';
 
@@ -24,12 +25,12 @@ typedef _DownloadTaskQueueMutation = void Function(Queue<DownloadTask> queue);
 class DownloadsState with _$DownloadsState {
   const factory DownloadsState({
     required Queue<DownloadTask> queue,
-    required List<DownloadTask> downloaded,
+    required List<DownloadedTask> downloaded,
     required List<DownloadTask> failed,
   }) = _DownloadsState;
 
   factory DownloadsState.initial() => DownloadsState(
-        queue: Queue<DownloadTask>(),
+        queue: Queue(),
         downloaded: [],
         failed: [],
       );
@@ -42,18 +43,18 @@ extension DownloadsCubitX on BuildContext {
 @injectable
 class DownloadsCubit extends Cubit<DownloadsState> {
   DownloadsCubit(
-    this._downloader,
-    this._onDownloadTaskDownloaded,
     this._eventBus,
     this._downloadTaskFactory,
+    this._downloadTaskDownloader,
+    this._onDownloadTaskDownloaded,
   ) : super(DownloadsState.initial()) {
     _init();
   }
 
-  final Downloader _downloader;
-  final OnDownloadTaskDownloaded _onDownloadTaskDownloaded;
   final EventBus _eventBus;
   final DownloadTaskFactory _downloadTaskFactory;
+  final DownloadTaskDownloader _downloadTaskDownloader;
+  final OnDownloadTaskDownloaded _onDownloadTaskDownloaded;
 
   final _lock = Lock();
   Timer? _timer;
@@ -126,9 +127,8 @@ class DownloadsCubit extends Cubit<DownloadsState> {
       }
 
       try {
-        await _downloader.download(
-          uri: downloadTask.uri,
-          savePath: downloadTask.savePath,
+        final downloadedTask = await _downloadTaskDownloader.download(
+          downloadTask,
           onReceiveProgress: (int count, int total) {
             if (total < 0) {
               return;
@@ -143,19 +143,15 @@ class DownloadsCubit extends Cubit<DownloadsState> {
           },
         );
 
-        final downloadedTask = downloadTask.copyWith(
-          progress: 1,
-          state: DownloadTaskState.downloaded,
-        );
+        if (downloadedTask != null) {
+          await _onDownloadTaskDownloaded(downloadedTask);
 
-        await _onDownloadTaskDownloaded(downloadedTask);
+          final queue = Queue.of(state.queue)..removeFirst();
+          final downloaded = List.of(state.downloaded)..insert(0, downloadedTask);
 
-        final queue = Queue.of(state.queue)..removeFirst();
-        final downloaded = List.of(state.downloaded)..insert(0, downloadedTask);
-
-        emit(state.copyWith(queue: queue, downloaded: downloaded));
-
-        return;
+          emit(state.copyWith(queue: queue, downloaded: downloaded));
+          return;
+        }
       } catch (e) {
         /* ignored */
       }

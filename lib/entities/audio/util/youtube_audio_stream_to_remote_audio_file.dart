@@ -11,6 +11,7 @@ class YoutubeAudioStreamToRemoteAudioFile {
       uri: t.url,
       sizeInKb: t.size.totalKiloBytes.toInt(),
       author: video.author,
+      imageUri: Uri.tryParse(video.thumbnails.standardResUrl),
     );
   }
 }
