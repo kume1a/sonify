@@ -6,7 +6,7 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../util/dio_pretty_log_interceptor.dart';
 
-const Duration _kTimeoutDuration = Duration(seconds: 20);
+const Duration _kTimeoutDuration = Duration(hours: 2);
 
 @module
 abstract class DiNetworkModule {

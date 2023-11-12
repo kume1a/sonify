@@ -43,6 +43,7 @@ dependencies:
   path_provider: ^2.0.15
   synchronized: ^3.1.0
   uuid: ^4.1.0
+  permission_handler: ^11.0.1
 
   sonify_storage:
     path: ./packages/sonify_storage

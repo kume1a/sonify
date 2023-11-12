@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:logging/logging.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../../app/di/register_dependencies.dart';
@@ -41,8 +40,6 @@ class DownloadYoutubeVideoButton extends HookWidget {
                 child: const _DownloadYoutubeVideoBottomSheet(),
               ),
             );
-
-            Logger.root.info(audioOnlyStreamInfo);
 
             if (audioOnlyStreamInfo == null || !isMounted()) {
               return;

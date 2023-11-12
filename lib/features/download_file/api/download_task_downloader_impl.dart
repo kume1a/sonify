@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 
 import '../../../entities/audio/model/local_audio_file.dart';
 import '../../../shared/util/resource_save_path_provider.dart';
@@ -38,10 +39,14 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
     final totalDownloadSize = extraSize + mainFileSize;
     var downloadedSize = 0;
 
+    Logger.root.finer('resolved extraSize=$extraSize, mainFileSize=$mainFileSize');
+
     final success = await _downloader.download(
       uri: downloadTask.uri,
       savePath: downloadTask.savePath,
       onReceiveProgress: (count, total) {
+        Logger.root.finer('main task onProgress count=$count, total=$total');
+
         downloadedSize += count;
         onReceiveProgress?.call(downloadedSize, totalDownloadSize);
       },
@@ -62,6 +67,8 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
         uri: imageUri,
         savePath: imageSavePath,
         onReceiveProgress: (count, total) {
+          Logger.root.finer('image onProgress count=$count, total=$total');
+
           downloadedSize += count;
           onReceiveProgress?.call(downloadedSize, totalDownloadSize);
         },

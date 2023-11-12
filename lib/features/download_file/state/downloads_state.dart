@@ -82,8 +82,6 @@ class DownloadsCubit extends Cubit<DownloadsState> {
   }
 
   Future<void> _onDownloadsEvent(DownloadsEvent event) async {
-    Logger.root.info('received download event');
-
     final downloadTask = await event.when(
       enqueueRemoteAudioFile: _downloadTaskFactory.fromRemoteAudioFile,
     );
@@ -106,15 +104,14 @@ class DownloadsCubit extends Cubit<DownloadsState> {
       return;
     }
 
-    Logger.root.info('enqueuing download task');
-
     _lock.synchronized(
       () => _mutateQueueAndEmit((queue) => queue.add(downloadTask)),
     );
   }
 
   Future<void> _downloadFirstFromQueue() async {
-    Logger.root.info('downloading first from queue');
+    Logger.root.info('getting first task queue');
+
     if (_lock.inLock) {
       Logger.root.info('in lock, returning');
       return;
@@ -137,6 +134,7 @@ class DownloadsCubit extends Cubit<DownloadsState> {
         final downloadedTask = await _downloadTaskDownloader.download(
           downloadTask,
           onReceiveProgress: (int count, int total) {
+            // Logger.root.info('receive progress: count=$count, total=$total');
             if (total < 0) {
               return;
             }

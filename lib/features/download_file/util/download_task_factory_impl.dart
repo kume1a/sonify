@@ -39,7 +39,7 @@ class DownloadTaskFactoryImpl implements DownloadTaskFactory {
       FileType.videoMp4 => 'mp4',
     };
 
-    final dirPath = ResourceSavePathProvider.getAudioMp3SavePath();
+    final dirPath = await ResourceSavePathProvider.getAudioMp3SavePath();
     final fileName = _uuidFactory.generate();
 
     return '$dirPath/$fileName.$extension';

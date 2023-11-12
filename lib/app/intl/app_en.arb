@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "ok": "Ok",
   "search": "Search",
   "download": "Download",
   "downloadVideoAs": "Download video as",
@@ -11,5 +12,8 @@
   "bitrateB": "Bit/s",
   "bitrateKB": "Kbit/s",
   "bitrateMB": "Mbit/s",
-  "bitrateGB": "Gbit/s"
+  "bitrateGB": "Gbit/s",
+  "openSettings": "Open settings",
+  "storagePermissionDenied": "Allow permisison to storage",
+  "storagePermissionPermanentlyDenied": "Permission to storage has been denied, please allow from settings"
 }
