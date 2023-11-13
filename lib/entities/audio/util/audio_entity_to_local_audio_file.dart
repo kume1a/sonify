@@ -8,11 +8,11 @@ class AudioEntityToLocalAudioFile {
   LocalAudioFile call(AudioEntity audioEntity) {
     return LocalAudioFile(
       id: audioEntity.id,
-      title: audioEntity.title,
-      author: audioEntity.author,
+      title: audioEntity.title ?? '',
+      author: audioEntity.author ?? '',
       imagePath: audioEntity.imagePath,
-      path: audioEntity.path,
-      sizeInKb: audioEntity.sizeInKb,
+      path: audioEntity.path ?? '',
+      sizeInKb: audioEntity.sizeInKb ?? 0,
     );
   }
 }

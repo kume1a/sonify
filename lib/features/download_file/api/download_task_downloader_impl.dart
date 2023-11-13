@@ -44,11 +44,11 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
     final success = await _downloader.download(
       uri: downloadTask.uri,
       savePath: downloadTask.savePath,
-      onReceiveProgress: (count, total) {
-        Logger.root.finer('main task onProgress count=$count, total=$total');
+      onReceiveProgress: (count, total, speed) {
+        Logger.root.finer('main task onProgress count=$count, total=$total, speed=$speed');
 
         downloadedSize += count;
-        onReceiveProgress?.call(downloadedSize, totalDownloadSize);
+        onReceiveProgress?.call(downloadedSize, totalDownloadSize, speed);
       },
     );
 
@@ -66,11 +66,11 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
       await _downloader.download(
         uri: imageUri,
         savePath: imageSavePath,
-        onReceiveProgress: (count, total) {
-          Logger.root.finer('image onProgress count=$count, total=$total');
+        onReceiveProgress: (count, total, speed) {
+          Logger.root.finer('image onProgress count=$count, total=$total, speed=speed');
 
           downloadedSize += count;
-          onReceiveProgress?.call(downloadedSize, totalDownloadSize);
+          onReceiveProgress?.call(downloadedSize, totalDownloadSize, speed);
         },
       );
     }

@@ -9,13 +9,13 @@ part 'audio_entity.g.dart';
 class AudioEntity {
   Id id = Isar.autoIncrement;
 
-  late String title;
+  String? title;
 
-  late String author;
+  String? author;
 
-  late String path;
+  String? path;
 
-  late int sizeInKb;
+  int? sizeInKb;
 
-  late String? imagePath;
+  String? imagePath;
 }

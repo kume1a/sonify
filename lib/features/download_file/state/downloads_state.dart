@@ -133,8 +133,7 @@ class DownloadsCubit extends Cubit<DownloadsState> {
       try {
         final downloadedTask = await _downloadTaskDownloader.download(
           downloadTask,
-          onReceiveProgress: (int count, int total) {
-            // Logger.root.info('receive progress: count=$count, total=$total');
+          onReceiveProgress: (count, total, speed) {
             if (total < 0) {
               return;
             }
