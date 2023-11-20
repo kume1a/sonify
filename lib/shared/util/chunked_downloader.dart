@@ -64,7 +64,9 @@ class ChunkedDownloader {
       stream?.onData((http.StreamedResponse r) async {
         // Get file size
         int fileSize = int.tryParse(r.headers['content-length'] ?? '-1') ?? -1;
+
         reader = ChunkedStreamReader(r.stream);
+
         try {
           Uint8List buffer;
           do {
@@ -103,7 +105,7 @@ class ChunkedDownloader {
 
           Logger.root.finest('Downloaded file');
         } catch (error) {
-          Logger.root.severe('Error downloading: $error');
+          Logger.root.severe('in Error downloading: $error');
           onError?.call(error);
         } finally {
           reader?.cancel();
@@ -111,7 +113,7 @@ class ChunkedDownloader {
         }
       });
     } catch (error) {
-      Logger.root.severe('Error downloading: $error');
+      Logger.root.severe('out Error downloading: $error');
       onError?.call(error);
     }
     return this;

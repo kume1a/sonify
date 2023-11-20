@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../../../shared/values/app_theme_extension.dart';
 import '../model/local_audio_file.dart';
 import '../state/local_audio_files_state.dart';
 
@@ -23,7 +27,7 @@ class LocalAudioFiles extends StatelessWidget {
   }
 }
 
-class _Item extends StatelessWidget {
+class _Item extends HookWidget {
   const _Item({
     required this.localAudioFile,
   });
@@ -32,6 +36,44 @@ class _Item extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(localAudioFile.title);
+    final theme = Theme.of(context);
+
+    final imageFile = useMemoized<File?>(
+      () => localAudioFile.imagePath != null ? File(localAudioFile.imagePath!) : null,
+    );
+
+    // Logger.root.info('imagePath = ${localAudioFile.imagePath}');
+    // Logger.root.info('imageFile = $imageFile');
+    // Logger.root.info('----------------');
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        children: [
+          // if (imageFile != null)
+          //   Padding(
+          //     padding: const EdgeInsets.only(right: 10),
+          //     child: Image.file(
+          //       imageFile,
+          //       fit: BoxFit.cover,
+          //     ),
+          //   ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(localAudioFile.title),
+              const SizedBox(height: 4),
+              Text(
+                localAudioFile.author,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: theme.appThemeExtension?.elSecondary,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

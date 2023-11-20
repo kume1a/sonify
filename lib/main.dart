@@ -10,6 +10,8 @@ import 'app/app.dart';
 import 'app/di/register_dependencies.dart';
 import 'app/navigation/page_navigator.dart';
 
+// TODO fix ChunkDownloader dispose of streams
+// TODO migrate downloads to a separate isolate
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
