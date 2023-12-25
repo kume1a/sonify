@@ -25,7 +25,7 @@ abstract class DiNetworkModule {
     );
 
     if (kDebugMode) {
-      dio.interceptors.add(DioPrettyLogInterceptor(logPrint: Logger.root.fine));
+      // dio.interceptors.add(DioPrettyLogInterceptor(logPrint: Logger.root.fine));
     }
 
     return dio;
