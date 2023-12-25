@@ -1,8 +1,11 @@
+import 'package:common_widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../../shared/util/equality.dart';
 import '../model/download_task.dart';
+import '../model/file_type.dart';
 import '../state/downloads_state.dart';
 
 class DownloadsList extends StatelessWidget {
@@ -26,7 +29,7 @@ class DownloadsList extends StatelessWidget {
   }
 }
 
-class _QueueItem extends StatelessWidget {
+class _QueueItem extends HookWidget {
   const _QueueItem({
     required this.downloadTask,
   });
@@ -35,9 +38,47 @@ class _QueueItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String title = '';
+    String? imageUrl;
+
+    switch (downloadTask.fileType) {
+      case FileType.audioMp3:
+        imageUrl = downloadTask.payload.remoteAudioFile?.imageUri.toString();
+        title = downloadTask.payload.remoteAudioFile?.title ?? '';
+      case FileType.videoMp4:
+        break;
+    }
+
+    final progress = downloadTask.progress.toStringAsFixed(2);
+    final speed = downloadTask.speedInKbs.toString();
+
     return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Text(downloadTask.progress.toString()),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (imageUrl != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: SafeImage(
+                url: imageUrl,
+                width: 36,
+                height: 36,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title),
+                Text('$progress%'),
+              ],
+            ),
+          ),
+          Text('${speed}kb/s'),
+        ],
+      ),
     );
   }
 }

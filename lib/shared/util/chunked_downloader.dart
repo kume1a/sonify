@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:logging/logging.dart';
 
-typedef ProgressCallback = void Function(int progress, int total, double speed);
+typedef ProgressCallback = void Function(int progress, int total, int speedInKbs);
 
 typedef OnDoneCallback = void Function(File file);
 
@@ -17,7 +17,7 @@ class ChunkedDownloader {
     required this.url,
     required this.saveFilePath,
     this.headers,
-    this.chunkSize = 1024 * 1024, // 1 MB
+    this.chunkSize = 1024 * 100, // 100kb
     this.onProgress,
     this.onDone,
     this.onError,
@@ -39,7 +39,7 @@ class ChunkedDownloader {
   StreamSubscription<StreamedResponse>? stream;
   ChunkedStreamReader<int>? reader;
   Map<String, String>? headers;
-  double speed = 0;
+  int speedInKbs = 0;
   bool paused = false;
   bool done = false;
 
@@ -80,23 +80,22 @@ class ChunkedDownloader {
             int endTime = DateTime.now().millisecondsSinceEpoch;
             int timeDiff = endTime - startTime;
             if (timeDiff > 0) {
-              speed = (buffer.length / timeDiff) * 1000;
+              speedInKbs = (buffer.length / timeDiff) * 1000 ~/ 1024;
             }
 
             offset += buffer.length;
 
-            Logger.root.finest('Downloading ${offset ~/ 1024 ~/ 1024}MB, Speed: ${speed ~/ 1024}kb/s');
+            Logger.root.finest('Downloading ${offset ~/ 1024 ~/ 1024}MB, Speed: ${speedInKbs ~/ 1024}kb/s');
 
             if (onProgress != null) {
               try {
-                onProgress!(offset, fileSize, speed);
+                onProgress!(offset, fileSize, speedInKbs);
               } catch (e) {
                 Logger.root.severe('ChunkedDownloader error onProgress: ', e);
               }
             }
 
             await file.writeAsBytes(buffer, mode: FileMode.append);
-            Logger.root.finest('Buffer size = ${buffer.length}');
             if (buffer.length != chunkSize) {
               break;
             }

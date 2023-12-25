@@ -148,6 +148,7 @@ class DownloadsCubit extends Cubit<DownloadsState> {
               ..removeFirst()
               ..addFirst(downloadTask.copyWith(
                 progress: count / total,
+                speedInKbs: speed,
                 state: DownloadTaskState.inProgress,
               )));
           },

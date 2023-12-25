@@ -19,6 +19,7 @@ class EnqueueTestYoutubeAudio extends StatelessWidget {
           uri: _testUrl,
           savePath: '/data/user/0/com.kume1a.sonify/app_flutteraudioMp3/491b19e4-64f2-409d-909cbafa01c14.mp3',
           progress: 0.0,
+          speedInKbs: 0,
           fileType: FileType.audioMp3,
           state: DownloadTaskState.idle,
           payload: DownloadTaskPayload(

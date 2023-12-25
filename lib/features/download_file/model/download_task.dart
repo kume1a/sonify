@@ -9,7 +9,6 @@ enum DownloadTaskState {
   idle,
   inProgress,
   failed,
-  downloaded,
 }
 
 @freezed
@@ -18,6 +17,7 @@ class DownloadTask with _$DownloadTask {
     required Uri uri,
     required String savePath,
     required double progress,
+    required int speedInKbs,
     required FileType fileType,
     required DownloadTaskState state,
     required DownloadTaskPayload payload,

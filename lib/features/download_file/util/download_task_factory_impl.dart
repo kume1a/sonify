@@ -25,6 +25,7 @@ class DownloadTaskFactoryImpl implements DownloadTaskFactory {
       savePath: savePath,
       uri: remoteAudioFile.uri,
       progress: 0,
+      speedInKbs: 0,
       state: DownloadTaskState.idle,
       fileType: fileType,
       payload: DownloadTaskPayload(

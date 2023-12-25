@@ -1,4 +1,4 @@
-typedef ProgressCallback = void Function(int count, int total, double? speed);
+typedef ProgressCallback = void Function(int count, int total, int speedInKbs);
 
 abstract interface class Downloader {
   /// @returns [bool] indicating success
