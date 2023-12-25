@@ -45,8 +45,6 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
       uri: downloadTask.uri,
       savePath: downloadTask.savePath,
       onReceiveProgress: (count, total, speed) {
-        Logger.root.finer('main task onProgress count=$count, total=$total, speed=$speed');
-
         downloadedSize += count;
         onReceiveProgress?.call(downloadedSize, totalDownloadSize, speed);
       },
@@ -67,8 +65,6 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
         uri: imageUri,
         savePath: imageSavePath,
         onReceiveProgress: (count, total, speed) {
-          Logger.root.finer('image onProgress count=$count, total=$total, speed=speed');
-
           downloadedSize += count;
           onReceiveProgress?.call(downloadedSize, totalDownloadSize, speed);
         },

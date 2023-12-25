@@ -64,7 +64,7 @@ class YoutubeExplodeYouTubeApi implements YoutubeApi {
 
   @override
   Future<YoutubeSearchSuggestions> searchSuggestions(String query) async {
-    final link = Uri.parse('https://invidious.snopyta.org/api/v1/search/suggestions?q=$query');
+    final link = Uri.parse('https://invidious.slipfox.xyz/api/v1/search/suggestions?q=$query');
 
     try {
       final response = await http.get(link, headers: headers);

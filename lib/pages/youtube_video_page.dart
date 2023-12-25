@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 
 import '../app/di/register_dependencies.dart';
 import '../features/youtube/state/youtube_video_state.dart';
@@ -26,6 +27,7 @@ class YoutubeVideoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Logger.root.info(args.videoId);
     return BlocProvider(
       create: (_) => getIt<YoutubeVideoCubit>()..init(args.videoId),
       lazy: false,

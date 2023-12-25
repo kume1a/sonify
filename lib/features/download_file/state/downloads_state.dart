@@ -110,10 +110,7 @@ class DownloadsCubit extends Cubit<DownloadsState> {
   }
 
   Future<void> _downloadFirstFromQueue() async {
-    Logger.root.info('getting first task queue');
-
     if (_lock.inLock) {
-      Logger.root.info('in lock, returning');
       return;
     }
 
