@@ -85,6 +85,7 @@ class DownloadsCubit extends Cubit<DownloadsState> {
       enqueueRemoteAudioFile: _downloadTaskFactory.fromRemoteAudioFile,
     );
 
+    // TODO use task ids instead of urls for identification
     final failedDownloadTask = state.failed.firstWhereOrNull((e) => e.uri == downloadTask.uri);
 
     if (failedDownloadTask != null) {
@@ -115,6 +116,7 @@ class DownloadsCubit extends Cubit<DownloadsState> {
 
     _lock.synchronized(() async {
       final downloadTask = state.queue.firstOrNull;
+
       if (downloadTask == null || downloadTask.state != DownloadTaskState.idle) {
         return;
       }
@@ -134,12 +136,12 @@ class DownloadsCubit extends Cubit<DownloadsState> {
               return;
             }
 
-            // _mutateQueueAndEmit((queue) => queue
-            //   ..removeFirst()
-            //   ..addFirst(downloadTask.copyWith(
-            //     progress: count / total,
-            //     state: DownloadTaskState.inProgress,
-            //   )));
+            _mutateQueueAndEmit((queue) => queue
+              ..removeFirst()
+              ..addFirst(downloadTask.copyWith(
+                progress: count / total,
+                state: DownloadTaskState.inProgress,
+              )));
           },
         );
 

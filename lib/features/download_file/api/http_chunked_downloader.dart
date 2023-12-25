@@ -17,7 +17,8 @@ class HttpChunkedDownloader implements Downloader {
       onProgress: (progress, total, speed) => onReceiveProgress?.call(progress, total, speed),
     );
 
-    downloader.start();
+    await downloader.start();
+    await downloader.waitDone();
 
     return true;
   }

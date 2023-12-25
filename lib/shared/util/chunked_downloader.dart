@@ -43,7 +43,7 @@ class ChunkedDownloader {
   bool paused = false;
   bool done = false;
 
-  Future<ChunkedDownloader> start() async {
+  Future<void> start() async {
     try {
       int offset = 0;
       var httpClient = http.Client();
@@ -89,7 +89,11 @@ class ChunkedDownloader {
                 .finest('Downloading ${offset ~/ 1024 ~/ 1024}MB, Speed: ${speed ~/ 1024 ~/ 1024}MB/s');
 
             if (onProgress != null) {
-              onProgress!(offset, fileSize, speed);
+              try {
+                onProgress!(offset, fileSize, speed);
+              } catch (e) {
+                Logger.root.severe('ChunkedDownloader error onProgress: ', e);
+              }
             }
 
             await file.writeAsBytes(buffer, mode: FileMode.append);
@@ -116,7 +120,12 @@ class ChunkedDownloader {
       Logger.root.severe('Chunked downloader outer error: $error');
       onError?.call(error);
     }
-    return this;
+  }
+
+  Future<void> waitDone() async {
+    while (!done) {
+      await Future.delayed(const Duration(milliseconds: 200));
+    }
   }
 
   void stop() {
