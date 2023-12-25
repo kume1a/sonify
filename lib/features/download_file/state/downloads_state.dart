@@ -80,11 +80,19 @@ class DownloadsCubit extends Cubit<DownloadsState> {
     return super.close();
   }
 
+  void enqueue(DownloadTask downloadTask) {
+    _enqueueDownloadTask(downloadTask);
+  }
+
   Future<void> _onDownloadsEvent(DownloadsEvent event) async {
     final downloadTask = await event.when(
       enqueueRemoteAudioFile: _downloadTaskFactory.fromRemoteAudioFile,
     );
 
+    _enqueueDownloadTask(downloadTask);
+  }
+
+  Future<void> _enqueueDownloadTask(DownloadTask downloadTask) async {
     // TODO use task ids instead of urls for identification
     final failedDownloadTask = state.failed.firstWhereOrNull((e) => e.uri == downloadTask.uri);
 

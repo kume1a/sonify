@@ -63,7 +63,7 @@ class ChunkedDownloader {
         // Get file size
         int fileSize = int.tryParse(r.headers['content-length'] ?? '-1') ?? -1;
 
-        reader = ChunkedStreamReader(r.stream.asBroadcastStream());
+        reader = ChunkedStreamReader(r.stream);
 
         try {
           while (true) {
@@ -85,8 +85,7 @@ class ChunkedDownloader {
 
             offset += buffer.length;
 
-            Logger.root
-                .finest('Downloading ${offset ~/ 1024 ~/ 1024}MB, Speed: ${speed ~/ 1024 ~/ 1024}MB/s');
+            Logger.root.finest('Downloading ${offset ~/ 1024 ~/ 1024}MB, Speed: ${speed ~/ 1024}kb/s');
 
             if (onProgress != null) {
               try {
@@ -97,6 +96,7 @@ class ChunkedDownloader {
             }
 
             await file.writeAsBytes(buffer, mode: FileMode.append);
+            Logger.root.finest('Buffer size = ${buffer.length}');
             if (buffer.length != chunkSize) {
               break;
             }
@@ -124,7 +124,7 @@ class ChunkedDownloader {
 
   Future<void> waitDone() async {
     while (!done) {
-      await Future.delayed(const Duration(milliseconds: 200));
+      await Future.delayed(const Duration(milliseconds: 300));
     }
   }
 

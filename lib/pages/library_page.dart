@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../app/di/register_dependencies.dart';
 import '../entities/audio/state/local_audio_files_state.dart';
 import '../entities/audio/ui/local_audio_files.dart';
+import '../features/download_file/ui/downloads_list.dart';
+import '../features/youtube/ui/enqueue_test_youtube_audio.dart';
 
 class LibraryPage extends StatelessWidget {
   const LibraryPage({super.key});
@@ -25,6 +27,20 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // return YoutubeVideoPage(args: YoutubeVideoPageArgs(videoId: 'W3q8Od5qJio'));
-    return const LocalAudioFiles();
+    return const CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: EdgeInsets.all(16),
+          sliver: SliverToBoxAdapter(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: EnqueueTestYoutubeAudio(),
+            ),
+          ),
+        ),
+        DownloadsList(),
+        LocalAudioFiles(),
+      ],
+    );
   }
 }

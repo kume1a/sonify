@@ -17,8 +17,8 @@ class LocalAudioFiles extends StatelessWidget {
     return BlocBuilder<LocalAudioFilesCubit, LocalAudioFilesState>(
       builder: (_, state) {
         return state.maybeWhen(
-          orElse: () => const SizedBox.shrink(),
-          success: (data) => ListView.builder(
+          orElse: () => const SliverToBoxAdapter(),
+          success: (data) => SliverList.builder(
             itemCount: data.length,
             itemBuilder: (_, index) => _Item(localAudioFile: data[index]),
           ),
