@@ -1,10 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logging/logging.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-
-import '../../util/dio_pretty_log_interceptor.dart';
 
 const Duration _kTimeoutDuration = Duration(hours: 2);
 

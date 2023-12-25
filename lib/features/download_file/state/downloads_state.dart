@@ -7,7 +7,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logging/logging.dart';
 import 'package:synchronized/synchronized.dart';
 
 import '../../../shared/util/subscription_composite.dart';
@@ -135,16 +134,14 @@ class DownloadsCubit extends Cubit<DownloadsState> {
               return;
             }
 
-            _mutateQueueAndEmit((queue) => queue
-              ..removeFirst()
-              ..addFirst(downloadTask.copyWith(
-                progress: count / total,
-                state: DownloadTaskState.inProgress,
-              )));
+            // _mutateQueueAndEmit((queue) => queue
+            //   ..removeFirst()
+            //   ..addFirst(downloadTask.copyWith(
+            //     progress: count / total,
+            //     state: DownloadTaskState.inProgress,
+            //   )));
           },
         );
-
-        Logger.root.info('downloaded task  = $downloadedTask');
 
         if (downloadedTask != null) {
           await _onDownloadTaskDownloaded(downloadedTask);

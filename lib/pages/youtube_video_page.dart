@@ -41,7 +41,7 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const EdgeInsets padding = EdgeInsets.symmetric(horizontal: 16);
+    const padding = EdgeInsets.symmetric(horizontal: 16);
 
     return const Scaffold(
       body: SafeArea(

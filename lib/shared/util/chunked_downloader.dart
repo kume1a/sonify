@@ -1,10 +1,7 @@
-library chunked_downloader;
-
 import 'dart:async';
 import 'dart:io';
 
 import 'package:async/async.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:logging/logging.dart';
@@ -61,15 +58,15 @@ class ChunkedDownloader {
       File file = File('$saveFilePath.tmp');
 
       stream = response.asStream().listen(null);
+
       stream?.onData((http.StreamedResponse r) async {
         // Get file size
         int fileSize = int.tryParse(r.headers['content-length'] ?? '-1') ?? -1;
 
-        reader = ChunkedStreamReader(r.stream);
+        reader = ChunkedStreamReader(r.stream.asBroadcastStream());
 
         try {
-          Uint8List buffer;
-          do {
+          while (true) {
             while (paused) {
               await Future.delayed(const Duration(milliseconds: 500));
             }
@@ -77,7 +74,7 @@ class ChunkedDownloader {
             int startTime = DateTime.now().millisecondsSinceEpoch;
 
             // Read chunk
-            buffer = await reader!.readBytes(chunkSize);
+            final buffer = await reader!.readBytes(chunkSize);
 
             // Calculate speed
             int endTime = DateTime.now().millisecondsSinceEpoch;
@@ -96,7 +93,10 @@ class ChunkedDownloader {
             }
 
             await file.writeAsBytes(buffer, mode: FileMode.append);
-          } while (buffer.length == chunkSize);
+            if (buffer.length != chunkSize) {
+              break;
+            }
+          }
 
           await file.rename(saveFilePath);
 
@@ -105,7 +105,7 @@ class ChunkedDownloader {
 
           Logger.root.finest('Downloaded file');
         } catch (error) {
-          Logger.root.severe('in Error downloading: $error');
+          Logger.root.severe('ChunkedDownloader inner error: $error');
           onError?.call(error);
         } finally {
           reader?.cancel();
@@ -113,7 +113,7 @@ class ChunkedDownloader {
         }
       });
     } catch (error) {
-      Logger.root.severe('out Error downloading: $error');
+      Logger.root.severe('Chunked downloader outer error: $error');
       onError?.call(error);
     }
     return this;
