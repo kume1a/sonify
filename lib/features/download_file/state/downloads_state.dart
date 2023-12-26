@@ -93,6 +93,8 @@ class DownloadsCubit extends Cubit<DownloadsState> {
   }
 
   Future<void> _enqueueDownloadTask(DownloadTask downloadTask) async {
+    // TODO split up downloadable and in progress tasks
+
     // TODO use task ids instead of urls for identification
     final failedDownloadTask = state.failed.firstWhereOrNull((e) => e.uri == downloadTask.uri);
 

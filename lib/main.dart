@@ -26,3 +26,23 @@ Future<void> main() async {
 
   runApp(const App());
 }
+
+
+//  headers = {
+//         'Accept': '*/*',
+//         'Accept-Encoding': 'application/json',
+//         'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
+//         'Referer': 'https://ytjar.downloader-ytjar.online/1.php',
+//         'Sec-Ch-Ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+//         'Sec-Ch-Ua-Mobile': '?0',
+//         'Sec-Ch-Ua-Platform': '"macOS"',
+//         'Sec-Fetch-Dest': 'empty',
+//         'Sec-Fetch-Mode': 'cors',
+//         'Sec-Fetch-Site': 'same-origin',
+//         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+//         'X-Requested-With': 'XMLHttpRequest',
+//     }
+
+//     res1 = requests.get('https://ytjar.downloader-ytjar.online/download1.php?id=n_LApFnTfP8', headers=headers)
+
+//     print(json.loads(res1.text))
