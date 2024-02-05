@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sonify_client/sonify_client.dart';
 
 import '../../../shared/values/assets.dart';
-import '../model/youtube_search_suggestions.dart';
 import '../state/youtube_search_state.dart';
 
 class YoutubeSearchResults extends StatelessWidget {

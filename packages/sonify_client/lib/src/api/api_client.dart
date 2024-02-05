@@ -3,7 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../entity/youtubemusic/model/youtube_suggestions_dto.dart';
+import '../entity/youtube/model/youtube_suggestions_dto.dart';
 import '../shared/entity/url_dto.dart';
 
 part 'api_client.g.dart';
@@ -12,9 +12,9 @@ part 'api_client.g.dart';
 abstract class ApiClient {
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 
-  @GET('/youtubeMusic/musicUrl')
+  @GET('/youtube/musicUrl')
   Future<UrlDto> getYoutubeMusicUrl(@Query('videoId') String videoId);
 
-  @GET('/youtubeMusic/searchSuggestions')
-  Future<YoutubeSuggestionsDto> getYoutubeMusicSuggestions(@Query('keyword') String keyword);
+  @GET('/youtube/searchSuggestions')
+  Future<YoutubeSuggestionsDto> getYoutubeSuggestions(@Query('keyword') String keyword);
 }

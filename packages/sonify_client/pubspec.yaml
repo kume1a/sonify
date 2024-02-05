@@ -1,6 +1,7 @@
 name: sonify_client
 description: api client sonify app
 version: 1.0.0
+publish_to: 'none'
 
 environment:
   sdk: ^3.1.4
@@ -13,6 +14,8 @@ dependencies:
   json_serializable: ^6.7.1
   retrofit: ^4.1.0
   synchronized: ^3.1.0+1
+  youtube_explode_dart: ^2.0.4
+  logging: ^1.2.0
 
   common_models:
     git:

@@ -44,9 +44,12 @@ dependencies:
   synchronized: ^3.1.0
   uuid: ^4.1.0
   permission_handler: ^11.0.1
+  flutter_dotenv: ^5.1.0
 
   sonify_storage:
     path: ./packages/sonify_storage
+  sonify_client:
+    path: ./packages/sonify_client
   sonify_video_player:
     path: ./packages/sonify_video_player
 
@@ -82,9 +85,7 @@ flutter:
   # generate: true
 
   assets:
-    - .env.development
-    - .env.production
-    - .env.local
+    - env/
     - assets/
     - assets/images/
     - assets/icons/

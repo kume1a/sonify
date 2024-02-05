@@ -1,3 +1,4 @@
 library;
 
-export 'src/sonify_client_base.dart';
+export 'src/api/index.dart';
+export 'src/entity/index.dart';

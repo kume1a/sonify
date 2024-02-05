@@ -1,9 +1,7 @@
-import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../model/youtube_music_home_dto.dart';
 
-@lazySingleton
 final class YoutubeMusicHomeDtoParser {
   YoutubeMusicHomeDto parse(Map<String, dynamic> json) {
     final List result = json['contents']['twoColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']

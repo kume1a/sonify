@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:sonify_client/sonify_client.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../../app/navigation/page_navigator.dart';
 import '../../../pages/youtube_video_page.dart';
-import '../api/youtube_api.dart';
-import '../model/youtube_music_home_dto.dart';
 
 part 'youtube_videos_state.freezed.dart';
 
@@ -34,13 +33,13 @@ extension YoutubeHomeVideosCubitX on BuildContext {
 @injectable
 class YoutubeVideosCubit extends Cubit<YoutubeVideosState> {
   YoutubeVideosCubit(
-    this._youtubeApi,
+    this._youtubeRepository,
     this._pageNavigator,
   ) : super(YoutubeVideosState.initial()) {
     _init();
   }
 
-  final YoutubeApi _youtubeApi;
+  final YoutubeRepository _youtubeRepository;
   final PageNavigator _pageNavigator;
 
   Future<void> _init() async {
@@ -62,7 +61,7 @@ class YoutubeVideosCubit extends Cubit<YoutubeVideosState> {
       searchQuery: searchQuery,
     ));
 
-    final res = await _youtubeApi.search(searchQuery);
+    final res = await _youtubeRepository.search(searchQuery);
 
     emit(state.copyWith(searchResults: DataState.success(res)));
   }
@@ -78,7 +77,7 @@ class YoutubeVideosCubit extends Cubit<YoutubeVideosState> {
 
   Future<void> _loadVideos() async {
     emit(state.copyWith(musicHome: DataState.loading()));
-    final res = await _youtubeApi.getMusicHome();
+    final res = await _youtubeRepository.getMusicHome();
     emit(state.copyWith(musicHome: DataState.fromEither(res)));
   }
 

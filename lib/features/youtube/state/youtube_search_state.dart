@@ -2,14 +2,12 @@ import 'package:common_models/common_models.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:sonify_client/sonify_client.dart';
 
 import '../../../app/navigation/page_navigator.dart';
 import '../../../shared/util/debounce.dart';
-import '../api/youtube_api.dart';
-import '../model/youtube_search_result.dart';
-import '../model/youtube_search_suggestions.dart';
 
-typedef YoutubeSearchState = DataState<Unit, YoutubeSearchSuggestions>;
+typedef YoutubeSearchState = DataState<FetchFailure, YoutubeSearchSuggestions>;
 
 extension YoutubeSearchCubitX on BuildContext {
   YoutubeSearchCubit get youtubeSearchCubit => read<YoutubeSearchCubit>();
@@ -18,11 +16,11 @@ extension YoutubeSearchCubitX on BuildContext {
 @injectable
 class YoutubeSearchCubit extends Cubit<YoutubeSearchState> {
   YoutubeSearchCubit(
-    this._youtubeApi,
+    this._youtubeRepository,
     this._pageNavigator,
   ) : super(YoutubeSearchState.idle());
 
-  final YoutubeApi _youtubeApi;
+  final YoutubeRepository _youtubeRepository;
   final PageNavigator _pageNavigator;
 
   final Debounce _debounce = Debounce.fromMilliseconds(400);
@@ -31,9 +29,9 @@ class YoutubeSearchCubit extends Cubit<YoutubeSearchState> {
     _debounce.execute(() async {
       emit(YoutubeSearchState.loading());
 
-      final res = await _youtubeApi.searchSuggestions(value);
+      final res = await _youtubeRepository.getYoutubeSuggestions(value);
 
-      emit(YoutubeSearchState.success(res));
+      emit(YoutubeSearchState.fromEither(res));
     });
   }
 

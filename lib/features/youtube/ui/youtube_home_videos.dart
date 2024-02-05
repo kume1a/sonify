@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sonify_client/sonify_client.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-import '../model/youtube_music_home_dto.dart';
 import '../state/youtube_videos_state.dart';
 import 'youtube_video_list_item.dart';
 

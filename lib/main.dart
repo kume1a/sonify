@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,8 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import 'app/app.dart';
+import 'app/configuration/app_environment.dart';
+import 'app/configuration/global_http_overrides.dart';
 import 'app/di/register_dependencies.dart';
 import 'app/navigation/page_navigator.dart';
 
@@ -15,9 +18,13 @@ import 'app/navigation/page_navigator.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await AppEnvironment.load();
+
   await registerDependencies(kDebugMode ? Environment.dev : Environment.prod);
 
   GlobalNavigator.navigatorKey = navigatorKey;
+
+  HttpOverrides.global = GlobalHttpOverrides();
 
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {

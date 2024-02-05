@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:global_navigator/global_navigator.dart';
 import 'package:injectable/injectable.dart';
+import 'package:sonify_client/sonify_client.dart';
 
-import '../../features/youtube/model/youtube_search_result.dart';
 import '../../pages/youtube_video_page.dart';
 import 'routes.dart';
 
