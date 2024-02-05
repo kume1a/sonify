@@ -1,0 +1,30 @@
+name: sonify_client
+description: api client sonify app
+version: 1.0.0
+
+environment:
+  sdk: ^3.1.4
+
+dependencies:
+  dio: ^5.4.0
+  flutter_secure_storage: ^9.0.0
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
+  json_serializable: ^6.7.1
+  retrofit: ^4.1.0
+  synchronized: ^3.1.0+1
+
+  common_models:
+    git:
+      url: https://github.com/kume1a/flutter_common.git
+      path: packages/common_models
+  common_network_components:
+    git:
+      url: https://github.com/kume1a/flutter_common.git
+      path: packages/common_network_components
+
+dev_dependencies:
+  lint: ^2.0.0
+  freezed: ^2.3.5
+  build_runner: ^2.4.5
+  retrofit_generator: ^7.0.1
