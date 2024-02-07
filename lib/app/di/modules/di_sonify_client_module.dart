@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 import 'package:sonify_client/sonify_client.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -11,8 +12,8 @@ abstract class DiSonifyClientModule {
   Dio dio() {
     return NetworkClientFactory.createNoInterceptorDio(
       apiUrl: AppEnvironment.apiUrl,
-      // logPrint: Logger.root.info,
-      logPrint: null,
+      logPrint: Logger.root.info,
+      // logPrint: null,
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../app/di/register_dependencies.dart';
 import '../features/youtube/state/youtube_videos_state.dart';
 import '../features/youtube/ui/youtube_home_top_bar.dart';
+import '../features/youtube/ui/youtube_home_videos.dart';
 
 class YoutubePage extends StatelessWidget {
   const YoutubePage({super.key});
@@ -26,8 +27,11 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: YoutubeHomeTopBar(),
+    return const Column(
+      children: [
+        YoutubeHomeTopBar(),
+        Expanded(child: YoutubeHomeVideos()),
+      ],
     );
   }
 }

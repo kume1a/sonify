@@ -12,9 +12,9 @@ part 'api_client.g.dart';
 abstract class ApiClient {
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 
-  @GET('/youtube/musicUrl')
+  @GET('/v1/youtube/musicUrl')
   Future<UrlDto> getYoutubeMusicUrl(@Query('videoId') String videoId);
 
-  @GET('/youtube/searchSuggestions')
+  @GET('/v1/youtube/searchSuggestions')
   Future<YoutubeSuggestionsDto> getYoutubeSuggestions(@Query('keyword') String keyword);
 }
