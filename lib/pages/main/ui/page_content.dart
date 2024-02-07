@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../jiosaavn_page.dart';
 import '../../library_page.dart';
 import '../../profile_page.dart';
 import '../../youtube_page.dart';
@@ -21,7 +20,6 @@ class PageContent extends StatelessWidget {
             // YoutubeVideoPage(args: YoutubeVideoPageArgs(videoId: 'EOnSh3QlpbQ')),
             LibraryPage(),
             YoutubePage(),
-            JiosaavnPage(),
             ProfilePage(),
           ],
         );

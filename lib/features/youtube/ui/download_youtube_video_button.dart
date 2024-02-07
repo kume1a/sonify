@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:logging/logging.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -15,14 +14,12 @@ import '../state/youtube_video_state.dart';
 import '../util/format_bitrate.dart';
 import '../util/format_file_size.dart';
 
-class DownloadYoutubeVideoButton extends HookWidget {
+class DownloadYoutubeVideoButton extends StatelessWidget {
   const DownloadYoutubeVideoButton({super.key});
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-
-    final isMounted = useIsMounted();
 
     return BlocBuilder<YoutubeVideoCubit, YoutubeVideoState>(
       buildWhen: (previous, current) => previous.video != current.video,
@@ -42,7 +39,7 @@ class DownloadYoutubeVideoButton extends HookWidget {
               ),
             );
 
-            if (audioOnlyStreamInfo == null || !isMounted()) {
+            if (audioOnlyStreamInfo == null || !context.mounted) {
               return;
             }
 

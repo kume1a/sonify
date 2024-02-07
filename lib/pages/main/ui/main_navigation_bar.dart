@@ -50,20 +50,6 @@ class MainNavigationBar extends StatelessWidget {
             ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
-                Assets.svgJiosaavn,
-                width: 24,
-                height: 24,
-              ),
-              activeIcon: SvgPicture.asset(
-                Assets.svgJiosaavn,
-                width: 24,
-                height: 24,
-                colorFilter: svgColor(Colors.white),
-              ),
-              label: 'JioSaavn',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
                 Assets.svgUser,
                 width: 24,
                 height: 24,

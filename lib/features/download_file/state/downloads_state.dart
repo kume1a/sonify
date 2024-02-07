@@ -9,7 +9,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:synchronized/synchronized.dart';
 
-import '../../../shared/util/subscription_composite.dart';
 import '../api/download_task_downloader.dart';
 import '../api/on_download_task_downloaded.dart';
 import '../model/download_task.dart';

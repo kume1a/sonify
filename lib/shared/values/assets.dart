@@ -8,7 +8,6 @@ abstract final class Assets {
   static const svgSearch = '$_icons/search.svg';
   static const svgLibrary = '$_icons/library.svg';
   static const svgYoutube = '$_icons/youtube.svg';
-  static const svgJiosaavn = '$_icons/jiosaavn.svg';
   static const svgUser = '$_icons/user.svg';
   static const svgHistory = '$_icons/history.svg';
   static const svgX = '$_icons/x.svg';
