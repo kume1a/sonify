@@ -25,11 +25,6 @@ abstract class DiSonifyClientModule {
   }
 
   @lazySingleton
-  YoutubeMusicHomeDtoParser youtubeMusicHomeDtoParser() {
-    return YoutubeMusicHomeDtoParser();
-  }
-
-  @lazySingleton
   YoutubeSearchSuggestionsMapper youtubeSearchSuggestionsMapper() {
     return YoutubeSearchSuggestionsMapper();
   }
@@ -37,16 +32,12 @@ abstract class DiSonifyClientModule {
   @lazySingleton
   YoutubeRepository youtubeMusicRepository(
     ApiClient apiClient,
-    Dio dio,
     YoutubeExplode youtubeExplode,
-    YoutubeMusicHomeDtoParser youtubeMusicHomeDtoParser,
     YoutubeSearchSuggestionsMapper youtubeSearchSuggestionsMapper,
   ) {
     return YoutubeRepositoryImpl(
       apiClient,
-      dio,
       youtubeExplode,
-      youtubeMusicHomeDtoParser,
       youtubeSearchSuggestionsMapper,
     );
   }

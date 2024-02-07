@@ -14,13 +14,11 @@ part 'youtube_videos_state.freezed.dart';
 @freezed
 class YoutubeVideosState with _$YoutubeVideosState {
   const factory YoutubeVideosState({
-    required DataState<FetchFailure, YoutubeMusicHomeDto> musicHome,
     required DataState<FetchFailure, List<Video>> searchResults,
     required String searchQuery,
   }) = _YoutubeVideosState;
 
   factory YoutubeVideosState.initial() => YoutubeVideosState(
-        musicHome: DataState.idle(),
         searchResults: DataState.idle(),
         searchQuery: '',
       );
@@ -35,16 +33,10 @@ class YoutubeVideosCubit extends Cubit<YoutubeVideosState> {
   YoutubeVideosCubit(
     this._youtubeRepository,
     this._pageNavigator,
-  ) : super(YoutubeVideosState.initial()) {
-    _init();
-  }
+  ) : super(YoutubeVideosState.initial());
 
   final YoutubeRepository _youtubeRepository;
   final PageNavigator _pageNavigator;
-
-  Future<void> _init() async {
-    _loadVideos();
-  }
 
   Future<void> onSearchPressed() async {
     final searchRes = await _pageNavigator.toYoutubeSearch();
@@ -56,7 +48,6 @@ class YoutubeVideosCubit extends Cubit<YoutubeVideosState> {
     }
 
     emit(state.copyWith(
-      musicHome: DataState.idle(),
       searchResults: DataState.loading(),
       searchQuery: searchQuery,
     ));
@@ -71,14 +62,6 @@ class YoutubeVideosCubit extends Cubit<YoutubeVideosState> {
       searchQuery: '',
       searchResults: DataState.idle(),
     ));
-
-    await _loadVideos();
-  }
-
-  Future<void> _loadVideos() async {
-    emit(state.copyWith(musicHome: DataState.loading()));
-    final res = await _youtubeRepository.getMusicHome();
-    emit(state.copyWith(musicHome: DataState.fromEither(res)));
   }
 
   Future<void> onVideoPressed(String videoId) async {
