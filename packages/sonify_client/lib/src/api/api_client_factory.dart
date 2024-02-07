@@ -20,7 +20,7 @@ final class NetworkClientFactory {
 
   static Dio createNoInterceptorDio({
     required String apiUrl,
-    LogPrint? logPrint,
+    required LogPrint? logPrint,
   }) {
     final dio = Dio(
       BaseOptions(
