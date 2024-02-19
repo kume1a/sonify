@@ -25,6 +25,7 @@ abstract class DiSonifyClientModule {
     );
   }
 
+  // youtube ----------------------------------------------------------------
   @lazySingleton
   YoutubeSearchSuggestionsMapper youtubeSearchSuggestionsMapper() {
     return YoutubeSearchSuggestionsMapper();
@@ -41,5 +42,33 @@ abstract class DiSonifyClientModule {
       youtubeExplode,
       youtubeSearchSuggestionsMapper,
     );
+  }
+
+  // auth ----------------------------------------------------------------
+  @lazySingleton
+  TokenPayloadMapper tokenPayloadMapper() {
+    return TokenPayloadMapper();
+  }
+
+  @lazySingleton
+  AuthRepository authRepository(
+    ApiClient apiClient,
+    TokenPayloadMapper tokenPayloadMapper,
+  ) {
+    return AuthRepositoryImpl(apiClient, tokenPayloadMapper);
+  }
+
+  // audio ----------------------------------------------------------------
+  @lazySingleton
+  AudioMapper audioMapper() {
+    return AudioMapper();
+  }
+
+  @lazySingleton
+  AudioRepository audioRepository(
+    ApiClient apiClient,
+    AudioMapper audioMapper,
+  ) {
+    return AudioRepositoryImpl(apiClient, audioMapper);
   }
 }

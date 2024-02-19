@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:global_navigator/global_navigator.dart';
 
 import '../features/download_file/state/downloads_state.dart';
-import '../pages/main/main_page.dart';
 import '../shared/values/app_theme.dart';
 import 'di/register_dependencies.dart';
 import 'intl/app_localizations.dart';
@@ -24,7 +23,6 @@ class App extends StatelessWidget {
         title: 'Sonify',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.darkTheme,
-        home: const MainPage(),
         initialRoute: Routes.root,
         navigatorObservers: [GNObserver()],
         onGenerateRoute: routeFactory,
