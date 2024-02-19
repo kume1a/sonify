@@ -3,7 +3,11 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
+import '../entity/audio/model/audio_dto.dart';
+import '../entity/audio/model/download_youtube_audio_body.dart';
 import '../entity/youtube/model/youtube_suggestions_dto.dart';
+import '../feature/auth/model/google_sign_in_body.dart';
+import '../feature/auth/model/token_payload_dto.dart';
 import '../shared/entity/url_dto.dart';
 
 part 'api_client.g.dart';
@@ -17,4 +21,10 @@ abstract class ApiClient {
 
   @GET('/v1/youtube/searchSuggestions')
   Future<YoutubeSuggestionsDto> getYoutubeSuggestions(@Query('keyword') String keyword);
+
+  @POST('/v1/audio/downloadYoutubeAudio')
+  Future<AudioDto> downloadYoutubeAudio(@Body() DownloadYoutubeAudioBody body);
+
+  @POST('/v1/auth/googleSignIn')
+  Future<TokenPayloadDto> googleSignIn(@Body() GoogleSignInBody body);
 }

@@ -25,6 +25,10 @@ dependencies:
     git:
       url: https://github.com/kume1a/flutter_common.git
       path: packages/common_network_components
+  common_utilities:
+    git:
+      url: https://github.com/kume1a/flutter_common.git
+      path: packages/common_utilities
 
 dev_dependencies:
   lint: ^2.0.0
