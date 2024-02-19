@@ -20,7 +20,7 @@ class YoutubeHomeTopBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const LogoHeader(),
+          const LogoHeaderSmall(),
           BlocBuilder<YoutubeVideosCubit, YoutubeVideosState>(
             buildWhen: (previous, current) => previous.searchQuery != current.searchQuery,
             builder: (_, state) {

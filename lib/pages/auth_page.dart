@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../app/di/register_dependencies.dart';
 import '../features/auth/state/auth_state.dart';
+import '../features/auth/ui/sign_in_with_google_button.dart';
+import '../shared/ui/logo_header.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -54,9 +56,20 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: SafeArea(
-        child: SizedBox.shrink(),
+        child: Container(
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              LogoHeaderMedium(),
+              SizedBox(height: 28),
+              SignInWithGoogleButton(),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -1,7 +1,9 @@
 import 'package:common_models/common_models.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 
 import '../api/auth_status_provider.dart';
 import '../api/auth_with_google.dart';
@@ -17,6 +19,10 @@ class AuthState with _$AuthState {
   factory AuthState.initial() => AuthState(
         isAuthenticated: SimpleDataState.idle(),
       );
+}
+
+extension AuthCubitX on BuildContext {
+  AuthCubit get authCubit => read<AuthCubit>();
 }
 
 @injectable
@@ -45,5 +51,11 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(
       isAuthenticated: SimpleDataState.success(isAuthenticated),
     ));
+  }
+
+  Future<void> onGoogleSignIn() async {
+    final res = await _authWithGoogle();
+
+    Logger.root.info(res);
   }
 }
