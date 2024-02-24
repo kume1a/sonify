@@ -25,12 +25,17 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            LogoHeaderMedium(),
-            SizedBox(height: 24),
-            UpdateUserNameForm(),
-          ],
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Align(child: LogoHeaderMedium()),
+              SizedBox(height: 24),
+              UpdateUserNameForm(),
+            ],
+          ),
         ),
       ),
     );

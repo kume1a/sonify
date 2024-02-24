@@ -19,5 +19,8 @@
   "enterYourName": "Enter your name",
   "unknownError": "Unknown error",
   "noInternetConnection": "No internet connection",
-  "signInWithGoogleError": "Error signing in with google"
+  "signInWithGoogleError": "Error signing in with google",
+  "fieldIsRequired": "Field is required",
+  "nameIsTooLong": "Name is too long",
+  "nameIsTooShort": "Name is too short"
 }

@@ -35,6 +35,7 @@ class AuthCubit extends Cubit<AuthState> {
     this._authRepository,
     this._pageNavigator,
     this._authTokenStore,
+    this._userRemoteRepository,
   ) : super(AuthState.initial()) {
     _init();
   }
@@ -44,6 +45,7 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthRepository _authRepository;
   final PageNavigator _pageNavigator;
   final AuthTokenStore _authTokenStore;
+  final UserRemoteRepository _userRemoteRepository;
 
   Future<void> _init() async {
     _loadAuthStatus();
@@ -59,6 +61,19 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(
       isAuthenticated: SimpleDataState.success(isAuthenticated),
     ));
+
+    if (isAuthenticated) {
+      await _userRemoteRepository.getAuthUser().awaitFold(
+        (_) => _pageNavigator.toMain(),
+        (r) {
+          if (r.name.isEmpty) {
+            _pageNavigator.toUserName();
+          } else {
+            _pageNavigator.toMain();
+          }
+        },
+      );
+    }
   }
 
   Future<void> onGoogleSignIn() async {
@@ -73,12 +88,13 @@ class AuthCubit extends Cubit<AuthState> {
     }
 
     final googleAuthentication = await googleAccount.authentication;
-    if (googleAuthentication.accessToken == null) {
+
+    if (googleAuthentication.idToken == null) {
       emit(state.copyWith(googleSignInAction: ActionState.failed(unit)));
       return;
     }
 
-    await _authRepository.googleSignIn(googleAuthentication.accessToken!).awaitFold(
+    await _authRepository.googleSignIn(googleAuthentication.idToken!).awaitFold(
       (l) => emit(state.copyWith(googleSignInAction: ActionState.failed(unit))),
       (tokenPayload) async {
         emit(state.copyWith(googleSignInAction: ActionState.executed()));

@@ -21,10 +21,14 @@ class UpdateUserNameForm extends StatelessWidget {
         return ValidatedForm(
           showErrors: state.validateForm,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
                 decoration: InputDecoration(hintText: l.enterYourName),
                 onChanged: context.updateUserNameCubit.onNameChanged,
+                validator: (value) => context.updateUserNameCubit.state.name.failureToString(
+                  (f) => f.translate(l),
+                ),
               ),
               const SizedBox(height: 16),
               if (state.submitState.isFailed)

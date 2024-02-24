@@ -30,4 +30,13 @@ class UserRemoteRepositoryImpl with SafeHttpRequestWrap implements UserRemoteRep
       return _userMapper.dtoToModel(dto);
     });
   }
+
+  @override
+  Future<Either<FetchFailure, User>> getAuthUser() {
+    return callCatchWithFetchFailure(() async {
+      final res = await _apiClient.getAuthUser();
+
+      return _userMapper.dtoToModel(res);
+    });
+  }
 }

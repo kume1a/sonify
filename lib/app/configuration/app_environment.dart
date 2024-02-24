@@ -46,6 +46,8 @@ class AppEnvironment {
   static String get apiUrl => dotenv.get('API_URL');
 
   static String get googleAuthClientIdIos => dotenv.get('GOOGLE_AUTH_CLIENT_ID_IOS');
+
+  static String get googleAuthClientIdWeb => dotenv.get('GOOGLE_AUTH_CLIENT_ID_WEB');
 }
 
 class _DotEnvLoader {

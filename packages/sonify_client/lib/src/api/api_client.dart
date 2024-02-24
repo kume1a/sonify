@@ -32,4 +32,7 @@ abstract class ApiClient {
 
   @PATCH('/users')
   Future<UserDto> updateUser(@Body() UpdateUserBody body);
+
+  @GET('/users/authUser')
+  Future<UserDto> getAuthUser();
 }

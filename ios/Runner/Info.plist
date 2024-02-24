@@ -48,5 +48,19 @@
 
   <key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow access to photo library to choose an image</string>
+
+  <!-- Google Sign-in Section -->
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>com.googleusercontent.apps.409540013191-q06fbgdm36vvllqg4fms88v4n3smmd4s</string>
+      </array>
+    </dict>
+  </array>
+  <!-- End of the Google Sign-in Section -->
 </dict>
 </plist>

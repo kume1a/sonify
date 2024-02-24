@@ -11,6 +11,7 @@ abstract class DiOauthModule {
   GoogleSignIn get googleSignIn {
     return GoogleSignIn(
       clientId: Platform.isIOS ? AppEnvironment.googleAuthClientIdIos : null,
+      serverClientId: Platform.isIOS ? AppEnvironment.googleAuthClientIdWeb : null,
     );
   }
 }

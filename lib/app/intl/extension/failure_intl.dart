@@ -10,3 +10,13 @@ extension ActionFailureIntl on ActionFailure {
     );
   }
 }
+
+extension NameFailureIntl on NameFailure {
+  String translate(AppLocalizations l) {
+    return when(
+      empty: () => l.fieldIsRequired,
+      tooLong: () => l.nameIsTooLong,
+      tooShort: () => l.nameIsTooShort,
+    );
+  }
+}
