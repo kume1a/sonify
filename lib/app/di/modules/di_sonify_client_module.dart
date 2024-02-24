@@ -46,8 +46,8 @@ abstract class DiSonifyClientModule {
 
   // auth ----------------------------------------------------------------
   @lazySingleton
-  TokenPayloadMapper tokenPayloadMapper() {
-    return TokenPayloadMapper();
+  TokenPayloadMapper tokenPayloadMapper(UserMapper userMapper) {
+    return TokenPayloadMapper(userMapper);
   }
 
   @lazySingleton
@@ -70,5 +70,19 @@ abstract class DiSonifyClientModule {
     AudioMapper audioMapper,
   ) {
     return AudioRepositoryImpl(apiClient, audioMapper);
+  }
+
+  // user ----------------------------------------------------------------
+  @lazySingleton
+  UserMapper userMapper() {
+    return UserMapper();
+  }
+
+  @lazySingleton
+  UserRemoteRepository userRemoteRepository(
+    ApiClient apiClient,
+    UserMapper userMapper,
+  ) {
+    return UserRemoteRepositoryImpl(apiClient, userMapper);
   }
 }

@@ -26,4 +26,6 @@ class PageNavigator {
 
   void toYoutubeVideo(YoutubeVideoPageArgs args) =>
       GlobalNavigator.pushNamed(Routes.youtubeVideo, arguments: args);
+
+  void toUserName() => GlobalNavigator.pushReplacementNamed(Routes.userName);
 }

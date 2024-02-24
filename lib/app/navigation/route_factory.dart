@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../pages/auth_page.dart';
 import '../../pages/main/main_page.dart';
+import '../../pages/user_name_page.dart';
 import '../../pages/youtube_search_page.dart';
 import '../../pages/youtube_video_page.dart';
 import 'routes.dart';
@@ -11,8 +12,16 @@ Route<dynamic> routeFactory(RouteSettings settings) {
     Routes.main => _createMainRoute(settings),
     Routes.youtubeSearch => _createYoutubeSearchRoute(settings),
     Routes.youtubeVideo => _createYoutubeVideoRoute(settings),
+    Routes.userName => _createUserNameRoute(settings),
     _ => throw Exception('route ${settings.name} is not supported'),
   };
+}
+
+Route _createUserNameRoute(RouteSettings settings) {
+  return MaterialPageRoute(
+    builder: (_) => const UserNamePage(),
+    settings: settings,
+  );
 }
 
 Route _createAuthRoute(RouteSettings settings) {

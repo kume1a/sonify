@@ -5,6 +5,8 @@ import 'package:retrofit/retrofit.dart';
 
 import '../entity/audio/model/audio_dto.dart';
 import '../entity/audio/model/download_youtube_audio_body.dart';
+import '../entity/user/model/update_user_body.dart';
+import '../entity/user/model/user_dto.dart';
 import '../entity/youtube/model/youtube_suggestions_dto.dart';
 import '../feature/auth/model/google_sign_in_body.dart';
 import '../feature/auth/model/token_payload_dto.dart';
@@ -27,4 +29,7 @@ abstract class ApiClient {
 
   @POST('/v1/auth/googleSignIn')
   Future<TokenPayloadDto> googleSignIn(@Body() GoogleSignInBody body);
+
+  @PATCH('/users')
+  Future<UserDto> updateUser(@Body() UpdateUserBody body);
 }

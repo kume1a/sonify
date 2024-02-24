@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logging/logging.dart';
+import 'package:sonify_client/sonify_client.dart';
 
+import '../../../app/navigation/page_navigator.dart';
 import '../api/auth_status_provider.dart';
+import '../api/auth_token_store.dart';
 import '../api/auth_with_google.dart';
 
 part 'auth_state.freezed.dart';
@@ -14,11 +16,11 @@ part 'auth_state.freezed.dart';
 class AuthState with _$AuthState {
   const factory AuthState({
     required SimpleDataState<bool> isAuthenticated,
+    required ActionState<Unit> googleSignInAction,
   }) = _AuthState;
 
-  factory AuthState.initial() => AuthState(
-        isAuthenticated: SimpleDataState.idle(),
-      );
+  factory AuthState.initial() =>
+      AuthState(isAuthenticated: SimpleDataState.idle(), googleSignInAction: ActionState.idle());
 }
 
 extension AuthCubitX on BuildContext {
@@ -30,12 +32,18 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit(
     this._authWithGoogle,
     this._authStatusProvider,
+    this._authRepository,
+    this._pageNavigator,
+    this._authTokenStore,
   ) : super(AuthState.initial()) {
     _init();
   }
 
   final AuthWithGoogle _authWithGoogle;
   final AuthStatusProvider _authStatusProvider;
+  final AuthRepository _authRepository;
+  final PageNavigator _pageNavigator;
+  final AuthTokenStore _authTokenStore;
 
   Future<void> _init() async {
     _loadAuthStatus();
@@ -54,8 +62,35 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> onGoogleSignIn() async {
-    final res = await _authWithGoogle();
+    emit(state.copyWith(
+      googleSignInAction: ActionState.executing(),
+    ));
 
-    Logger.root.info(res);
+    final googleAccount = await _authWithGoogle();
+    if (googleAccount == null) {
+      emit(state.copyWith(googleSignInAction: ActionState.failed(unit)));
+      return;
+    }
+
+    final googleAuthentication = await googleAccount.authentication;
+    if (googleAuthentication.accessToken == null) {
+      emit(state.copyWith(googleSignInAction: ActionState.failed(unit)));
+      return;
+    }
+
+    await _authRepository.googleSignIn(googleAuthentication.accessToken!).awaitFold(
+      (l) => emit(state.copyWith(googleSignInAction: ActionState.failed(unit))),
+      (tokenPayload) async {
+        emit(state.copyWith(googleSignInAction: ActionState.executed()));
+
+        await _authTokenStore.writeAccessToken(tokenPayload.accessToken);
+
+        if (tokenPayload.user?.name.isEmpty == true) {
+          _pageNavigator.toUserName();
+        } else {
+          _pageNavigator.toMain();
+        }
+      },
+    );
   }
 }

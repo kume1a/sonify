@@ -11,7 +11,7 @@ class Palette {
   static const Color secondaryDark = Color(0xFF923DFD);
   static const Color secondaryLight = Color.fromARGB(255, 155, 83, 243);
 
-  static const Color primaryContainer = Color(0xFF1B0E39);
+  static const Color primaryContainer = Color(0xFF180C32);
   static const Color secondaryContainer = Color(0xFF231148);
 
   static const Color elPrimary = Color(0xFFFFFFFF);

@@ -15,5 +15,9 @@
   "bitrateGB": "Gbit/s",
   "openSettings": "Open settings",
   "storagePermissionDenied": "Allow permisison to storage",
-  "storagePermissionPermanentlyDenied": "Permission to storage has been denied, please allow from settings"
+  "storagePermissionPermanentlyDenied": "Permission to storage has been denied, please allow from settings",
+  "enterYourName": "Enter your name",
+  "unknownError": "Unknown error",
+  "noInternetConnection": "No internet connection",
+  "signInWithGoogleError": "Error signing in with google"
 }
