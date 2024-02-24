@@ -27,6 +27,7 @@ dependencies:
 
   # Data
   json_serializable: ^6.7.0
+  flutter_secure_storage: ^9.0.0
 
   # DI
   injectable: ^2.3.2

@@ -1,14 +1,17 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 import 'package:sonify_client/sonify_client.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../configuration/app_environment.dart';
+import '../injection_tokens.dart';
 
 @module
 abstract class DiSonifyClientModule {
   @lazySingleton
+  @Named(InjectionToken.noInterceptorDio)
   Dio dio() {
     return NetworkClientFactory.createNoInterceptorDio(
       apiUrl: AppEnvironment.apiUrl,
@@ -18,7 +21,22 @@ abstract class DiSonifyClientModule {
   }
 
   @lazySingleton
-  ApiClient apiClient(Dio dio) {
+  @Named(InjectionToken.authenticatedDio)
+  Dio authenticatedDio(
+    @Named(InjectionToken.noInterceptorDio) Dio noInterceptorDio,
+    AuthTokenStore authTokenStore,
+  ) {
+    return NetworkClientFactory.createAuthenticatedDio(
+      noInterceptorDio: noInterceptorDio,
+      authTokenStore: authTokenStore,
+      afterExit: () {},
+      logPrint: Logger.root.info,
+      apiUrl: AppEnvironment.apiUrl,
+    );
+  }
+
+  @lazySingleton
+  ApiClient apiClient(@Named(InjectionToken.authenticatedDio) Dio dio) {
     return NetworkClientFactory.createApiClient(
       dio: dio,
       apiUrl: AppEnvironment.apiUrl,
@@ -45,6 +63,11 @@ abstract class DiSonifyClientModule {
   }
 
   // auth ----------------------------------------------------------------
+  @lazySingleton
+  AuthTokenStore authTokenStore(FlutterSecureStorage secureStorage) {
+    return SecureStoreageTokenStoreImpl(secureStorage);
+  }
+
   @lazySingleton
   TokenPayloadMapper tokenPayloadMapper(UserMapper userMapper) {
     return TokenPayloadMapper(userMapper);

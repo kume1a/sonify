@@ -2,13 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
+import '../../../app/di/injection_tokens.dart';
 import 'file_size_resolver.dart';
 
 @LazySingleton(as: ResolveFileSize)
 class ResolveFileSizeImpl implements ResolveFileSize {
   ResolveFileSizeImpl(
-    this._dio,
-  );
+    @Named(InjectionToken.noInterceptorDio) Dio dio,
+  ) : _dio = dio;
 
   final Dio _dio;
 

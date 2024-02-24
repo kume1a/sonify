@@ -7,7 +7,6 @@ import 'package:sonify_client/sonify_client.dart';
 
 import '../../../app/navigation/page_navigator.dart';
 import '../api/auth_status_provider.dart';
-import '../api/auth_token_store.dart';
 import '../api/auth_with_google.dart';
 
 part 'auth_state.freezed.dart';

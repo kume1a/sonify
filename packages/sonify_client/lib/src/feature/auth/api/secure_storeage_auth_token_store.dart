@@ -1,9 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:injectable/injectable.dart';
 
 import 'auth_token_store.dart';
 
-@LazySingleton(as: AuthTokenStore)
 class SecureStoreageTokenStoreImpl implements AuthTokenStore {
   SecureStoreageTokenStoreImpl(
     this._secureStorage,
