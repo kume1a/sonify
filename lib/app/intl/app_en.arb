@@ -2,6 +2,7 @@
   "@@locale": "en",
   "ok": "Ok",
   "search": "Search",
+  "searchDots": "Search...",
   "download": "Download",
   "downloadVideoAs": "Download video as",
   "audio": "Audio",

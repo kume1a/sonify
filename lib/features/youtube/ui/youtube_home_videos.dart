@@ -30,17 +30,23 @@ class _SearchResultsSuccess extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: data.length,
-      itemBuilder: (_, index) {
-        final video = data[index];
+    if (data.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
-        return YoutubeVideoListItem(
-          videoId: video.id.value,
-          imageUrl: video.thumbnails.mediumResUrl,
-          title: video.title,
-        );
-      },
+    return Expanded(
+      child: ListView.builder(
+        itemCount: data.length,
+        itemBuilder: (_, index) {
+          final video = data[index];
+
+          return YoutubeVideoListItem(
+            videoId: video.id.value,
+            imageUrl: video.thumbnails.mediumResUrl,
+            title: video.title,
+          );
+        },
+      ),
     );
   }
 }
