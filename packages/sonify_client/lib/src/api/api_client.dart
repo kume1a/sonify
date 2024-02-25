@@ -30,9 +30,9 @@ abstract class ApiClient {
   @POST('/v1/auth/googleSignIn')
   Future<TokenPayloadDto> googleSignIn(@Body() GoogleSignInBody body);
 
-  @PATCH('/users')
+  @PATCH('/v1/users')
   Future<UserDto> updateUser(@Body() UpdateUserBody body);
 
-  @GET('/users/authUser')
+  @GET('/v1/users/authUser')
   Future<UserDto> getAuthUser();
 }
