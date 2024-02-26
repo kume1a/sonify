@@ -4,6 +4,7 @@
   "search": "Search",
   "searchDots": "Search...",
   "download": "Download",
+  "downloadAudio": "Download audio",
   "downloadVideoAs": "Download video as",
   "audio": "Audio",
   "sizeB": "B",
@@ -23,5 +24,6 @@
   "signInWithGoogleError": "Error signing in with google",
   "fieldIsRequired": "Field is required",
   "nameIsTooLong": "Name is too long",
-  "nameIsTooShort": "Name is too short"
+  "nameIsTooShort": "Name is too short",
+  "fastDownload": "Fast download"
 }

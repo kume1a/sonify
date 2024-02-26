@@ -31,24 +31,28 @@ class YoutubeVideoPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => getIt<YoutubeVideoCubit>()..init(args.videoId),
       lazy: false,
-      child: const _Content(),
+      child: _Content(args: args),
     );
   }
 }
 
 class _Content extends StatelessWidget {
-  const _Content();
+  const _Content({
+    required this.args,
+  });
+
+  final YoutubeVideoPageArgs args;
 
   @override
   Widget build(BuildContext context) {
     const padding = EdgeInsets.symmetric(horizontal: 16);
 
-    return const Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Stack(
+            const Stack(
               children: [
                 AspectRatio(
                   aspectRatio: 16 / 9,
@@ -61,17 +65,17 @@ class _Content extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 12),
-            Padding(
+            const SizedBox(height: 12),
+            const Padding(
               padding: padding,
               child: YoutubeVideoInfo(),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Padding(
               padding: padding,
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: DownloadYoutubeVideoButton(),
+                child: DownloadYoutubeVideoButton(videoId: args.videoId),
               ),
             ),
           ],

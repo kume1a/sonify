@@ -76,7 +76,6 @@ class _NoSearchQueryView extends StatelessWidget {
 
 class _SearchQueryTopBar extends StatelessWidget {
   const _SearchQueryTopBar({
-    super.key,
     required this.searchQuery,
   });
 

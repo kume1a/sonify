@@ -18,18 +18,22 @@ part 'api_client.g.dart';
 abstract class ApiClient {
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 
+  // youtube ---------------------------
   @GET('/v1/youtube/musicUrl')
   Future<UrlDto> getYoutubeMusicUrl(@Query('videoId') String videoId);
 
   @GET('/v1/youtube/searchSuggestions')
   Future<YoutubeSuggestionsDto> getYoutubeSuggestions(@Query('keyword') String keyword);
 
+  // audio -----------------------------
   @POST('/v1/audio/downloadYoutubeAudio')
   Future<AudioDto> downloadYoutubeAudio(@Body() DownloadYoutubeAudioBody body);
 
+  // auth ------------------------------
   @POST('/v1/auth/googleSignIn')
   Future<TokenPayloadDto> googleSignIn(@Body() GoogleSignInBody body);
 
+  // user ------------------------------
   @PATCH('/v1/users')
   Future<UserDto> updateUser(@Body() UpdateUserBody body);
 
