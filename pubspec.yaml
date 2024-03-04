@@ -19,6 +19,9 @@ dependencies:
 
   # UI
   flutter_svg: ^2.0.10+1
+  flip_card: ^0.6.0
+  sliding_up_panel: ^2.0.0+1
+  palette_generator: ^0.3.3+3
 
   # Network
   youtube_explode_dart: ^2.1.0
@@ -38,6 +41,10 @@ dependencies:
 
   # auth
   google_sign_in: ^6.2.1
+
+  # audio
+  audio_session: ^0.1.18
+  audio_service: ^0.18.12
 
   # Util
   logging: ^1.2.0
@@ -73,6 +80,7 @@ dependencies:
     git:
       url: https://github.com/kume1a/flutter_common.git
       path: packages/common_models
+  cached_network_image: ^3.3.1
 
 dev_dependencies:
   flutter_test:

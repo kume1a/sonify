@@ -62,5 +62,10 @@
     </dict>
   </array>
   <!-- End of the Google Sign-in Section -->
+
+  <key>UIBackgroundModes</key>
+  <array>
+    <string>audio</string>
+  </array>
 </dict>
 </plist>
