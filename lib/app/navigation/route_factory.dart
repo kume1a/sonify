@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../pages/audio_player_page.dart';
 import '../../pages/auth_page.dart';
 import '../../pages/main/main_page.dart';
 import '../../pages/user_name_page.dart';
@@ -13,8 +14,16 @@ Route<dynamic> routeFactory(RouteSettings settings) {
     Routes.youtubeSearch => _createYoutubeSearchRoute(settings),
     Routes.youtubeVideo => _createYoutubeVideoRoute(settings),
     Routes.userName => _createUserNameRoute(settings),
+    Routes.audioPlayer => createAudioPlayerRoute(settings),
     _ => throw Exception('route ${settings.name} is not supported'),
   };
+}
+
+Route createAudioPlayerRoute(RouteSettings settings) {
+  return MaterialPageRoute(
+    builder: (_) => const AudioPlayerPage(),
+    settings: settings,
+  );
 }
 
 Route _createUserNameRoute(RouteSettings settings) {

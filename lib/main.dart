@@ -42,15 +42,26 @@ Future<void> main() async {
     // The user unplugged the headphones, so we should pause or lower the volume.
   });
 
-  _audioHandler = await AudioService.init(
-    builder: () => MyAudioHandler(),
-    config: const AudioServiceConfig(
-      androidNotificationChannelId: 'com.mycompany.myapp.channel.audio',
-      androidNotificationChannelName: 'Music playback',
-    ),
-  );
+  await startService();
 
   runApp(const App());
+}
+
+Future<void> startService() async {
+  // final AudioPlayerHandler audioHandler = await AudioService.init(
+  //   builder: () => AudioPlayerHandlerImpl(),
+  //   config: AudioServiceConfig(
+  //     androidNotificationChannelId: 'com.shadow.blackhole.channel.audio',
+  //     androidNotificationChannelName: 'BlackHole',
+  //     androidNotificationOngoing: true,
+  //     androidNotificationIcon: 'drawable/ic_stat_music_note',
+  //     androidShowNotificationBadge: true,
+  //     // androidStopForegroundOnPause: Hive.box('settings')
+  //     // .get('stopServiceOnPause', defaultValue: true) as bool,
+  //     notificationColor: Colors.grey[900],
+  //   ),
+  // );
+  // GetIt.I.registerSingleton<AudioPlayerHandler>(audioHandler);
 }
 
 class MyAudioHandler extends BaseAudioHandler
