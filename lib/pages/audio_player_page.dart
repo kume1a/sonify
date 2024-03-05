@@ -1,21 +1,33 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:developer' as dev;
 import 'dart:ui' as ui;
 
 import 'package:audio_service/audio_service.dart';
+import 'package:audiotagger/audiotagger.dart';
+import 'package:audiotagger/models/tag.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
+import 'package:http/http.dart';
+import 'package:logging/logging.dart';
+import 'package:marquee/marquee.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../app/intl/app_localizations.dart';
+import 'temp/collage.dart';
+import 'temp/ext_storage.dart';
+import 'temp/playlist.dart';
 
 class PlayScreen extends StatefulWidget {
   const PlayScreen({super.key});
@@ -168,7 +180,9 @@ class _PlayScreenState extends State<PlayScreen> {
         stream: audioHandler.mediaItem,
         builder: (context, snapshot) {
           final MediaItem? mediaItem = snapshot.data;
-          if (mediaItem == null) return const SizedBox();
+          if (mediaItem == null) {
+            return const SizedBox();
+          }
           final offline = !mediaItem.extras!['url'].toString().startsWith('http');
           mediaItem.artUri.toString().startsWith('file')
               ? getColors(
@@ -2463,10 +2477,10 @@ class AddToPlaylist {
                               playlistNames[index].toString(),
                               mediaItem,
                             );
-                            ShowSnackBar().showSnackBar(
-                              context,
-                              '${AppLocalizations.of(context).addedTo} ${playlistDetails.containsKey(playlistNames[index]) ? playlistDetails[playlistNames[index]]["name"] ?? playlistNames[index] : playlistNames[index]}',
-                            );
+                            // ShowSnackBar().showSnackBar(
+                            //   context,
+                            //   '${AppLocalizations.of(context).addedTo} ${playlistDetails.containsKey(playlistNames[index]) ? playlistDetails[playlistNames[index]]["name"] ?? playlistNames[index] : playlistNames[index]}',
+                            // );
                           }
                         },
                       );
@@ -2550,7 +2564,7 @@ class AnimatedText extends StatelessWidget {
           return SizedBox(
             height: tp.height,
             width: constraints.maxWidth,
-            child: wrapped.Marquee(
+            child: Marquee(
               text: '  $text${" " * 30}',
               style: style,
               textScaleFactor: textScaleFactor,
@@ -2605,7 +2619,7 @@ class DownloadButton extends StatefulWidget {
 
 class _DownloadButtonState extends State<DownloadButton> {
   late Download down;
-  final Box downloadsBox = Hive.box('downloads');
+  // final Box downloadsBox = Hive.box('downloads');
   final ValueNotifier<bool> showStopButton = ValueNotifier<bool>(false);
 
   @override
@@ -2619,10 +2633,13 @@ class _DownloadButtonState extends State<DownloadButton> {
 
   @override
   Widget build(BuildContext context) {
+    const isDownloaded = false;
+
     return SizedBox.square(
       dimension: 50,
       child: Center(
-        child: (downloadsBox.containsKey(widget.data['id']))
+        child: isDownloaded
+            // child: (downloadsBox.containsKey(widget.data['id']))
             ? IconButton(
                 icon: const Icon(Icons.download_done_rounded),
                 tooltip: 'Download Done',
@@ -2881,25 +2898,25 @@ class _AlbumDownloadButtonState extends State<AlbumDownloadButton> {
                       color: Theme.of(context).iconTheme.color,
                       tooltip: AppLocalizations.of(context).down,
                       onPressed: () async {
-                        ShowSnackBar().showSnackBar(
-                          context,
-                          '${AppLocalizations.of(context).downingAlbum} "${widget.albumName}"',
-                        );
+                        // ShowSnackBar().showSnackBar(
+                        //   context,
+                        //   '${AppLocalizations.of(context).downingAlbum} "${widget.albumName}"',
+                        // );
 
-                        data = (await SaavnAPI().fetchAlbumSongs(widget.albumId))['songs'] as List;
-                        for (final items in data) {
-                          down.prepareDownload(
-                            context,
-                            items as Map,
-                            createFolder: true,
-                            folderName: widget.albumName,
-                          );
-                          await _waitUntilDone(items['id'].toString());
-                          setState(() {
-                            done++;
-                          });
-                        }
-                        finished = true;
+                        // data = (await SaavnAPI().fetchAlbumSongs(widget.albumId))['songs'] as List;
+                        // for (final items in data) {
+                        //   down.prepareDownload(
+                        //     context,
+                        //     items as Map,
+                        //     createFolder: true,
+                        //     folderName: widget.albumName,
+                        //   );
+                        //   await _waitUntilDone(items['id'].toString());
+                        //   setState(() {
+                        //     done++;
+                        //   });
+                        // }
+                        // finished = true;
                       },
                     ),
                   )
@@ -2995,16 +3012,14 @@ class Download with ChangeNotifier {
 
   int? rememberOption;
   final ValueNotifier<bool> remember = ValueNotifier<bool>(false);
-  String preferredDownloadQuality =
-      Hive.box('settings').get('downloadQuality', defaultValue: '320 kbps') as String;
-  String preferredYtDownloadQuality =
-      Hive.box('settings').get('ytDownloadQuality', defaultValue: 'High') as String;
-  String downloadFormat = Hive.box('settings').get('downloadFormat', defaultValue: 'm4a').toString();
-  bool createDownloadFolder = Hive.box('settings').get('createDownloadFolder', defaultValue: false) as bool;
-  bool createYoutubeFolder = Hive.box('settings').get('createYoutubeFolder', defaultValue: false) as bool;
+  String preferredDownloadQuality = '320 kbps';
+  String preferredYtDownloadQuality = 'High';
+  String downloadFormat = 'm4a';
+  bool createDownloadFolder = false;
+  bool createYoutubeFolder = false;
   double? progress = 0.0;
   String lastDownloadId = '';
-  bool downloadLyrics = Hive.box('settings').get('downloadLyrics', defaultValue: false) as bool;
+  bool downloadLyrics = false;
   bool download = true;
 
   Future<void> prepareDownload(
@@ -3032,7 +3047,7 @@ class Download with ChangeNotifier {
     data['title'] = data['title'].toString().split('(From')[0].trim();
 
     String filename = '';
-    final int downFilename = Hive.box('settings').get('downFilename', defaultValue: 0) as int;
+    const int downFilename = 0;
     if (downFilename == 0) {
       filename = '${data["title"]} - ${data["artist"]}';
     } else if (downFilename == 1) {
@@ -3041,7 +3056,7 @@ class Download with ChangeNotifier {
       filename = '${data["title"]}';
     }
     // String filename = '${data["title"]} - ${data["artist"]}';
-    String dlPath = Hive.box('settings').get('downloadPath', defaultValue: '') as String;
+    String dlPath = '';
     if (filename.length > 200) {
       final String temp = filename.substring(0, 200);
       final List tempList = temp.split(', ');
@@ -3170,7 +3185,7 @@ class Download with ChangeNotifier {
                             ),
                             onPressed: () async {
                               Navigator.pop(context);
-                              Hive.box('downloads').delete(data['id']);
+                              // Hive.box('downloads').delete(data['id']);
                               downloadSong(context, dlPath, filename, data);
                               rememberOption = 1;
                             },
@@ -3230,7 +3245,8 @@ class Download with ChangeNotifier {
     String lyrics;
     final artname = fileName.replaceAll('.m4a', '.jpg');
     if (!Platform.isWindows) {
-      appPath = Hive.box('settings').get('tempDirPath')?.toString();
+      // appPath = Hive.box('settings').get('tempDirPath')?.toString();
+      appPath = null;
       appPath ??= (await getTemporaryDirectory()).path;
     } else {
       final Directory? temp = await getDownloadsDirectory();
@@ -3378,7 +3394,6 @@ class Download with ChangeNotifier {
             // });
           } catch (e) {
             Logger.root.severe('Error editing tags: $e');
-            log('Failed to edit tags');
           }
         }
         client.close();
@@ -3513,31 +3528,31 @@ class _LikeButtonState extends State<LikeButton> with SingleTickerProviderStateM
           setState(() {
             liked = !liked;
           });
-          if (widget.showSnack) {
-            ShowSnackBar().showSnackBar(
-              context,
-              liked ? AppLocalizations.of(context).addedToFav : AppLocalizations.of(context).removedFromFav,
-              action: SnackBarAction(
-                textColor: Theme.of(context).colorScheme.secondary,
-                label: AppLocalizations.of(context).undo,
-                onPressed: () {
-                  liked
-                      ? removeLiked(
-                          widget.mediaItem == null ? widget.data!['id'].toString() : widget.mediaItem!.id,
-                        )
-                      : widget.mediaItem == null
-                          ? addMapToPlaylist('Favorite Songs', widget.data!)
-                          : addItemToPlaylist(
-                              'Favorite Songs',
-                              widget.mediaItem!,
-                            );
+          // if (widget.showSnack) {
+          //   ShowSnackBar().showSnackBar(
+          //     context,
+          //     liked ? AppLocalizations.of(context).addedToFav : AppLocalizations.of(context).removedFromFav,
+          //     action: SnackBarAction(
+          //       textColor: Theme.of(context).colorScheme.secondary,
+          //       label: AppLocalizations.of(context).undo,
+          //       onPressed: () {
+          //         liked
+          //             ? removeLiked(
+          //                 widget.mediaItem == null ? widget.data!['id'].toString() : widget.mediaItem!.id,
+          //               )
+          //             : widget.mediaItem == null
+          //                 ? addMapToPlaylist('Favorite Songs', widget.data!)
+          //                 : addItemToPlaylist(
+          //                     'Favorite Songs',
+          //                     widget.mediaItem!,
+          //                   );
 
-                  liked = !liked;
-                  setState(() {});
-                },
-              ),
-            );
-          }
+          //         liked = !liked;
+          //         setState(() {});
+          //       },
+          //     ),
+          //   );
+          // }
         },
       ),
     );
@@ -3594,7 +3609,9 @@ class Lyrics {
           .body;
       lyrics = lyrics.split(delimiter1).last;
       lyrics = lyrics.split(delimiter2).first;
-      if (lyrics.contains('<meta charset="UTF-8">')) throw Error();
+      if (lyrics.contains('<meta charset="UTF-8">')) {
+        throw Error();
+      }
     } catch (_) {
       try {
         lyrics = (await get(
@@ -3605,7 +3622,9 @@ class Lyrics {
             .body;
         lyrics = lyrics.split(delimiter1).last;
         lyrics = lyrics.split(delimiter2).first;
-        if (lyrics.contains('<meta charset="UTF-8">')) throw Error();
+        if (lyrics.contains('<meta charset="UTF-8">')) {
+          throw Error();
+        }
       } catch (_) {
         try {
           lyrics = (await get(
@@ -3618,7 +3637,9 @@ class Lyrics {
               .body;
           lyrics = lyrics.split(delimiter1).last;
           lyrics = lyrics.split(delimiter2).first;
-          if (lyrics.contains('<meta charset="UTF-8">')) throw Error();
+          if (lyrics.contains('<meta charset="UTF-8">')) {
+            throw Error();
+          }
         } catch (_) {
           lyrics = '';
         }
@@ -3641,7 +3662,9 @@ class Lyrics {
     const String authority = 'www.musixmatch.com';
     final String unencodedPath = '/search/$song $artist';
     final Response res = await get(Uri.https(authority, unencodedPath));
-    if (res.statusCode != 200) return '';
+    if (res.statusCode != 200) {
+      return '';
+    }
     final RegExpMatch? result = RegExp(r'href=\"(\/lyrics\/.*?)\"').firstMatch(res.body);
     return result == null ? '' : result[1]!;
   }
@@ -3649,7 +3672,9 @@ class Lyrics {
   static Future<String> scrapLink(String unencodedPath) async {
     const String authority = 'www.musixmatch.com';
     final Response res = await get(Uri.https(authority, unencodedPath));
-    if (res.statusCode != 200) return '';
+    if (res.statusCode != 200) {
+      return '';
+    }
     final List<String?> lyrics = RegExp(
       r'<span class=\"lyrics__content__ok\">(.*?)<\/span>',
       dotAll: true,

@@ -1,6 +1,8 @@
 {
   "@@locale": "en",
   "ok": "Ok",
+  "yes": "Yes",
+  "no": "No",
   "cancel": "Cancel",
   "search": "Search",
   "searchDots": "Search...",
@@ -56,5 +58,15 @@
   "shuffle": "Shuffle",
   "upNext": "Up Next",
   "createPlaylist": "Create Playlist",
-  "createNewPlaylist": "Create New Playlist"
+  "createNewPlaylist": "Create New Playlist",
+  "stopDown": "Stop Download",
+  "downDone": "Download Done",
+  "down": "Download",
+  "alreadyExists": "Already Exists",
+  "downAgain": "already exists.\nDo you want to download it again?",
+  "rememberChoice": "Remember my choice",
+  "yesReplace": "Yes, but replace old",
+  "unlike": "Unlike",
+  "like": "Like",
+  "adjustSpeed": "Adjust Speed"
 }

@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:audio_session/audio_session.dart';
 import 'package:audio_service/audio_service.dart';
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:global_navigator/global_navigator.dart';
@@ -44,7 +44,7 @@ Future<void> main() async {
 
   _audioHandler = await AudioService.init(
     builder: () => MyAudioHandler(),
-    config: AudioServiceConfig(
+    config: const AudioServiceConfig(
       androidNotificationChannelId: 'com.mycompany.myapp.channel.audio',
       androidNotificationChannelName: 'Music playback',
     ),
@@ -60,12 +60,17 @@ class MyAudioHandler extends BaseAudioHandler
   // mix in default seek callback implementations
 
   // The most common callbacks:
+  @override
   Future<void> play() async {
     // All 'play' requests from all origins route to here. Implement this
     // callback to start playing audio appropriate to your app. e.g. music.
   }
+  @override
   Future<void> pause() async {}
+  @override
   Future<void> stop() async {}
+  @override
   Future<void> seek(Duration position) async {}
+  @override
   Future<void> skipToQueueItem(int i) async {}
 }
