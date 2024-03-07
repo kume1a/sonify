@@ -30,8 +30,8 @@ abstract class DiSonifyClientModule {
       noInterceptorDio: noInterceptorDio,
       authTokenStore: authTokenStore,
       afterExit: () {},
-      // logPrint: Logger.root.info,
-      logPrint: null,
+      logPrint: Logger.root.info,
+      // logPrint: null,
       apiUrl: AppEnvironment.apiUrl,
     );
   }
