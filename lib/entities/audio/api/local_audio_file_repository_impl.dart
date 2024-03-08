@@ -23,6 +23,17 @@ class LocalAudioFileRepositoryImpl implements LocalAudioFileRepository {
   }
 
   @override
+  Future<LocalAudioFile?> getById(int id) async {
+    final entity = await _audioEntityDao.getById(id);
+
+    if (entity == null) {
+      return null;
+    }
+
+    return _audioEntityToLocalAudioFile(entity);
+  }
+
+  @override
   Future<void> save(LocalAudioFile localAudioFile) {
     final entity = AudioEntity();
 

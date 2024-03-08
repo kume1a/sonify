@@ -9,7 +9,7 @@ import 'package:logging/logging.dart';
 
 import 'app/app.dart';
 import 'app/configuration/app_environment.dart';
-import 'app/configuration/audio_session_config.dart';
+import 'app/configuration/configure_audio_components.dart';
 import 'app/configuration/global_http_overrides.dart';
 import 'app/di/register_dependencies.dart';
 import 'app/navigation/page_navigator.dart';
@@ -32,7 +32,7 @@ Future<void> main() async {
     log('${record.level.name}: ${record.time}: ${record.message}');
   });
 
-  await getIt<ConfigureAudioSession>().call();
+  configureAudioComponents();
 
   runApp(const App());
 }

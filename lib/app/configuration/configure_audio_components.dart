@@ -1,6 +1,12 @@
 import 'package:audio_session/audio_session.dart';
 import 'package:logging/logging.dart';
 
+import '../di/register_dependencies.dart';
+
+Future<void> configureAudioComponents() async {
+  await getIt<ConfigureAudioSession>().call();
+}
+
 class ConfigureAudioSession {
   ConfigureAudioSession(
     this._audioSession,

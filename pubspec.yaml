@@ -23,6 +23,7 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   palette_generator: ^0.3.3+3
   marquee: ^2.2.3
+  audio_video_progress_bar: ^2.0.2
 
   # Network
   youtube_explode_dart: ^2.1.0

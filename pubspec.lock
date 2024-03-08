@@ -65,6 +65,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.18"
+  audio_video_progress_bar:
+    dependency: "direct main"
+    description:
+      name: audio_video_progress_bar
+      sha256: ccc7d7b83d2a16c52d4a7fb332faabd1baa053fb0e4c16815aefd3945ab33b81
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   audiotagger:
     dependency: "direct main"
     description:
@@ -230,7 +238,7 @@ packages:
     description:
       path: "packages/common_models"
       ref: HEAD
-      resolved-ref: "354dc74a917fa76cd3b3d8e75b7fa5187c80a9f6"
+      resolved-ref: f893e70b43efc563b416f435ea82bd13eaf3276b
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.4"
@@ -239,7 +247,7 @@ packages:
     description:
       path: "packages/common_network_components"
       ref: HEAD
-      resolved-ref: "354dc74a917fa76cd3b3d8e75b7fa5187c80a9f6"
+      resolved-ref: f893e70b43efc563b416f435ea82bd13eaf3276b
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.7"
@@ -248,7 +256,7 @@ packages:
     description:
       path: "packages/common_utilities"
       ref: HEAD
-      resolved-ref: "354dc74a917fa76cd3b3d8e75b7fa5187c80a9f6"
+      resolved-ref: f893e70b43efc563b416f435ea82bd13eaf3276b
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.1"
@@ -257,7 +265,7 @@ packages:
     description:
       path: "packages/common_widgets"
       ref: HEAD
-      resolved-ref: "354dc74a917fa76cd3b3d8e75b7fa5187c80a9f6"
+      resolved-ref: f893e70b43efc563b416f435ea82bd13eaf3276b
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.6"
@@ -558,10 +566,10 @@ packages:
     dependency: transitive
     description:
       name: google_identity_services_web
-      sha256: "972ff30eebf6a5eab28be3e1e47a45df087ed64d5aefdac0df47758ecdec5385"
+      sha256: "9482364c9f8b7bd36902572ebc3a7c2b5c8ee57a9c93e6eb5099c1a9ec5265d8"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.1"
+    version: "0.3.1+1"
   google_sign_in:
     dependency: "direct main"
     description:
@@ -654,10 +662,10 @@ packages:
     dependency: "direct dev"
     description:
       name: injectable_generator
-      sha256: f9d3c05f0938403f79ad6c6d23ec8e37a7a05ad980b1bf9399493f3e41845788
+      sha256: "7fb573114f8bbdd169f7ae9b0bcd13f464e8170454c27be816d5a1bb39ac8086"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.1"
+    version: "2.4.2"
   intl:
     dependency: "direct main"
     description:
@@ -1312,10 +1320,10 @@ packages:
     dependency: "direct main"
     description:
       name: video_player
-      sha256: fbf28ce8bcfe709ad91b5789166c832cb7a684d14f571a81891858fefb5bb1c2
+      sha256: afc65f4b8bcb2c188f64a591f84fb471f4f2e19fc607c65fd8d2f8fedb3dec23
       url: "https://pub.dev"
     source: hosted
-    version: "2.8.2"
+    version: "2.8.3"
   video_player_android:
     dependency: transitive
     description:
@@ -1344,10 +1352,10 @@ packages:
     dependency: transitive
     description:
       name: video_player_web
-      sha256: "8e9cb7fe94e49490e67bbc15149691792b58a0ade31b32e3f3688d104a0e057b"
+      sha256: "41245cef5ef29c4585dbabcbcbe9b209e34376642c7576cabf11b4ad9289d6e4"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "2.3.0"
   vm_service:
     dependency: transitive
     description:
@@ -1384,10 +1392,10 @@ packages:
     dependency: transitive
     description:
       name: web
-      sha256: "1d9158c616048c38f712a6646e317a3426da10e884447626167240d45209cbad"
+      sha256: "97da13628db363c635202ad97068d47c5b8aa555808e7a9411963c533b449b27"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.0"
+    version: "0.5.1"
   web_socket_channel:
     dependency: transitive
     description:
