@@ -30,4 +30,6 @@ class PageNavigator {
   void toUserName() => GlobalNavigator.pushReplacementNamed(Routes.userName);
 
   void toAudioPlayer() => GlobalNavigator.pushNamed(Routes.audioPlayer);
+
+  void toAuthPage() => GlobalNavigator.pushNamedAndRemoveAll(Routes.auth);
 }

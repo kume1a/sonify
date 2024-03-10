@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:sonify_client/sonify_client.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
+import '../../../features/auth/api/after_sign_out.dart';
 import '../../configuration/app_environment.dart';
 import '../injection_tokens.dart';
 
@@ -25,11 +26,12 @@ abstract class DiSonifyClientModule {
   Dio authenticatedDio(
     @Named(InjectionToken.noInterceptorDio) Dio noInterceptorDio,
     AuthTokenStore authTokenStore,
+    AfterSignOut afterSignOut,
   ) {
     return NetworkClientFactory.createAuthenticatedDio(
       noInterceptorDio: noInterceptorDio,
       authTokenStore: authTokenStore,
-      afterExit: () {},
+      afterExit: afterSignOut.call,
       logPrint: Logger.root.info,
       // logPrint: null,
       apiUrl: AppEnvironment.apiUrl,
