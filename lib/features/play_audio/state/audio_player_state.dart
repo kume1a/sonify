@@ -11,7 +11,7 @@ part 'audio_player_state.freezed.dart';
 @freezed
 class AudioPlayerState with _$AudioPlayerState {
   const factory AudioPlayerState({
-    int? a,
+    String? playlistName,
   }) = _AudioPlayerState;
 
   factory AudioPlayerState.initial() => const AudioPlayerState();

@@ -3,6 +3,7 @@ import 'package:global_navigator/global_navigator.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sonify_client/sonify_client.dart';
 
+import '../../pages/audio_player_page.dart';
 import '../../pages/youtube_video_page.dart';
 import 'routes.dart';
 
@@ -29,7 +30,8 @@ class PageNavigator {
 
   void toUserName() => GlobalNavigator.pushReplacementNamed(Routes.userName);
 
-  void toAudioPlayer() => GlobalNavigator.pushNamed(Routes.audioPlayer);
+  void toAudioPlayer(AudioPlayerPageArgs args) =>
+      GlobalNavigator.pushNamed(Routes.audioPlayer, arguments: args);
 
   void toAuthPage() => GlobalNavigator.pushNamedAndRemoveAll(Routes.auth);
 }

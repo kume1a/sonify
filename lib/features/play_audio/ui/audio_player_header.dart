@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../shared/values/assets.dart';
+import '../state/audio_player_state.dart';
 
 class AudioPlayerHeader extends StatelessWidget {
   const AudioPlayerHeader({super.key});
@@ -20,20 +22,28 @@ class AudioPlayerHeader extends StatelessWidget {
               child: Icon(Icons.chevron_right),
             ),
           ),
-          const Expanded(
-            child: Column(
-              children: [
-                Text(
-                  'Playlist name',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  'Playlist',
-                  style: TextStyle(fontSize: 10),
-                ),
-              ],
+          Expanded(
+            child: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+              builder: (context, state) {
+                if (state.playlistName == null) {
+                  return const SizedBox.shrink();
+                }
+
+                return const Column(
+                  children: [
+                    Text(
+                      'Playlist name',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      'Playlist',
+                      style: TextStyle(fontSize: 10),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
           IconButton(

@@ -21,8 +21,10 @@ Route<dynamic> routeFactory(RouteSettings settings) {
 }
 
 Route _createAudioPlayerRoute(RouteSettings settings) {
+  final AudioPlayerPageArgs args = _getArgs(settings);
+
   return MaterialPageRoute(
-    builder: (_) => const AudioPlayerPage(),
+    builder: (_) => AudioPlayerPage(args: args),
     settings: settings,
   );
 }
@@ -42,11 +44,7 @@ Route _createAuthRoute(RouteSettings settings) {
 }
 
 Route _createYoutubeVideoRoute(RouteSettings settings) {
-  if (settings.arguments == null || settings.arguments is! YoutubeVideoPageArgs) {
-    throw Exception('args type of $YoutubeVideoPageArgs is required');
-  }
-
-  final args = settings.arguments! as YoutubeVideoPageArgs;
+  final YoutubeVideoPageArgs args = _getArgs(settings);
 
   return MaterialPageRoute(
     builder: (_) => YoutubeVideoPage(args: args),
@@ -66,4 +64,12 @@ Route _createMainRoute(RouteSettings settings) {
     builder: (_) => const MainPage(),
     settings: settings,
   );
+}
+
+T _getArgs<T>(RouteSettings settings) {
+  if (settings.arguments == null || settings.arguments is! T) {
+    throw Exception('Arguments typeof ${T.runtimeType} is required');
+  }
+
+  return settings.arguments as T;
 }

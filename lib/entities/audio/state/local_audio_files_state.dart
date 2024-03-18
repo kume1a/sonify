@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../app/navigation/page_navigator.dart';
+import '../../../pages/audio_player_page.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../api/local_audio_file_repository.dart';
 import '../model/local_audio_file.dart';
@@ -32,6 +33,10 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<LocalAudioFile>>
   }
 
   void onLocalAudioFilePressed(LocalAudioFile localAudioFile) {
-    _pageNavigator.toAudioPlayer();
+    final args = AudioPlayerPageArgs(
+      localAudioFileId: localAudioFile.id,
+    );
+
+    _pageNavigator.toAudioPlayer(args);
   }
 }
