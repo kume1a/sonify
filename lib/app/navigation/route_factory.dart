@@ -14,12 +14,13 @@ Route<dynamic> routeFactory(RouteSettings settings) {
     Routes.youtubeSearch => _createYoutubeSearchRoute(settings),
     Routes.youtubeVideo => _createYoutubeVideoRoute(settings),
     Routes.userName => _createUserNameRoute(settings),
-    Routes.audioPlayer => createAudioPlayerRoute(settings),
+    Routes.audioPlayer => _createAudioPlayerRoute(settings),
+    Routes.auth => _createAuthRoute(settings),
     _ => throw Exception('route ${settings.name} is not supported'),
   };
 }
 
-Route createAudioPlayerRoute(RouteSettings settings) {
+Route _createAudioPlayerRoute(RouteSettings settings) {
   return MaterialPageRoute(
     builder: (_) => const AudioPlayerPage(),
     settings: settings,

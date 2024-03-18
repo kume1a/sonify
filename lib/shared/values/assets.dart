@@ -13,4 +13,13 @@ abstract final class Assets {
   static const svgX = '$_icons/x.svg';
   static const svgMusicNote = '$_icons/music_note.svg';
   static const svgGoogle = '$_icons/google.svg';
+  static const svgHeartFilled = '$_icons/heart_filled.svg';
+  static const svgHeart = '$_icons/heart.svg';
+  static const svgPlay = '$_icons/play.svg';
+  static const svgRepeatOff = '$_icons/repeat_off.svg';
+  static const svgRepeat = '$_icons/repeat.svg';
+  static const svgSkipBack = '$_icons/skip_back.svg';
+  static const svgSkipForward = '$_icons/skip_forward.svg';
+  static const svgQuillList = '$_icons/quill_list.svg';
+  static const svgShuffle = '$_icons/shuffle.svg';
 }
