@@ -15,6 +15,9 @@ class AudioMapper {
       path: dto.path ?? '',
       author: dto.author ?? '',
       userId: dto.userId ?? kInvalidId,
+      sizeInBytes: dto.sizeInBytes ?? 0,
+      thumbnailPath: dto.thumbnailPath ?? '',
+      youtubeVideoId: dto.youtubeVideoId ?? '',
     );
   }
 }

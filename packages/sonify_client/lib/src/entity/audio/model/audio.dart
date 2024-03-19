@@ -13,5 +13,8 @@ class Audio with _$Audio {
     required String path,
     required String author,
     required String userId,
+    required int? sizeInBytes,
+    required String youtubeVideoId,
+    required String thumbnailPath,
   }) = _Audio;
 }

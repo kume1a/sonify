@@ -1,6 +1,5 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:logging/logging.dart';
 
@@ -25,7 +24,7 @@ class AudioPlayerControls extends StatelessWidget {
 }
 
 class _MetaAndPlayMode extends StatelessWidget {
-  const _MetaAndPlayMode({super.key});
+  const _MetaAndPlayMode();
 
   @override
   Widget build(BuildContext context) {

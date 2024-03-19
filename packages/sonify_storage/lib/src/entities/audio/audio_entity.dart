@@ -11,11 +11,17 @@ class AudioEntity {
 
   String? title;
 
-  String? author;
+  int? duration;
 
   String? path;
 
-  int? sizeInKb;
+  String? author;
 
-  String? imagePath;
+  String? userId;
+
+  int? sizeInBytes;
+
+  String? youtubeVideoId;
+
+  String? thumbnailPath;
 }

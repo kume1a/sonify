@@ -77,10 +77,11 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
         final remoteAudioFile = RemoteAudioFile(
           title: video.title,
           uri: Uri.parse(assembleResourceUrl(r.path)),
-          // sizeInKb:.size.totalKiloBytes.toInt(),
-          sizeInKb: 0,
+          sizeInBytes: r.sizeInBytes ?? 0,
           author: video.author,
-          imageUri: Uri.tryParse(video.thumbnails.standardResUrl),
+          imageUri: Uri.tryParse(r.thumbnailPath),
+          userId: r.userId,
+          youtubeVideoId: r.youtubeVideoId,
         );
 
         _eventBus.fire(DownloadsEvent.enqueueRemoteAudioFile(remoteAudioFile));

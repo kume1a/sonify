@@ -41,6 +41,7 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
     _listenToBufferedPosition();
     _listenToTotalDuration();
     _listenToChangesInSong();
+    _updateSkipButtons();
   }
 
   Future<void> _queueAudioFile() async {
@@ -60,7 +61,7 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
       title: localAudioFile.title,
       artist: localAudioFile.author,
       // duration: Duration(milliseconds: localAudioFile.),
-      artUri: localAudioFile.imagePath != null ? Uri.parse(localAudioFile.imagePath!) : null,
+      artUri: localAudioFile.thumbnailPath != null ? Uri.parse(localAudioFile.thumbnailPath!) : null,
       extras: {
         'localPath': localAudioFile.path,
       },

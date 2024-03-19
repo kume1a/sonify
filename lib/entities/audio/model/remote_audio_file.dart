@@ -7,8 +7,10 @@ class RemoteAudioFile with _$RemoteAudioFile {
   const factory RemoteAudioFile({
     required String title,
     required Uri uri,
-    required int sizeInKb,
+    required int sizeInBytes,
     required String author,
     required Uri? imageUri,
+    required String youtubeVideoId,
+    required String userId,
   }) = _RemoteAudioFile;
 }

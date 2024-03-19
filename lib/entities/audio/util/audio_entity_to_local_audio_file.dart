@@ -10,9 +10,12 @@ class AudioEntityToLocalAudioFile {
       id: audioEntity.id,
       title: audioEntity.title ?? '',
       author: audioEntity.author ?? '',
-      imagePath: audioEntity.imagePath,
+      userId: audioEntity.userId ?? '',
+      duration: Duration(seconds: audioEntity.duration ?? 0),
+      sizeInBytes: audioEntity.sizeInBytes ?? 0,
+      thumbnailPath: audioEntity.thumbnailPath,
+      youtubeVideoId: audioEntity.youtubeVideoId ?? '',
       path: audioEntity.path ?? '',
-      sizeInKb: audioEntity.sizeInKb ?? 0,
     );
   }
 }

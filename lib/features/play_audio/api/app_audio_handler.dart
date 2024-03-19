@@ -1,5 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:logging/logging.dart';
 
 class AppAudioHandler extends BaseAudioHandler {
   AppAudioHandler() {
@@ -16,7 +17,7 @@ class AppAudioHandler extends BaseAudioHandler {
     try {
       await _player.setAudioSource(_playlist);
     } catch (e) {
-      print('Error: $e');
+      Logger.root.severe('Error: $e');
     }
   }
 
@@ -61,7 +62,9 @@ class AppAudioHandler extends BaseAudioHandler {
     _player.durationStream.listen((duration) {
       var index = _player.currentIndex;
       final newQueue = queue.value;
-      if (index == null || newQueue.isEmpty) return;
+      if (index == null || newQueue.isEmpty) {
+        return;
+      }
       if (_player.shuffleModeEnabled) {
         index = _player.shuffleIndices!.indexOf(index);
       }
@@ -76,7 +79,9 @@ class AppAudioHandler extends BaseAudioHandler {
   void _listenForCurrentSongIndexChanges() {
     _player.currentIndexStream.listen((index) {
       final playlist = queue.value;
-      if (index == null || playlist.isEmpty) return;
+      if (index == null || playlist.isEmpty) {
+        return;
+      }
       if (_player.shuffleModeEnabled) {
         index = _player.shuffleIndices!.indexOf(index);
       }
@@ -87,7 +92,9 @@ class AppAudioHandler extends BaseAudioHandler {
   void _listenForSequenceStateChanges() {
     _player.sequenceStateStream.listen((SequenceState? sequenceState) {
       final sequence = sequenceState?.effectiveSequence;
-      if (sequence == null || sequence.isEmpty) return;
+      if (sequence == null || sequence.isEmpty) {
+        return;
+      }
       final items = sequence.map((source) => source.tag as MediaItem);
       queue.add(items.toList());
     });
@@ -143,7 +150,9 @@ class AppAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> skipToQueueItem(int index) async {
-    if (index < 0 || index >= queue.value.length) return;
+    if (index < 0 || index >= queue.value.length) {
+      return;
+    }
     if (_player.shuffleModeEnabled) {
       index = _player.shuffleIndices![index];
     }

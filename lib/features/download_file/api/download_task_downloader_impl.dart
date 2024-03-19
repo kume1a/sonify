@@ -75,10 +75,13 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
           localAudioFile: LocalAudioFile(
             id: -1,
             author: downloadTask.payload.remoteAudioFile?.author ?? '',
-            imagePath: imageSavePath,
+            thumbnailPath: imageSavePath,
             path: downloadTask.savePath,
-            sizeInKb: downloadTask.payload.remoteAudioFile?.sizeInKb ?? 0,
+            sizeInBytes: downloadTask.payload.remoteAudioFile?.sizeInBytes ?? 0,
             title: downloadTask.payload.remoteAudioFile?.title ?? '',
+            duration: Duration.zero,
+            userId: '',
+            youtubeVideoId: '',
           ),
         ),
       FileType.videoMp4 => const DownloadedTaskPayload(), // TODO add payload

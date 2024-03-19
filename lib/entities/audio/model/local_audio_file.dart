@@ -7,9 +7,12 @@ class LocalAudioFile with _$LocalAudioFile {
   const factory LocalAudioFile({
     required int id,
     required String title,
-    required String author,
-    required String? imagePath,
+    required Duration duration,
     required String path,
-    required int sizeInKb,
+    required String author,
+    required String userId,
+    required int sizeInBytes,
+    required String youtubeVideoId,
+    required String? thumbnailPath,
   }) = _LocalAudioFile;
 }

@@ -37,12 +37,14 @@ class LocalAudioFileRepositoryImpl implements LocalAudioFileRepository {
   Future<void> save(LocalAudioFile localAudioFile) {
     final entity = AudioEntity();
 
-    entity.path = localAudioFile.path;
     entity.title = localAudioFile.title;
-    entity.sizeInKb = localAudioFile.sizeInKb;
-    entity.imagePath = localAudioFile.imagePath;
+    entity.duration = localAudioFile.duration.inSeconds;
+    entity.path = localAudioFile.path;
     entity.author = localAudioFile.author;
-
+    entity.userId = localAudioFile.userId;
+    entity.sizeInBytes = localAudioFile.sizeInBytes;
+    entity.youtubeVideoId = localAudioFile.youtubeVideoId;
+    entity.thumbnailPath = localAudioFile.thumbnailPath;
     return _audioEntityDao.insert(entity);
   }
 }

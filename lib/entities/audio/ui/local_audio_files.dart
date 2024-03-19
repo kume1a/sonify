@@ -40,7 +40,7 @@ class _Item extends HookWidget {
     final theme = Theme.of(context);
 
     final imageFile = useMemoized<File?>(
-      () => localAudioFile.imagePath != null ? File(localAudioFile.imagePath!) : null,
+      () => localAudioFile.thumbnailPath != null ? File(localAudioFile.thumbnailPath!) : null,
     );
 
     return InkWell(
