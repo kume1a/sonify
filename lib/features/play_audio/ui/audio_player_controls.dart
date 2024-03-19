@@ -1,9 +1,11 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:logging/logging.dart';
 
 import '../../../shared/values/assets.dart';
+import '../model/playback_button_state.dart';
+import '../state/audio_player_state.dart';
 
 class AudioPlayerControls extends StatelessWidget {
   const AudioPlayerControls({super.key});
@@ -31,19 +33,31 @@ class _MetaAndPlayMode extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        const Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Music name',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ),
-              Text(
-                'Artist name',
-                style: TextStyle(fontSize: 13),
-              ),
-            ],
+        Expanded(
+          child: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+            buildWhen: (previous, current) => previous.currentSong != current.currentSong,
+            builder: (_, state) {
+              return state.currentSong.maybeWhen(
+                orElse: () => const SizedBox.shrink(),
+                success: (data) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      data.title,
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      data.author,
+                      style: const TextStyle(fontSize: 13),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
         const SizedBox(width: 8),
@@ -61,12 +75,19 @@ class _Progress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ProgressBar(
-      progress: const Duration(milliseconds: 1000),
-      buffered: const Duration(milliseconds: 2000),
-      total: const Duration(milliseconds: 5000),
-      onSeek: (duration) {
-        Logger.root.info('User selected a new time: $duration');
+    return BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+      buildWhen: (previous, current) => previous.playbackProgress != current.playbackProgress,
+      builder: (_, state) {
+        if (state.playbackProgress == null) {
+          return const SizedBox.shrink();
+        }
+
+        return ProgressBar(
+          progress: state.playbackProgress!.current,
+          buffered: state.playbackProgress!.buffered,
+          total: state.playbackProgress!.total,
+          onSeek: context.audioPlayerCubit.onSeek,
+        );
       },
     );
   }
@@ -82,7 +103,22 @@ class _Controls extends StatelessWidget {
       children: [
         SvgPicture.asset(Assets.svgRepeat),
         SvgPicture.asset(Assets.svgSkipBack),
-        SvgPicture.asset(Assets.svgPlay),
+        IconButton(
+          onPressed: context.audioPlayerCubit.onPlayOrPause,
+          icon: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+            buildWhen: (previous, current) => previous.playButtonState != current.playButtonState,
+            builder: (_, state) {
+              return switch (state.playButtonState) {
+                PlaybackButtonState.idle || PlaybackButtonState.loading => const SizedBox.square(
+                    dimension: 24,
+                    child: CircularProgressIndicator(),
+                  ),
+                PlaybackButtonState.paused => SvgPicture.asset(Assets.svgPlay),
+                PlaybackButtonState.playing => SvgPicture.asset(Assets.svgPause),
+              };
+            },
+          ),
+        ),
         SvgPicture.asset(Assets.svgSkipForward),
         SvgPicture.asset(Assets.svgHeart),
       ],

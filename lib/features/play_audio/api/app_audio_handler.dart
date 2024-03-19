@@ -10,6 +10,7 @@ class AppAudioHandler extends BaseAudioHandler {
     _listenForCurrentSongIndexChanges();
     _listenForSequenceStateChanges();
   }
+
   final _player = AudioPlayer();
   final _playlist = ConcatenatingAudioSource(children: []);
 
@@ -122,13 +123,6 @@ class AppAudioHandler extends BaseAudioHandler {
     queue.add(newQueue);
   }
 
-  UriAudioSource _createAudioSource(MediaItem mediaItem) {
-    return AudioSource.uri(
-      Uri.parse(mediaItem.extras!['url'] as String),
-      tag: mediaItem,
-    );
-  }
-
   @override
   Future<void> removeQueueItemAt(int index) async {
     // manage Just Audio
@@ -203,5 +197,12 @@ class AppAudioHandler extends BaseAudioHandler {
   Future<void> stop() async {
     await _player.stop();
     return super.stop();
+  }
+
+  UriAudioSource _createAudioSource(MediaItem mediaItem) {
+    return AudioSource.uri(
+      Uri.parse(mediaItem.extras!['localPath'] as String),
+      tag: mediaItem,
+    );
   }
 }

@@ -22,4 +22,5 @@ abstract final class Assets {
   static const svgSkipForward = '$_icons/skip_forward.svg';
   static const svgQuillList = '$_icons/quill_list.svg';
   static const svgShuffle = '$_icons/shuffle.svg';
+  static const svgPause = '$_icons/pause.svg';
 }
