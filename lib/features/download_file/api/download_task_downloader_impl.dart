@@ -59,7 +59,7 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
       final imageSaveDirectory = await ResourceSavePathProvider.getAudioMp3ImagesSavePath();
       final imageFileName = _uuidFactory.generate();
 
-      imageSavePath = '$imageSaveDirectory/$imageFileName.jpg';
+      imageSavePath = '$imageSaveDirectory/$imageFileName.webp';
 
       await _downloader.download(
         uri: imageUri,

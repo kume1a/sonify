@@ -79,7 +79,7 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
           uri: Uri.parse(assembleResourceUrl(r.path)),
           sizeInBytes: r.sizeInBytes ?? 0,
           author: video.author,
-          imageUri: Uri.tryParse(r.thumbnailPath),
+          imageUri: Uri.tryParse(assembleResourceUrl(r.thumbnailPath)),
           userId: r.userId,
           youtubeVideoId: r.youtubeVideoId,
         );
