@@ -16,8 +16,8 @@ class LocalAudioFileRepositoryImpl implements LocalAudioFileRepository {
   final AudioEntityToLocalAudioFile _audioEntityToLocalAudioFile;
 
   @override
-  Future<List<LocalAudioFile>> getAll() async {
-    final audioEntities = await _audioEntityDao.getAll();
+  Future<List<LocalAudioFile>> getAllByUserId(String userId) async {
+    final audioEntities = await _audioEntityDao.getAllByUserId(userId);
 
     return audioEntities.map(_audioEntityToLocalAudioFile.call).toList();
   }
@@ -45,6 +45,7 @@ class LocalAudioFileRepositoryImpl implements LocalAudioFileRepository {
     entity.sizeInBytes = localAudioFile.sizeInBytes;
     entity.youtubeVideoId = localAudioFile.youtubeVideoId;
     entity.thumbnailPath = localAudioFile.thumbnailPath;
+
     return _audioEntityDao.insert(entity);
   }
 }

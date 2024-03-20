@@ -9,8 +9,8 @@ class IsarAudioEntityDao implements AudioEntityDao {
   final Isar _isar;
 
   @override
-  Future<List<AudioEntity>> getAll() {
-    return _isar.collection<AudioEntity>().where().findAll();
+  Future<List<AudioEntity>> getAllByUserId(String userId) {
+    return _isar.collection<AudioEntity>().filter().userIdEqualTo(userId).findAll();
   }
 
   @override
