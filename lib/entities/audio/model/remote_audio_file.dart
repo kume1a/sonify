@@ -12,5 +12,6 @@ class RemoteAudioFile with _$RemoteAudioFile {
     required Uri? imageUri,
     required String youtubeVideoId,
     required String userId,
+    required Duration duration,
   }) = _RemoteAudioFile;
 }

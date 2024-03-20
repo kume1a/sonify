@@ -14,7 +14,7 @@ import '../api/on_download_task_downloaded.dart';
 import '../model/download_task.dart';
 import '../model/downloaded_task.dart';
 import '../model/downloads_event.dart';
-import '../util/download_task_factory.dart';
+import '../util/download_task_mapper.dart';
 
 part 'downloads_state.freezed.dart';
 
@@ -51,7 +51,7 @@ class DownloadsCubit extends Cubit<DownloadsState> {
   }
 
   final EventBus _eventBus;
-  final DownloadTaskFactory _downloadTaskFactory;
+  final DownloadTaskMapper _downloadTaskFactory;
   final DownloadTaskDownloader _downloadTaskDownloader;
   final OnDownloadTaskDownloaded _onDownloadTaskDownloaded;
 

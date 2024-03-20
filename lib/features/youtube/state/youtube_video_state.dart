@@ -82,6 +82,7 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
           imageUri: Uri.tryParse(assembleResourceUrl(r.thumbnailPath)),
           userId: r.userId,
           youtubeVideoId: r.youtubeVideoId,
+          duration: Duration(seconds: r.duration),
         );
 
         _eventBus.fire(DownloadsEvent.enqueueRemoteAudioFile(remoteAudioFile));

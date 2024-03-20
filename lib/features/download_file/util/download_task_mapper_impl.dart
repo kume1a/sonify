@@ -5,11 +5,11 @@ import '../../../shared/util/resource_save_path_provider.dart';
 import '../../../shared/util/uuid_factory.dart';
 import '../model/download_task.dart';
 import '../model/file_type.dart';
-import 'download_task_factory.dart';
+import 'download_task_mapper.dart';
 
-@LazySingleton(as: DownloadTaskFactory)
-class DownloadTaskFactoryImpl implements DownloadTaskFactory {
-  DownloadTaskFactoryImpl(
+@LazySingleton(as: DownloadTaskMapper)
+class DownloadTaskMapperImpl implements DownloadTaskMapper {
+  DownloadTaskMapperImpl(
     this._uuidFactory,
   );
 

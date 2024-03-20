@@ -1,12 +1,12 @@
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
-import '../../../entities/audio/model/local_audio_file.dart';
 import '../../../shared/util/resource_save_path_provider.dart';
 import '../../../shared/util/uuid_factory.dart';
 import '../model/download_task.dart';
 import '../model/downloaded_task.dart';
 import '../model/file_type.dart';
+import '../util/downloaded_task_mapper.dart';
 import 'download_task_downloader.dart';
 import 'downloader.dart';
 import 'file_size_resolver.dart';
@@ -17,11 +17,13 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
     this._downloader,
     this._resolveFileSize,
     this._uuidFactory,
+    this._downloadedTaskMapper,
   );
 
   final Downloader _downloader;
   final ResolveFileSize _resolveFileSize;
   final UuidFactory _uuidFactory;
+  final DownloadedTaskMapper _downloadedTaskMapper;
 
   @override
   Future<DownloadedTask?> download(
@@ -54,44 +56,24 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
       return null;
     }
 
-    String? imageSavePath;
+    String? thumbnailSavePath;
     if (imageUri != null) {
       final imageSaveDirectory = await ResourceSavePathProvider.getAudioMp3ImagesSavePath();
-      final imageFileName = _uuidFactory.generate();
+      final imageName = imageUri.pathSegments.lastOrNull ?? '${_uuidFactory.generate()}.webp';
 
-      imageSavePath = '$imageSaveDirectory/$imageFileName.webp';
+      thumbnailSavePath = '$imageSaveDirectory/$imageName';
 
       await _downloader.download(
         uri: imageUri,
-        savePath: imageSavePath,
+        savePath: thumbnailSavePath,
         onReceiveProgress: (count, total, speed) {
           downloadedSize += count;
           onReceiveProgress?.call(downloadedSize, totalDownloadSize, speed);
         },
       );
     }
-    final payload = switch (downloadTask.fileType) {
-      FileType.audioMp3 => DownloadedTaskPayload(
-          localAudioFile: LocalAudioFile(
-            id: -1,
-            author: downloadTask.payload.remoteAudioFile?.author ?? '',
-            thumbnailPath: imageSavePath,
-            path: downloadTask.savePath,
-            sizeInBytes: downloadTask.payload.remoteAudioFile?.sizeInBytes ?? 0,
-            title: downloadTask.payload.remoteAudioFile?.title ?? '',
-            duration: Duration.zero,
-            userId: '',
-            youtubeVideoId: '',
-          ),
-        ),
-      FileType.videoMp4 => const DownloadedTaskPayload(), // TODO add payload
-    };
 
-    return DownloadedTask(
-      savePath: downloadTask.savePath,
-      fileType: downloadTask.fileType,
-      payload: payload,
-    );
+    return _downloadedTaskMapper.fromDownloadTask(downloadTask, thumbnailSavePath);
   }
 
   Future<int> _resolveExtraSize(List<Uri?> uris) async {

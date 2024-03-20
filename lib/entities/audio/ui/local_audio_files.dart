@@ -1,10 +1,7 @@
-import 'dart:io';
-
-import 'package:common_widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../../../shared/ui/audio_thumbnail.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../model/local_audio_file.dart';
 import '../state/local_audio_files_state.dart';
@@ -28,7 +25,7 @@ class LocalAudioFiles extends StatelessWidget {
   }
 }
 
-class _Item extends HookWidget {
+class _Item extends StatelessWidget {
   const _Item({
     required this.localAudioFile,
   });
@@ -39,32 +36,18 @@ class _Item extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final imageFile = useMemoized<File?>(
-      () => localAudioFile.thumbnailPath != null ? File(localAudioFile.thumbnailPath!) : null,
-    );
-
     return InkWell(
       onTap: () => context.localAudioFilesCubit.onLocalAudioFilePressed(localAudioFile),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           children: [
-            if (imageFile != null)
+            if (localAudioFile.thumbnailPath != null)
               Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.file(
-                    imageFile,
-                    width: 36,
-                    height: 36,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => BlankContainer(
-                      width: 36,
-                      height: 36,
-                      color: theme.colorScheme.secondaryContainer,
-                    ),
-                  ),
+                child: AudioThumbnail(
+                  thumbnailPath: localAudioFile.thumbnailPath,
+                  dimension: 36,
                 ),
               ),
             Expanded(
