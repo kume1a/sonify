@@ -47,6 +47,7 @@ class _Item extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 10),
                 child: AudioThumbnail(
                   thumbnailPath: localAudioFile.thumbnailPath,
+                  borderRadius: BorderRadius.circular(8),
                   dimension: 36,
                 ),
               ),

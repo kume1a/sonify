@@ -20,6 +20,7 @@ class AudioPlayerImage extends HookWidget {
               success: (data) => AudioThumbnail(
                 dimension: constraints.maxWidth * 0.75,
                 thumbnailPath: data.thumbnailPath ?? '',
+                borderRadius: BorderRadius.circular(18),
               ),
             );
           },
