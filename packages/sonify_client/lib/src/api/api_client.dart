@@ -10,7 +10,7 @@ import '../entity/user/model/user_dto.dart';
 import '../entity/youtube/model/youtube_suggestions_dto.dart';
 import '../feature/auth/model/google_sign_in_body.dart';
 import '../feature/auth/model/token_payload_dto.dart';
-import '../shared/entity/url_dto.dart';
+import '../shared/dto/url_dto.dart';
 
 part 'api_client.g.dart';
 

@@ -4,6 +4,7 @@ import 'package:logging/logging.dart';
 
 import '../app/di/register_dependencies.dart';
 import '../features/youtube/state/youtube_video_state.dart';
+import '../features/youtube/ui/download_youtube_audio_error_text.dart';
 import '../features/youtube/ui/download_youtube_video_button.dart';
 import '../features/youtube/ui/youtube_video.dart';
 import '../features/youtube/ui/youtube_video_info.dart';
@@ -31,28 +32,24 @@ class YoutubeVideoPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => getIt<YoutubeVideoCubit>()..init(args.videoId),
       lazy: false,
-      child: _Content(args: args),
+      child: const _Content(),
     );
   }
 }
 
 class _Content extends StatelessWidget {
-  const _Content({
-    required this.args,
-  });
-
-  final YoutubeVideoPageArgs args;
+  const _Content();
 
   @override
   Widget build(BuildContext context) {
     const padding = EdgeInsets.symmetric(horizontal: 16);
 
-    return Scaffold(
+    return const Scaffold(
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Stack(
+            Stack(
               children: [
                 AspectRatio(
                   aspectRatio: 16 / 9,
@@ -65,17 +62,24 @@ class _Content extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            const Padding(
+            SizedBox(height: 12),
+            Padding(
               padding: padding,
               child: YoutubeVideoInfo(),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Padding(
               padding: padding,
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: DownloadYoutubeVideoButton(videoId: args.videoId),
+                child: DownloadYoutubeVideoButton(),
+              ),
+            ),
+            Padding(
+              padding: padding,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: DownloadYoutubeAudioErrorText(),
               ),
             ),
           ],

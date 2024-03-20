@@ -68,5 +68,6 @@
   "yesReplace": "Yes, but replace old",
   "unlike": "Unlike",
   "like": "Like",
-  "adjustSpeed": "Adjust Speed"
+  "adjustSpeed": "Adjust Speed",
+  "audioAlreadyDownloaded": "Audio already downloaded"
 }

@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:common_models/common_models.dart';
 import 'package:common_network_components/common_network_components.dart';
+import 'package:logging/logging.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../../api/api_client.dart';
@@ -47,30 +48,59 @@ class YoutubeRepositoryImpl with SafeHttpRequestWrap implements YoutubeRepositor
   }
 
   @override
-  Future<List<Video>> search(String query) async {
-    return _yt.search.search(query);
+  Future<Either<FetchFailure, List<Video>>> search(String query) async {
+    try {
+      final videos = await _yt.search.search(query);
+
+      return right(videos);
+    } catch (e) {
+      Logger.root.severe('YoutubeRepositoryImpl.search', e);
+    }
+
+    return left(FetchFailure.unknown);
   }
 
   @override
-  Future<Video> getVideo(String videoId) {
-    return _yt.videos.get(videoId);
+  Future<Either<FetchFailure, Video>> getVideo(String videoId) async {
+    try {
+      final video = await _yt.videos.get(videoId);
+
+      return right(video);
+    } catch (e) {
+      Logger.root.severe('YoutubeRepositoryImpl.getVideo', e);
+    }
+
+    return left(FetchFailure.unknown);
   }
 
   @override
-  Future<UnmodifiableListView<AudioOnlyStreamInfo>> getAudioOnlyStreams(
+  Future<Either<FetchFailure, UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams(
     String videoId,
   ) async {
-    final manifest = await _yt.videos.streams.getManifest(videoId);
+    try {
+      final manifest = await _yt.videos.streams.getManifest(videoId);
 
-    return manifest.audioOnly;
+      return right(manifest.audioOnly);
+    } catch (e) {
+      Logger.root.severe('YoutubeRepositoryImpl.getAudioOnlyStreams', e);
+    }
+
+    return left(FetchFailure.unknown);
   }
 
   @override
-  Future<MuxedStreamInfo> getHighestQualityMuxedStreamInfo(
+  Future<Either<FetchFailure, MuxedStreamInfo>> getHighestQualityMuxedStreamInfo(
     String videoId,
   ) async {
-    final manifest = await _yt.videos.streams.getManifest(videoId);
+    try {
+      final manifest = await _yt.videos.streams.getManifest(videoId);
+      final streamInfo = await manifest.muxed.withHighestBitrate();
 
-    return manifest.muxed.withHighestBitrate();
+      return right(streamInfo);
+    } catch (e) {
+      Logger.root.severe('YoutubeRepositoryImpl.getHighestQualityMuxedStreamInfo', e);
+    }
+
+    return left(FetchFailure.unknown);
   }
 }

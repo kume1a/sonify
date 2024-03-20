@@ -10,11 +10,11 @@ abstract interface class YoutubeRepository {
 
   Future<Either<FetchFailure, YoutubeSearchSuggestions>> getYoutubeSuggestions(String keyword);
 
-  Future<List<Video>> search(String query);
+  Future<Either<FetchFailure, List<Video>>> search(String query);
 
-  Future<UnmodifiableListView<AudioOnlyStreamInfo>> getAudioOnlyStreams(String videoId);
+  Future<Either<FetchFailure, UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams(String videoId);
 
-  Future<MuxedStreamInfo> getHighestQualityMuxedStreamInfo(String videoId);
+  Future<Either<FetchFailure, MuxedStreamInfo>> getHighestQualityMuxedStreamInfo(String videoId);
 
-  Future<Video> getVideo(String videoId);
+  Future<Either<FetchFailure, Video>> getVideo(String videoId);
 }

@@ -1,5 +1,4 @@
 import 'package:injectable/injectable.dart';
-import 'package:logging/logging.dart';
 
 import '../../../entities/audio/api/local_audio_file_repository.dart';
 import '../model/downloaded_task.dart';
@@ -32,8 +31,6 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
     if (localAudioFile == null) {
       return;
     }
-
-    Logger.root.info('Saving local audio file: $localAudioFile');
 
     await _localAudioFileRepository.save(localAudioFile);
   }

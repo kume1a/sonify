@@ -2,24 +2,24 @@ import 'package:injectable/injectable.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
 import '../model/local_audio_file.dart';
-import '../util/audio_entity_to_local_audio_file.dart';
+import '../util/local_audio_file_mapper.dart';
 import 'local_audio_file_repository.dart';
 
 @LazySingleton(as: LocalAudioFileRepository)
 class LocalAudioFileRepositoryImpl implements LocalAudioFileRepository {
   LocalAudioFileRepositoryImpl(
     this._audioEntityDao,
-    this._audioEntityToLocalAudioFile,
+    this._localAudioFileMapper,
   );
 
   final AudioEntityDao _audioEntityDao;
-  final AudioEntityToLocalAudioFile _audioEntityToLocalAudioFile;
+  final LocalAudioFileMapper _localAudioFileMapper;
 
   @override
   Future<List<LocalAudioFile>> getAllByUserId(String userId) async {
     final audioEntities = await _audioEntityDao.getAllByUserId(userId);
 
-    return audioEntities.map(_audioEntityToLocalAudioFile.call).toList();
+    return audioEntities.map(_localAudioFileMapper.fromAudioEntity).toList();
   }
 
   @override
@@ -30,7 +30,7 @@ class LocalAudioFileRepositoryImpl implements LocalAudioFileRepository {
       return null;
     }
 
-    return _audioEntityToLocalAudioFile(entity);
+    return _localAudioFileMapper.fromAudioEntity(entity);
   }
 
   @override

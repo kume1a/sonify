@@ -7,8 +7,7 @@ import 'package:injectable/injectable.dart';
 import 'package:sonify_client/sonify_client.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-import '../../../entities/audio/model/remote_audio_file.dart';
-import '../../../shared/util/assemble_resource_url.dart';
+import '../../../entities/audio/util/remote_audio_file_mapper.dart';
 import '../../download_file/model/downloads_event.dart';
 
 part 'youtube_video_state.freezed.dart';
@@ -19,13 +18,15 @@ class YoutubeVideoState with _$YoutubeVideoState {
     Uri? videoUri,
     required SimpleDataState<Video> video,
     required SimpleDataState<MuxedStreamInfo> highQualityMuxedStreamInfo,
-    required ActionState<ActionFailure> downloadAudioState,
+    required ActionState<DownloadYoutubeAudioFailure> downloadAudioState,
+    required bool isDownloadAvailable,
   }) = _YoutubeVideoState;
 
   factory YoutubeVideoState.initial() => YoutubeVideoState(
         video: SimpleDataState.idle(),
         highQualityMuxedStreamInfo: SimpleDataState.idle(),
         downloadAudioState: ActionState.idle(),
+        isDownloadAvailable: false,
       );
 }
 
@@ -39,11 +40,13 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
     this._youtubeRepository,
     this._eventBus,
     this._audioRepository,
+    this._remoteAudioFileMapper,
   ) : super(YoutubeVideoState.initial());
 
   final YoutubeRepository _youtubeRepository;
   final EventBus _eventBus;
   final AudioRepository _audioRepository;
+  final RemoteAudioFileMapper _remoteAudioFileMapper;
 
   void init(String videoId) {
     _loadVideo(videoId);
@@ -59,9 +62,10 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
     final highestBitrateVideo = await _youtubeRepository.getHighestQualityMuxedStreamInfo(videoId);
 
     emit(state.copyWith(
-      videoUri: highestBitrateVideo.url,
-      video: SimpleDataState.success(video),
-      highQualityMuxedStreamInfo: SimpleDataState.success(highestBitrateVideo),
+      videoUri: highestBitrateVideo.rightOrNull?.url,
+      video: SimpleDataState.fromEither(video),
+      highQualityMuxedStreamInfo: SimpleDataState.fromEither(highestBitrateVideo),
+      isDownloadAvailable: video.isRight,
     ));
   }
 
@@ -71,22 +75,28 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
       return;
     }
 
+    emit(state.copyWith(downloadAudioState: ActionState.executing()));
+
     _audioRepository.downloadYoutubeAudio(video.id.value).awaitFold(
-      (l) => emit(state.copyWith(downloadAudioState: ActionState.failed(l))),
-      (r) {
-        final remoteAudioFile = RemoteAudioFile(
-          title: video.title,
-          uri: Uri.parse(assembleResourceUrl(r.path)),
-          sizeInBytes: r.sizeInBytes ?? 0,
-          author: video.author,
-          imageUri: Uri.tryParse(assembleResourceUrl(r.thumbnailPath)),
-          userId: r.userId,
-          youtubeVideoId: r.youtubeVideoId,
-          duration: Duration(seconds: r.duration),
-        );
+      (l) async {
+        emit(state.copyWith(downloadAudioState: ActionState.failed(l)));
+        await _resetDownloadAudioState();
+      },
+      (r) async {
+        final remoteAudioFile = _remoteAudioFileMapper.fromAudio(r);
 
         _eventBus.fire(DownloadsEvent.enqueueRemoteAudioFile(remoteAudioFile));
+
+        emit(state.copyWith(downloadAudioState: ActionState.executed()));
+        await _resetDownloadAudioState();
       },
+    );
+  }
+
+  Future<void> _resetDownloadAudioState() {
+    return Future.delayed(
+      const Duration(seconds: 2),
+      () => emit(state.copyWith(downloadAudioState: ActionState.idle())),
     );
   }
 }

@@ -54,7 +54,7 @@ class YoutubeVideosCubit extends Cubit<YoutubeVideosState> {
 
     final res = await _youtubeRepository.search(searchQuery);
 
-    emit(state.copyWith(searchResults: DataState.success(res)));
+    emit(state.copyWith(searchResults: DataState.fromEither(res)));
   }
 
   Future<void> onClearSearch() async {

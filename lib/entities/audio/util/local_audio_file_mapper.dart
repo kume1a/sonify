@@ -4,8 +4,8 @@ import 'package:sonify_storage/sonify_storage.dart';
 import '../model/local_audio_file.dart';
 
 @lazySingleton
-class AudioEntityToLocalAudioFile {
-  LocalAudioFile call(AudioEntity audioEntity) {
+class LocalAudioFileMapper {
+  LocalAudioFile fromAudioEntity(AudioEntity audioEntity) {
     return LocalAudioFile(
       id: audioEntity.id,
       title: audioEntity.title ?? '',
