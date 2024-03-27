@@ -114,23 +114,36 @@ class AppAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> addQueueItem(MediaItem mediaItem) async {
-    // manage Just Audio
     final audioSource = _createAudioSource(mediaItem);
     _playlist.add(audioSource);
 
-    // notify system
     final newQueue = queue.value..add(mediaItem);
     queue.add(newQueue);
   }
 
   @override
+  Future<void> insertQueueItem(int index, MediaItem mediaItem) async {
+    final audioSource = _createAudioSource(mediaItem);
+    _playlist.insert(index, audioSource);
+
+    final newQueue = queue.value..insert(index, mediaItem);
+    queue.add(newQueue);
+  }
+
+  @override
   Future<void> removeQueueItemAt(int index) async {
-    // manage Just Audio
     _playlist.removeAt(index);
 
-    // notify system
     final newQueue = queue.value..removeAt(index);
     queue.add(newQueue);
+  }
+
+  @override
+  Future<void> updateQueue(List<MediaItem> queue) async {
+    final audioSources = queue.map(_createAudioSource).toList();
+
+    _playlist.clear();
+    _playlist.addAll(audioSources);
   }
 
   @override

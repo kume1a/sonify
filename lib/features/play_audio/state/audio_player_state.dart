@@ -122,7 +122,8 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
       },
     );
 
-    await _audioHandler.addQueueItem(mediaItem);
+    await _audioHandler.updateQueue([]);
+    await _audioHandler.insertQueueItem(0, mediaItem);
   }
 
   void _onPlaybackStateChanged(PlaybackState playbackState) {
