@@ -14,7 +14,7 @@ class EmailSignInState with _$EmailSignInState {
   const factory EmailSignInState({
     required Email email,
     required Password password,
-    required ActionState<ActionFailure> signInState,
+    required ActionState<EmailSignInFailure> signInState,
     required bool validateForm,
   }) = _EmailSignInState;
 
@@ -47,11 +47,10 @@ class EmailSignInCubit extends Cubit<EmailSignInState> {
   }
 
   void onPasswordChanged(String password) {
-    final Password newPassword = Password(password);
-    emit(state.copyWith(password: newPassword, validateForm: true));
+    emit(state.copyWith(password: Password(password)));
   }
 
-  Future<void> onEmailSignIn() async {
+  Future<void> onSignInPressed() async {
     emit(state.copyWith(validateForm: true, signInState: ActionState.idle()));
 
     if (state.email.invalid || state.password.invalid) {

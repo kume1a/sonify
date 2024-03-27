@@ -2,7 +2,10 @@ import 'package:common_models/common_models.dart';
 import 'package:common_network_components/common_network_components.dart';
 
 import '../../../api/api_client.dart';
+import '../../../shared/api_exception_message_code.dart';
+import '../../../shared/dto/error_response_dto.dart';
 import '../model/email_sign_in_body.dart';
+import '../model/email_sign_in_failure.dart';
 import '../model/google_sign_in_body.dart';
 import '../model/token_payload.dart';
 import '../util/token_payload_mapper.dart';
@@ -29,16 +32,29 @@ class AuthRepositoryImpl with SafeHttpRequestWrap implements AuthRepository {
   }
 
   @override
-  Future<Either<ActionFailure, TokenPayload>> emailSignIn({
+  Future<Either<EmailSignInFailure, TokenPayload>> emailSignIn({
     required String email,
     required String password,
   }) {
-    return callCatchWithActionFailure(() async {
-      final body = EmailSignInBody(email: email, password: password);
+    return callCatch(
+      call: () async {
+        final body = EmailSignInBody(email: email, password: password);
 
-      final res = await _apiClient.emailSignIn(body);
+        final res = await _apiClient.emailSignIn(body);
 
-      return _tokenPayloadMapper.dtoToModel(res);
-    });
+        return _tokenPayloadMapper.dtoToModel(res);
+      },
+      networkError: EmailSignInFailure.network(),
+      unknownError: EmailSignInFailure.unknown(),
+      onResponseError: (response) {
+        final errorDto = ErrorResponseDto.fromJson(response?.data);
+
+        return switch (errorDto.message) {
+          ApiExceptionMessageCode.invalidEmailOrPassword => EmailSignInFailure.invalidEmailOrPassword(),
+          ApiExceptionMessageCode.invalidAuthMethod => EmailSignInFailure.invalidAuthMethod(),
+          _ => EmailSignInFailure.unknown(),
+        };
+      },
+    );
   }
 }

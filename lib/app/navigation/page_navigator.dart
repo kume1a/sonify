@@ -28,7 +28,7 @@ class PageNavigator {
   void toYoutubeVideo(YoutubeVideoPageArgs args) =>
       GlobalNavigator.pushNamed(Routes.youtubeVideo, arguments: args);
 
-  void toUserName() => GlobalNavigator.pushReplacementNamed(Routes.userName);
+  void toUserName() => GlobalNavigator.pushNamedAndRemoveAll(Routes.userName);
 
   void toAudioPlayer(AudioPlayerPageArgs args) =>
       GlobalNavigator.pushNamed(Routes.audioPlayer, arguments: args);

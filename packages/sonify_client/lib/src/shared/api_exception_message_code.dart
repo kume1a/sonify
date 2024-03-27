@@ -9,4 +9,6 @@ abstract class ApiExceptionMessageCode {
   static const missingToken = 'MISSING_TOKEN';
   static const invalidToken = 'INVALID_TOKEN';
   static const audioAlreadyExists = 'AUDIO_ALREADY_EXISTS';
+  static const invalidAuthMethod = 'INVALID_AUTH_METHOD';
+  static const invalidEmailOrPassword = 'INVALID_EMAIL_OR_PASSWORD';
 }

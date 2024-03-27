@@ -99,11 +99,11 @@ class _ButtonSignIn extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<EmailSignInCubit, EmailSignInState>(
       buildWhen: (previous, current) => previous.signInState != current.signInState,
-      builder: (context, state) {
+      builder: (_, state) {
         final l = AppLocalizations.of(context);
 
         return LoadingTextButton(
-          onPressed: state.signInState.isExecuting ? null : context.emailSignInCubit.onEmailSignIn,
+          onPressed: context.emailSignInCubit.onSignInPressed,
           label: l.signIn,
           isLoading: state.signInState.isExecuting,
         );
@@ -130,7 +130,7 @@ class _EmailSignInErrortext extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(12),
           child: Text(
-            l.emailSignInFailed,
+            state.signInState.failureOrNull?.translate(l) ?? '',
             textAlign: TextAlign.center,
             style: TextStyle(color: theme.colorScheme.error),
           ),

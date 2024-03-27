@@ -54,3 +54,14 @@ extension DownloadYoutubeAudioFailureIntl on DownloadYoutubeAudioFailure {
     );
   }
 }
+
+extension EmailSignInFailureIntl on EmailSignInFailure {
+  String translate(AppLocalizations l) {
+    return when(
+      invalidEmailOrPassword: () => l.invalidEmailOrPassword,
+      invalidAuthMethod: () => l.emailAlreadyUsedWithDifferentAuthProvider,
+      network: () => l.noInternetConnection,
+      unknown: () => l.unknownError,
+    );
+  }
+}

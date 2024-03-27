@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -5,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:synchronized/synchronized.dart';
 
 import '../feature/auth/api/auth_token_store.dart';
+import '../shared/api_exception_message_code.dart';
+import '../shared/dto/error_response_dto.dart';
 
 class AuthorizationInterceptor extends Interceptor {
   AuthorizationInterceptor(
@@ -36,7 +39,17 @@ class AuthorizationInterceptor extends Interceptor {
   Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == HttpStatus.unauthorized ||
         err.response?.statusCode == HttpStatus.forbidden) {
-      _clearExit();
+      try {
+        final errDto = ErrorResponseDto.fromJson(err.response?.data);
+
+        if (errDto.message == ApiExceptionMessageCode.invalidToken ||
+            errDto.message == ApiExceptionMessageCode.missingToken ||
+            errDto.message == ApiExceptionMessageCode.unauthorized) {
+          await _clearExit();
+        }
+      } catch (e) {
+        log(e.toString());
+      }
     }
 
     return super.onError(err, handler);
