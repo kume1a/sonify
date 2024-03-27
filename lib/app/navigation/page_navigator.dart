@@ -33,5 +33,7 @@ class PageNavigator {
   void toAudioPlayer(AudioPlayerPageArgs args) =>
       GlobalNavigator.pushNamed(Routes.audioPlayer, arguments: args);
 
-  void toAuthPage() => GlobalNavigator.pushNamedAndRemoveAll(Routes.auth);
+  void toAuth() => GlobalNavigator.pushNamedAndRemoveAll(Routes.auth);
+
+  void toEmailSignIn() => GlobalNavigator.pushNamed(Routes.emailSignIn);
 }

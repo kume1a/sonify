@@ -22,6 +22,7 @@ class UpdateUserNameForm extends StatelessWidget {
           showErrors: state.validateForm,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextFormField(
                 decoration: InputDecoration(hintText: l.enterYourName),

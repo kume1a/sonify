@@ -69,5 +69,15 @@
   "unlike": "Unlike",
   "like": "Like",
   "adjustSpeed": "Adjust Speed",
-  "audioAlreadyDownloaded": "Audio already downloaded"
+  "audioAlreadyDownloaded": "Audio already downloaded",
+  "emailSignInFailed": "Sign in with email failed",
+  "email": "Email",
+  "password": "Password",
+  "emailIsTooLong": "Email is too long",
+  "emailContainsWhitespace": "Email contains empty space",
+  "emailIsInvalid": "Email is invalid",
+  "passwordContainsWhitespace": "Password contains empty space",
+  "signIn": "Sign In",
+  "passwordIsTooShort": "Password is too short",
+  "passwordIsTooLong": "Password is too long"
 }

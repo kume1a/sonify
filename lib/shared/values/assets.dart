@@ -23,4 +23,5 @@ abstract final class Assets {
   static const svgQuillList = '$_icons/quill_list.svg';
   static const svgShuffle = '$_icons/shuffle.svg';
   static const svgPause = '$_icons/pause.svg';
+  static const svgMail = '$_icons/mail.svg';
 }

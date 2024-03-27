@@ -108,4 +108,8 @@ class AuthCubit extends Cubit<AuthState> {
       },
     );
   }
+
+  void onEmailSignIn() {
+    _pageNavigator.toEmailSignIn();
+  }
 }

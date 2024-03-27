@@ -8,6 +8,7 @@ import '../entity/audio/model/download_youtube_audio_body.dart';
 import '../entity/user/model/update_user_body.dart';
 import '../entity/user/model/user_dto.dart';
 import '../entity/youtube/model/youtube_suggestions_dto.dart';
+import '../feature/auth/model/email_sign_in_body.dart';
 import '../feature/auth/model/google_sign_in_body.dart';
 import '../feature/auth/model/token_payload_dto.dart';
 import '../shared/dto/url_dto.dart';
@@ -32,6 +33,9 @@ abstract class ApiClient {
   // auth ------------------------------
   @POST('/v1/auth/googleSignIn')
   Future<TokenPayloadDto> googleSignIn(@Body() GoogleSignInBody body);
+
+  @POST('/v1/auth/emailSignIn')
+  Future<TokenPayloadDto> emailSignIn(@Body() EmailSignInBody body);
 
   // user ------------------------------
   @PATCH('/v1/users')

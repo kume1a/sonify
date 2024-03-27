@@ -22,6 +22,29 @@ extension NameFailureIntl on NameFailure {
   }
 }
 
+extension EmailFailureIntl on EmailFailure {
+  String translate(AppLocalizations l) {
+    return when(
+      empty: () => l.fieldIsRequired,
+      tooLong: () => l.emailIsTooLong,
+      containsWhitespace: () => l.emailContainsWhitespace,
+      invalid: () => l.emailIsInvalid,
+    );
+  }
+}
+
+extension PasswordFailureIntl on PasswordFailure {
+  String translate(AppLocalizations l) {
+    return maybeWhen(
+      orElse: () => '',
+      empty: () => l.fieldIsRequired,
+      tooLong: () => l.passwordIsTooShort,
+      tooShort: () => l.passwordIsTooShort,
+      containsWhitespace: () => l.passwordContainsWhitespace,
+    );
+  }
+}
+
 extension DownloadYoutubeAudioFailureIntl on DownloadYoutubeAudioFailure {
   String translate(AppLocalizations l) {
     return when(

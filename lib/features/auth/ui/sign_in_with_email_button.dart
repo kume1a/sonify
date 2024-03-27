@@ -4,14 +4,14 @@ import 'package:flutter_svg/svg.dart';
 import '../../../shared/values/assets.dart';
 import '../state/auth_state.dart';
 
-class SignInWithGoogleButton extends StatelessWidget {
-  const SignInWithGoogleButton({super.key});
+class SignInWithEmailButton extends StatelessWidget {
+  const SignInWithEmailButton({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
       color: Colors.white,
-      onPressed: context.authCubit.onGoogleSignIn,
+      onPressed: context.authCubit.onEmailSignIn,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
@@ -19,13 +19,13 @@ class SignInWithGoogleButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SvgPicture.asset(
-            Assets.svgGoogle,
+            Assets.svgMail,
             width: 20,
             height: 20,
           ),
           const SizedBox(width: 6),
           const Text(
-            'Sign in with Google',
+            'Continue with email',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.black),
           ),

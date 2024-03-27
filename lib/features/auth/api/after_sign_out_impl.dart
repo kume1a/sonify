@@ -13,6 +13,6 @@ class AfterSignOutImpl implements AfterSignOut {
 
   @override
   Future<void> call() async {
-    _pageNavigator.toAuthPage();
+    _pageNavigator.toAuth();
   }
 }

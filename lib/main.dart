@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:common_models/common_models.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:global_navigator/global_navigator.dart';
@@ -33,6 +34,8 @@ Future<void> main() async {
   });
 
   configureAudioComponents();
+
+  VVOConfig.password.minLength = 6;
 
   runApp(const App());
 }
