@@ -1,3 +1,4 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:common_models/common_models.dart';
 import 'package:common_utilities/common_utilities.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
-import '../../../app/navigation/page_navigator.dart';
 import '../../../features/auth/api/auth_user_info_provider.dart';
-import '../../../pages/audio_player_page.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../api/local_audio_file_repository.dart';
 import '../model/event_local_audio_file.dart';
@@ -23,9 +22,9 @@ extension LocalAudioFilesCubitX on BuildContext {
 final class LocalAudioFilesCubit extends EntityLoaderCubit<List<LocalAudioFile>> {
   LocalAudioFilesCubit(
     this._localAudioFileRepository,
-    this._pageNavigator,
     this._authUserInfoProvider,
     this._eventBus,
+    this._audioHandler,
   ) {
     _init();
 
@@ -33,9 +32,9 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<LocalAudioFile>>
   }
 
   final LocalAudioFileRepository _localAudioFileRepository;
-  final PageNavigator _pageNavigator;
   final AuthUserInfoProvider _authUserInfoProvider;
   final EventBus _eventBus;
+  final AudioHandler _audioHandler;
 
   final _subscriptions = SubscriptionComposite();
 
@@ -64,12 +63,21 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<LocalAudioFile>>
     return _localAudioFileRepository.getAllByUserId(userId);
   }
 
-  void onLocalAudioFilePressed(LocalAudioFile localAudioFile) {
-    final args = AudioPlayerPageArgs(
-      localAudioFileId: localAudioFile.id,
+  Future<void> onLocalAudioFilePressed(LocalAudioFile localAudioFile) async {
+    final mediaItem = MediaItem(
+      id: localAudioFile.id.toString(),
+      title: localAudioFile.title,
+      artist: localAudioFile.author,
+      duration: localAudioFile.duration,
+      artUri: localAudioFile.thumbnailPath != null ? Uri.parse(localAudioFile.thumbnailPath!) : null,
+      extras: {
+        'localPath': localAudioFile.path,
+        'localAudioFileId': localAudioFile.id,
+      },
     );
 
-    _pageNavigator.toAudioPlayer(args);
+    await _audioHandler.updateQueue([]);
+    await _audioHandler.insertQueueItem(0, mediaItem);
   }
 
   Future<void> _onEventLocalAudioFile(EventLocalAudioFile event) async {

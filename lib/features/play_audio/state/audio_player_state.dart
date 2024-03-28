@@ -38,20 +38,16 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
   AudioPlayerCubit(
     this._localAudioFileRepository,
     this._audioHandler,
-  ) : super(AudioPlayerState.initial());
+  ) : super(AudioPlayerState.initial()) {
+    _init();
+  }
 
   final LocalAudioFileRepository _localAudioFileRepository;
   final AudioHandler _audioHandler;
 
   final _subscriptions = SubscriptionComposite();
 
-  int? _localAudioFileId;
-
-  Future<void> init(int localAudioFileId) async {
-    _localAudioFileId = localAudioFileId;
-
-    await _queueAudioFile();
-
+  Future<void> _init() async {
     _subscriptions.add(_audioHandler.playbackState.listen(_onPlaybackStateChanged));
     _subscriptions.add(AudioService.position.listen(_onPositionChanged));
     _subscriptions.add(_audioHandler.mediaItem.listen(_onMediaItemChanged));
@@ -95,37 +91,6 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
 
   void onSkipToNext() => _audioHandler.skipToNext();
 
-  Future<void> _queueAudioFile() async {
-    if (_localAudioFileId == null) {
-      Logger.root.warning('Local audio file id is null');
-      return;
-    }
-
-    emit(state.copyWith(currentSong: SimpleDataState.loading()));
-    final localAudioFile = await _localAudioFileRepository.getById(_localAudioFileId!);
-
-    if (localAudioFile == null) {
-      emit(state.copyWith(currentSong: SimpleDataState.failure()));
-      return;
-    }
-
-    emit(state.copyWith(currentSong: SimpleDataState.success(localAudioFile)));
-
-    final mediaItem = MediaItem(
-      id: localAudioFile.id.toString(),
-      title: localAudioFile.title,
-      artist: localAudioFile.author,
-      duration: localAudioFile.duration,
-      artUri: localAudioFile.thumbnailPath != null ? Uri.parse(localAudioFile.thumbnailPath!) : null,
-      extras: {
-        'localPath': localAudioFile.path,
-      },
-    );
-
-    await _audioHandler.updateQueue([]);
-    await _audioHandler.insertQueueItem(0, mediaItem);
-  }
-
   void _onPlaybackStateChanged(PlaybackState playbackState) {
     final isPlaying = playbackState.playing;
     final processingState = playbackState.processingState;
@@ -157,12 +122,31 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
     emit(state.copyWith(playbackProgress: newProgress));
   }
 
-  void _onMediaItemChanged(MediaItem? mediaItem) {
+  Future<void> _onMediaItemChanged(MediaItem? mediaItem) async {
     final newProgress = (state.playbackProgress ?? PlaybackProgressState.zero()).copyWith(
       total: mediaItem?.duration ?? Duration.zero,
     );
 
     emit(state.copyWith(playbackProgress: newProgress));
+
+    // --------------
+
+    final localAudioFileId = mediaItem?.extras?['localAudioFileId'] as int?;
+    if (localAudioFileId == null) {
+      Logger.root.warning('Local audio file id is null, so not loading the current song.');
+      emit(state.copyWith(currentSong: SimpleDataState.idle()));
+      return;
+    }
+
+    emit(state.copyWith(currentSong: SimpleDataState.loading()));
+    final localAudioFile = await _localAudioFileRepository.getById(localAudioFileId);
+
+    if (localAudioFile == null) {
+      emit(state.copyWith(currentSong: SimpleDataState.failure()));
+      return;
+    }
+
+    emit(state.copyWith(currentSong: SimpleDataState.success(localAudioFile)));
   }
 
   // Future<void> _loadPlaylist() async {

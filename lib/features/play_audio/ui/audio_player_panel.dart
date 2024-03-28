@@ -1,14 +1,113 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../../shared/ui/audio_thumbnail.dart';
 import '../../../shared/values/assets.dart';
 import '../model/playback_button_state.dart';
 import '../state/audio_player_state.dart';
 
-class AudioPlayerControls extends StatelessWidget {
-  const AudioPlayerControls({super.key});
+class AudioPlayerPanel extends StatelessWidget {
+  const AudioPlayerPanel({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        _AudioPlayerHeader(),
+        SizedBox(height: 24),
+        _AudioPlayerImage(),
+        SizedBox(height: 32),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: _AudioPlayerControls(),
+        ),
+        Spacer(flex: 3),
+      ],
+    );
+  }
+}
+
+class _AudioPlayerImage extends HookWidget {
+  const _AudioPlayerImage();
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (_, constraints) {
+        return BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+          buildWhen: (previous, current) => previous.currentSong != current.currentSong,
+          builder: (_, state) {
+            return state.currentSong.maybeWhen(
+              orElse: () => const SizedBox.shrink(),
+              success: (data) => AudioThumbnail(
+                dimension: constraints.maxWidth * 0.75,
+                thumbnailPath: data.thumbnailPath ?? '',
+                borderRadius: BorderRadius.circular(18),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _AudioPlayerHeader extends StatelessWidget {
+  const _AudioPlayerHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        children: [
+          IconButton(
+            onPressed: () => Navigator.of(context).maybePop(),
+            iconSize: 28,
+            icon: const RotatedBox(
+              quarterTurns: 1,
+              child: Icon(Icons.chevron_right),
+            ),
+          ),
+          Expanded(
+            child: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+              builder: (context, state) {
+                if (state.playlistName == null) {
+                  return const SizedBox.shrink();
+                }
+
+                return const Column(
+                  children: [
+                    Text(
+                      'Playlist name',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      'Playlist',
+                      style: TextStyle(fontSize: 10),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: SvgPicture.asset(Assets.svgQuillList),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AudioPlayerControls extends StatelessWidget {
+  const _AudioPlayerControls();
 
   @override
   Widget build(BuildContext context) {

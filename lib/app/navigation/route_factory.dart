@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../pages/audio_player_page.dart';
 import '../../pages/auth_page.dart';
 import '../../pages/email_sign_in_page.dart';
 import '../../pages/main/main_page.dart';
@@ -15,7 +14,6 @@ Route<dynamic> routeFactory(RouteSettings settings) {
     Routes.youtubeSearch => _createYoutubeSearchRoute(settings),
     Routes.youtubeVideo => _createYoutubeVideoRoute(settings),
     Routes.userName => _createUserNameRoute(settings),
-    Routes.audioPlayer => _createAudioPlayerRoute(settings),
     Routes.auth => _createAuthRoute(settings),
     Routes.emailSignIn => _createEmailSignInRoute(settings),
     _ => throw Exception('route ${settings.name} is not supported'),
@@ -25,15 +23,6 @@ Route<dynamic> routeFactory(RouteSettings settings) {
 Route _createEmailSignInRoute(RouteSettings settings) {
   return MaterialPageRoute(
     builder: (_) => const EmailSignInPage(),
-    settings: settings,
-  );
-}
-
-Route _createAudioPlayerRoute(RouteSettings settings) {
-  final AudioPlayerPageArgs args = _getArgs(settings);
-
-  return MaterialPageRoute(
-    builder: (_) => AudioPlayerPage(args: args),
     settings: settings,
   );
 }

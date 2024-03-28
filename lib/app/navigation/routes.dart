@@ -6,6 +6,5 @@ abstract class Routes {
   static const String youtubeSearch = 'youtubeSearch';
   static const String youtubeVideo = 'youtubeVideo';
   static const String userName = 'userName';
-  static const String audioPlayer = 'audioPlayer';
   static const String emailSignIn = 'emailSignIn';
 }
