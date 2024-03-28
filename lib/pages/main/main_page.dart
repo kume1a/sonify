@@ -40,6 +40,7 @@ class _Content extends StatelessWidget {
       bottomNavigationBar: const MainNavigationBar(),
       body: SafeArea(
         child: SlidingUpPanel(
+          controller: context.audioPlayerCubit.panelController,
           body: const PageContent(),
           panel: const AudioPlayerPanel(),
           color: theme.scaffoldBackgroundColor,

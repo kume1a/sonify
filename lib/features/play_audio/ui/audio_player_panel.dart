@@ -65,7 +65,7 @@ class _AudioPlayerHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            onPressed: () => Navigator.of(context).maybePop(),
+            onPressed: context.audioPlayerCubit.onDownArrowPressed,
             iconSize: 28,
             icon: const RotatedBox(
               quarterTurns: 1,

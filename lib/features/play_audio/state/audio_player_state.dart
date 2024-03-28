@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../../entities/audio/api/local_audio_file_repository.dart';
 import '../../../entities/audio/model/local_audio_file.dart';
@@ -47,6 +48,8 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
 
   final _subscriptions = SubscriptionComposite();
 
+  final panelController = PanelController();
+
   Future<void> _init() async {
     _subscriptions.add(_audioHandler.playbackState.listen(_onPlaybackStateChanged));
     _subscriptions.add(AudioService.position.listen(_onPositionChanged));
@@ -67,6 +70,13 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
     await _subscriptions.closeAll();
 
     return super.close();
+  }
+
+  void onDownArrowPressed() {
+    panelController.animatePanelToPosition(
+      0.0,
+      duration: const Duration(milliseconds: 250),
+    );
   }
 
   void onPlayOrPause() {
@@ -138,6 +148,11 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
       return;
     }
 
+    panelController.animatePanelToPosition(
+      1.0,
+      duration: const Duration(milliseconds: 250),
+    );
+
     emit(state.copyWith(currentSong: SimpleDataState.loading()));
     final localAudioFile = await _localAudioFileRepository.getById(localAudioFileId);
 
@@ -147,6 +162,8 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
     }
 
     emit(state.copyWith(currentSong: SimpleDataState.success(localAudioFile)));
+
+    await _audioHandler.play();
   }
 
   // Future<void> _loadPlaylist() async {
