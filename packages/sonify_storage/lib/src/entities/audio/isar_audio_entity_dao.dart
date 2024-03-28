@@ -14,7 +14,7 @@ class IsarAudioEntityDao implements AudioEntityDao {
   }
 
   @override
-  Future<void> insert(AudioEntity entity) {
+  Future<int> insert(AudioEntity entity) {
     return _isar.writeTxn(() => _isar.collection<AudioEntity>().put(entity));
   }
 

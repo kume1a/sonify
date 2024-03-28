@@ -5,5 +5,5 @@ abstract interface class LocalAudioFileRepository {
 
   Future<LocalAudioFile?> getById(int id);
 
-  Future<void> save(LocalAudioFile localAudioFile);
+  Future<LocalAudioFile> save(LocalAudioFile localAudioFile);
 }

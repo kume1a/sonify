@@ -34,7 +34,7 @@ class LocalAudioFileRepositoryImpl implements LocalAudioFileRepository {
   }
 
   @override
-  Future<void> save(LocalAudioFile localAudioFile) {
+  Future<LocalAudioFile> save(LocalAudioFile localAudioFile) async {
     final entity = AudioEntity();
 
     entity.title = localAudioFile.title;
@@ -46,6 +46,8 @@ class LocalAudioFileRepositoryImpl implements LocalAudioFileRepository {
     entity.youtubeVideoId = localAudioFile.youtubeVideoId;
     entity.thumbnailPath = localAudioFile.thumbnailPath;
 
-    return _audioEntityDao.insert(entity);
+    final entityId = await _audioEntityDao.insert(entity);
+
+    return localAudioFile.copyWith(id: entityId);
   }
 }

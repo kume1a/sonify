@@ -36,9 +36,9 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
       return;
     }
 
-    await _localAudioFileRepository.save(localAudioFile);
+    final insertedLocalAudioFile = await _localAudioFileRepository.save(localAudioFile);
 
-    _eventBus.fire(EventLocalAudioFile.downloaded(localAudioFile));
+    _eventBus.fire(EventLocalAudioFile.downloaded(insertedLocalAudioFile));
   }
 
   Future<void> _handleVideoMp4Downloaded(DownloadedTask downloadTask) async {
