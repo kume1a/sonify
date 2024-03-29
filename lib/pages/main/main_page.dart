@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../app/di/register_dependencies.dart';
 import '../../features/play_audio/state/audio_player_state.dart';
@@ -33,18 +32,11 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final mediaQuery = MediaQuery.of(context);
-
-    return Scaffold(
-      bottomNavigationBar: const MainNavigationBar(),
+    return const Scaffold(
+      bottomNavigationBar: MainNavigationBar(),
       body: SafeArea(
-        child: SlidingUpPanel(
-          controller: context.audioPlayerCubit.panelController,
-          body: const PageContent(),
-          panel: const AudioPlayerPanel(),
-          color: theme.scaffoldBackgroundColor,
-          maxHeight: mediaQuery.size.height,
+        child: AudioPlayerPanel(
+          body: PageContent(),
         ),
       ),
     );

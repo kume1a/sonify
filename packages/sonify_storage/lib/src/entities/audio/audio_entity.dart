@@ -7,7 +7,7 @@ part 'audio_entity.g.dart';
 @collection
 @Name(AudioEntity_.collectionName)
 class AudioEntity {
-  Id id = Isar.autoIncrement;
+  Id? id;
 
   String? title;
 

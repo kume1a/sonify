@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../../shared/ui/audio_thumbnail.dart';
 import '../../../shared/values/assets.dart';
@@ -10,28 +11,121 @@ import '../model/playback_button_state.dart';
 import '../state/audio_player_state.dart';
 
 class AudioPlayerPanel extends StatelessWidget {
-  const AudioPlayerPanel({super.key});
+  const AudioPlayerPanel({
+    super.key,
+    required this.body,
+  });
+
+  final Widget body;
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    final theme = Theme.of(context);
+    final mediaQuery = MediaQuery.of(context);
+
+    return SlidingUpPanel(
+      controller: context.audioPlayerCubit.panelController,
+      body: body,
+      panel: const _PanelContent(),
+      collapsed: const _MiniAudioPlayer(),
+      minHeight: 56,
+      color: theme.scaffoldBackgroundColor,
+      maxHeight: mediaQuery.size.height,
+    );
+  }
+}
+
+class _PanelContent extends StatelessWidget {
+  const _PanelContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
       children: [
-        _AudioPlayerHeader(),
-        SizedBox(height: 24),
-        _AudioPlayerImage(),
-        SizedBox(height: 32),
-        Padding(
+        const _AudioPlayerHeader(),
+        const SizedBox(height: 24),
+        LayoutBuilder(builder: (_, constraints) {
+          return _AudioPlayerImage(
+            dimension: constraints.maxWidth * 0.75,
+          );
+        }),
+        const SizedBox(height: 32),
+        const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: _AudioPlayerControls(),
         ),
-        Spacer(flex: 3),
+        const Spacer(flex: 3),
       ],
     );
   }
 }
 
+class _MiniAudioPlayer extends StatelessWidget {
+  const _MiniAudioPlayer();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return ColoredBox(
+      color: theme.colorScheme.secondaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Row(
+          children: [
+            const _AudioPlayerImage(dimension: 42),
+            const SizedBox(width: 8),
+            Expanded(
+              child: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+                buildWhen: (previous, current) => previous.currentSong != current.currentSong,
+                builder: (_, state) {
+                  return state.currentSong.maybeWhen(
+                    orElse: () => const SizedBox.shrink(),
+                    success: (data) => Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          data.title.trim(),
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          data.author.trim(),
+                          style: const TextStyle(fontSize: 11),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(width: 8),
+            const _PlayPauseButton(dimension: 20),
+            IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(
+                Assets.svgSkipForward,
+                width: 20,
+                height: 20,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _AudioPlayerImage extends HookWidget {
-  const _AudioPlayerImage();
+  const _AudioPlayerImage({
+    required this.dimension,
+  });
+
+  final double dimension;
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +137,9 @@ class _AudioPlayerImage extends HookWidget {
             return state.currentSong.maybeWhen(
               orElse: () => const SizedBox.shrink(),
               success: (data) => AudioThumbnail(
-                dimension: constraints.maxWidth * 0.75,
+                dimension: dimension,
                 thumbnailPath: data.thumbnailPath ?? '',
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(dimension * 0.1),
               ),
             );
           },
@@ -202,25 +296,47 @@ class _Controls extends StatelessWidget {
       children: [
         SvgPicture.asset(Assets.svgRepeat),
         SvgPicture.asset(Assets.svgSkipBack),
-        IconButton(
-          onPressed: context.audioPlayerCubit.onPlayOrPause,
-          icon: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
-            buildWhen: (previous, current) => previous.playButtonState != current.playButtonState,
-            builder: (_, state) {
-              return switch (state.playButtonState) {
-                PlaybackButtonState.idle || PlaybackButtonState.loading => const SizedBox.square(
-                    dimension: 24,
-                    child: CircularProgressIndicator(),
-                  ),
-                PlaybackButtonState.paused => SvgPicture.asset(Assets.svgPlay),
-                PlaybackButtonState.playing => SvgPicture.asset(Assets.svgPause),
-              };
-            },
-          ),
-        ),
+        const _PlayPauseButton(dimension: 32),
         SvgPicture.asset(Assets.svgSkipForward),
         SvgPicture.asset(Assets.svgHeart),
       ],
+    );
+  }
+}
+
+class _PlayPauseButton extends StatelessWidget {
+  const _PlayPauseButton({
+    required this.dimension,
+  });
+
+  final double dimension;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: context.audioPlayerCubit.onPlayOrPause,
+      visualDensity: VisualDensity.compact,
+      icon: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+        buildWhen: (previous, current) => previous.playButtonState != current.playButtonState,
+        builder: (_, state) {
+          return switch (state.playButtonState) {
+            PlaybackButtonState.idle || PlaybackButtonState.loading => SizedBox.square(
+                dimension: dimension,
+                child: const CircularProgressIndicator(),
+              ),
+            PlaybackButtonState.paused => SvgPicture.asset(
+                Assets.svgPlay,
+                width: dimension,
+                height: dimension,
+              ),
+            PlaybackButtonState.playing => SvgPicture.asset(
+                Assets.svgPause,
+                width: dimension,
+                height: dimension,
+              ),
+          };
+        },
+      ),
     );
   }
 }

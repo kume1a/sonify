@@ -37,6 +37,7 @@ class LocalAudioFileRepositoryImpl implements LocalAudioFileRepository {
   Future<LocalAudioFile> save(LocalAudioFile localAudioFile) async {
     final entity = AudioEntity();
 
+    entity.id = localAudioFile.id;
     entity.title = localAudioFile.title;
     entity.duration = localAudioFile.duration.inSeconds;
     entity.path = localAudioFile.path;
