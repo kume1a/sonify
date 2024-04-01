@@ -73,10 +73,12 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
   }
 
   void onDownArrowPressed() {
-    panelController.animatePanelToPosition(
-      0.0,
-      duration: const Duration(milliseconds: 250),
-    );
+    if (panelController.isAttached) {
+      panelController.animatePanelToPosition(
+        0.0,
+        duration: const Duration(milliseconds: 250),
+      );
+    }
   }
 
   void onPlayOrPause() {
@@ -139,8 +141,6 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
 
     emit(state.copyWith(playbackProgress: newProgress));
 
-    // --------------
-
     final localAudioFileId = mediaItem?.extras?['localAudioFileId'] as int?;
     if (localAudioFileId == null) {
       Logger.root.warning('Local audio file id is null, so not loading the current song.');
@@ -148,10 +148,12 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
       return;
     }
 
-    panelController.animatePanelToPosition(
-      1.0,
-      duration: const Duration(milliseconds: 250),
-    );
+    if (panelController.isAttached) {
+      panelController.animatePanelToPosition(
+        1.0,
+        duration: const Duration(milliseconds: 250),
+      );
+    }
 
     emit(state.copyWith(currentSong: SimpleDataState.loading()));
     final localAudioFile = await _localAudioFileRepository.getById(localAudioFileId);
