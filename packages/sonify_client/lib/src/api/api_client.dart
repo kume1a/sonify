@@ -3,8 +3,8 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../entity/audio/model/audio_dto.dart';
 import '../entity/audio/model/download_youtube_audio_body.dart';
+import '../entity/audio/model/user_audio_dto.dart';
 import '../entity/user/model/update_user_body.dart';
 import '../entity/user/model/user_dto.dart';
 import '../entity/youtube/model/youtube_suggestions_dto.dart';
@@ -28,7 +28,7 @@ abstract class ApiClient {
 
   // audio -----------------------------
   @POST('/v1/audio/downloadYoutubeAudio')
-  Future<AudioDto> downloadYoutubeAudio(@Body() DownloadYoutubeAudioBody body);
+  Future<UserAudioDto> downloadYoutubeAudio(@Body() DownloadYoutubeAudioBody body);
 
   // auth ------------------------------
   @POST('/v1/auth/googleSignIn')

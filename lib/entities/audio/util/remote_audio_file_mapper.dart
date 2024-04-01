@@ -6,16 +6,16 @@ import '../model/remote_audio_file.dart';
 
 @lazySingleton
 class RemoteAudioFileMapper {
-  RemoteAudioFile fromAudio(Audio audio) {
+  RemoteAudioFile fromUserAudio(UserAudio userAudio) {
     return RemoteAudioFile(
-      title: audio.title,
-      uri: Uri.parse(assembleResourceUrl(audio.path)),
-      sizeInBytes: audio.sizeInBytes,
-      author: audio.author,
-      imageUri: Uri.tryParse(assembleResourceUrl(audio.thumbnailPath)),
-      userId: audio.userId,
-      youtubeVideoId: audio.youtubeVideoId,
-      duration: Duration(seconds: audio.duration),
+      title: userAudio.audio.title,
+      uri: Uri.parse(assembleResourceUrl(userAudio.audio.path)),
+      sizeInBytes: userAudio.audio.sizeInBytes,
+      author: userAudio.audio.author,
+      imageUri: Uri.tryParse(assembleResourceUrl(userAudio.audio.thumbnailPath)),
+      userId: userAudio.userId,
+      youtubeVideoId: userAudio.audio.youtubeVideoId,
+      duration: Duration(seconds: userAudio.audio.duration),
     );
   }
 }

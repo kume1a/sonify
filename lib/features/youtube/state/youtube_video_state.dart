@@ -83,7 +83,7 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
         await _resetDownloadAudioState();
       },
       (r) async {
-        final remoteAudioFile = _remoteAudioFileMapper.fromAudio(r);
+        final remoteAudioFile = _remoteAudioFileMapper.fromUserAudio(r);
 
         _eventBus.fire(DownloadsEvent.enqueueRemoteAudioFile(remoteAudioFile));
 

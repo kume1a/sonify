@@ -91,11 +91,16 @@ abstract class DiSonifyClientModule {
   }
 
   @lazySingleton
+  UserAudioMapper userAudioMapper(AudioMapper audioMapper) {
+    return UserAudioMapper(audioMapper);
+  }
+
+  @lazySingleton
   AudioRepository audioRepository(
     ApiClient apiClient,
-    AudioMapper audioMapper,
+    UserAudioMapper userAudioMapper,
   ) {
-    return AudioRepositoryImpl(apiClient, audioMapper);
+    return AudioRepositoryImpl(apiClient, userAudioMapper);
   }
 
   // user ----------------------------------------------------------------
