@@ -11,6 +11,8 @@ import '../entity/youtube/model/youtube_suggestions_dto.dart';
 import '../feature/auth/model/email_sign_in_body.dart';
 import '../feature/auth/model/google_sign_in_body.dart';
 import '../feature/auth/model/token_payload_dto.dart';
+import '../feature/spotifyauth/model/authorize_spotify_body.dart';
+import '../feature/spotifyauth/model/spotify_token_payload_dto.dart';
 import '../shared/dto/url_dto.dart';
 
 part 'api_client.g.dart';
@@ -43,4 +45,8 @@ abstract class ApiClient {
 
   @GET('/v1/users/authUser')
   Future<UserDto> getAuthUser();
+
+  // spotify ---------------------------
+  @POST('/v1/spotify/authorize')
+  Future<SpotifyTokenPayloadDto> authorizeSpotify(@Body() AuthorizeSpotifyBody body);
 }

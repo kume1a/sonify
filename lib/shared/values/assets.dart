@@ -6,7 +6,7 @@ abstract final class Assets {
   static const svgLogoTransparentBg = '$_logo/logo_transparent_bg.svg';
 
   static const svgSearch = '$_icons/search.svg';
-  static const svgLibrary = '$_icons/library.svg';
+  static const svgHome = '$_icons/home.svg';
   static const svgYoutube = '$_icons/youtube.svg';
   static const svgUser = '$_icons/user.svg';
   static const svgHistory = '$_icons/history.svg';

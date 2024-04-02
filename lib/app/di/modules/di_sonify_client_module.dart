@@ -116,4 +116,18 @@ abstract class DiSonifyClientModule {
   ) {
     return UserRemoteRepositoryImpl(apiClient, userMapper);
   }
+
+  // spotify ----------------------------------------------------------------
+  @lazySingleton
+  SpotifyTokenPayloadMapper spotifyTokenPayloadMapper() {
+    return SpotifyTokenPayloadMapper();
+  }
+
+  @lazySingleton
+  SpotifyAuthRepository spotifyAuthRepository(
+    ApiClient apiClient,
+    SpotifyTokenPayloadMapper spotifyTokenPayloadMapper,
+  ) {
+    return SpotifyAuthRepositoryImpl(apiClient, spotifyTokenPayloadMapper);
+  }
 }

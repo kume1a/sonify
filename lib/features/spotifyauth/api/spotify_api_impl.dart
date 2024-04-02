@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 
 import '../../../app/configuration/app_environment.dart';
+import '../../../shared/values/constant.dart';
 import 'spotify_api.dart';
 
 @LazySingleton(as: SpotifyApi)
@@ -14,8 +15,6 @@ class SpotifyApiImpl implements SpotifyApi {
       'playlist-read-collaborative',
     ];
 
-    const redirectUrl = 'app://sonify/spotifyauth';
-
     final uri = Uri.https(
       'accounts.spotify.com',
       '/authorize',
@@ -23,7 +22,7 @@ class SpotifyApiImpl implements SpotifyApi {
         'response_type': 'code',
         'client_id': AppEnvironment.spotifyClientId,
         'scope': scopes.join('%20'),
-        'redirect_uri': redirectUrl,
+        'redirect_uri': kSpotifyCallbackUrl,
       },
     );
 

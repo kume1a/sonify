@@ -1,3 +1,4 @@
+import 'package:app_links/app_links.dart';
 import 'package:common_utilities/common_utilities.dart';
 import 'package:injectable/injectable.dart';
 import 'package:uuid/uuid.dart';
@@ -9,4 +10,7 @@ abstract class DiUtilModule {
 
   @lazySingleton
   EventBus get eventBus => EventBus();
+
+  @lazySingleton
+  AppLinks get appLinks => AppLinks();
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../state/auth_spotify_state.dart';
+import '../state/spotify_auth_state.dart';
 
 class AuthSpotifyButton extends StatelessWidget {
   const AuthSpotifyButton({super.key});
@@ -9,7 +9,14 @@ class AuthSpotifyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: context.authSpotifyCubit.onAuthorizePressed,
-      child: const Text('Authorize Spotify'),
+      style: TextButton.styleFrom(
+        foregroundColor: const Color.fromARGB(255, 16, 105, 47),
+        backgroundColor: const Color(0xFF1DB954),
+      ),
+      child: const Text(
+        'Authorize Spotify',
+        style: TextStyle(color: Colors.white),
+      ),
     );
   }
 }

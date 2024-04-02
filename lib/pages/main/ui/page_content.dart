@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../library_page.dart';
+import '../../home_page.dart';
 import '../../profile_page.dart';
 import '../../youtube_page.dart';
 import '../state/main_page_state.dart';
@@ -18,7 +18,7 @@ class PageContent extends StatelessWidget {
           index: state.pageIndex,
           children: const [
             // YoutubeVideoPage(args: YoutubeVideoPageArgs(videoId: 'EOnSh3QlpbQ')),
-            LibraryPage(),
+            HomePage(),
             YoutubePage(),
             ProfilePage(),
           ],
