@@ -48,6 +48,8 @@ class AppEnvironment {
   static String get googleAuthClientIdIos => dotenv.get('GOOGLE_AUTH_CLIENT_ID_IOS');
 
   static String get googleAuthClientIdWeb => dotenv.get('GOOGLE_AUTH_CLIENT_ID_WEB');
+
+  static String get spotifyClientId => dotenv.get('SPOTIFY_CLIENT_ID');
 }
 
 class _DotEnvLoader {

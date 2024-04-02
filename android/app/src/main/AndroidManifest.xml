@@ -23,7 +23,7 @@
     <activity
       android:name="com.ryanheise.audioservice.AudioServiceActivity"
       android:exported="true"
-      android:launchMode="singleTop"
+      android:launchMode="singleInstance"
       android:theme="@style/LaunchTheme"
       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
       android:hardwareAccelerated="true"
@@ -38,6 +38,19 @@
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
+
+      <!-- Deep Link sample -->
+      <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
+
+      <intent-filter>
+          <action android:name="android.intent.action.VIEW" />
+          <category android:name="android.intent.category.DEFAULT" />
+          <category android:name="android.intent.category.BROWSABLE" />
+          <!-- Add optional android:host to distinguish your app
+                from others in case of conflicting scheme name -->
+          <data android:scheme="app" android:host="sonify" android:pathPrefix="/spotifyauth" />
+      </intent-filter>
+
     </activity>
 
     <meta-data

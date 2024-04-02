@@ -16,7 +16,7 @@ Route<dynamic> routeFactory(RouteSettings settings) {
     Routes.userName => _createUserNameRoute(settings),
     Routes.auth => _createAuthRoute(settings),
     Routes.emailSignIn => _createEmailSignInRoute(settings),
-    _ => throw Exception('route ${settings.name} is not supported'),
+    _ => throw Exception('route $settings is not supported'),
   };
 }
 

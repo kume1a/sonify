@@ -61,6 +61,8 @@ dependencies:
   permission_handler: ^11.3.0
   flutter_dotenv: ^5.1.0
   collection: ^1.18.0
+  url_launcher: ^6.2.5
+  app_links: ^4.0.1
 
   sonify_storage:
     path: ./packages/sonify_storage
