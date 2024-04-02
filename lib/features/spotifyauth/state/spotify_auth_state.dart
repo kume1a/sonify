@@ -107,10 +107,14 @@ class SpotifyAuthCubit extends Cubit<SpotifyAuthState> {
 
   Future<void> _authorizeSpotifyToken(String code) async {
     await _spotifyAuthRepository.authorizeSpotify(code: code).awaitFold(
-      (l) => emit(state.copyWith(isSpotifyAuthenticated: SimpleDataState.success(false))),
+      (l) {
+        emit(state.copyWith(isSpotifyAuthenticated: SimpleDataState.success(false)));
+      },
       (r) async {
         if (r.refreshToken.isEmpty || r.accessToken.isEmpty || r.expiresIn == 0) {
-          return emit(state.copyWith(isSpotifyAuthenticated: SimpleDataState.success(false)));
+          emit(state.copyWith(isSpotifyAuthenticated: SimpleDataState.success(false)));
+
+          return;
         }
 
         await Future.wait([
