@@ -7,7 +7,6 @@ import 'package:injectable/injectable.dart';
 import 'package:sonify_client/sonify_client.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-import '../../../entities/audio/util/remote_audio_file_mapper.dart';
 import '../../download_file/model/downloads_event.dart';
 
 part 'youtube_video_state.freezed.dart';
@@ -40,13 +39,11 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
     this._youtubeRepository,
     this._eventBus,
     this._audioRepository,
-    this._remoteAudioFileMapper,
   ) : super(YoutubeVideoState.initial());
 
   final YoutubeRepository _youtubeRepository;
   final EventBus _eventBus;
   final AudioRepository _audioRepository;
-  final RemoteAudioFileMapper _remoteAudioFileMapper;
 
   void init(String videoId) {
     _loadVideo(videoId);
@@ -83,9 +80,7 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
         await _resetDownloadAudioState();
       },
       (r) async {
-        final remoteAudioFile = _remoteAudioFileMapper.fromUserAudio(r);
-
-        _eventBus.fire(DownloadsEvent.enqueueRemoteAudioFile(remoteAudioFile));
+        _eventBus.fire(DownloadsEvent.enqueueUserAudio(r));
 
         emit(state.copyWith(downloadAudioState: ActionState.executed()));
         await _resetDownloadAudioState();

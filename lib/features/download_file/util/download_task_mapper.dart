@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
+import 'package:sonify_client/sonify_client.dart';
 
-import '../../../entities/audio/model/remote_audio_file.dart';
+import '../../../shared/util/assemble_resource_url.dart';
 import '../../../shared/util/resource_save_path_provider.dart';
 import '../../../shared/util/uuid_factory.dart';
 import '../model/download_task.dart';
@@ -14,20 +15,20 @@ class DownloadTaskMapper {
 
   final UuidFactory _uuidFactory;
 
-  Future<DownloadTask> fromRemoteAudioFile(RemoteAudioFile remoteAudioFile) async {
+  Future<DownloadTask> fromUserAudio(UserAudio userAudio) async {
     const fileType = FileType.audioMp3;
 
     final savePath = await _getSavePath(fileType);
 
     return DownloadTask(
       savePath: savePath,
-      uri: remoteAudioFile.uri,
+      uri: Uri.parse(assembleResourceUrl(userAudio.audio.path)),
       progress: 0,
       speedInKbs: 0,
       state: DownloadTaskState.idle,
       fileType: fileType,
       payload: DownloadTaskPayload(
-        remoteAudioFile: remoteAudioFile,
+        userAudio: userAudio,
       ),
     );
   }

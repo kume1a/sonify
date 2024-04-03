@@ -11,9 +11,10 @@ class Audio with _$Audio {
     required int durationMs,
     required String path,
     required String author,
-    required String userId,
-    required int sizeInBytes,
-    required String youtubeVideoId,
-    required String thumbnailPath,
+    required int sizeBytes,
+    required String? youtubeVideoId,
+    required String? thumbnailPath,
+    required String? thumbnailUrl,
+    required String? spotifyId,
   }) = _Audio;
 }

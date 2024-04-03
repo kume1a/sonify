@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sonify_client/sonify_client.dart';
 
-import '../../../entities/audio/model/remote_audio_file.dart';
 import 'file_type.dart';
 
 part 'download_task.freezed.dart';
@@ -27,6 +27,6 @@ class DownloadTask with _$DownloadTask {
 @freezed
 class DownloadTaskPayload with _$DownloadTaskPayload {
   const factory DownloadTaskPayload({
-    RemoteAudioFile? remoteAudioFile,
+    UserAudio? userAudio,
   }) = _DownloadTaskPayload;
 }

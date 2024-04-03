@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
+import '../../../shared/util/assemble_resource_url.dart';
 import '../../../shared/util/resource_save_path_provider.dart';
 import '../../../shared/util/uuid_factory.dart';
 import '../model/download_task.dart';
@@ -30,10 +31,7 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
     DownloadTask downloadTask, {
     ProgressCallback? onReceiveProgress,
   }) async {
-    final imageUri = switch (downloadTask.fileType) {
-      FileType.audioMp3 => downloadTask.payload.remoteAudioFile?.imageUri,
-      FileType.videoMp4 => null, // TODO add case when implementing mp4 download
-    };
+    final imageUri = _resolveImageUri(downloadTask);
 
     final extraSize = await _resolveExtraSize([imageUri]);
     final mainFileSize = await _resolveFileSize(downloadTask.uri) ?? 0;
@@ -74,6 +72,23 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
     }
 
     return _downloadedTaskMapper.fromDownloadTask(downloadTask, thumbnailSavePath);
+  }
+
+  Uri? _resolveImageUri(DownloadTask downloadTask) {
+    switch (downloadTask.fileType) {
+      case FileType.audioMp3:
+        if (downloadTask.payload.userAudio?.audio.thumbnailPath != null) {
+          return Uri.tryParse(assembleResourceUrl(downloadTask.payload.userAudio!.audio.thumbnailPath!));
+        }
+
+        if (downloadTask.payload.userAudio?.audio.thumbnailUrl != null) {
+          return Uri.tryParse(downloadTask.payload.userAudio!.audio.thumbnailUrl!);
+        }
+
+        return null;
+      case FileType.videoMp4:
+        return null;
+    }
   }
 
   Future<int> _resolveExtraSize(List<Uri?> uris) async {

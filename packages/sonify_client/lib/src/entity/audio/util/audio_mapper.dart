@@ -13,10 +13,11 @@ class AudioMapper {
       durationMs: dto.durationMs ?? 0,
       path: dto.path ?? '',
       author: dto.author ?? '',
-      userId: dto.userId ?? kInvalidId,
-      sizeInBytes: dto.sizeInBytes ?? 0,
-      thumbnailPath: dto.thumbnailPath ?? '',
-      youtubeVideoId: dto.youtubeVideoId ?? '',
+      sizeBytes: dto.sizeBytes ?? 0,
+      thumbnailPath: dto.thumbnailPath,
+      youtubeVideoId: dto.youtubeVideoId,
+      thumbnailUrl: dto.thumbnailUrl,
+      spotifyId: dto.spotifyId,
     );
   }
 }

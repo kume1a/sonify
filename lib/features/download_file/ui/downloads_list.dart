@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../../../entities/audio/util/audio_extension.dart';
 import '../../../shared/util/equality.dart';
 import '../model/download_task.dart';
 import '../model/file_type.dart';
@@ -39,12 +40,12 @@ class _QueueItem extends HookWidget {
   @override
   Widget build(BuildContext context) {
     String title = '';
-    String? imageUrl;
+    Uri? imageUri;
 
     switch (downloadTask.fileType) {
       case FileType.audioMp3:
-        imageUrl = downloadTask.payload.remoteAudioFile?.imageUri.toString();
-        title = downloadTask.payload.remoteAudioFile?.title ?? '';
+        imageUri = downloadTask.payload.userAudio?.audio.imageUri;
+        title = downloadTask.payload.userAudio?.audio.title ?? '';
       case FileType.videoMp4:
         break;
     }
@@ -57,11 +58,11 @@ class _QueueItem extends HookWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (imageUrl != null)
+          if (imageUri != null)
             Padding(
               padding: const EdgeInsets.only(right: 10),
               child: SafeImage(
-                url: imageUrl,
+                url: imageUri.toString(),
                 width: 36,
                 height: 36,
                 borderRadius: BorderRadius.circular(8),

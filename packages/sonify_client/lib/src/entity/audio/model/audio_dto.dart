@@ -14,9 +14,11 @@ class AudioDto with _$AudioDto {
     String? path,
     String? author,
     String? userId,
-    int? sizeInBytes,
+    int? sizeBytes,
     String? youtubeVideoId,
     String? thumbnailPath,
+    String? thumbnailUrl,
+    String? spotifyId,
   }) = _AudioDto;
 
   factory AudioDto.fromJson(Map<String, dynamic> json) => _$AudioDtoFromJson(json);

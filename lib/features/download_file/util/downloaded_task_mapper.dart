@@ -14,19 +14,19 @@ class DownloadedTaskMapper {
     final DownloadedTaskPayload payload;
     switch (downloadTask.fileType) {
       case FileType.audioMp3:
-        final remoteAudioFile = downloadTask.payload.remoteAudioFile;
+        final userAudio = downloadTask.payload.userAudio;
 
         payload = DownloadedTaskPayload(
           localAudioFile: LocalAudioFile(
             id: -1,
-            author: remoteAudioFile?.author ?? '',
+            author: userAudio?.audio.author ?? '',
             thumbnailPath: thumbnailSavePath,
             path: downloadTask.savePath,
-            sizeInBytes: remoteAudioFile?.sizeInBytes ?? 0,
-            title: remoteAudioFile?.title ?? '',
-            duration: remoteAudioFile?.duration ?? Duration.zero,
-            userId: remoteAudioFile?.userId ?? '',
-            youtubeVideoId: remoteAudioFile?.youtubeVideoId ?? '',
+            sizeInBytes: userAudio?.audio.sizeBytes ?? 0,
+            title: userAudio?.audio.title ?? '',
+            duration: Duration(milliseconds: userAudio?.audio.durationMs ?? 0),
+            userId: userAudio?.userId ?? '',
+            youtubeVideoId: userAudio?.audio.youtubeVideoId ?? '',
           ),
         );
         break;
