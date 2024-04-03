@@ -9,9 +9,8 @@ class AudioMapper {
     return Audio(
       id: dto.id ?? kInvalidId,
       createdAt: tryMapDate(dto.createdAt),
-      updatedAt: tryMapDate(dto.updatedAt),
       title: dto.title ?? '',
-      duration: dto.duration ?? 0,
+      durationMs: dto.durationMs ?? 0,
       path: dto.path ?? '',
       author: dto.author ?? '',
       userId: dto.userId ?? kInvalidId,

@@ -10,7 +10,7 @@ class AudioDto with _$AudioDto {
     String? id,
     String? createdAt,
     String? title,
-    int? duration,
+    int? durationMs,
     String? path,
     String? author,
     String? userId,

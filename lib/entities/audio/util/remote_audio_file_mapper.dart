@@ -15,7 +15,7 @@ class RemoteAudioFileMapper {
       imageUri: Uri.tryParse(assembleResourceUrl(userAudio.audio.thumbnailPath)),
       userId: userAudio.userId,
       youtubeVideoId: userAudio.audio.youtubeVideoId,
-      duration: Duration(seconds: userAudio.audio.duration),
+      duration: Duration(milliseconds: userAudio.audio.durationMs),
     );
   }
 }

@@ -7,9 +7,8 @@ class Audio with _$Audio {
   const factory Audio({
     required String id,
     required DateTime? createdAt,
-    required DateTime? updatedAt,
     required String title,
-    required int duration,
+    required int durationMs,
     required String path,
     required String author,
     required String userId,

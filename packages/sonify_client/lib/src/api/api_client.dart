@@ -51,7 +51,7 @@ abstract class ApiClient {
   @POST('/v1/spotify/authorize')
   Future<SpotifyTokenPayloadDto> authorizeSpotify(@Body() AuthorizeSpotifyBody body);
 
-  @GET('/v1/spotify/importUserPlaylists')
+  @POST('/v1/spotify/importUserPlaylists')
   Future<void> importSpotifyUserPlaylists(
     @Query('spotifyAccessToken') String spotifyAccessToken,
   );
