@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_positional_boolean_parameters
 
 import 'package:dio/dio.dart';
+import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../entity/audio/model/download_youtube_audio_body.dart';
@@ -49,4 +50,9 @@ abstract class ApiClient {
   // spotify ---------------------------
   @POST('/v1/spotify/authorize')
   Future<SpotifyTokenPayloadDto> authorizeSpotify(@Body() AuthorizeSpotifyBody body);
+
+  @GET('/v1/spotify/importUserPlaylists')
+  Future<void> importSpotifyUserPlaylists(
+    @Query('spotifyAccessToken') String spotifyAccessToken,
+  );
 }

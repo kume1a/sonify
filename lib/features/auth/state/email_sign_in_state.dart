@@ -1,4 +1,5 @@
 import 'package:common_models/common_models.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -48,6 +49,16 @@ class EmailSignInCubit extends Cubit<EmailSignInState> {
 
   void onPasswordChanged(String password) {
     emit(state.copyWith(password: Password(password)));
+  }
+
+  void onDevSignIn() {
+    if (!kDebugMode) {
+      return;
+    }
+
+    emit(state.copyWith(email: Email('atheros098@gmail.com'), password: Password('password')));
+
+    onSignInPressed();
   }
 
   Future<void> onSignInPressed() async {

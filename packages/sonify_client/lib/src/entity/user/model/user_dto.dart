@@ -9,7 +9,6 @@ class UserDto with _$UserDto {
   const factory UserDto({
     String? id,
     String? createdAt,
-    String? updatedAt,
     String? name,
     String? email,
   }) = _UserDto;

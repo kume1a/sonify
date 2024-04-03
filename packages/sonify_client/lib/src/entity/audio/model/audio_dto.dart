@@ -9,7 +9,6 @@ class AudioDto with _$AudioDto {
   const factory AudioDto({
     String? id,
     String? createdAt,
-    String? updatedAt,
     String? title,
     int? duration,
     String? path,

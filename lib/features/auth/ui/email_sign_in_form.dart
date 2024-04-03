@@ -1,4 +1,5 @@
 import 'package:common_widgets/common_widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,22 +28,28 @@ class EmailSignInForm extends StatelessWidget {
                 builder: (_, state) {
                   return ValidatedForm(
                     showErrors: state.validateForm,
-                    child: const Column(
+                    child: Column(
                       children: [
-                        Spacer(flex: 2),
-                        LogoHeaderMedium(),
-                        Spacer(),
-                        _FieldEmail(),
-                        SizedBox(height: 16),
-                        _FieldPassword(),
-                        Spacer(),
-                        SizedBox(
+                        const Spacer(flex: 2),
+                        const LogoHeaderMedium(),
+                        const SizedBox(height: 8),
+                        if (kDebugMode)
+                          TextButton(
+                            onPressed: context.emailSignInCubit.onDevSignIn,
+                            child: const Text('Dev SignIn'),
+                          ),
+                        const Spacer(),
+                        const _FieldEmail(),
+                        const SizedBox(height: 16),
+                        const _FieldPassword(),
+                        const Spacer(),
+                        const SizedBox(
                           width: double.infinity,
                           child: _ButtonSignIn(),
                         ),
-                        SizedBox(height: 12),
-                        _EmailSignInErrortext(),
-                        Spacer(flex: 3),
+                        const SizedBox(height: 12),
+                        const _EmailSignInErrortext(),
+                        const Spacer(flex: 3),
                       ],
                     ),
                   );
