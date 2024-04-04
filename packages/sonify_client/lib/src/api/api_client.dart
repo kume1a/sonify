@@ -6,6 +6,7 @@ import 'package:retrofit/retrofit.dart';
 
 import '../entity/audio/model/download_youtube_audio_body.dart';
 import '../entity/audio/model/user_audio_dto.dart';
+import '../entity/playlist/model/playlist_dto.dart';
 import '../entity/user/model/update_user_body.dart';
 import '../entity/user/model/user_dto.dart';
 import '../entity/youtube/model/youtube_suggestions_dto.dart';
@@ -55,4 +56,7 @@ abstract class ApiClient {
   Future<void> importSpotifyUserPlaylists(
     @Query('spotifyAccessToken') String spotifyAccessToken,
   );
+
+  @GET('/v1/spotify/myPlaylists')
+  Future<List<PlaylistDto>> getAuthUserPlaylists();
 }

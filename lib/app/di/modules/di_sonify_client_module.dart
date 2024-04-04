@@ -133,9 +133,15 @@ abstract class DiSonifyClientModule {
 
   // playlist ----------------------------------------------------------------
   @lazySingleton
+  PlaylistMapper playlistMapper() {
+    return PlaylistMapper();
+  }
+
+  @lazySingleton
   PlaylistRepository playlistRepository(
     ApiClient apiClient,
+    PlaylistMapper playlistMapper,
   ) {
-    return PlaylistRepositoryImpl(apiClient);
+    return PlaylistRepositoryImpl(apiClient, playlistMapper);
   }
 }

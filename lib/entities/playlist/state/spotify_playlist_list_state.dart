@@ -19,15 +19,15 @@ class SpotifyPlaylistListCubit extends Cubit<Unit> {
   final SpotifyAccessTokenProvider _spotifyAccessTokenProvider;
 
   Future<void> _init() async {
-    final spotifyAccessToken = await _spotifyAccessTokenProvider.get();
+    // final spotifyAccessToken = await _spotifyAccessTokenProvider.get();
 
-    if (spotifyAccessToken == null) {
-      Logger.root.warning('Spotify access token is null');
-      return;
-    }
+    // if (spotifyAccessToken == null) {
+    //   Logger.root.warning('Spotify access token is null');
+    //   return;
+    // }
 
-    await _playlistRepository.importSpotifyUserPlaylists(
-      spotifyAccessToken: spotifyAccessToken,
-    );
+    // await _playlistRepository.importSpotifyUserPlaylists(
+    //   spotifyAccessToken: spotifyAccessToken,
+    // );
   }
 }
