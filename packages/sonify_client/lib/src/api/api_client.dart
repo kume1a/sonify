@@ -9,6 +9,7 @@ import '../entity/audio/model/user_audio_dto.dart';
 import '../entity/playlist/model/playlist_dto.dart';
 import '../entity/user/model/update_user_body.dart';
 import '../entity/user/model/user_dto.dart';
+import '../entity/usersync/model/user_sync_datum_dto.dart';
 import '../entity/youtube/model/youtube_suggestions_dto.dart';
 import '../feature/auth/model/email_sign_in_body.dart';
 import '../feature/auth/model/google_sign_in_body.dart';
@@ -59,4 +60,8 @@ abstract class ApiClient {
 
   @GET('/v1/spotify/myPlaylists')
   Future<List<PlaylistDto>> getAuthUserPlaylists();
+
+  // user sync --------------------------
+  @GET('/v1/usersync/myUserSyncDatum')
+  Future<UserSyncDatumDto> getAuthUserSyncDatum();
 }

@@ -144,4 +144,18 @@ abstract class DiSonifyClientModule {
   ) {
     return PlaylistRepositoryImpl(apiClient, playlistMapper);
   }
+
+  // user sync datum ----------------------------------------------------------------
+  @lazySingleton
+  UserSyncDatumMapper userSyncDatumMapper() {
+    return UserSyncDatumMapper();
+  }
+
+  @lazySingleton
+  UserSyncDatumRepository userSyncDatumRepository(
+    ApiClient apiClient,
+    UserSyncDatumMapper userSyncDatumMapper,
+  ) {
+    return UserSyncDatumRepositoryImpl(apiClient, userSyncDatumMapper);
+  }
 }
