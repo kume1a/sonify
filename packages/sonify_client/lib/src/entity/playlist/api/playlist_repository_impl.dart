@@ -17,10 +17,10 @@ class PlaylistRepositoryImpl with SafeHttpRequestWrap implements PlaylistReposit
   final PlaylistMapper _playlistMapper;
 
   @override
-  Future<Either<FetchFailure, Unit>> importSpotifyUserPlaylists({
+  Future<Either<ActionFailure, Unit>> importSpotifyUserPlaylists({
     required String spotifyAccessToken,
   }) {
-    return callCatchWithFetchFailure(
+    return callCatchWithActionFailure(
       () async {
         await _apiClient.importSpotifyUserPlaylists(
           spotifyAccessToken,
