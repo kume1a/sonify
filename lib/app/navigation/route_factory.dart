@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../pages/auth_page.dart';
 import '../../pages/email_sign_in_page.dart';
 import '../../pages/main/main_page.dart';
+import '../../pages/playlist_page.dart';
 import '../../pages/user_name_page.dart';
 import '../../pages/youtube_search_page.dart';
 import '../../pages/youtube_video_page.dart';
@@ -16,8 +17,18 @@ Route<dynamic> routeFactory(RouteSettings settings) {
     Routes.userName => _createUserNameRoute(settings),
     Routes.auth => _createAuthRoute(settings),
     Routes.emailSignIn => _createEmailSignInRoute(settings),
+    Routes.playlist => _createPlaylistRoute(settings),
     _ => throw Exception('route $settings is not supported'),
   };
+}
+
+Route _createPlaylistRoute(RouteSettings settings) {
+  final PlaylistPageArgs args = _getArgs(settings);
+
+  return MaterialPageRoute(
+    builder: (_) => PlaylistPage(args: args),
+    settings: settings,
+  );
 }
 
 Route _createEmailSignInRoute(RouteSettings settings) {

@@ -30,7 +30,7 @@ class SpotifyPlaylistsList extends StatelessWidget {
                       playlists.length > 3 ? context.spotifyPlaylistListCubit.onViewAllPressed : null,
                 ),
                 SizedBox(
-                  height: 200,
+                  height: 190,
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     scrollDirection: Axis.horizontal,
@@ -58,26 +58,36 @@ class _PlaylistItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      width: 125,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SafeImage(
-            url: playlist.thumbnailUrl,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          const SizedBox(height: 4),
-          Text(playlist.name),
-          Text(
-            'TODO artist names',
-            style: TextStyle(
-              fontSize: 12,
-              color: theme.appThemeExtension?.elSecondary,
+    return InkWell(
+      onTap: () => context.spotifyPlaylistListCubit.onPlaylistPressed(playlist),
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        width: 125,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SafeImage(
+              url: playlist.thumbnailUrl,
+              borderRadius: BorderRadius.circular(8),
             ),
-          ),
-        ],
+            const SizedBox(height: 4),
+            Text(
+              playlist.name,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              'TODO artist names',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 12,
+                color: theme.appThemeExtension?.elSecondary,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

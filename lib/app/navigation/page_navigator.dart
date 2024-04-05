@@ -3,6 +3,7 @@ import 'package:global_navigator/global_navigator.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sonify_client/sonify_client.dart';
 
+import '../../pages/playlist_page.dart';
 import '../../pages/youtube_video_page.dart';
 import 'routes.dart';
 
@@ -32,4 +33,6 @@ class PageNavigator {
   void toAuth() => GlobalNavigator.pushNamedAndRemoveAll(Routes.auth);
 
   void toEmailSignIn() => GlobalNavigator.pushNamed(Routes.emailSignIn);
+
+  void toPlaylist(PlaylistPageArgs args) => GlobalNavigator.pushNamed(Routes.playlist, arguments: args);
 }

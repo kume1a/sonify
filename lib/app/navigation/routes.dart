@@ -7,4 +7,5 @@ abstract class Routes {
   static const String youtubeVideo = 'youtubeVideo';
   static const String userName = 'userName';
   static const String emailSignIn = 'emailSignIn';
+  static const String playlist = 'playlist';
 }
