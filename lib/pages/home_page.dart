@@ -4,16 +4,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../app/di/register_dependencies.dart';
-import '../app/intl/app_localizations.dart';
-import '../entities/audio/state/local_audio_files_state.dart';
 import '../entities/playlist/state/import_spotify_playlists_state.dart';
 import '../entities/playlist/state/spotify_playlist_list_state.dart';
 import '../entities/playlist/ui/ensure_spotify_playlists_imported.dart';
+import '../entities/playlist/ui/playlist_tiles.dart';
 import '../entities/playlist/ui/spotify_playlists_list.dart';
-import '../features/download_file/ui/downloads_list.dart';
 import '../features/spotifyauth/state/spotify_auth_state.dart';
 import '../features/spotifyauth/ui/auth_spotify_button.dart';
-import '../shared/ui/list_header.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -22,7 +19,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => getIt<LocalAudioFilesCubit>()),
         BlocProvider(create: (_) => getIt<SpotifyAuthCubit>()),
         BlocProvider(create: (_) => getIt<SpotifyPlaylistListCubit>()),
         BlocProvider(create: (_) => getIt<ImportSpotifyPlaylistsCubit>()),
@@ -37,21 +33,18 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-
     return BlocBuilder<SpotifyAuthCubit, SpotifyAuthState>(
       builder: (context, state) {
         return state.isSpotifyAuthenticated.maybeWhen(
           orElse: () => const SizedBox.shrink(),
           success: (isSpotifyAuthenticated) {
             if (isSpotifyAuthenticated) {
-              return const EnsureSpotifyPlaylistsImported(
-                child: CustomScrollView(
-                  slivers: [
-                    DownloadsList(),
-                    SliverToBoxAdapter(
-                      child: SpotifyPlaylistsList(),
-                    ),
+              return EnsureSpotifyPlaylistsImported(
+                child: ListView(
+                  children: const [
+                    SizedBox(height: 24),
+                    PlaylistTiles(),
+                    SpotifyPlaylistsList(),
                   ],
                 ),
               );

@@ -90,5 +90,7 @@
   "playlists": "Playlists",
   "artists": "Artists",
   "recents": "Recents",
-  "viewAll": "View All"
+  "viewAll": "View All",
+  "myLibrary": "My Library",
+  "likedSongs": "Liked Songs"
 }
