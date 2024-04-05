@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,15 +41,13 @@ class _Content extends StatelessWidget {
           orElse: () => const SizedBox.shrink(),
           success: (isSpotifyAuthenticated) {
             if (isSpotifyAuthenticated) {
-              return const CustomScrollView(
-                slivers: [
-                  DownloadsList(),
-                  SliverToBoxAdapter(
-                    child: EnsureSpotifyPlaylistsImported(
-                      child: SpotifyPlaylistsList(),
-                    ),
-                  ),
-                ],
+              return const EnsureSpotifyPlaylistsImported(
+                child: CustomScrollView(
+                  slivers: [
+                    DownloadsList(),
+                    SliverToBoxAdapter(child: SpotifyPlaylistsList()),
+                  ],
+                ),
               );
             }
 

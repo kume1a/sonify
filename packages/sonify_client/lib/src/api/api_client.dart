@@ -58,10 +58,11 @@ abstract class ApiClient {
     @Query('spotifyAccessToken') String spotifyAccessToken,
   );
 
-  @GET('/v1/spotify/myPlaylists')
-  Future<List<PlaylistDto>> getAuthUserPlaylists();
-
   // user sync --------------------------
   @GET('/v1/usersync/myUserSyncDatum')
   Future<UserSyncDatumDto> getAuthUserSyncDatum();
+
+  // playlist ---------------------------
+  @GET('/v1/playlist/myPlaylists')
+  Future<List<PlaylistDto>> getAuthUserPlaylists();
 }

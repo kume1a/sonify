@@ -83,5 +83,8 @@
   "signOut": "Sign out",
   "invalidEmailOrPassword": "Invalid email or password",
   "emailAlreadyUsedWithDifferentAuthProvider": "Email already used with different authentication provider",
-  "importingSpotifyPlaylists": "Importing Spotify Playlists"
+  "importingSpotifyPlaylists": "Importing Spotify Playlists",
+  "importingSpotifyPlaylistsSub": "This may take a while depending on the number of playlists",
+  "importSpotifyPlaylists": "Import Spotify Playlists",
+  "import": "Import"
 }

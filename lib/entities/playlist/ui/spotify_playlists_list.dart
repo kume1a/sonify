@@ -22,10 +22,7 @@ class SpotifyPlaylistsList extends StatelessWidget {
                 itemBuilder: (_, index) {
                   final playlist = playlists[index];
 
-                  return ListTile(
-                    title: Text(playlist.name),
-                    onTap: () => context.read<SpotifyPlaylistListCubit>().onPlaylistPressed(playlist),
-                  );
+                  return Text(playlist.name);
                 },
               ),
             );
