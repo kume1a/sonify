@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../app/di/register_dependencies.dart';
+import '../app/intl/app_localizations.dart';
 import '../entities/audio/state/local_audio_files_state.dart';
 import '../entities/playlist/state/import_spotify_playlists_state.dart';
 import '../entities/playlist/state/spotify_playlist_list_state.dart';
@@ -12,6 +13,7 @@ import '../entities/playlist/ui/spotify_playlists_list.dart';
 import '../features/download_file/ui/downloads_list.dart';
 import '../features/spotifyauth/state/spotify_auth_state.dart';
 import '../features/spotifyauth/ui/auth_spotify_button.dart';
+import '../shared/ui/list_header.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -35,6 +37,8 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
     return BlocBuilder<SpotifyAuthCubit, SpotifyAuthState>(
       builder: (context, state) {
         return state.isSpotifyAuthenticated.maybeWhen(
@@ -45,7 +49,9 @@ class _Content extends StatelessWidget {
                 child: CustomScrollView(
                   slivers: [
                     DownloadsList(),
-                    SliverToBoxAdapter(child: SpotifyPlaylistsList()),
+                    SliverToBoxAdapter(
+                      child: SpotifyPlaylistsList(),
+                    ),
                   ],
                 ),
               );

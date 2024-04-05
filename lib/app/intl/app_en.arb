@@ -86,5 +86,9 @@
   "importingSpotifyPlaylists": "Importing Spotify Playlists",
   "importingSpotifyPlaylistsSub": "This may take a while depending on the number of playlists",
   "importSpotifyPlaylists": "Import Spotify Playlists",
-  "import": "Import"
+  "import": "Import",
+  "playlists": "Playlists",
+  "artists": "Artists",
+  "recents": "Recents",
+  "viewAll": "View All"
 }

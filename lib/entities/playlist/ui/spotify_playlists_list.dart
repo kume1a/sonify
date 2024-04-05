@@ -1,6 +1,11 @@
+import 'package:common_widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sonify_client/sonify_client.dart';
 
+import '../../../app/intl/app_localizations.dart';
+import '../../../shared/ui/list_header.dart';
+import '../../../shared/values/app_theme_extension.dart';
 import '../state/spotify_playlist_list_state.dart';
 
 class SpotifyPlaylistsList extends StatelessWidget {
@@ -8,27 +13,72 @@ class SpotifyPlaylistsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SpotifyPlaylistListCubit, ImportSpotifyPlaylistListState>(
+    final l = AppLocalizations.of(context);
+
+    return BlocBuilder<SpotifyPlaylistListCubit, SpotifyPlaylistListState>(
       builder: (context, state) {
         return state.maybeWhen(
           orElse: () => const SizedBox.shrink(),
           loading: () => const CircularProgressIndicator(),
           success: (playlists) {
-            return SizedBox(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: playlists.length,
-                itemBuilder: (_, index) {
-                  final playlist = playlists[index];
-
-                  return Text(playlist.name);
-                },
-              ),
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListHeader(
+                  text: l.playlists,
+                  onViewAllPressed:
+                      playlists.length > 3 ? context.spotifyPlaylistListCubit.onViewAllPressed : null,
+                ),
+                SizedBox(
+                  height: 200,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: playlists.length,
+                    itemBuilder: (_, index) => _PlaylistItem(playlist: playlists[index]),
+                  ),
+                ),
+              ],
             );
           },
         );
       },
+    );
+  }
+}
+
+class _PlaylistItem extends StatelessWidget {
+  const _PlaylistItem({
+    required this.playlist,
+  });
+
+  final Playlist playlist;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      width: 125,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SafeImage(
+            url: playlist.thumbnailUrl,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          const SizedBox(height: 4),
+          Text(playlist.name),
+          Text(
+            'TODO artist names',
+            style: TextStyle(
+              fontSize: 12,
+              color: theme.appThemeExtension?.elSecondary,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
