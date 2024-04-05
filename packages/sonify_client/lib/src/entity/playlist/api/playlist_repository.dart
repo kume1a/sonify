@@ -8,4 +8,8 @@ abstract interface class PlaylistRepository {
   });
 
   Future<Either<FetchFailure, List<Playlist>>> getAuthUserPlaylists();
+
+  Future<Either<FetchFailure, Playlist>> getPlaylistById({
+    required String playlistId,
+  });
 }

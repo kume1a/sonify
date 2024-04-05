@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../audio/model/audio.dart';
+
 part 'playlist.freezed.dart';
 
 @freezed
@@ -11,5 +13,6 @@ class Playlist with _$Playlist {
     required String? thumbnailPath,
     required String? thumbnailUrl,
     required String? spotifyId,
+    required List<Audio>? audios,
   }) = _Playlist;
 }

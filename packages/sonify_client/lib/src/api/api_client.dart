@@ -63,6 +63,11 @@ abstract class ApiClient {
   Future<UserSyncDatumDto> getAuthUserSyncDatum();
 
   // playlist ---------------------------
-  @GET('/v1/playlist/myPlaylists')
+  @GET('/v1/playlists/myPlaylists')
   Future<List<PlaylistDto>> getAuthUserPlaylists();
+
+  @GET('/v1/playlists/{playlistId}')
+  Future<PlaylistDto> getPlaylistById(
+    @Path('playlistId') String playlistId,
+  );
 }

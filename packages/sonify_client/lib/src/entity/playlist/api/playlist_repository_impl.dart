@@ -41,4 +41,15 @@ class PlaylistRepositoryImpl with SafeHttpRequestWrap implements PlaylistReposit
       },
     );
   }
+
+  @override
+  Future<Either<FetchFailure, Playlist>> getPlaylistById({
+    required String playlistId,
+  }) {
+    return callCatchWithFetchFailure(() async {
+      final res = await _apiClient.getPlaylistById(playlistId);
+
+      return _playlistMapper.dtoToModel(res);
+    });
+  }
 }
