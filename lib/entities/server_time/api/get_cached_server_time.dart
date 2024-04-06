@@ -58,7 +58,7 @@ class GetCachedServerTime implements GetServerTime {
       }
     }
 
-    final cachedOffset = await _serverTimeOffsetStore.read();
+    final cachedOffset = _serverTimeOffsetStore.read();
 
     if (cachedOffset != null) {
       return _localTimeWithOffset(cachedOffset);

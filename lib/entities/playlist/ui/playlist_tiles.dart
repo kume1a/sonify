@@ -24,7 +24,7 @@ class PlaylistTiles extends StatelessWidget {
 }
 
 class _MyLibraryPlaylistTile extends StatelessWidget {
-  const _MyLibraryPlaylistTile({super.key});
+  const _MyLibraryPlaylistTile();
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class _MyLibraryPlaylistTile extends StatelessWidget {
 }
 
 class _LikedSongsPlaylistTile extends StatelessWidget {
-  const _LikedSongsPlaylistTile({super.key});
+  const _LikedSongsPlaylistTile();
 
   @override
   Widget build(BuildContext context) {

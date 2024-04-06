@@ -24,6 +24,7 @@ dependencies:
   palette_generator: ^0.3.3+3
   marquee: ^2.2.3
   audio_video_progress_bar: ^2.0.2
+  cached_network_image: ^3.3.1
 
   # Network
   youtube_explode_dart: ^2.1.0
@@ -87,7 +88,6 @@ dependencies:
     git:
       url: https://github.com/kume1a/flutter_common.git
       path: packages/common_models
-  cached_network_image: ^3.3.1
 
 dev_dependencies:
   flutter_test:

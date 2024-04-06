@@ -41,11 +41,12 @@ class SharedPrefsSpotifyCredsStore implements SpotifyCredsStore {
   }
 
   @override
-  DateTime? readTokenExpiry() {
+  DateTime? readTokenExpiresAt() {
     return callOrDefault(
       () {
         final expiry = _sharedPreferences.getInt(_keyTokenExpiry);
-        return expiry != null ? DateTime.fromMillisecondsSinceEpoch(expiry) : DateTime.now();
+
+        return expiry != null ? DateTime.fromMillisecondsSinceEpoch(expiry) : null;
       },
       null,
     );
@@ -70,11 +71,9 @@ class SharedPrefsSpotifyCredsStore implements SpotifyCredsStore {
   }
 
   @override
-  Future<void> writeTokenExpiresIn(int expiresInSeconds) async {
+  Future<void> writeTokenExpiresAt(DateTime expiresAt) async {
     try {
-      final expiry = DateTime.now().add(Duration(seconds: expiresInSeconds));
-
-      await _sharedPreferences.setInt(_keyTokenExpiry, expiry.millisecondsSinceEpoch);
+      await _sharedPreferences.setInt(_keyTokenExpiry, expiresAt.millisecondsSinceEpoch);
     } catch (e) {
       Logger.root.severe(e);
     }

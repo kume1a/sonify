@@ -8,6 +8,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 import 'package:sonify_client/sonify_client.dart';
 
+import '../../../entities/server_time/api/get_server_time.dart';
 import '../../../shared/util/intent.dart';
 import '../../../shared/values/constant.dart';
 import '../api/spotify_api.dart';
@@ -38,6 +39,7 @@ class SpotifyAuthCubit extends Cubit<SpotifyAuthState> {
     this._spotifyCredsStore,
     this._spotifyAuthRepository,
     this._appLinks,
+    this._getServerTime,
   ) : super(SpotifyAuthState.initial()) {
     _init();
   }
@@ -47,6 +49,7 @@ class SpotifyAuthCubit extends Cubit<SpotifyAuthState> {
   final SpotifyCredsStore _spotifyCredsStore;
   final SpotifyAuthRepository _spotifyAuthRepository;
   final AppLinks _appLinks;
+  final GetServerTime _getServerTime;
 
   final _subscriptions = SubscriptionComposite();
 
@@ -117,10 +120,13 @@ class SpotifyAuthCubit extends Cubit<SpotifyAuthState> {
           return;
         }
 
+        final serverTime = await _getServerTime();
+        final expiresAt = serverTime.add(Duration(seconds: r.expiresIn));
+
         await Future.wait([
           _spotifyCredsStore.writeRefreshToken(r.refreshToken),
           _spotifyCredsStore.writeAccessToken(r.accessToken),
-          _spotifyCredsStore.writeTokenExpiresIn(r.expiresIn),
+          _spotifyCredsStore.writeTokenExpiresAt(expiresAt),
         ]);
         Logger.root.fine('Spotify token authorized successfully.');
         emit(state.copyWith(isSpotifyAuthenticated: SimpleDataState.success(true)));

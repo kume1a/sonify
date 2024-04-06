@@ -3,13 +3,13 @@ abstract interface class SpotifyCredsStore {
 
   String? readRefreshToken();
 
-  DateTime? readTokenExpiry();
+  DateTime? readTokenExpiresAt();
 
   Future<void> writeRefreshToken(String token);
 
   Future<void> writeAccessToken(String token);
 
-  Future<void> writeTokenExpiresIn(int expiresInSeconds);
+  Future<void> writeTokenExpiresAt(DateTime expiresAt);
 
   Future<void> clear();
 }

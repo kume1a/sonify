@@ -4,9 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sonify_client/sonify_client.dart';
 
-import '../../../app/di/register_dependencies.dart';
 import '../../../app/navigation/page_navigator.dart';
-import '../../../features/spotifyauth/api/spotify_access_token_provider.dart';
 import '../../../pages/playlist_page.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
 
@@ -30,8 +28,6 @@ final class SpotifyPlaylistListCubit extends EntityLoaderCubit<List<Playlist>> {
 
   @override
   Future<List<Playlist>?> loadEntity() async {
-    getIt<SpotifyAccessTokenProvider>().get();
-
     final res = await _playlistRepository.getAuthUserPlaylists();
 
     return res.rightOrNull;
