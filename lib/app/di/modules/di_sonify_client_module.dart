@@ -167,4 +167,18 @@ abstract class DiSonifyClientModule {
   ) {
     return UserSyncDatumRepositoryImpl(apiClient, userSyncDatumMapper);
   }
+
+  // server time
+  @lazySingleton
+  ServerTimeMapper serverTimeMapper() {
+    return ServerTimeMapper();
+  }
+
+  @lazySingleton
+  ServerTimeRepository serverTimeRepository(
+    ApiClient apiClient,
+    ServerTimeMapper serverTimeMapper,
+  ) {
+    return ServerTimeRepositoryImpl(apiClient, serverTimeMapper);
+  }
 }

@@ -7,6 +7,7 @@ import 'package:retrofit/retrofit.dart';
 import '../entity/audio/model/download_youtube_audio_body.dart';
 import '../entity/audio/model/user_audio_dto.dart';
 import '../entity/playlist/model/playlist_dto.dart';
+import '../entity/server_time/model/server_time_dto.dart';
 import '../entity/user/model/update_user_body.dart';
 import '../entity/user/model/user_dto.dart';
 import '../entity/usersync/model/user_sync_datum_dto.dart';
@@ -25,6 +26,9 @@ part 'api_client.g.dart';
 @RestApi()
 abstract class ApiClient {
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
+
+  @GET('/serverTime')
+  Future<ServerTimeDto> getServerTime();
 
   // youtube ---------------------------
   @GET('/v1/youtube/musicUrl')
