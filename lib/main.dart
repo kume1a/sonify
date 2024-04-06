@@ -12,6 +12,7 @@ import 'app/app.dart';
 import 'app/configuration/app_environment.dart';
 import 'app/configuration/configure_audio_components.dart';
 import 'app/configuration/global_http_overrides.dart';
+import 'app/configuration/init_cached_stores.dart';
 import 'app/di/register_dependencies.dart';
 import 'app/navigation/page_navigator.dart';
 
@@ -34,6 +35,7 @@ Future<void> main() async {
   });
 
   configureAudioComponents();
+  initCachedStores();
 
   VVOConfig.password.minLength = 6;
 
