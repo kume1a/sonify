@@ -15,6 +15,8 @@ import '../feature/auth/model/email_sign_in_body.dart';
 import '../feature/auth/model/google_sign_in_body.dart';
 import '../feature/auth/model/token_payload_dto.dart';
 import '../feature/spotifyauth/model/authorize_spotify_body.dart';
+import '../feature/spotifyauth/model/refresh_spotify_token_body.dart';
+import '../feature/spotifyauth/model/spotify_refresh_token_payload_dto.dart';
 import '../feature/spotifyauth/model/spotify_token_payload_dto.dart';
 import '../shared/dto/url_dto.dart';
 
@@ -52,6 +54,9 @@ abstract class ApiClient {
   // spotify ---------------------------
   @POST('/v1/spotify/authorize')
   Future<SpotifyTokenPayloadDto> authorizeSpotify(@Body() AuthorizeSpotifyBody body);
+
+  @POST('/v1/spotify/refreshToken')
+  Future<SpotifyRefreshTokenPayloadDto> refreshSpotifyToken(@Body() RefreshSpotifyTokenBody body);
 
   @POST('/v1/spotify/importUserPlaylists')
   Future<void> importSpotifyUserPlaylists(

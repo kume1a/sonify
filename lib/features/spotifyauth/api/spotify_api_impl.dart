@@ -6,6 +6,8 @@ import 'spotify_api.dart';
 
 @LazySingleton(as: SpotifyApi)
 class SpotifyApiImpl implements SpotifyApi {
+  SpotifyApiImpl();
+
   @override
   Uri getAuthorizationUrl() {
     const scopes = [
