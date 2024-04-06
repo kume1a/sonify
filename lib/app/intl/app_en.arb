@@ -92,5 +92,13 @@
   "recents": "Recents",
   "viewAll": "View All",
   "myLibrary": "My Library",
-  "likedSongs": "Liked Songs"
+  "likedSongs": "Liked Songs",
+  "playedNTimes": "Played @n times",
+  "@playedNTimes": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../app/di/register_dependencies.dart';
 import '../entities/playlist/state/playlist_state.dart';
+import '../entities/playlist/ui/playlist_appbar.dart';
+import '../entities/playlist/ui/playlist_items.dart';
 
 class PlaylistPageArgs {
   const PlaylistPageArgs({
@@ -35,9 +37,22 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+
     return Scaffold(
       body: SafeArea(
-        child: Container(),
+        child: CustomScrollView(
+          slivers: [
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: PlaylistAppBar(
+                maxExtent: mediaQuery.padding.top + mediaQuery.size.height * .35,
+                minExtent: mediaQuery.padding.top + 56,
+              ),
+            ),
+            const PlaylistItems(),
+          ],
+        ),
       ),
     );
   }
