@@ -1,6 +1,7 @@
 import 'package:common_widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 
+import '../../util/utils.dart';
 import '../../values/app_theme_extension.dart';
 import '../audio_thumbnail.dart';
 
@@ -33,13 +34,13 @@ class AudioListItem extends StatelessWidget {
             if (thumbnailPath != null || thumbnailUrl != null)
               Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: thumbnailPath != null
+                child: thumbnailPath.notNullOrEmpty
                     ? AudioThumbnail(
                         thumbnailPath: thumbnailPath,
                         borderRadius: BorderRadius.circular(8),
                         dimension: 36,
                       )
-                    : thumbnailUrl != null
+                    : thumbnailUrl.notNullOrEmpty
                         ? SafeImage(
                             url: thumbnailUrl,
                             width: 36,

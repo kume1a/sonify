@@ -1,4 +1,3 @@
-import 'package:audio_service/audio_service.dart';
 import 'package:common_models/common_models.dart';
 import 'package:common_utilities/common_utilities.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../api/local_audio_file_repository.dart';
 import '../model/event_local_audio_file.dart';
 import '../model/local_audio_file.dart';
+import '../util/enqueue_audio.dart';
 
 typedef LocalAudioFilesState = SimpleDataState<List<LocalAudioFile>>;
 
@@ -24,7 +24,7 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<LocalAudioFile>>
     this._localAudioFileRepository,
     this._authUserInfoProvider,
     this._eventBus,
-    this._audioHandler,
+    this._enqueueAudio,
   ) {
     _init();
 
@@ -34,7 +34,7 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<LocalAudioFile>>
   final LocalAudioFileRepository _localAudioFileRepository;
   final AuthUserInfoProvider _authUserInfoProvider;
   final EventBus _eventBus;
-  final AudioHandler _audioHandler;
+  final EnqueueAudio _enqueueAudio;
 
   final _subscriptions = SubscriptionComposite();
 
@@ -64,20 +64,7 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<LocalAudioFile>>
   }
 
   Future<void> onLocalAudioFilePressed(LocalAudioFile localAudioFile) async {
-    final mediaItem = MediaItem(
-      id: localAudioFile.id.toString(),
-      title: localAudioFile.title,
-      artist: localAudioFile.author,
-      duration: localAudioFile.duration,
-      artUri: localAudioFile.thumbnailPath != null ? Uri.parse(localAudioFile.thumbnailPath!) : null,
-      extras: {
-        'localPath': localAudioFile.path,
-        'localAudioFileId': localAudioFile.id,
-      },
-    );
-
-    await _audioHandler.updateQueue([]);
-    await _audioHandler.insertQueueItem(0, mediaItem);
+    return _enqueueAudio.fromLocalAudioFile(localAudioFile);
   }
 
   Future<void> _onEventLocalAudioFile(EventLocalAudioFile event) async {

@@ -19,3 +19,7 @@ T callOrDefault<T>(T Function() fn, T defaultValue) {
 
   return defaultValue;
 }
+
+extension StringX on String? {
+  bool get notNullOrEmpty => this != null && this?.isNotEmpty == true;
+}

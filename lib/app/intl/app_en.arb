@@ -93,7 +93,7 @@
   "viewAll": "View All",
   "myLibrary": "My Library",
   "likedSongs": "Liked Songs",
-  "playedNTimes": "Played @n times",
+  "playedNTimes": "Played {n} times",
   "@playedNTimes": {
     "placeholders": {
       "n": {

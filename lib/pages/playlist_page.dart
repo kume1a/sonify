@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../app/di/register_dependencies.dart';
 import '../entities/playlist/state/playlist_state.dart';
 import '../entities/playlist/ui/playlist_appbar.dart';
-import '../entities/playlist/ui/playlist_items.dart';
 
 class PlaylistPageArgs {
   const PlaylistPageArgs({
@@ -39,6 +38,11 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
 
+    return const AlbumPageView(
+      text: 'text',
+      likesAndHours: 'likesAndHours',
+    );
+
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
@@ -50,7 +54,7 @@ class _Content extends StatelessWidget {
                 minExtent: mediaQuery.padding.top + 56,
               ),
             ),
-            const PlaylistItems(),
+            // const PlaylistItems(),
           ],
         ),
       ),
