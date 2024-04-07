@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -38,14 +39,20 @@ class AudioListItem extends StatelessWidget {
                     ? AudioThumbnail(
                         thumbnailPath: thumbnailPath,
                         borderRadius: BorderRadius.circular(8),
-                        dimension: 36,
+                        dimension: 42,
                       )
                     : thumbnailUrl.notNullOrEmpty
-                        ? SafeImage(
-                            url: thumbnailUrl,
-                            width: 36,
-                            height: 36,
+                        ? ClipRRect(
                             borderRadius: BorderRadius.circular(8),
+                            child: CachedNetworkImage(
+                              imageUrl: thumbnailUrl!,
+                              width: 42,
+                              height: 42,
+                              errorWidget: (_, __, ___) =>
+                                  ColoredBox(color: theme.colorScheme.primaryContainer),
+                              placeholder: (context, url) =>
+                                  ColoredBox(color: theme.colorScheme.primaryContainer),
+                            ),
                           )
                         : const SizedBox.shrink(),
               ),

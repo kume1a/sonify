@@ -7,10 +7,7 @@ import '../state/playlist_state.dart';
 class PlaylistItems extends StatelessWidget {
   const PlaylistItems({
     super.key,
-    required this.scrollController,
   });
-
-  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +15,7 @@ class PlaylistItems extends StatelessWidget {
       builder: (_, state) {
         return state.maybeWhen(
           orElse: () => const SliverToBoxAdapter(),
-          success: (data) => ListView.builder(
-            controller: scrollController,
+          success: (data) => SliverList.builder(
             itemCount: data.audios?.length ?? 0,
             itemBuilder: (_, index) {
               final audio = data.audios?.elementAt(index);
