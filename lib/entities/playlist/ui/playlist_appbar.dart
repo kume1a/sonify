@@ -234,7 +234,7 @@ class _PlaylistViewCount extends StatelessWidget {
 }
 
 class _OptionButtons extends StatelessWidget {
-  const _OptionButtons({super.key});
+  const _OptionButtons();
 
   @override
   Widget build(BuildContext context) {

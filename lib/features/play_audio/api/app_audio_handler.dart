@@ -103,11 +103,11 @@ class AppAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> addQueueItems(List<MediaItem> mediaItems) async {
-    // manage Just Audio
-    final audioSource = mediaItems.map(_createAudioSource);
-    _playlist.addAll(audioSource.toList());
+    final audioSource =
+        mediaItems.map(_createAudioSource).where((element) => element != null).cast<AudioSource>().toList();
 
-    // notify system
+    _playlist.addAll(audioSource);
+
     final newQueue = queue.value..addAll(mediaItems);
     queue.add(newQueue);
   }
@@ -115,6 +115,10 @@ class AppAudioHandler extends BaseAudioHandler {
   @override
   Future<void> addQueueItem(MediaItem mediaItem) async {
     final audioSource = _createAudioSource(mediaItem);
+    if (audioSource == null) {
+      return;
+    }
+
     _playlist.add(audioSource);
 
     final newQueue = queue.value..add(mediaItem);
@@ -124,6 +128,10 @@ class AppAudioHandler extends BaseAudioHandler {
   @override
   Future<void> insertQueueItem(int index, MediaItem mediaItem) async {
     final audioSource = _createAudioSource(mediaItem);
+    if (audioSource == null) {
+      return;
+    }
+
     _playlist.insert(index, audioSource);
 
     final newQueue = queue.value..insert(index, mediaItem);
@@ -140,7 +148,7 @@ class AppAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> updateQueue(List<MediaItem> queue) async {
-    final audioSources = queue.map(_createAudioSource).toList();
+    final audioSources = queue.map(_createAudioSource).where((e) => e != null).cast<AudioSource>().toList();
 
     _playlist.clear();
     _playlist.addAll(audioSources);
@@ -212,9 +220,29 @@ class AppAudioHandler extends BaseAudioHandler {
     return super.stop();
   }
 
-  UriAudioSource _createAudioSource(MediaItem mediaItem) {
+  UriAudioSource? _createAudioSource(MediaItem mediaItem) {
+    if (mediaItem.extras == null) {
+      Logger.root.warning('Media extras is null, mediaItem: $mediaItem');
+      return null;
+    }
+
+    Uri? mediaUri;
+
+    if (mediaItem.extras!.containsKey('localPath')) {
+      mediaUri = Uri.parse(mediaItem.extras!['localPath'] as String);
+    } else if (mediaItem.extras!.containsKey('remoteUrl')) {
+      mediaUri = Uri.parse(mediaItem.extras!['remoteUrl'] as String);
+    }
+
+    if (mediaUri == null) {
+      Logger.root.warning('Media URI is null, mediaItem: $mediaItem');
+      return null;
+    }
+
+    Logger.root.info('Creating audio source for mediaItem: $mediaItem');
+
     return AudioSource.uri(
-      Uri.parse(mediaItem.extras!['localPath'] as String),
+      mediaUri,
       tag: mediaItem,
     );
   }

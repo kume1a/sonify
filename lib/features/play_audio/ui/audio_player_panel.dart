@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:sonify_client/sonify_client.dart';
 
-import '../../../entities/audio/model/local_audio_file.dart';
 import '../../../shared/ui/audio_thumbnail.dart';
 import '../../../shared/values/assets.dart';
 import '../model/playback_button_state.dart';
@@ -32,8 +32,8 @@ class AudioPlayerPanel extends StatelessWidget {
           success: (data) => SlidingUpPanel(
             controller: context.audioPlayerCubit.panelController,
             body: body,
-            panel: _PanelContent(localAudioFile: data),
-            collapsed: _MiniAudioPlayer(localAudioFile: data),
+            panel: _PanelContent(audio: data),
+            collapsed: _MiniAudioPlayer(audio: data),
             minHeight: 56,
             color: theme.scaffoldBackgroundColor,
             maxHeight: mediaQuery.size.height,
@@ -46,10 +46,10 @@ class AudioPlayerPanel extends StatelessWidget {
 
 class _PanelContent extends StatelessWidget {
   const _PanelContent({
-    required this.localAudioFile,
+    required this.audio,
   });
 
-  final LocalAudioFile localAudioFile;
+  final Audio audio;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class _PanelContent extends StatelessWidget {
         LayoutBuilder(builder: (_, constraints) {
           return _AudioPlayerImage(
             dimension: constraints.maxWidth * 0.75,
-            localAudioFile: localAudioFile,
+            audio: audio,
           );
         }),
         const SizedBox(height: 32),
@@ -76,10 +76,10 @@ class _PanelContent extends StatelessWidget {
 
 class _MiniAudioPlayer extends StatelessWidget {
   const _MiniAudioPlayer({
-    required this.localAudioFile,
+    required this.audio,
   });
 
-  final LocalAudioFile localAudioFile;
+  final Audio audio;
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +93,7 @@ class _MiniAudioPlayer extends StatelessWidget {
           children: [
             _AudioPlayerImage(
               dimension: 42,
-              localAudioFile: localAudioFile,
+              audio: audio,
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -144,11 +144,11 @@ class _MiniAudioPlayer extends StatelessWidget {
 class _AudioPlayerImage extends HookWidget {
   const _AudioPlayerImage({
     required this.dimension,
-    required this.localAudioFile,
+    required this.audio,
   });
 
   final double dimension;
-  final LocalAudioFile localAudioFile;
+  final Audio audio;
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +156,7 @@ class _AudioPlayerImage extends HookWidget {
       builder: (_, constraints) {
         return AudioThumbnail(
           dimension: dimension,
-          thumbnailPath: localAudioFile.thumbnailPath ?? '',
+          thumbnailPath: audio.thumbnailPath ?? '',
           borderRadius: BorderRadius.circular(dimension * 0.1),
         );
       },

@@ -7,9 +7,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:sonify_client/sonify_client.dart';
 
-import '../../../entities/audio/api/local_audio_file_repository.dart';
-import '../../../entities/audio/model/local_audio_file.dart';
 import '../model/playback_button_state.dart';
 import '../model/playback_progress_state.dart';
 
@@ -19,7 +18,7 @@ part 'audio_player_state.freezed.dart';
 class AudioPlayerState with _$AudioPlayerState {
   const factory AudioPlayerState({
     String? playlistName,
-    required SimpleDataState<LocalAudioFile> currentSong,
+    required SimpleDataState<Audio> currentSong,
     required PlaybackButtonState playButtonState,
     PlaybackProgressState? playbackProgress,
   }) = _AudioPldayerState;
@@ -37,13 +36,11 @@ extension AudioPlayerCubitX on BuildContext {
 @injectable
 class AudioPlayerCubit extends Cubit<AudioPlayerState> {
   AudioPlayerCubit(
-    this._localAudioFileRepository,
     this._audioHandler,
   ) : super(AudioPlayerState.initial()) {
     _init();
   }
 
-  final LocalAudioFileRepository _localAudioFileRepository;
   final AudioHandler _audioHandler;
 
   final _subscriptions = SubscriptionComposite();
@@ -135,18 +132,27 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
   }
 
   Future<void> _onMediaItemChanged(MediaItem? mediaItem) async {
+    Logger.root.info('Media item changed to: $mediaItem');
+
     final newProgress = (state.playbackProgress ?? PlaybackProgressState.zero()).copyWith(
       total: mediaItem?.duration ?? Duration.zero,
     );
 
-    emit(state.copyWith(playbackProgress: newProgress));
+    emit(state.copyWith(
+      playbackProgress: newProgress,
+      currentSong: SimpleDataState.loading(),
+    ));
 
-    final localAudioFileId = mediaItem?.extras?['localAudioFileId'] as int?;
-    if (localAudioFileId == null) {
-      Logger.root.warning('Local audio file id is null, so not loading the current song.');
-      emit(state.copyWith(currentSong: SimpleDataState.idle()));
+    final audio = mediaItem?.extras?['audio'] as Audio?;
+
+    if (audio == null) {
+      emit(state.copyWith(currentSong: SimpleDataState.failure()));
       return;
     }
+
+    emit(state.copyWith(currentSong: SimpleDataState.success(audio)));
+
+    await _audioHandler.play();
 
     if (panelController.isAttached) {
       panelController.animatePanelToPosition(
@@ -154,18 +160,6 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
         duration: const Duration(milliseconds: 250),
       );
     }
-
-    emit(state.copyWith(currentSong: SimpleDataState.loading()));
-    final localAudioFile = await _localAudioFileRepository.getById(localAudioFileId);
-
-    if (localAudioFile == null) {
-      emit(state.copyWith(currentSong: SimpleDataState.failure()));
-      return;
-    }
-
-    emit(state.copyWith(currentSong: SimpleDataState.success(localAudioFile)));
-
-    await _audioHandler.play();
   }
 
   // Future<void> _loadPlaylist() async {

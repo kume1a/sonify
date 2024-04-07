@@ -23,7 +23,7 @@ final class EnqueueAudio {
       artUri: audio.thumbnailUri,
       extras: {
         'remoteUrl': assembleResourceUrl(audio.path),
-        'audioId': audio.id,
+        'audio': audio,
       },
     );
 
@@ -40,7 +40,7 @@ final class EnqueueAudio {
       artUri: localAudioFile.thumbnailPath != null ? Uri.parse(localAudioFile.thumbnailPath!) : null,
       extras: {
         'localPath': localAudioFile.path,
-        'localAudioFileId': localAudioFile.id,
+        'localAudioFile': localAudioFile,
       },
     );
 
