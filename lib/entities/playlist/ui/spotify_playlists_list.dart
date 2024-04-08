@@ -19,7 +19,7 @@ class SpotifyPlaylistsList extends StatelessWidget {
       builder: (context, state) {
         return state.maybeWhen(
           orElse: () => const SizedBox.shrink(),
-          loading: () => const CircularProgressIndicator(),
+          loading: () => const Center(child: CircularProgressIndicator()),
           success: (playlists) {
             return Column(
               mainAxisSize: MainAxisSize.min,
