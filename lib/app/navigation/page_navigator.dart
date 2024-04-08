@@ -35,4 +35,6 @@ class PageNavigator {
   void toEmailSignIn() => GlobalNavigator.pushNamed(Routes.emailSignIn);
 
   void toPlaylist(PlaylistPageArgs args) => GlobalNavigator.pushNamed(Routes.playlist, arguments: args);
+
+  void toMyLibrary() => GlobalNavigator.pushNamed(Routes.myLibrary);
 }

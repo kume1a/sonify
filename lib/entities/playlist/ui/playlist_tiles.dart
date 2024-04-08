@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../../../shared/values/assets.dart';
+import '../state/playlist_tiles_state.dart';
 
 class PlaylistTiles extends StatelessWidget {
   const PlaylistTiles({super.key});
@@ -32,6 +33,7 @@ class _MyLibraryPlaylistTile extends StatelessWidget {
     final l = AppLocalizations.of(context);
 
     return _PlaylistTile(
+      onPressed: context.playlistTilesCubit.onMyLibraryPressed,
       image: AspectRatio(
         aspectRatio: 1,
         child: Container(
@@ -57,6 +59,7 @@ class _LikedSongsPlaylistTile extends StatelessWidget {
     final l = AppLocalizations.of(context);
 
     return _PlaylistTile(
+      onPressed: context.playlistTilesCubit.onLikedSongsPressed,
       image: AspectRatio(
         aspectRatio: 1,
         child: Container(
@@ -77,26 +80,31 @@ class _PlaylistTile extends StatelessWidget {
   const _PlaylistTile({
     required this.image,
     required this.name,
+    required this.onPressed,
   });
 
   final Widget image;
   final String name;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primaryContainer,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          image,
-          const SizedBox(width: 6),
-          Text(name),
-        ],
+    return GestureDetector(
+      onTap: onPressed,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: theme.colorScheme.primaryContainer,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            image,
+            const SizedBox(width: 6),
+            Text(name),
+          ],
+        ),
       ),
     );
   }

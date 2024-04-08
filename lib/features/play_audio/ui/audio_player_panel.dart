@@ -59,7 +59,7 @@ class _PanelContent extends StatelessWidget {
         const SizedBox(height: 24),
         LayoutBuilder(builder: (_, constraints) {
           return _AudioPlayerImage(
-            dimension: constraints.maxWidth * 0.75,
+            size: Size.square(constraints.maxWidth * 0.75),
             audio: audio,
           );
         }),
@@ -92,7 +92,7 @@ class _MiniAudioPlayer extends StatelessWidget {
         child: Row(
           children: [
             _AudioPlayerImage(
-              dimension: 42,
+              size: const Size.square(42),
               audio: audio,
             ),
             const SizedBox(width: 8),
@@ -143,22 +143,22 @@ class _MiniAudioPlayer extends StatelessWidget {
 
 class _AudioPlayerImage extends HookWidget {
   const _AudioPlayerImage({
-    required this.dimension,
+    required this.size,
     required this.audio,
   });
 
-  final double dimension;
+  final Size size;
   final Audio audio;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (_, constraints) {
-        return AudioThumbnail(
-          dimension: dimension,
+        return Thumbnail(
+          size: size,
           thumbnailPath: audio.thumbnailPath,
           thumbnailUrl: audio.thumbnailUrl,
-          borderRadius: BorderRadius.circular(dimension * 0.1),
+          borderRadius: BorderRadius.circular(size.longestSide * 0.1),
         );
       },
     );

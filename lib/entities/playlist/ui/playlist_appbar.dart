@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../../../shared/ui/pulsing_fade.dart';
+import '../../../shared/ui/round_play_button.dart';
 import '../../../shared/util/color.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
@@ -30,11 +31,8 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
     final theme = Theme.of(context);
     final l = AppLocalizations.of(context);
 
-    final double offset = shrinkOffset / maxExtent;
+    final offset = shrinkOffset / maxExtent;
 
-    // calculated with linear formula
-    // .6k + b = 1
-    // .5k + b = 0
     final colorProgress = const Interval(.2, .8).transform(offset);
     final iconColor = theme.brightness == Brightness.light
         ? ColorTween(begin: Colors.white, end: Colors.black).lerp(colorProgress)
@@ -121,7 +119,7 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
         const Positioned(
           right: 16,
           bottom: -20,
-          child: _PlayButton(),
+          child: RoundPlayButton(dimension: 52),
         ),
       ],
     );
@@ -263,27 +261,6 @@ class _OptionButtons extends StatelessWidget {
           colorFilter: svgColor(theme.appThemeExtension?.elSecondary),
         ),
       ],
-    );
-  }
-}
-
-class _PlayButton extends StatelessWidget {
-  const _PlayButton();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      width: 52,
-      height: 52,
-      decoration: BoxDecoration(color: theme.colorScheme.secondary, shape: BoxShape.circle),
-      alignment: Alignment.center,
-      child: SvgPicture.asset(
-        Assets.svgPlay,
-        width: 24,
-        height: 24,
-      ),
     );
   }
 }

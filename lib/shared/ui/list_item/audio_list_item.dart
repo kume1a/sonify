@@ -32,11 +32,11 @@ class AudioListItem extends StatelessWidget {
             if (thumbnailPath != null || thumbnailUrl != null)
               Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: AudioThumbnail(
+                child: Thumbnail(
                   thumbnailPath: thumbnailPath,
                   thumbnailUrl: thumbnailUrl,
                   borderRadius: BorderRadius.circular(8),
-                  dimension: 42,
+                  size: const Size.square(42),
                 ),
               ),
             Expanded(

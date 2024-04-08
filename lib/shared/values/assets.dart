@@ -26,4 +26,7 @@ abstract final class Assets {
   static const svgMail = '$_icons/mail.svg';
   static const svgDownload = '$_icons/download.svg';
   static const svgMenuVertical = '$_icons/menu_vertical.svg';
+  static const svgMic = '$_icons/mic.svg';
+  static const svgPlaylist = '$_icons/playlist.svg';
+  static const svgArrowDownUp = '$_icons/arrow_down_up.svg';
 }

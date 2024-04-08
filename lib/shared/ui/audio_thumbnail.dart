@@ -8,18 +8,21 @@ import 'package:flutter_svg/svg.dart';
 
 import '../values/assets.dart';
 
-class AudioThumbnail extends HookWidget {
-  const AudioThumbnail({
+class Thumbnail extends HookWidget {
+  const Thumbnail({
     super.key,
-    required this.thumbnailPath,
-    required this.thumbnailUrl,
-    required this.dimension,
+    this.thumbnailPath,
+    this.thumbnailUrl,
+    required this.size,
     this.borderRadius = BorderRadius.zero,
-  });
+  }) : assert(
+          thumbnailPath != null || thumbnailUrl != null,
+          'Either thumbnailPath or thumbnailUrl must be provided',
+        );
 
   final String? thumbnailPath;
   final String? thumbnailUrl;
-  final double dimension;
+  final Size size;
   final BorderRadiusGeometry borderRadius;
 
   @override
@@ -35,8 +38,8 @@ class AudioThumbnail extends HookWidget {
         borderRadius: BorderRadius.circular(8),
         child: CachedNetworkImage(
           imageUrl: thumbnailUrl!,
-          width: dimension,
-          height: dimension,
+          width: size.width,
+          height: size.height,
           errorWidget: (_, __, ___) => _placeholder(theme),
           placeholder: (context, url) => _placeholder(theme),
         ),
@@ -49,8 +52,8 @@ class AudioThumbnail extends HookWidget {
             borderRadius: borderRadius,
             child: Image.file(
               imageFile,
-              width: dimension,
-              height: dimension,
+              width: size.width,
+              height: size.height,
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) => _placeholder(theme),
             ),
@@ -58,11 +61,11 @@ class AudioThumbnail extends HookWidget {
   }
 
   Widget _placeholder(ThemeData theme) {
-    final childDimension = max<double>(24, dimension * .3);
+    final childDimension = max<double>(24, size.width * .25);
 
     return Container(
-      width: dimension,
-      height: dimension,
+      width: size.width,
+      height: size.height,
       color: theme.colorScheme.secondaryContainer,
       child: Align(
         child: SvgPicture.asset(

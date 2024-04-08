@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../app/di/register_dependencies.dart';
 import '../entities/playlist/state/import_spotify_playlists_state.dart';
+import '../entities/playlist/state/playlist_tiles_state.dart';
 import '../entities/playlist/state/spotify_playlist_list_state.dart';
 import '../entities/playlist/ui/ensure_spotify_playlists_imported.dart';
 import '../entities/playlist/ui/playlist_tiles.dart';
@@ -22,6 +23,7 @@ class HomePage extends StatelessWidget {
         BlocProvider(create: (_) => getIt<SpotifyAuthCubit>()),
         BlocProvider(create: (_) => getIt<SpotifyPlaylistListCubit>()),
         BlocProvider(create: (_) => getIt<ImportSpotifyPlaylistsCubit>()),
+        BlocProvider(create: (_) => getIt<PlaylistTilesCubit>()),
       ],
       child: const _Content(),
     );

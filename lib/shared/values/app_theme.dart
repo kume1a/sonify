@@ -80,6 +80,9 @@ abstract final class AppTheme {
     extensions: [
       AppThemeExtension(
         elSecondary: Palette.elSecondary,
+        myLibraryTileLikedBg: Palette.myLibraryTileLikedBg,
+        myLibraryTilePlaylistsBg: Palette.myLibraryTilePlaylistsBg,
+        myLibraryArtistsBg: Palette.myLibraryArtistsBg,
       ),
     ],
   );

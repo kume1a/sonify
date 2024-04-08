@@ -82,4 +82,6 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<LocalAudioFile>>
       },
     );
   }
+
+  void onSearchQueryChanged(String value) {}
 }

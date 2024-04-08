@@ -1,9 +1,9 @@
-import 'package:common_widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sonify_client/sonify_client.dart';
 
 import '../../../app/intl/app_localizations.dart';
+import '../../../shared/ui/audio_thumbnail.dart';
 import '../../../shared/ui/list_header.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../state/spotify_playlist_list_state.dart';
@@ -67,9 +67,9 @@ class _PlaylistItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SafeImage(
-              url: playlist.thumbnailUrl,
-              borderRadius: BorderRadius.circular(8),
+            Thumbnail(
+              thumbnailUrl: playlist.thumbnailUrl,
+              size: const Size.square(125),
             ),
             const SizedBox(height: 4),
             Text(
