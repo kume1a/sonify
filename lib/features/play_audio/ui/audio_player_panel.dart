@@ -30,7 +30,7 @@ class AudioPlayerPanel extends StatelessWidget {
         return state.currentSong.maybeWhen(
           orElse: () => body,
           success: (data) => SlidingUpPanel(
-            controller: context.audioPlayerCubit.panelController,
+            controller: AudioPlayerCubit.panelController,
             body: body,
             panel: _PanelContent(audio: data),
             collapsed: _MiniAudioPlayer(audio: data),
@@ -156,7 +156,8 @@ class _AudioPlayerImage extends HookWidget {
       builder: (_, constraints) {
         return AudioThumbnail(
           dimension: dimension,
-          thumbnailPath: audio.thumbnailPath ?? '',
+          thumbnailPath: audio.thumbnailPath,
+          thumbnailUrl: audio.thumbnailUrl,
           borderRadius: BorderRadius.circular(dimension * 0.1),
         );
       },

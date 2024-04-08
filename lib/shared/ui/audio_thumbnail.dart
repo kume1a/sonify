@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
@@ -11,11 +12,13 @@ class AudioThumbnail extends HookWidget {
   const AudioThumbnail({
     super.key,
     required this.thumbnailPath,
+    required this.thumbnailUrl,
     required this.dimension,
     this.borderRadius = BorderRadius.zero,
   });
 
   final String? thumbnailPath;
+  final String? thumbnailUrl;
   final double dimension;
   final BorderRadiusGeometry borderRadius;
 
@@ -27,20 +30,31 @@ class AudioThumbnail extends HookWidget {
       () => thumbnailPath != null ? File(thumbnailPath!) : null,
     );
 
-    if (imageFile == null) {
-      return _placeholder(theme);
+    if (thumbnailUrl != null) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: CachedNetworkImage(
+          imageUrl: thumbnailUrl!,
+          width: dimension,
+          height: dimension,
+          errorWidget: (_, __, ___) => _placeholder(theme),
+          placeholder: (context, url) => _placeholder(theme),
+        ),
+      );
     }
 
-    return ClipRRect(
-      borderRadius: borderRadius,
-      child: Image.file(
-        imageFile,
-        width: dimension,
-        height: dimension,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => _placeholder(theme),
-      ),
-    );
+    return imageFile == null
+        ? _placeholder(theme)
+        : ClipRRect(
+            borderRadius: borderRadius,
+            child: Image.file(
+              imageFile,
+              width: dimension,
+              height: dimension,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => _placeholder(theme),
+            ),
+          );
   }
 
   Widget _placeholder(ThemeData theme) {

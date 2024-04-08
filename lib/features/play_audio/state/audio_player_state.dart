@@ -45,7 +45,7 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
 
   final _subscriptions = SubscriptionComposite();
 
-  final panelController = PanelController();
+  static final panelController = PanelController();
 
   Future<void> _init() async {
     _subscriptions.add(_audioHandler.playbackState.listen(_onPlaybackStateChanged));
@@ -153,13 +153,6 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
     emit(state.copyWith(currentSong: SimpleDataState.success(audio)));
 
     await _audioHandler.play();
-
-    if (panelController.isAttached) {
-      panelController.animatePanelToPosition(
-        1.0,
-        duration: const Duration(milliseconds: 250),
-      );
-    }
   }
 
   // Future<void> _loadPlaylist() async {
