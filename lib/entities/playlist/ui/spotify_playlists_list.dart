@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sonify_client/sonify_client.dart';
 
 import '../../../app/intl/app_localizations.dart';
-import '../../../shared/ui/audio_thumbnail.dart';
 import '../../../shared/ui/list_header.dart';
+import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../state/spotify_playlist_list_state.dart';
 

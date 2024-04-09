@@ -6,7 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:sonify_client/sonify_client.dart';
 
-import '../../../shared/ui/audio_thumbnail.dart';
+import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/values/assets.dart';
 import '../model/playback_button_state.dart';
 import '../state/audio_player_state.dart';

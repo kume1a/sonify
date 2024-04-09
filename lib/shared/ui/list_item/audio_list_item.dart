@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../values/app_theme_extension.dart';
-import '../audio_thumbnail.dart';
+import '../thumbnail.dart';
 
 class AudioListItem extends StatelessWidget {
   const AudioListItem({

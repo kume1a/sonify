@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../util/utils.dart';
 import '../values/assets.dart';
 
 class Thumbnail extends HookWidget {
@@ -30,34 +31,34 @@ class Thumbnail extends HookWidget {
     final theme = Theme.of(context);
 
     final imageFile = useMemoized<File?>(
-      () => thumbnailPath != null ? File(thumbnailPath!) : null,
+      () => thumbnailPath.notNullOrEmpty ? File(thumbnailPath!) : null,
     );
 
-    if (thumbnailUrl != null) {
+    if (imageFile != null) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: CachedNetworkImage(
-          imageUrl: thumbnailUrl!,
+        borderRadius: borderRadius,
+        child: Image.file(
+          imageFile,
           width: size.width,
           height: size.height,
-          errorWidget: (_, __, ___) => _placeholder(theme),
-          placeholder: (context, url) => _placeholder(theme),
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => _placeholder(theme),
         ),
       );
     }
 
-    return imageFile == null
-        ? _placeholder(theme)
-        : ClipRRect(
-            borderRadius: borderRadius,
-            child: Image.file(
-              imageFile,
+    return thumbnailUrl.notNullOrEmpty
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: CachedNetworkImage(
+              imageUrl: thumbnailUrl!,
               width: size.width,
               height: size.height,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => _placeholder(theme),
+              errorWidget: (_, __, ___) => _placeholder(theme),
+              placeholder: (context, url) => _placeholder(theme),
             ),
-          );
+          )
+        : _placeholder(theme);
   }
 
   Widget _placeholder(ThemeData theme) {
