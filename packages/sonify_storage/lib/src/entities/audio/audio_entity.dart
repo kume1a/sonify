@@ -9,6 +9,8 @@ part 'audio_entity.g.dart';
 class AudioEntity {
   Id? id = Isar.autoIncrement;
 
+  String? remoteId;
+
   int? createdAtMillis;
 
   String? title;

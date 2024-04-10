@@ -20,10 +20,10 @@ class LocalAudioFiles extends StatelessWidget {
               final localAudioFile = data[index];
 
               return AudioListItem(
-                onTap: () => context.localAudioFilesCubit.onLocalAudioFilePressed(localAudioFile),
-                thumbnailPath: localAudioFile.thumbnailPath,
-                title: localAudioFile.title,
-                author: localAudioFile.author,
+                onTap: () => context.localAudioFilesCubit.onUserAudioFilePressed(localAudioFile),
+                thumbnailPath: localAudioFile.audio?.thumbnailPath,
+                title: localAudioFile.audio?.title ?? '',
+                author: localAudioFile.audio?.author ?? '',
               );
             },
           ),

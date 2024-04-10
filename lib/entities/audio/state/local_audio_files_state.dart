@@ -8,17 +8,17 @@ import 'package:logging/logging.dart';
 
 import '../../../features/auth/api/auth_user_info_provider.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
-import '../model/event_audio.dart';
+import '../model/event_user_audio.dart';
 import '../util/enqueue_audio.dart';
 
-typedef LocalAudioFilesState = SimpleDataState<List<Audio>>;
+typedef LocalAudioFilesState = SimpleDataState<List<UserAudio>>;
 
 extension LocalAudioFilesCubitX on BuildContext {
   LocalAudioFilesCubit get localAudioFilesCubit => read<LocalAudioFilesCubit>();
 }
 
 @injectable
-final class LocalAudioFilesCubit extends EntityLoaderCubit<List<Audio>> {
+final class LocalAudioFilesCubit extends EntityLoaderCubit<List<UserAudio>> {
   LocalAudioFilesCubit(
     this._audioLocalRepository,
     this._authUserInfoProvider,
@@ -39,7 +39,7 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<Audio>> {
 
   void _init() {
     _subscriptions.add(
-      _eventBus.on<EventAudio>().listen(_onEventAudio),
+      _eventBus.on<EventUserAudio>().listen(_onEventUserAudio),
     );
   }
 
@@ -51,7 +51,7 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<Audio>> {
   }
 
   @override
-  Future<List<Audio>?> loadEntity() async {
+  Future<List<UserAudio>?> loadEntity() async {
     final userId = await _authUserInfoProvider.getId();
 
     if (userId == null) {
@@ -62,11 +62,16 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<Audio>> {
     return _audioLocalRepository.getAllByUserId(userId);
   }
 
-  Future<void> onLocalAudioFilePressed(Audio audio) async {
-    return _enqueueAudio.fromAudio(audio);
+  Future<void> onUserAudioFilePressed(UserAudio userAudio) async {
+    if (userAudio.audio == null) {
+      Logger.root.warning('Audio is null, cannot enqueue audio.');
+      return;
+    }
+
+    return _enqueueAudio.fromAudio(userAudio.audio!);
   }
 
-  Future<void> _onEventAudio(EventAudio event) async {
+  Future<void> _onEventUserAudio(EventUserAudio event) async {
     await event.when(
       downloaded: (audio) async {
         final newState = await state.modifyData((data) {

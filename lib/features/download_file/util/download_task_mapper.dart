@@ -1,3 +1,4 @@
+import 'package:common_utilities/common_utilities.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 
@@ -15,14 +16,19 @@ class DownloadTaskMapper {
 
   final UuidFactory _uuidFactory;
 
-  Future<DownloadTask> fromUserAudio(UserAudio userAudio) async {
+  Future<DownloadTask?> fromUserAudio(UserAudio userAudio) async {
+    final uri = tryMap(userAudio.audio?.path, (path) => Uri.tryParse(assembleResourceUrl(path)));
+    if (uri == null) {
+      return null;
+    }
+
     const fileType = FileType.audioMp3;
 
     final savePath = await _getSavePath(fileType);
 
     return DownloadTask(
       savePath: savePath,
-      uri: Uri.parse(assembleResourceUrl(userAudio.audio.path)),
+      uri: uri,
       progress: 0,
       speedInKbs: 0,
       state: DownloadTaskState.idle,

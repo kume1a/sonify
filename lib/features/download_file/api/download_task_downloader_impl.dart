@@ -77,12 +77,14 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
   Uri? _resolveImageUri(DownloadTask downloadTask) {
     switch (downloadTask.fileType) {
       case FileType.audioMp3:
-        if (downloadTask.payload.userAudio?.audio.thumbnailPath != null) {
-          return Uri.tryParse(assembleResourceUrl(downloadTask.payload.userAudio!.audio.thumbnailPath!));
+        final audio = downloadTask.payload.userAudio?.audio;
+
+        if (audio?.thumbnailPath != null) {
+          return Uri.tryParse(assembleResourceUrl(audio!.thumbnailPath!));
         }
 
-        if (downloadTask.payload.userAudio?.audio.thumbnailUrl != null) {
-          return Uri.tryParse(downloadTask.payload.userAudio!.audio.thumbnailUrl!);
+        if (audio?.thumbnailUrl != null) {
+          return Uri.tryParse(audio!.thumbnailUrl!);
         }
 
         return null;

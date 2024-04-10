@@ -44,8 +44,8 @@ class _QueueItem extends HookWidget {
 
     switch (downloadTask.fileType) {
       case FileType.audioMp3:
-        imageUri = downloadTask.payload.userAudio?.audio.thumbnailUri;
-        title = downloadTask.payload.userAudio?.audio.title ?? '';
+        imageUri = downloadTask.payload.userAudio?.audio?.thumbnailUri;
+        title = downloadTask.payload.userAudio?.audio?.title ?? '';
       case FileType.videoMp4:
         break;
     }

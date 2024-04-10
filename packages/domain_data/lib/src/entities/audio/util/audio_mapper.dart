@@ -25,7 +25,7 @@ class AudioMapper {
 
   Audio fromEntity(AudioEntity e) {
     return Audio(
-      id: null,
+      id: e.remoteId,
       localId: e.id,
       title: e.title ?? '',
       author: e.author ?? '',

@@ -1,9 +1,10 @@
 import '../model/audio.dart';
+import '../model/user_audio.dart';
 
 abstract interface class AudioLocalRepository {
-  Future<List<Audio>> getAllByUserId(String userId);
+  Future<List<UserAudio>> getAllByUserId(String userId);
 
   Future<Audio?> getById(int id);
 
-  Future<Audio> save(Audio audio);
+  Future<UserAudio?> save(UserAudio audio);
 }

@@ -3,7 +3,6 @@ import 'package:domain_data/domain_data.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:sonify_client/sonify_client.dart';
 
 import '../../../app/navigation/page_navigator.dart';
 import '../../../shared/util/debounce.dart';

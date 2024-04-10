@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 import 'package:synchronized/synchronized.dart';
 
 import '../api/download_task_downloader.dart';
@@ -87,6 +88,11 @@ class DownloadsCubit extends Cubit<DownloadsState> {
     final downloadTask = await event.when(
       enqueueUserAudio: _downloadTaskFactory.fromUserAudio,
     );
+
+    if (downloadTask == null) {
+      Logger.root.warning('Failed to create download task from event: $event');
+      return;
+    }
 
     _enqueueDownloadTask(downloadTask);
   }

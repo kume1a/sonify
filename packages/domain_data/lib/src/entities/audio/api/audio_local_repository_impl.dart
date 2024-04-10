@@ -1,23 +1,29 @@
 import 'package:sonify_storage/sonify_storage.dart';
 
 import '../model/audio.dart';
+import '../model/user_audio.dart';
 import '../util/audio_mapper.dart';
+import '../util/user_audio_mapper.dart';
 import 'audio_local_repository.dart';
 
 class AudioLocalRepositoryImpl implements AudioLocalRepository {
   AudioLocalRepositoryImpl(
     this._audioEntityDao,
+    this._userAudioEntityDao,
     this._audioMapper,
+    this._userAudioMapper,
   );
 
   final AudioEntityDao _audioEntityDao;
+  final UserAudioEntityDao _userAudioEntityDao;
   final AudioMapper _audioMapper;
+  final UserAudioMapper _userAudioMapper;
 
   @override
-  Future<List<Audio>> getAllByUserId(String userId) async {
-    final audioEntities = await _audioEntityDao.getAllByUserId(userId);
+  Future<List<UserAudio>> getAllByUserId(String userId) async {
+    final audioEntities = await _userAudioEntityDao.getAllByUserId(userId);
 
-    return audioEntities.map(_audioMapper.fromEntity).toList();
+    return audioEntities.map(_userAudioMapper.fromEntity).toList();
   }
 
   @override
@@ -32,22 +38,43 @@ class AudioLocalRepositoryImpl implements AudioLocalRepository {
   }
 
   @override
-  Future<Audio> save(Audio audio) async {
-    final entity = AudioEntity();
+  Future<UserAudio?> save(UserAudio userAudio) async {
+    final audio = userAudio.audio;
+    if (audio == null) {
+      return null;
+    }
 
-    entity.createdAtMillis = audio.createdAt?.millisecondsSinceEpoch;
-    entity.title = audio.title;
-    entity.durationMs = audio.durationMs;
-    entity.path = audio.path;
-    entity.author = audio.author;
-    entity.sizeBytes = audio.sizeBytes;
-    entity.youtubeVideoId = audio.youtubeVideoId;
-    entity.spotifyId = audio.spotifyId;
-    entity.thumbnailPath = audio.thumbnailPath;
-    entity.thumbnailUrl = audio.thumbnailUrl;
+    final audioEntity = AudioEntity();
 
-    final entityId = await _audioEntityDao.insert(entity);
+    audioEntity.remoteId = audio.id;
+    audioEntity.createdAtMillis = audio.createdAt?.millisecondsSinceEpoch;
+    audioEntity.title = audio.title;
+    audioEntity.durationMs = audio.durationMs;
+    audioEntity.path = audio.path;
+    audioEntity.author = audio.author;
+    audioEntity.sizeBytes = audio.sizeBytes;
+    audioEntity.youtubeVideoId = audio.youtubeVideoId;
+    audioEntity.spotifyId = audio.spotifyId;
+    audioEntity.thumbnailPath = audio.thumbnailPath;
+    audioEntity.thumbnailUrl = audio.thumbnailUrl;
 
-    return audio.copyWith(localId: entityId);
+    final userAudioEntity = UserAudioEntity();
+
+    userAudioEntity.bUserId = userAudio.userId;
+    userAudioEntity.bAudioId = userAudio.audioId;
+    userAudioEntity.createdAtMillis = userAudio.createdAt?.millisecondsSinceEpoch;
+
+    // ---------------------
+
+    userAudioEntity.audio.value = audioEntity;
+
+    final userAudioEntityId = await _userAudioEntityDao.insert(userAudioEntity);
+    final audioEntityId = await _audioEntityDao.insert(audioEntity);
+    await userAudioEntity.audio.save();
+
+    return userAudio.copyWith(
+      localId: userAudioEntityId,
+      audio: audio.copyWith(localId: audioEntityId),
+    );
   }
 }

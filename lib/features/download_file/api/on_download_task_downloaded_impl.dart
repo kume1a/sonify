@@ -1,8 +1,9 @@
 import 'package:common_utilities/common_utilities.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 
-import '../../../entities/audio/model/event_audio.dart';
+import '../../../entities/audio/model/event_user_audio.dart';
 import '../model/downloaded_task.dart';
 import '../model/file_type.dart';
 import 'on_download_task_downloaded.dart';
@@ -36,9 +37,13 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
       return;
     }
 
-    final insertedAudio = await _audioLocalRepository.save(userAudio.audio);
+    final insertedAudio = await _audioLocalRepository.save(userAudio);
+    if (insertedAudio == null) {
+      Logger.root.warning('Failed to save userAudio, $userAudio');
+      return;
+    }
 
-    _eventBus.fire(EventAudio.downloaded(insertedAudio));
+    _eventBus.fire(EventUserAudio.downloaded(insertedAudio));
   }
 
   Future<void> _handleVideoMp4Downloaded(DownloadedTask downloadTask) async {

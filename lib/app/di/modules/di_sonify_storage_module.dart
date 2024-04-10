@@ -11,7 +11,12 @@ abstract class DiSonifyStorageModule {
   }
 
   @lazySingleton
-  AudioEntityDao songEntityDao(Isar isar) {
+  AudioEntityDao audioEntityDao(Isar isar) {
     return IsarAudioEntityDao(isar);
+  }
+
+  @lazySingleton
+  UserAudioEntityDao userAudioEntityDao(Isar isar) {
+    return IsarUserAudioEntityDao(isar);
   }
 }
