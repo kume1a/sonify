@@ -1,2 +1,2 @@
-export 'server_time_repository.dart';
-export 'server_time_repository_impl.dart';
+export 'server_time_remote_service.dart';
+export 'server_time_remote_service_impl.dart';

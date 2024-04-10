@@ -45,4 +45,18 @@ abstract class DiDomainModelModule {
   ) {
     return PlaylistRemoteRepositoryImpl(playlistRemoteService, playlistMapper);
   }
+
+  // server time ----------------------------------------------------------------
+  @lazySingleton
+  ServerTimeMapper serverTimeMapper() {
+    return ServerTimeMapper();
+  }
+
+  @lazySingleton
+  ServerTimeRemoteRepository serverTimeRemoteRepository(
+    ServerTimeRemoteService serverTimeRemoteService,
+    ServerTimeMapper serverTimeMapper,
+  ) {
+    return ServerTimeRemoteRepositoryImpl(serverTimeRemoteService, serverTimeMapper);
+  }
 }

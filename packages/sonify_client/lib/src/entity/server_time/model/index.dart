@@ -1,1 +1,1 @@
-export 'server_time.dart';
+export 'server_time_dto.dart';

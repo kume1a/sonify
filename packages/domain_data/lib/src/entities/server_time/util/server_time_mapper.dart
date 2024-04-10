@@ -1,7 +1,7 @@
 import 'package:common_utilities/common_utilities.dart';
+import 'package:sonify_client/sonify_client.dart';
 
 import '../model/server_time.dart';
-import '../model/server_time_dto.dart';
 
 class ServerTimeMapper {
   ServerTime dtoToModel(ServerTimeDto dto) {

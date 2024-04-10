@@ -1,3 +1,4 @@
+import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sonify_client/sonify_client.dart';
 
@@ -21,11 +22,11 @@ class _ServerTimeDiffInMemoryCache {
 @LazySingleton(as: GetServerTime)
 class GetCachedServerTime implements GetServerTime {
   GetCachedServerTime(
-    this._serverTimeRepository,
+    this._serverTimeRemoteRepository,
     this._serverTimeOffsetStore,
   );
 
-  final ServerTimeRepository _serverTimeRepository;
+  final ServerTimeRemoteRepository _serverTimeRemoteRepository;
   final ServerTimeOffsetStore _serverTimeOffsetStore;
 
   final _serverTimeOffsetInMemoryCache = _ServerTimeDiffInMemoryCache();
@@ -45,7 +46,7 @@ class GetCachedServerTime implements GetServerTime {
       return _localTimeWithOffset(inMemoryCachedDiff);
     }
 
-    final remoteServerTimestamp = await _serverTimeRepository.getServerTime();
+    final remoteServerTimestamp = await _serverTimeRemoteRepository.getServerTime();
 
     if (remoteServerTimestamp.isRight) {
       final offsetInMillis = _calculateServerTimeOffset(remoteServerTimestamp.rightOrThrow);
