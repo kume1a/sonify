@@ -32,7 +32,7 @@ class AudioMapper {
       durationMs: e.durationMs ?? 0,
       sizeBytes: e.sizeBytes ?? 0,
       thumbnailPath: e.thumbnailPath,
-      youtubeVideoId: e.youtubeVideoId ?? '',
+      youtubeVideoId: e.youtubeVideoId,
       path: e.path ?? '',
       createdAt: tryMapDateMillis(e.createdAtMillis),
       spotifyId: e.spotifyId,

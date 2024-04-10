@@ -16,18 +16,4 @@ class IsarUserAudioEntityDao implements UserAudioEntityDao {
 
     return res;
   }
-
-  @override
-  Future<int> insert(UserAudioEntity entity) {
-    return _isar.writeTxn(() => _isar.collection<UserAudioEntity>().put(entity));
-  }
-
-  @override
-  Future<UserAudioEntity?> getById(int id) async {
-    final res = await _isar.collection<UserAudioEntity>().filter().idEqualTo(id).findFirst();
-
-    await res?.audio.load();
-
-    return res;
-  }
 }

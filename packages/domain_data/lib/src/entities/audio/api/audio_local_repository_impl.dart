@@ -12,12 +12,14 @@ class AudioLocalRepositoryImpl implements AudioLocalRepository {
     this._userAudioEntityDao,
     this._audioMapper,
     this._userAudioMapper,
+    this._createUserAudioWithAudio,
   );
 
   final AudioEntityDao _audioEntityDao;
   final UserAudioEntityDao _userAudioEntityDao;
   final AudioMapper _audioMapper;
   final UserAudioMapper _userAudioMapper;
+  final CreateUserAudioWithAudio _createUserAudioWithAudio;
 
   @override
   Future<List<UserAudio>> getAllByUserId(String userId) async {
@@ -66,15 +68,14 @@ class AudioLocalRepositoryImpl implements AudioLocalRepository {
 
     // ---------------------
 
-    userAudioEntity.audio.value = audioEntity;
-
-    final userAudioEntityId = await _userAudioEntityDao.insert(userAudioEntity);
-    final audioEntityId = await _audioEntityDao.insert(audioEntity);
-    await userAudioEntity.audio.save();
+    final ids = await _createUserAudioWithAudio(
+      audio: audioEntity,
+      userAudio: userAudioEntity,
+    );
 
     return userAudio.copyWith(
-      localId: userAudioEntityId,
-      audio: audio.copyWith(localId: audioEntityId),
+      localId: ids.userAudioEntityId,
+      audio: audio.copyWith(localId: ids.audioEntityId),
     );
   }
 }

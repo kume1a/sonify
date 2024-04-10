@@ -10,13 +10,20 @@ abstract class DiSonifyStorageModule {
     return IsarFactory.newInstance();
   }
 
+  // audio ---------------------------------------------------------------------
   @lazySingleton
   AudioEntityDao audioEntityDao(Isar isar) {
     return IsarAudioEntityDao(isar);
   }
 
+  // user audio ----------------------------------------------------------------
   @lazySingleton
   UserAudioEntityDao userAudioEntityDao(Isar isar) {
     return IsarUserAudioEntityDao(isar);
+  }
+
+  @lazySingleton
+  CreateUserAudioWithAudio createUserAudioWithAudio(Isar isar) {
+    return IsarCreateUserAudioWithAudio(isar);
   }
 }

@@ -22,12 +22,14 @@ abstract class DiDomainModelModule {
     UserAudioEntityDao userAudioEntityDao,
     AudioMapper audioMapper,
     UserAudioMapper userAudioMapper,
+    CreateUserAudioWithAudio createUserAudioWithAudio,
   ) {
     return AudioLocalRepositoryImpl(
       audioEntityDao,
       userAudioEntityDao,
       audioMapper,
       userAudioMapper,
+      createUserAudioWithAudio,
     );
   }
 
