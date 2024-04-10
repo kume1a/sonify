@@ -110,4 +110,18 @@ abstract class DiDomainModelModule {
       spotifyRefreshTokenPayloadMapper,
     );
   }
+
+  // user sync datum ----------------------------------------------------------------
+  @lazySingleton
+  UserSyncDatumMapper userSyncDatumMapper() {
+    return UserSyncDatumMapper();
+  }
+
+  @lazySingleton
+  UserSyncDatumRemoteRepository userSyncDatumRemoteRepository(
+    UserSyncDatumRemoteService userSyncDatumRemoteService,
+    UserSyncDatumMapper userSyncDatumMapper,
+  ) {
+    return UserSyncDatumRemoteRepositoryImpl(userSyncDatumRemoteService, userSyncDatumMapper);
+  }
 }

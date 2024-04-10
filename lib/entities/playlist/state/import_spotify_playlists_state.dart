@@ -37,7 +37,7 @@ class ImportSpotifyPlaylistsCubit extends Cubit<ImportSpotifyPlaylistsState> {
     _init();
   }
 
-  final UserSyncDatumRepository _userSyncDatumRepository;
+  final UserSyncDatumRemoteService _userSyncDatumRepository;
   final PlaylistRemoteService _playlistRepository;
   final SpotifyAccessTokenProvider _spotifyAccessTokenProvider;
 

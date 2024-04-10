@@ -1,1 +1,1 @@
-export 'user_sync_datum.dart';
+export 'user_sync_datum_dto.dart';

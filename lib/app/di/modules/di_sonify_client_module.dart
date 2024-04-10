@@ -102,16 +102,8 @@ abstract class DiSonifyClientModule {
 
   // user sync datum ----------------------------------------------------------------
   @lazySingleton
-  UserSyncDatumMapper userSyncDatumMapper() {
-    return UserSyncDatumMapper();
-  }
-
-  @lazySingleton
-  UserSyncDatumRepository userSyncDatumRepository(
-    ApiClient apiClient,
-    UserSyncDatumMapper userSyncDatumMapper,
-  ) {
-    return UserSyncDatumRepositoryImpl(apiClient, userSyncDatumMapper);
+  UserSyncDatumRemoteService userSyncDatumRemoteService(ApiClient apiClient) {
+    return UserSyncDatumRemoteServiceImpl(apiClient);
   }
 
   // server time ----------------------------------------------------------------
