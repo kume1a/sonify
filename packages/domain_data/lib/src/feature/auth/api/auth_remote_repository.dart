@@ -1,10 +1,12 @@
 import 'package:common_models/common_models.dart';
+import 'package:sonify_client/sonify_client.dart';
 
-import '../model/email_sign_in_failure.dart';
 import '../model/token_payload.dart';
 
-abstract interface class AuthRepository {
-  Future<Either<ActionFailure, TokenPayload>> googleSignIn(String token);
+abstract interface class AuthRemoteRepository {
+  Future<Either<ActionFailure, TokenPayload>> googleSignIn({
+    required String token,
+  });
 
   Future<Either<EmailSignInFailure, TokenPayload>> emailSignIn({
     required String email,

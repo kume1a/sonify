@@ -21,10 +21,6 @@ class YoutubeRepositoryImpl with SafeHttpRequestWrap implements YoutubeRepositor
   final YoutubeExplode _yt;
   final YoutubeSearchSuggestionsMapper _youtubeSearchSuggestionsMapper;
 
-  static const Map<String, String> headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:96.0) Gecko/20100101 Firefox/96.0'
-  };
-
   @override
   Future<Either<FetchFailure, String>> getYoutubeMusicUrl(String videoId) {
     return callCatchWithFetchFailure(

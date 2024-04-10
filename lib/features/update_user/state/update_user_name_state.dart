@@ -35,7 +35,7 @@ class UpdateUserNameCubit extends Cubit<UpdateUserNameState> {
     this._pageNavigator,
   ) : super(UpdateUserNameState.initial());
 
-  final UserRemoteRepository _userRemoteRepository;
+  final UserRemoteService _userRemoteRepository;
   final PageNavigator _pageNavigator;
 
   void onNameChanged(String value) {

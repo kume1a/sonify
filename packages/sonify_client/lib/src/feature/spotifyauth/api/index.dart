@@ -1,2 +1,2 @@
-export 'spotify_auth_repository.dart';
-export 'spotify_auth_repository_impl.dart';
+export 'spotify_auth_remote_service.dart';
+export 'spotify_auth_remote_service_impl.dart';

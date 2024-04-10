@@ -1,5 +1,6 @@
+import 'package:sonify_client/sonify_client.dart';
+
 import '../model/spotify_refresh_token_payload.dart';
-import '../model/spotify_refresh_token_payload_dto.dart';
 
 class SpotifyRefreshTokenPayloadMapper {
   SpotifyRefreshTokenPayload dtoToModel(SpotifyRefreshTokenPayloadDto dto) {

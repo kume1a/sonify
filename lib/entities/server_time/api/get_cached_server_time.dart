@@ -1,6 +1,5 @@
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
-import 'package:sonify_client/sonify_client.dart';
 
 import 'get_server_time.dart';
 import 'server_time_offset_store.dart';

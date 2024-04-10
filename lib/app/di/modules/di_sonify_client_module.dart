@@ -72,16 +72,8 @@ abstract class DiSonifyClientModule {
   }
 
   @lazySingleton
-  TokenPayloadMapper tokenPayloadMapper(UserMapper userMapper) {
-    return TokenPayloadMapper(userMapper);
-  }
-
-  @lazySingleton
-  AuthRepository authRepository(
-    ApiClient apiClient,
-    TokenPayloadMapper tokenPayloadMapper,
-  ) {
-    return AuthRepositoryImpl(apiClient, tokenPayloadMapper);
+  AuthRemoteService authRemoteService(ApiClient apiClient) {
+    return AuthRemoteServiceImpl(apiClient);
   }
 
   // audio ----------------------------------------------------------------
@@ -92,39 +84,14 @@ abstract class DiSonifyClientModule {
 
   // user ----------------------------------------------------------------
   @lazySingleton
-  UserMapper userMapper() {
-    return UserMapper();
-  }
-
-  @lazySingleton
-  UserRemoteRepository userRemoteRepository(
-    ApiClient apiClient,
-    UserMapper userMapper,
-  ) {
-    return UserRemoteRepositoryImpl(apiClient, userMapper);
+  UserRemoteService userRemoteService(ApiClient apiClient) {
+    return UserRemoteServiceImpl(apiClient);
   }
 
   // spotify ----------------------------------------------------------------
   @lazySingleton
-  SpotifyTokenPayloadMapper spotifyTokenPayloadMapper() {
-    return SpotifyTokenPayloadMapper();
-  }
-
-  SpotifyRefreshTokenPayloadMapper spotifyRefreshTokenPayloadMapper() {
-    return SpotifyRefreshTokenPayloadMapper();
-  }
-
-  @lazySingleton
-  SpotifyAuthRepository spotifyAuthRepository(
-    ApiClient apiClient,
-    SpotifyTokenPayloadMapper spotifyTokenPayloadMapper,
-    SpotifyRefreshTokenPayloadMapper spotifyRefreshTokenPayloadMapper,
-  ) {
-    return SpotifyAuthRepositoryImpl(
-      apiClient,
-      spotifyTokenPayloadMapper,
-      spotifyRefreshTokenPayloadMapper,
-    );
+  SpotifyAuthRemoteService spotifyAuthRemotService(ApiClient apiClient) {
+    return SpotifyAuthRemoteServiceImpl(apiClient);
   }
 
   // playlist ----------------------------------------------------------------

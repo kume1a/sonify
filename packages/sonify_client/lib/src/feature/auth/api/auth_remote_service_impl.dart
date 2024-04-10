@@ -7,42 +7,37 @@ import '../../../shared/dto/error_response_dto.dart';
 import '../model/email_sign_in_body.dart';
 import '../model/email_sign_in_failure.dart';
 import '../model/google_sign_in_body.dart';
-import '../model/token_payload.dart';
-import '../util/token_payload_mapper.dart';
-import 'auth_repository.dart';
+import '../model/token_payload_dto.dart';
+import 'auth_remote_service.dart';
 
-class AuthRepositoryImpl with SafeHttpRequestWrap implements AuthRepository {
-  AuthRepositoryImpl(
+class AuthRemoteServiceImpl with SafeHttpRequestWrap implements AuthRemoteService {
+  AuthRemoteServiceImpl(
     this._apiClient,
-    this._tokenPayloadMapper,
   );
 
   final ApiClient _apiClient;
-  final TokenPayloadMapper _tokenPayloadMapper;
 
   @override
-  Future<Either<ActionFailure, TokenPayload>> googleSignIn(String token) {
-    return callCatchWithActionFailure(() async {
+  Future<Either<ActionFailure, TokenPayloadDto>> googleSignIn({
+    required String token,
+  }) {
+    return callCatchWithActionFailure(() {
       final body = GoogleSignInBody(token: token);
 
-      final res = await _apiClient.googleSignIn(body);
-
-      return _tokenPayloadMapper.dtoToModel(res);
+      return _apiClient.googleSignIn(body);
     });
   }
 
   @override
-  Future<Either<EmailSignInFailure, TokenPayload>> emailSignIn({
+  Future<Either<EmailSignInFailure, TokenPayloadDto>> emailSignIn({
     required String email,
     required String password,
   }) {
     return callCatch(
-      call: () async {
+      call: () {
         final body = EmailSignInBody(email: email, password: password);
 
-        final res = await _apiClient.emailSignIn(body);
-
-        return _tokenPayloadMapper.dtoToModel(res);
+        return _apiClient.emailSignIn(body);
       },
       networkError: const EmailSignInFailure.network(),
       unknownError: const EmailSignInFailure.unknown(),

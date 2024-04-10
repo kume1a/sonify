@@ -1,4 +1,5 @@
 import 'package:common_models/common_models.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -31,7 +32,7 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit(
     this._authWithGoogle,
     this._authStatusProvider,
-    this._authRepository,
+    this._authRemoteRepository,
     this._pageNavigator,
     this._authTokenStore,
     this._userRemoteRepository,
@@ -41,7 +42,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   final AuthWithGoogle _authWithGoogle;
   final AuthStatusProvider _authStatusProvider;
-  final AuthRepository _authRepository;
+  final AuthRemoteRepository _authRemoteRepository;
   final PageNavigator _pageNavigator;
   final AuthTokenStore _authTokenStore;
   final UserRemoteRepository _userRemoteRepository;
@@ -93,7 +94,7 @@ class AuthCubit extends Cubit<AuthState> {
       return;
     }
 
-    await _authRepository.googleSignIn(googleAuthentication.idToken!).awaitFold(
+    await _authRemoteRepository.googleSignIn(token: googleAuthentication.idToken!).awaitFold(
       (l) => emit(state.copyWith(googleSignInAction: ActionState.failed(unit))),
       (tokenPayload) async {
         emit(state.copyWith(googleSignInAction: ActionState.executed()));

@@ -1,8 +1,8 @@
 import 'package:common_utilities/common_utilities.dart';
+import 'package:sonify_client/sonify_client.dart';
 
-import '../../../entity/user/util/user_mapper.dart';
+import '../../../entities/user/util/user_mapper.dart';
 import '../model/token_payload.dart';
-import '../model/token_payload_dto.dart';
 
 class TokenPayloadMapper {
   TokenPayloadMapper(

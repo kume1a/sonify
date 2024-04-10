@@ -1,12 +1,12 @@
 import 'package:app_links/app_links.dart';
 import 'package:common_models/common_models.dart';
 import 'package:common_utilities/common_utilities.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
-import 'package:sonify_client/sonify_client.dart';
 
 import '../../../entities/server_time/api/get_server_time.dart';
 import '../../../shared/util/intent.dart';
@@ -37,7 +37,7 @@ class SpotifyAuthCubit extends Cubit<SpotifyAuthState> {
     this._spotifyApi,
     this._intentLauncher,
     this._spotifyCredsStore,
-    this._spotifyAuthRepository,
+    this._spotifyAuthRemoteRepository,
     this._appLinks,
     this._getServerTime,
   ) : super(SpotifyAuthState.initial()) {
@@ -47,7 +47,7 @@ class SpotifyAuthCubit extends Cubit<SpotifyAuthState> {
   final SpotifyApi _spotifyApi;
   final IntentLauncher _intentLauncher;
   final SpotifyCredsStore _spotifyCredsStore;
-  final SpotifyAuthRepository _spotifyAuthRepository;
+  final SpotifyAuthRemoteRepository _spotifyAuthRemoteRepository;
   final AppLinks _appLinks;
   final GetServerTime _getServerTime;
 
@@ -109,7 +109,7 @@ class SpotifyAuthCubit extends Cubit<SpotifyAuthState> {
   }
 
   Future<void> _authorizeSpotifyToken(String code) async {
-    await _spotifyAuthRepository.authorizeSpotify(code: code).awaitFold(
+    await _spotifyAuthRemoteRepository.authorizeSpotify(code: code).awaitFold(
       (l) {
         emit(state.copyWith(isSpotifyAuthenticated: SimpleDataState.success(false)));
       },
@@ -128,7 +128,9 @@ class SpotifyAuthCubit extends Cubit<SpotifyAuthState> {
           _spotifyCredsStore.writeAccessToken(r.accessToken),
           _spotifyCredsStore.writeTokenExpiresAt(expiresAt),
         ]);
+
         Logger.root.fine('Spotify token authorized successfully.');
+
         emit(state.copyWith(isSpotifyAuthenticated: SimpleDataState.success(true)));
       },
     );

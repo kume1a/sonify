@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../entity/user/model/user.dart';
+import '../../../entities/user/model/user.dart';
 
 part 'token_payload.freezed.dart';
 

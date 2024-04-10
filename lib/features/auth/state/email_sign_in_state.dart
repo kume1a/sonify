@@ -1,4 +1,5 @@
 import 'package:common_models/common_models.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,12 +35,12 @@ extension EmailSignInStateX on BuildContext {
 @injectable
 class EmailSignInCubit extends Cubit<EmailSignInState> {
   EmailSignInCubit(
-    this._authRepository,
+    this._authRemoteRepository,
     this._authTokenStore,
     this._pageNavigator,
   ) : super(EmailSignInState.initial());
 
-  final AuthRepository _authRepository;
+  final AuthRemoteRepository _authRemoteRepository;
   final AuthTokenStore _authTokenStore;
   final PageNavigator _pageNavigator;
 
@@ -70,7 +71,7 @@ class EmailSignInCubit extends Cubit<EmailSignInState> {
 
     emit(state.copyWith(signInState: ActionState.executing()));
 
-    await _authRepository
+    await _authRemoteRepository
         .emailSignIn(email: state.email.getOrThrow, password: state.password.getOrThrow)
         .awaitFold(
       (l) => emit(state.copyWith(signInState: ActionState.failed(l))),

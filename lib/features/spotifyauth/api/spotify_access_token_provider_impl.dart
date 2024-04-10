@@ -1,7 +1,7 @@
 import 'package:common_models/common_models.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
-import 'package:sonify_client/sonify_client.dart';
 
 import '../../../entities/server_time/api/get_server_time.dart';
 import 'spotify_access_token_provider.dart';
@@ -11,12 +11,12 @@ import 'spotify_creds_store.dart';
 class SpotifyAccessTokenProviderImpl implements SpotifyAccessTokenProvider {
   SpotifyAccessTokenProviderImpl(
     this._spotifyCredsStore,
-    this._spotifyAuthRepository,
+    this._spotifyAuthRemoteRepository,
     this._getServerTime,
   );
 
   final SpotifyCredsStore _spotifyCredsStore;
-  final SpotifyAuthRepository _spotifyAuthRepository;
+  final SpotifyAuthRemoteRepository _spotifyAuthRemoteRepository;
   final GetServerTime _getServerTime;
 
   @override
@@ -40,7 +40,9 @@ class SpotifyAccessTokenProviderImpl implements SpotifyAccessTokenProvider {
 
     Logger.root.finer('Refreshing Spotify token...');
 
-    return _spotifyAuthRepository.refreshSpotifyToken(spotifyRefreshToken: spotifyRefreshToken).awaitFold(
+    return _spotifyAuthRemoteRepository
+        .refreshSpotifyToken(spotifyRefreshToken: spotifyRefreshToken)
+        .awaitFold(
       (l) => null,
       (r) async {
         final newServerTime = await _getServerTime();

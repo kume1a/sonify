@@ -59,4 +59,55 @@ abstract class DiDomainModelModule {
   ) {
     return ServerTimeRemoteRepositoryImpl(serverTimeRemoteService, serverTimeMapper);
   }
+
+  // auth ----------------------------------------------------------------
+  @lazySingleton
+  TokenPayloadMapper tokenPayloadMapper(UserMapper userMapper) {
+    return TokenPayloadMapper(userMapper);
+  }
+
+  @lazySingleton
+  AuthRemoteRepository authRemoteRepository(
+    AuthRemoteService authRemoteService,
+    TokenPayloadMapper tokenPayloadMapper,
+  ) {
+    return AuthRemoteRepositoryImpl(authRemoteService, tokenPayloadMapper);
+  }
+
+  // user ----------------------------------------------------------------
+  @lazySingleton
+  UserMapper userMapper() {
+    return UserMapper();
+  }
+
+  @lazySingleton
+  UserRemoteRepository userRemoteRepository(
+    UserRemoteService userRemoteService,
+    UserMapper userMapper,
+  ) {
+    return UserRemoteRepositoryImpl(userRemoteService, userMapper);
+  }
+
+  // spotify ----------------------------------------------------------------
+  @lazySingleton
+  SpotifyTokenPayloadMapper spotifyTokenPayloadMapper() {
+    return SpotifyTokenPayloadMapper();
+  }
+
+  SpotifyRefreshTokenPayloadMapper spotifyRefreshTokenPayloadMapper() {
+    return SpotifyRefreshTokenPayloadMapper();
+  }
+
+  @lazySingleton
+  SpotifyAuthRemoteRepository spotifyAuthRemoteRepository(
+    SpotifyAuthRemoteService spotifyAuthRemoteService,
+    SpotifyTokenPayloadMapper spotifyTokenPayloadMapper,
+    SpotifyRefreshTokenPayloadMapper spotifyRefreshTokenPayloadMapper,
+  ) {
+    return SpotifyAuthRemoteRepositoryImpl(
+      spotifyAuthRemoteService,
+      spotifyTokenPayloadMapper,
+      spotifyRefreshTokenPayloadMapper,
+    );
+  }
 }
