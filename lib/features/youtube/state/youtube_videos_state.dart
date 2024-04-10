@@ -35,7 +35,7 @@ class YoutubeVideosCubit extends Cubit<YoutubeVideosState> {
     this._pageNavigator,
   ) : super(YoutubeVideosState.initial());
 
-  final YoutubeRepository _youtubeRepository;
+  final YoutubeRemoteService _youtubeRepository;
   final PageNavigator _pageNavigator;
 
   Future<void> onSearchPressed() async {

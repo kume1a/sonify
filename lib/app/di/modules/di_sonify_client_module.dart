@@ -48,20 +48,13 @@ abstract class DiSonifyClientModule {
 
   // youtube ----------------------------------------------------------------
   @lazySingleton
-  YoutubeSearchSuggestionsMapper youtubeSearchSuggestionsMapper() {
-    return YoutubeSearchSuggestionsMapper();
-  }
-
-  @lazySingleton
-  YoutubeRepository youtubeMusicRepository(
+  YoutubeRemoteService youtubeRemoteService(
     ApiClient apiClient,
     YoutubeExplode youtubeExplode,
-    YoutubeSearchSuggestionsMapper youtubeSearchSuggestionsMapper,
   ) {
-    return YoutubeRepositoryImpl(
+    return YoutubeRemoteServiceImpl(
       apiClient,
       youtubeExplode,
-      youtubeSearchSuggestionsMapper,
     );
   }
 

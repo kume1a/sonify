@@ -6,40 +6,30 @@ import 'package:logging/logging.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../../api/api_client.dart';
-import '../model/youtube_search_suggestions.dart';
-import '../util/youtube_search_suggestions_mapper.dart';
-import 'youtube_repository.dart';
+import '../../../shared/dto/url_dto.dart';
+import '../model/youtube_search_suggestions_dto.dart';
+import 'youtube_remote_service.dart';
 
-class YoutubeRepositoryImpl with SafeHttpRequestWrap implements YoutubeRepository {
-  YoutubeRepositoryImpl(
+class YoutubeRemoteServiceImpl with SafeHttpRequestWrap implements YoutubeRemoteService {
+  YoutubeRemoteServiceImpl(
     this._apiClient,
     this._yt,
-    this._youtubeSearchSuggestionsMapper,
   );
 
   final ApiClient _apiClient;
   final YoutubeExplode _yt;
-  final YoutubeSearchSuggestionsMapper _youtubeSearchSuggestionsMapper;
 
   @override
-  Future<Either<FetchFailure, String>> getYoutubeMusicUrl(String videoId) {
+  Future<Either<FetchFailure, UrlDto>> getYoutubeMusicUrl(String videoId) {
     return callCatchWithFetchFailure(
-      () async {
-        final res = await _apiClient.getYoutubeMusicUrl(videoId);
-
-        return res.url;
-      },
+      () => _apiClient.getYoutubeMusicUrl(videoId),
     );
   }
 
   @override
-  Future<Either<FetchFailure, YoutubeSearchSuggestions>> getYoutubeSuggestions(String keyword) async {
+  Future<Either<FetchFailure, YoutubeSearchSuggestionsDto>> getYoutubeSuggestions(String keyword) async {
     return callCatchWithFetchFailure(
-      () async {
-        final res = await _apiClient.getYoutubeSuggestions(keyword);
-
-        return _youtubeSearchSuggestionsMapper.dtoToModel(res);
-      },
+      () => _apiClient.getYoutubeSuggestions(keyword),
     );
   }
 

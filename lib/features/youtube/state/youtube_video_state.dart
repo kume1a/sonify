@@ -42,7 +42,7 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
     this._audioRemoteRepository,
   ) : super(YoutubeVideoState.initial());
 
-  final YoutubeRepository _youtubeRepository;
+  final YoutubeRemoteService _youtubeRepository;
   final EventBus _eventBus;
   final AudioRemoteRepository _audioRemoteRepository;
 

@@ -1,2 +1,2 @@
-export 'youtube_repository.dart';
-export 'youtube_repository_impl.dart';
+export 'youtube_remote_service.dart';
+export 'youtube_remote_service_impl.dart';

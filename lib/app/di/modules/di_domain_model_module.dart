@@ -124,4 +124,21 @@ abstract class DiDomainModelModule {
   ) {
     return UserSyncDatumRemoteRepositoryImpl(userSyncDatumRemoteService, userSyncDatumMapper);
   }
+
+  // youtube ----------------------------------------------------------------
+  @lazySingleton
+  YoutubeSearchSuggestionsMapper youtubeSearchSuggestionsMapper() {
+    return YoutubeSearchSuggestionsMapper();
+  }
+
+  @lazySingleton
+  YoutubeRemoteRepository youtubeRemoteRepository(
+    YoutubeRemoteService youtubeRemoteService,
+    YoutubeSearchSuggestionsMapper youtubeSearchSuggestionsMapper,
+  ) {
+    return YoutubeRemoteRepositoryImpl(
+      youtubeRemoteService,
+      youtubeSearchSuggestionsMapper,
+    );
+  }
 }
