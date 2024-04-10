@@ -6,7 +6,9 @@ import 'package:sonify_storage/sonify_storage.dart';
 abstract class DiSonifyStorageModule {
   @preResolve
   @lazySingleton
-  Future<Isar> get isar => IsarFactory.newInstance();
+  Future<Isar> isar() {
+    return IsarFactory.newInstance();
+  }
 
   @lazySingleton
   AudioEntityDao songEntityDao(Isar isar) {

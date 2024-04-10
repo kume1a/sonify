@@ -1,6 +1,6 @@
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sonify_client/sonify_client.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../../../shared/ui/list_header.dart';
@@ -16,7 +16,7 @@ class SpotifyPlaylistsList extends StatelessWidget {
     final l = AppLocalizations.of(context);
 
     return BlocBuilder<SpotifyPlaylistListCubit, SpotifyPlaylistListState>(
-      builder: (context, state) {
+      builder: (_, state) {
         return state.maybeWhen(
           orElse: () => const SizedBox.shrink(),
           loading: () => const Center(child: CircularProgressIndicator()),

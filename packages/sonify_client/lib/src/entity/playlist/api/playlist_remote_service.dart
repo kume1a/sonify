@@ -2,14 +2,14 @@ import 'package:common_models/common_models.dart';
 
 import '../model/index.dart';
 
-abstract interface class PlaylistRepository {
+abstract interface class PlaylistRemoteService {
   Future<Either<ActionFailure, Unit>> importSpotifyUserPlaylists({
     required String spotifyAccessToken,
   });
 
-  Future<Either<FetchFailure, List<Playlist>>> getAuthUserPlaylists();
+  Future<Either<FetchFailure, List<PlaylistDto>>> getAuthUserPlaylists();
 
-  Future<Either<FetchFailure, Playlist>> getPlaylistById({
+  Future<Either<FetchFailure, PlaylistDto>> getPlaylistById({
     required String playlistId,
   });
 }

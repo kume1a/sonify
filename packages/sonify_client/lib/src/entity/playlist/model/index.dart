@@ -1,1 +1,1 @@
-export 'playlist.dart';
+export 'playlist_dto.dart';

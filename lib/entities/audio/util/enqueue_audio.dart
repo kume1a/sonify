@@ -1,9 +1,9 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
-import 'package:sonify_client/sonify_client.dart';
 
 import '../../../shared/util/assemble_resource_url.dart';
-import '../model/local_audio_file.dart';
+import '../../../shared/values/constant.dart';
 import 'audio_extension.dart';
 
 @lazySingleton
@@ -16,7 +16,7 @@ final class EnqueueAudio {
 
   Future<void> fromAudio(Audio audio) async {
     final mediaItem = MediaItem(
-      id: audio.id,
+      id: audio.id ?? audio.localId?.toString() ?? kInvalidId,
       title: audio.title,
       artist: audio.author,
       duration: Duration(milliseconds: audio.durationMs),
@@ -24,23 +24,6 @@ final class EnqueueAudio {
       extras: {
         'remoteUrl': assembleResourceUrl(audio.path),
         'audio': audio,
-      },
-    );
-
-    await _audioHandler.updateQueue([]);
-    await _audioHandler.insertQueueItem(0, mediaItem);
-  }
-
-  Future<void> fromLocalAudioFile(LocalAudioFile localAudioFile) async {
-    final mediaItem = MediaItem(
-      id: localAudioFile.id.toString(),
-      title: localAudioFile.title,
-      artist: localAudioFile.author,
-      duration: localAudioFile.duration,
-      artUri: localAudioFile.thumbnailPath != null ? Uri.parse(localAudioFile.thumbnailPath!) : null,
-      extras: {
-        'localPath': localAudioFile.path,
-        'localAudioFile': localAudioFile,
       },
     );
 

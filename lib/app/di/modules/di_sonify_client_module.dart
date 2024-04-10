@@ -86,21 +86,8 @@ abstract class DiSonifyClientModule {
 
   // audio ----------------------------------------------------------------
   @lazySingleton
-  AudioMapper audioMapper() {
-    return AudioMapper();
-  }
-
-  @lazySingleton
-  UserAudioMapper userAudioMapper(AudioMapper audioMapper) {
-    return UserAudioMapper(audioMapper);
-  }
-
-  @lazySingleton
-  AudioRepository audioRepository(
-    ApiClient apiClient,
-    UserAudioMapper userAudioMapper,
-  ) {
-    return AudioRepositoryImpl(apiClient, userAudioMapper);
+  AudioRemoteService audioRepository(ApiClient apiClient) {
+    return AudioRemoteServiceImpl(apiClient);
   }
 
   // user ----------------------------------------------------------------
@@ -142,16 +129,8 @@ abstract class DiSonifyClientModule {
 
   // playlist ----------------------------------------------------------------
   @lazySingleton
-  PlaylistMapper playlistMapper(AudioMapper audioMapper) {
-    return PlaylistMapper(audioMapper);
-  }
-
-  @lazySingleton
-  PlaylistRepository playlistRepository(
-    ApiClient apiClient,
-    PlaylistMapper playlistMapper,
-  ) {
-    return PlaylistRepositoryImpl(apiClient, playlistMapper);
+  PlaylistRemoteService playlistRemoteService(ApiClient apiClient) {
+    return PlaylistRemoteServiceImpl(apiClient);
   }
 
   // user sync datum ----------------------------------------------------------------

@@ -94,7 +94,7 @@ class YoutubeRepositoryImpl with SafeHttpRequestWrap implements YoutubeRepositor
   ) async {
     try {
       final manifest = await _yt.videos.streams.getManifest(videoId);
-      final streamInfo = await manifest.muxed.withHighestBitrate();
+      final streamInfo = manifest.muxed.withHighestBitrate();
 
       return right(streamInfo);
     } catch (e) {

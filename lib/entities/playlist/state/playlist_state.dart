@@ -1,9 +1,9 @@
 import 'package:common_models/common_models.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
-import 'package:sonify_client/sonify_client.dart';
 
 import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../../audio/util/enqueue_audio.dart';
@@ -17,11 +17,11 @@ extension PlaylistCubitX on BuildContext {
 @injectable
 final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   PlaylistCubit(
-    this._playlistRepository,
+    this._playlistRemoteRepository,
     this._enqueueAudio,
   );
 
-  final PlaylistRepository _playlistRepository;
+  final PlaylistRemoteRepository _playlistRemoteRepository;
   final EnqueueAudio _enqueueAudio;
 
   String? _playlistId;
@@ -39,7 +39,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
       return null;
     }
 
-    final res = await _playlistRepository.getPlaylistById(
+    final res = await _playlistRemoteRepository.getPlaylistById(
       playlistId: _playlistId!,
     );
 

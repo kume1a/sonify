@@ -1,5 +1,6 @@
 import 'package:common_models/common_models.dart';
 import 'package:common_utilities/common_utilities.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
@@ -7,21 +8,19 @@ import 'package:logging/logging.dart';
 
 import '../../../features/auth/api/auth_user_info_provider.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
-import '../api/local_audio_file_repository.dart';
-import '../model/event_local_audio_file.dart';
-import '../model/local_audio_file.dart';
+import '../model/event_audio.dart';
 import '../util/enqueue_audio.dart';
 
-typedef LocalAudioFilesState = SimpleDataState<List<LocalAudioFile>>;
+typedef LocalAudioFilesState = SimpleDataState<List<Audio>>;
 
 extension LocalAudioFilesCubitX on BuildContext {
   LocalAudioFilesCubit get localAudioFilesCubit => read<LocalAudioFilesCubit>();
 }
 
 @injectable
-final class LocalAudioFilesCubit extends EntityLoaderCubit<List<LocalAudioFile>> {
+final class LocalAudioFilesCubit extends EntityLoaderCubit<List<Audio>> {
   LocalAudioFilesCubit(
-    this._localAudioFileRepository,
+    this._audioLocalRepository,
     this._authUserInfoProvider,
     this._eventBus,
     this._enqueueAudio,
@@ -31,7 +30,7 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<LocalAudioFile>>
     loadEntityAndEmit();
   }
 
-  final LocalAudioFileRepository _localAudioFileRepository;
+  final AudioLocalRepository _audioLocalRepository;
   final AuthUserInfoProvider _authUserInfoProvider;
   final EventBus _eventBus;
   final EnqueueAudio _enqueueAudio;
@@ -40,7 +39,7 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<LocalAudioFile>>
 
   void _init() {
     _subscriptions.add(
-      _eventBus.on<EventLocalAudioFile>().listen(_onEventLocalAudioFile),
+      _eventBus.on<EventAudio>().listen(_onEventAudio),
     );
   }
 
@@ -52,7 +51,7 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<LocalAudioFile>>
   }
 
   @override
-  Future<List<LocalAudioFile>?> loadEntity() async {
+  Future<List<Audio>?> loadEntity() async {
     final userId = await _authUserInfoProvider.getId();
 
     if (userId == null) {
@@ -60,20 +59,20 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<LocalAudioFile>>
       return null;
     }
 
-    return _localAudioFileRepository.getAllByUserId(userId);
+    return _audioLocalRepository.getAllByUserId(userId);
   }
 
-  Future<void> onLocalAudioFilePressed(LocalAudioFile localAudioFile) async {
-    return _enqueueAudio.fromLocalAudioFile(localAudioFile);
+  Future<void> onLocalAudioFilePressed(Audio audio) async {
+    return _enqueueAudio.fromAudio(audio);
   }
 
-  Future<void> _onEventLocalAudioFile(EventLocalAudioFile event) async {
+  Future<void> _onEventAudio(EventAudio event) async {
     await event.when(
-      downloaded: (localAudioFile) async {
+      downloaded: (audio) async {
         final newState = await state.modifyData((data) {
           final dataCopy = List.of(data);
 
-          dataCopy.insert(0, localAudioFile);
+          dataCopy.insert(0, audio);
 
           return dataCopy;
         });

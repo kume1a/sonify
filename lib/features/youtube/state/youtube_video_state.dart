@@ -1,5 +1,6 @@
 import 'package:common_models/common_models.dart';
 import 'package:common_utilities/common_utilities.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -38,12 +39,12 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
   YoutubeVideoCubit(
     this._youtubeRepository,
     this._eventBus,
-    this._audioRepository,
+    this._audioRemoteRepository,
   ) : super(YoutubeVideoState.initial());
 
   final YoutubeRepository _youtubeRepository;
   final EventBus _eventBus;
-  final AudioRepository _audioRepository;
+  final AudioRemoteRepository _audioRemoteRepository;
 
   void init(String videoId) {
     _loadVideo(videoId);
@@ -74,7 +75,7 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
 
     emit(state.copyWith(downloadAudioState: ActionState.executing()));
 
-    _audioRepository.downloadYoutubeAudio(video.id.value).awaitFold(
+    _audioRemoteRepository.downloadYoutubeAudio(videoId: video.id.value).awaitFold(
       (l) async {
         emit(state.copyWith(downloadAudioState: ActionState.failed(l)));
         await _resetDownloadAudioState();

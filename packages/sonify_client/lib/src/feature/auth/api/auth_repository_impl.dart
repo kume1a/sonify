@@ -44,15 +44,15 @@ class AuthRepositoryImpl with SafeHttpRequestWrap implements AuthRepository {
 
         return _tokenPayloadMapper.dtoToModel(res);
       },
-      networkError: EmailSignInFailure.network(),
-      unknownError: EmailSignInFailure.unknown(),
+      networkError: const EmailSignInFailure.network(),
+      unknownError: const EmailSignInFailure.unknown(),
       onResponseError: (response) {
         final errorDto = ErrorResponseDto.fromJson(response?.data);
 
         return switch (errorDto.message) {
-          ApiExceptionMessageCode.invalidEmailOrPassword => EmailSignInFailure.invalidEmailOrPassword(),
-          ApiExceptionMessageCode.invalidAuthMethod => EmailSignInFailure.invalidAuthMethod(),
-          _ => EmailSignInFailure.unknown(),
+          ApiExceptionMessageCode.invalidEmailOrPassword => const EmailSignInFailure.invalidEmailOrPassword(),
+          ApiExceptionMessageCode.invalidAuthMethod => const EmailSignInFailure.invalidAuthMethod(),
+          _ => const EmailSignInFailure.unknown(),
         };
       },
     );

@@ -1,2 +1,2 @@
-export 'playlist_repository.dart';
-export 'playlist_repository_impl.dart';
+export 'playlist_remote_service.dart';
+export 'playlist_remote_service_impl.dart';

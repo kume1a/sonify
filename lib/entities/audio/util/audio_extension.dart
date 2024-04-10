@@ -1,4 +1,4 @@
-import 'package:sonify_client/sonify_client.dart';
+import 'package:domain_data/domain_data.dart';
 
 import '../../../shared/util/assemble_resource_url.dart';
 

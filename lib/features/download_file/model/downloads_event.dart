@@ -1,5 +1,5 @@
+import 'package:domain_data/domain_data.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:sonify_client/sonify_client.dart';
 
 part 'downloads_event.freezed.dart';
 

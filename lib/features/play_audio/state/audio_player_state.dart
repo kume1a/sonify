@@ -1,13 +1,13 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:common_models/common_models.dart';
 import 'package:common_utilities/common_utilities.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:sonify_client/sonify_client.dart';
 
 import '../model/playback_button_state.dart';
 import '../model/playback_progress_state.dart';

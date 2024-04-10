@@ -1,2 +1,2 @@
-export 'audio_repository.dart';
-export 'audio_repository_impl.dart';
+export 'audio_remote_service.dart';
+export 'audio_remote_service_impl.dart';

@@ -7,21 +7,25 @@ part 'audio_entity.g.dart';
 @collection
 @Name(AudioEntity_.collectionName)
 class AudioEntity {
-  Id? id;
+  Id? id = Isar.autoIncrement;
+
+  int? createdAtMillis;
 
   String? title;
 
-  int? duration;
+  int? durationMs;
 
   String? path;
 
   String? author;
 
-  String? userId;
-
-  int? sizeInBytes;
+  int? sizeBytes;
 
   String? youtubeVideoId;
 
+  String? spotifyId;
+
   String? thumbnailPath;
+
+  String? thumbnailUrl;
 }

@@ -6,37 +6,34 @@ import '../../../shared/api_exception_message_code.dart';
 import '../../../shared/dto/error_response_dto.dart';
 import '../model/download_youtube_audio_body.dart';
 import '../model/download_youtube_audio_failure.dart';
-import '../model/user_audio.dart';
-import '../util/user_audio_mapper.dart';
-import 'audio_repository.dart';
+import '../model/user_audio_dto.dart';
+import 'audio_remote_service.dart';
 
-class AudioRepositoryImpl with SafeHttpRequestWrap implements AudioRepository {
-  AudioRepositoryImpl(
+class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteService {
+  AudioRemoteServiceImpl(
     this._apiClient,
-    this._userAudioMapper,
   );
 
   final ApiClient _apiClient;
-  final UserAudioMapper _userAudioMapper;
 
   @override
-  Future<Either<DownloadYoutubeAudioFailure, UserAudio>> downloadYoutubeAudio(String videoId) {
+  Future<Either<DownloadYoutubeAudioFailure, UserAudioDto>> downloadYoutubeAudio({
+    required String videoId,
+  }) {
     return callCatch(
       call: () async {
         final body = DownloadYoutubeAudioBody(videoId: videoId);
 
-        final res = await _apiClient.downloadYoutubeAudio(body);
-
-        return _userAudioMapper.dtoToModel(res);
+        return _apiClient.downloadYoutubeAudio(body);
       },
-      networkError: DownloadYoutubeAudioFailure.network(),
-      unknownError: DownloadYoutubeAudioFailure.unknown(),
+      networkError: const DownloadYoutubeAudioFailure.network(),
+      unknownError: const DownloadYoutubeAudioFailure.unknown(),
       onResponseError: (response) {
         final res = ErrorResponseDto.fromJson(response!.data! as Map<String, dynamic>);
 
         return switch (res.message) {
-          ApiExceptionMessageCode.audioAlreadyExists => DownloadYoutubeAudioFailure.alreadyDownloaded(),
-          _ => DownloadYoutubeAudioFailure.unknown(),
+          ApiExceptionMessageCode.audioAlreadyExists => const DownloadYoutubeAudioFailure.alreadyDownloaded(),
+          _ => const DownloadYoutubeAudioFailure.unknown(),
         };
       },
     );

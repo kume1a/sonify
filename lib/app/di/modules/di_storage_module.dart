@@ -9,5 +9,7 @@ abstract class DiStorageModule {
 
   @lazySingleton
   @preResolve
-  Future<SharedPreferences> get sharedPreferences => SharedPreferences.getInstance();
+  Future<SharedPreferences> sharedPreferences() {
+    return SharedPreferences.getInstance();
+  }
 }

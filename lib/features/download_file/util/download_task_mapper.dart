@@ -1,5 +1,5 @@
+import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
-import 'package:sonify_client/sonify_client.dart';
 
 import '../../../shared/util/assemble_resource_url.dart';
 import '../../../shared/util/resource_save_path_provider.dart';

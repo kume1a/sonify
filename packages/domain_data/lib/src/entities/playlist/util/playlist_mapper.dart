@@ -1,9 +1,9 @@
 import 'package:common_utilities/common_utilities.dart';
+import 'package:sonify_client/sonify_client.dart';
 
 import '../../../shared/constant.dart';
 import '../../audio/util/audio_mapper.dart';
 import '../model/playlist.dart';
-import '../model/playlist_dto.dart';
 
 class PlaylistMapper {
   PlaylistMapper(
@@ -20,7 +20,7 @@ class PlaylistMapper {
       thumbnailPath: dto.thumbnailPath,
       thumbnailUrl: dto.thumbnailUrl,
       spotifyId: dto.spotifyId,
-      audios: tryMapList(dto.audios, _audioMapper.dtoToModel),
+      audios: tryMapList(dto.audios, _audioMapper.fromDto),
     );
   }
 }

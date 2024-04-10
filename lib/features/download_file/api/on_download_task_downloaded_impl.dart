@@ -1,8 +1,8 @@
 import 'package:common_utilities/common_utilities.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../entities/audio/api/local_audio_file_repository.dart';
-import '../../../entities/audio/model/event_local_audio_file.dart';
+import '../../../entities/audio/model/event_audio.dart';
 import '../model/downloaded_task.dart';
 import '../model/file_type.dart';
 import 'on_download_task_downloaded.dart';
@@ -10,11 +10,11 @@ import 'on_download_task_downloaded.dart';
 @LazySingleton(as: OnDownloadTaskDownloaded)
 class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
   OnDownloadTaskDownloadedImpl(
-    this._localAudioFileRepository,
+    this._audioLocalRepository,
     this._eventBus,
   );
 
-  final LocalAudioFileRepository _localAudioFileRepository;
+  final AudioLocalRepository _audioLocalRepository;
   final EventBus _eventBus;
 
   @override
@@ -30,15 +30,15 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
   }
 
   Future<void> _handleAudioMp3Downloaded(DownloadedTask downloadTask) async {
-    final localAudioFile = downloadTask.payload.localAudioFile;
+    final userAudio = downloadTask.payload.userAudio;
 
-    if (localAudioFile == null) {
+    if (userAudio == null) {
       return;
     }
 
-    final insertedLocalAudioFile = await _localAudioFileRepository.save(localAudioFile);
+    final insertedAudio = await _audioLocalRepository.save(userAudio.audio);
 
-    _eventBus.fire(EventLocalAudioFile.downloaded(insertedLocalAudioFile));
+    _eventBus.fire(EventAudio.downloaded(insertedAudio));
   }
 
   Future<void> _handleVideoMp4Downloaded(DownloadedTask downloadTask) async {
