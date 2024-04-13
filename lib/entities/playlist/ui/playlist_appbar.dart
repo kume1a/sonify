@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:logging/logging.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../../../shared/ui/pulsing_fade.dart';

@@ -22,25 +22,46 @@ class AudioPlayerPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return SafeArea(
+      child: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+        buildWhen: (previous, current) => previous.currentSong != current.currentSong,
+        builder: (_, state) {
+          return state.currentSong.maybeWhen(
+            orElse: () => body,
+            success: (data) => _Panel(body: body, audio: data),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _Panel extends HookWidget {
+  const _Panel({
+    super.key,
+    required this.body,
+    required this.audio,
+  });
+
+  final Widget body;
+  final Audio audio;
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final mediaQuery = MediaQuery.of(context);
 
-    return BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
-      buildWhen: (previous, current) => previous.currentSong != current.currentSong,
-      builder: (context, state) {
-        return state.currentSong.maybeWhen(
-          orElse: () => body,
-          success: (data) => SlidingUpPanel(
-            controller: AudioPlayerCubit.panelController,
-            body: body,
-            panel: _PanelContent(audio: data),
-            collapsed: _MiniAudioPlayer(audio: data),
-            minHeight: 56,
-            color: theme.scaffoldBackgroundColor,
-            maxHeight: mediaQuery.size.height,
-          ),
-        );
-      },
+    final panelPosition = useState(0.0);
+
+    return SlidingUpPanel(
+      controller: context.audioPlayerCubit.panelController,
+      body: body,
+      panel: _PanelContent(audio: audio),
+      collapsed: panelPosition.value < 1 ? _MiniAudioPlayer(audio: audio) : null,
+      onPanelSlide: (position) => panelPosition.value = position,
+      minHeight: 56,
+      color: theme.scaffoldBackgroundColor,
+      maxHeight: mediaQuery.size.height,
     );
   }
 }
@@ -86,9 +107,10 @@ class _MiniAudioPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return ColoredBox(
-      color: theme.colorScheme.secondaryContainer,
-      child: Padding(
+    return GestureDetector(
+      onTap: context.audioPlayerCubit.onMiniAudioPlayerPanelPressed,
+      child: Container(
+        color: theme.colorScheme.secondaryContainer,
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Row(
           children: [
@@ -126,8 +148,9 @@ class _MiniAudioPlayer extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            const _PlayPauseButton(size: 20),
+            const _PlayPauseButton(size: 24),
             IconButton(
+              visualDensity: VisualDensity.compact,
               onPressed: () {},
               icon: SvgPicture.asset(
                 Assets.svgSkipForward,
@@ -332,7 +355,7 @@ class _PlayPauseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: context.audioPlayerCubit.onPlayOrPause,
-      visualDensity: VisualDensity.compact,
+      iconSize: size,
       icon: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
         buildWhen: (previous, current) => previous.playButtonState != current.playButtonState,
         builder: (_, state) {

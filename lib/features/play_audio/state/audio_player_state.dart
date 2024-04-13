@@ -43,9 +43,8 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
 
   final AudioHandler _audioHandler;
 
+  final panelController = PanelController();
   final _subscriptions = SubscriptionComposite();
-
-  static final panelController = PanelController();
 
   Future<void> _init() async {
     _subscriptions.add(_audioHandler.playbackState.listen(_onPlaybackStateChanged));
@@ -69,12 +68,15 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
     return super.close();
   }
 
+  void onMiniAudioPlayerPanelPressed() {
+    if (panelController.isAttached) {
+      panelController.open();
+    }
+  }
+
   void onDownArrowPressed() {
     if (panelController.isAttached) {
-      panelController.animatePanelToPosition(
-        0.0,
-        duration: const Duration(milliseconds: 250),
-      );
+      panelController.close();
     }
   }
 
@@ -88,10 +90,9 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
 
     if (state.playButtonState == PlaybackButtonState.playing) {
       _audioHandler.pause();
-      return;
+    } else {
+      _audioHandler.play();
     }
-
-    _audioHandler.play();
   }
 
   void onSeek(Duration position) => _audioHandler.seek(position);

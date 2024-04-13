@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:logging/logging.dart';
 
 class PlayPause extends HookWidget {
   const PlayPause({
@@ -20,7 +19,6 @@ class PlayPause extends HookWidget {
 
     useEffect(
       () {
-        Logger.root.info('isPlaying: $isPlaying');
         if (isPlaying) {
           animationController.forward();
         } else {
