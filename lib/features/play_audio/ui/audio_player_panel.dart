@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../../../shared/ui/optional_marquee.dart';
 import '../../../shared/ui/play_pause.dart';
 import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/values/assets.dart';
@@ -38,7 +39,6 @@ class AudioPlayerPanel extends StatelessWidget {
 
 class _Panel extends HookWidget {
   const _Panel({
-    super.key,
     required this.body,
     required this.audio,
   });
@@ -251,7 +251,7 @@ class _AudioPlayerControls extends StatelessWidget {
         _MetaAndPlayMode(),
         SizedBox(height: 20),
         _Progress(),
-        SizedBox(height: 36),
+        SizedBox(height: 24),
         _Controls(),
       ],
     );
@@ -275,11 +275,13 @@ class _MetaAndPlayMode extends StatelessWidget {
                 success: (data) => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      data.title,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                    OptionalMarquee(
+                      height: 24,
+                      text: data.title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                      ),
                     ),
                     Text(
                       data.author,
@@ -335,9 +337,15 @@ class _Controls extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SvgPicture.asset(Assets.svgRepeat),
-        SvgPicture.asset(Assets.svgSkipBack),
-        const _PlayPauseButton(size: 32),
-        SvgPicture.asset(Assets.svgSkipForward),
+        IconButton(
+          onPressed: context.audioPlayerCubit.onSkipToPrevious,
+          icon: SvgPicture.asset(Assets.svgSkipBack),
+        ),
+        const _PlayPauseButton(size: 38),
+        IconButton(
+          onPressed: context.audioPlayerCubit.onSkipToNext,
+          icon: SvgPicture.asset(Assets.svgSkipForward),
+        ),
         SvgPicture.asset(Assets.svgHeart),
       ],
     );
