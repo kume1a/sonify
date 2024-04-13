@@ -15,7 +15,11 @@ class MyLibraryHeader extends StatelessWidget {
 
     return Row(
       children: [
-        const RoundPlayButton(dimension: 26),
+        RoundPlayButton(
+          size: 26,
+          isPlaying: false,
+          onPressed: () {},
+        ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(

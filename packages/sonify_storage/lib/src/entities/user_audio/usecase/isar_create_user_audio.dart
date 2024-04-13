@@ -1,5 +1,4 @@
 import '../../../../sonify_storage.dart';
-import 'create_user_audio.dart';
 
 class IsarCreateUserAudioWithAudio implements CreateUserAudioWithAudio {
   IsarCreateUserAudioWithAudio(
@@ -7,11 +6,6 @@ class IsarCreateUserAudioWithAudio implements CreateUserAudioWithAudio {
   );
 
   final Isar _isar;
-
-  @override
-  Future<int> insert(UserAudioEntity entity) {
-    return _isar.writeTxn(() => _isar.collection<UserAudioEntity>().put(entity));
-  }
 
   @override
   Future<UserAudioAndAudioEntityIds> call({

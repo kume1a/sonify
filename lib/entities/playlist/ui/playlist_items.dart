@@ -12,8 +12,9 @@ class PlaylistItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PlaylistCubit, PlaylistState>(
+      buildWhen: (previous, current) => previous.playlist != current.playlist,
       builder: (_, state) {
-        return state.maybeWhen(
+        return state.playlist.maybeWhen(
           orElse: () => const SliverToBoxAdapter(),
           success: (data) => SliverList.builder(
             itemCount: data.audios?.length ?? 0,

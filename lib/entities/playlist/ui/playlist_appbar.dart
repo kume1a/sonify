@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logging/logging.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../../../shared/ui/pulsing_fade.dart';
@@ -116,10 +117,19 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
             ],
           ),
         ),
-        const Positioned(
+        Positioned(
           right: 16,
           bottom: -20,
-          child: RoundPlayButton(dimension: 52),
+          child: BlocBuilder<PlaylistCubit, PlaylistState>(
+            buildWhen: (previous, current) => previous.isPlaylistPlaying != current.isPlaylistPlaying,
+            builder: (_, state) {
+              return RoundPlayButton(
+                size: 52,
+                isPlaying: state.isPlaylistPlaying,
+                onPressed: context.playlistCubit.onPlayPlaylistPressed,
+              );
+            },
+          ),
         ),
       ],
     );
@@ -149,10 +159,11 @@ class _PlaylistImage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return BlocBuilder<PlaylistCubit, PlaylistState>(
+      buildWhen: (previous, current) => previous.playlist != current.playlist,
       builder: (_, state) {
-        return state.hasData
+        return state.playlist.hasData
             ? CachedNetworkImage(
-                imageUrl: state.getOrThrow.thumbnailUrl ?? '',
+                imageUrl: state.playlist.getOrThrow.thumbnailUrl ?? '',
                 fit: BoxFit.cover,
                 placeholder: (_, __) => ColoredBox(color: theme.colorScheme.secondaryContainer),
                 errorWidget: (_, __, ___) => ColoredBox(color: theme.colorScheme.secondaryContainer),
@@ -175,8 +186,9 @@ class _PlaylistTitle extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
 
     return BlocBuilder<PlaylistCubit, PlaylistState>(
+      buildWhen: (previous, current) => previous.playlist != current.playlist,
       builder: (_, state) {
-        return state.maybeWhen(
+        return state.playlist.maybeWhen(
           success: (data) => Text(
             data.name,
             maxLines: 2,

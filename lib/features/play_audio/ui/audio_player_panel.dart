@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../../../shared/ui/play_pause.dart';
 import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/values/assets.dart';
 import '../model/playback_button_state.dart';
@@ -125,7 +126,7 @@ class _MiniAudioPlayer extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            const _PlayPauseButton(dimension: 20),
+            const _PlayPauseButton(size: 20),
             IconButton(
               onPressed: () {},
               icon: SvgPicture.asset(
@@ -312,7 +313,7 @@ class _Controls extends StatelessWidget {
       children: [
         SvgPicture.asset(Assets.svgRepeat),
         SvgPicture.asset(Assets.svgSkipBack),
-        const _PlayPauseButton(dimension: 32),
+        const _PlayPauseButton(size: 32),
         SvgPicture.asset(Assets.svgSkipForward),
         SvgPicture.asset(Assets.svgHeart),
       ],
@@ -322,10 +323,10 @@ class _Controls extends StatelessWidget {
 
 class _PlayPauseButton extends StatelessWidget {
   const _PlayPauseButton({
-    required this.dimension,
+    required this.size,
   });
 
-  final double dimension;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
@@ -335,22 +336,20 @@ class _PlayPauseButton extends StatelessWidget {
       icon: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
         buildWhen: (previous, current) => previous.playButtonState != current.playButtonState,
         builder: (_, state) {
-          return switch (state.playButtonState) {
-            PlaybackButtonState.idle || PlaybackButtonState.loading => SizedBox.square(
-                dimension: dimension,
-                child: const CircularProgressIndicator(),
-              ),
-            PlaybackButtonState.paused => SvgPicture.asset(
-                Assets.svgPlay,
-                width: dimension,
-                height: dimension,
-              ),
-            PlaybackButtonState.playing => SvgPicture.asset(
-                Assets.svgPause,
-                width: dimension,
-                height: dimension,
-              ),
-          };
+          final isLoading = state.playButtonState == PlaybackButtonState.idle ||
+              state.playButtonState == PlaybackButtonState.loading;
+
+          if (isLoading) {
+            return SizedBox.square(
+              dimension: size,
+              child: const CircularProgressIndicator(),
+            );
+          }
+
+          return PlayPause(
+            isPlaying: state.playButtonState == PlaybackButtonState.playing,
+            size: size,
+          );
         },
       ),
     );
