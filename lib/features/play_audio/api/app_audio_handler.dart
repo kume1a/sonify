@@ -1,25 +1,173 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
 
+import '../../../entities/audio/util/audio_extension.dart';
+
 class AppAudioHandler extends BaseAudioHandler {
   AppAudioHandler() {
-    _loadEmptyPlaylist();
+    _player.setAudioSource(_playlist);
+
     _notifyAudioHandlerAboutPlaybackEvents();
     _listenForDurationChanges();
     _listenForCurrentSongIndexChanges();
-    _listenForSequenceStateChanges();
   }
 
   final _player = AudioPlayer();
   final _playlist = ConcatenatingAudioSource(children: []);
 
-  Future<void> _loadEmptyPlaylist() async {
-    try {
-      await _player.setAudioSource(_playlist);
-    } catch (e) {
-      Logger.root.severe('Error: $e');
+  @override
+  Future<void> addQueueItems(List<MediaItem> mediaItems) async {
+    final audioSource =
+        mediaItems.map(_createAudioSource).where((element) => element != null).cast<AudioSource>().toList();
+
+    _playlist.addAll(audioSource);
+
+    final newQueue = queue.value..addAll(mediaItems);
+    queue.add(newQueue);
+  }
+
+  @override
+  Future<void> addQueueItem(MediaItem mediaItem) async {
+    final audioSource = _createAudioSource(mediaItem);
+    if (audioSource == null) {
+      return;
     }
+
+    _playlist.add(audioSource);
+
+    final newQueue = queue.value..add(mediaItem);
+    queue.add(newQueue);
+  }
+
+  @override
+  Future<void> insertQueueItem(int index, MediaItem mediaItem) async {
+    final audioSource = _createAudioSource(mediaItem);
+    if (audioSource == null) {
+      return;
+    }
+
+    _playlist.insert(index, audioSource);
+
+    final newQueue = queue.value..insert(index, mediaItem);
+    queue.add(newQueue);
+  }
+
+  @override
+  Future<void> removeQueueItemAt(int index) async {
+    _playlist.removeAt(index);
+
+    final newQueue = queue.value..removeAt(index);
+    queue.add(newQueue);
+  }
+
+  @override
+  Future<void> updateQueue(List<MediaItem> queue) async {
+    final audioSources = queue.map(_createAudioSource).where((e) => e != null).cast<AudioSource>().toList();
+
+    await _playlist.clear();
+    await _playlist.addAll(audioSources);
+
+    final sequence = _player.sequenceState?.effectiveSequence;
+    if (sequence == null || sequence.isEmpty) {
+      return;
+    }
+    final items = sequence.map((source) => source.tag as MediaItem);
+    this.queue.add(items.toList());
+  }
+
+  @override
+  Future<void> play() => _player.play();
+
+  @override
+  Future<void> pause() => _player.pause();
+
+  @override
+  Future<void> seek(Duration position) => _player.seek(position);
+
+  @override
+  Future<void> skipToQueueItem(int index) async {
+    if (index < 0 || index >= queue.value.length) {
+      return;
+    }
+
+    if (_player.shuffleModeEnabled) {
+      index = _player.shuffleIndices![index];
+    }
+
+    _player.seek(Duration.zero, index: index);
+  }
+
+  @override
+  Future<void> skipToNext() => _player.seekToNext();
+
+  @override
+  Future<void> skipToPrevious() => _player.seekToPrevious();
+
+  @override
+  Future<void> setRepeatMode(AudioServiceRepeatMode repeatMode) async {
+    switch (repeatMode) {
+      case AudioServiceRepeatMode.none:
+        _player.setLoopMode(LoopMode.off);
+        break;
+      case AudioServiceRepeatMode.one:
+        _player.setLoopMode(LoopMode.one);
+        break;
+      case AudioServiceRepeatMode.group:
+      case AudioServiceRepeatMode.all:
+        _player.setLoopMode(LoopMode.all);
+        break;
+    }
+  }
+
+  @override
+  Future<void> setShuffleMode(AudioServiceShuffleMode shuffleMode) async {
+    if (shuffleMode == AudioServiceShuffleMode.none) {
+      _player.setShuffleModeEnabled(false);
+    } else {
+      await _player.shuffle();
+      _player.setShuffleModeEnabled(true);
+
+      // TODO check this.queue
+    }
+  }
+
+  @override
+  Future<void> stop() async {
+    await _player.stop();
+    return super.stop();
+  }
+
+  UriAudioSource? _createAudioSource(MediaItem mediaItem) {
+    if (mediaItem.extras == null) {
+      Logger.root.warning('Media extras is null, mediaItem: $mediaItem');
+      return null;
+    }
+
+    Audio? audio;
+    if (mediaItem.extras!.containsKey('audio')) {
+      final dynamic dynamicAudio = mediaItem.extras!['audio'];
+      if (dynamicAudio is Audio) {
+        audio = dynamicAudio;
+      }
+    }
+
+    if (audio == null) {
+      Logger.root.warning('Audio is null, mediaItem: $mediaItem');
+      return null;
+    }
+
+    final audioUri = audio.audioUri;
+    if (audioUri == null) {
+      Logger.root.warning('Audio uri is null, audio: $audio');
+      return null;
+    }
+
+    return AudioSource.uri(
+      audioUri,
+      tag: mediaItem,
+    );
   }
 
   void _notifyAudioHandlerAboutPlaybackEvents() {
@@ -88,162 +236,5 @@ class AppAudioHandler extends BaseAudioHandler {
       }
       mediaItem.add(playlist[index]);
     });
-  }
-
-  void _listenForSequenceStateChanges() {
-    _player.sequenceStateStream.listen((SequenceState? sequenceState) {
-      final sequence = sequenceState?.effectiveSequence;
-      if (sequence == null || sequence.isEmpty) {
-        return;
-      }
-      final items = sequence.map((source) => source.tag as MediaItem);
-      queue.add(items.toList());
-    });
-  }
-
-  @override
-  Future<void> addQueueItems(List<MediaItem> mediaItems) async {
-    final audioSource =
-        mediaItems.map(_createAudioSource).where((element) => element != null).cast<AudioSource>().toList();
-
-    _playlist.addAll(audioSource);
-
-    final newQueue = queue.value..addAll(mediaItems);
-    queue.add(newQueue);
-  }
-
-  @override
-  Future<void> addQueueItem(MediaItem mediaItem) async {
-    final audioSource = _createAudioSource(mediaItem);
-    if (audioSource == null) {
-      return;
-    }
-
-    _playlist.add(audioSource);
-
-    final newQueue = queue.value..add(mediaItem);
-    queue.add(newQueue);
-  }
-
-  @override
-  Future<void> insertQueueItem(int index, MediaItem mediaItem) async {
-    final audioSource = _createAudioSource(mediaItem);
-    if (audioSource == null) {
-      return;
-    }
-
-    _playlist.insert(index, audioSource);
-
-    final newQueue = queue.value..insert(index, mediaItem);
-    queue.add(newQueue);
-  }
-
-  @override
-  Future<void> removeQueueItemAt(int index) async {
-    _playlist.removeAt(index);
-
-    final newQueue = queue.value..removeAt(index);
-    queue.add(newQueue);
-  }
-
-  @override
-  Future<void> updateQueue(List<MediaItem> queue) async {
-    final audioSources = queue.map(_createAudioSource).where((e) => e != null).cast<AudioSource>().toList();
-
-    _playlist.clear();
-    _playlist.addAll(audioSources);
-  }
-
-  @override
-  Future<void> play() => _player.play();
-
-  @override
-  Future<void> pause() => _player.pause();
-
-  @override
-  Future<void> seek(Duration position) => _player.seek(position);
-
-  @override
-  Future<void> skipToQueueItem(int index) async {
-    if (index < 0 || index >= queue.value.length) {
-      return;
-    }
-    if (_player.shuffleModeEnabled) {
-      index = _player.shuffleIndices![index];
-    }
-    _player.seek(Duration.zero, index: index);
-  }
-
-  @override
-  Future<void> skipToNext() => _player.seekToNext();
-
-  @override
-  Future<void> skipToPrevious() => _player.seekToPrevious();
-
-  @override
-  Future<void> setRepeatMode(AudioServiceRepeatMode repeatMode) async {
-    switch (repeatMode) {
-      case AudioServiceRepeatMode.none:
-        _player.setLoopMode(LoopMode.off);
-        break;
-      case AudioServiceRepeatMode.one:
-        _player.setLoopMode(LoopMode.one);
-        break;
-      case AudioServiceRepeatMode.group:
-      case AudioServiceRepeatMode.all:
-        _player.setLoopMode(LoopMode.all);
-        break;
-    }
-  }
-
-  @override
-  Future<void> setShuffleMode(AudioServiceShuffleMode shuffleMode) async {
-    if (shuffleMode == AudioServiceShuffleMode.none) {
-      _player.setShuffleModeEnabled(false);
-    } else {
-      await _player.shuffle();
-      _player.setShuffleModeEnabled(true);
-    }
-  }
-
-  @override
-  Future<void> customAction(String name, [Map<String, dynamic>? extras]) async {
-    if (name == 'dispose') {
-      await _player.dispose();
-      super.stop();
-    }
-  }
-
-  @override
-  Future<void> stop() async {
-    await _player.stop();
-    return super.stop();
-  }
-
-  UriAudioSource? _createAudioSource(MediaItem mediaItem) {
-    if (mediaItem.extras == null) {
-      Logger.root.warning('Media extras is null, mediaItem: $mediaItem');
-      return null;
-    }
-
-    Uri? mediaUri;
-
-    if (mediaItem.extras!.containsKey('localPath')) {
-      mediaUri = Uri.parse(mediaItem.extras!['localPath'] as String);
-    } else if (mediaItem.extras!.containsKey('remoteUrl')) {
-      mediaUri = Uri.parse(mediaItem.extras!['remoteUrl'] as String);
-    }
-
-    if (mediaUri == null) {
-      Logger.root.warning('Media URI is null, mediaItem: $mediaItem');
-      return null;
-    }
-
-    Logger.root.info('Creating audio source for mediaItem: $mediaItem');
-
-    return AudioSource.uri(
-      mediaUri,
-      tag: mediaItem,
-    );
   }
 }

@@ -7,9 +7,9 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../../../features/auth/api/auth_user_info_provider.dart';
+import '../../../features/play_audio/util/enqueue_audio.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../model/event_user_audio.dart';
-import '../util/enqueue_audio.dart';
 
 typedef LocalAudioFilesState = SimpleDataState<List<UserAudio>>;
 
@@ -68,7 +68,7 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<UserAudio>> {
       return;
     }
 
-    return _enqueueAudio.fromAudio(userAudio.audio!);
+    return _enqueueAudio.call(userAudio.audio!);
   }
 
   Future<void> _onEventUserAudio(EventUserAudio event) async {
