@@ -129,7 +129,7 @@ class _EmailSignInErrortext extends StatelessWidget {
 
     return BlocBuilder<EmailSignInCubit, EmailSignInState>(
       buildWhen: (previous, current) => previous.signInState != current.signInState,
-      builder: (context, state) {
+      builder: (_, state) {
         if (!state.signInState.isFailed) {
           return const SizedBox.shrink();
         }

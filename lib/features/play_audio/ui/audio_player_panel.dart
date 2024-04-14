@@ -13,8 +13,9 @@ import '../../../shared/util/color.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
 import '../model/playback_button_state.dart';
+import '../state/audio_player_controls_state.dart';
 import '../state/audio_player_panel_state.dart';
-import '../state/audio_player_state.dart';
+import '../state/now_playing_audio_state.dart';
 
 class AudioPlayerPanel extends StatelessWidget {
   const AudioPlayerPanel({
@@ -27,10 +28,10 @@ class AudioPlayerPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
-        buildWhen: (previous, current) => previous.currentSong != current.currentSong,
+      child: BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
+        buildWhen: (previous, current) => previous.nowPlayingAudio != current.nowPlayingAudio,
         builder: (_, state) {
-          return state.currentSong.maybeWhen(
+          return state.nowPlayingAudio.maybeWhen(
             orElse: () => body,
             success: (data) => _Panel(body: body, audio: data),
           );
@@ -123,10 +124,10 @@ class _MiniAudioPlayer extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Expanded(
-              child: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
-                buildWhen: (previous, current) => previous.currentSong != current.currentSong,
+              child: BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
+                buildWhen: (previous, current) => previous.nowPlayingAudio != current.nowPlayingAudio,
                 builder: (_, state) {
-                  return state.currentSong.maybeWhen(
+                  return state.nowPlayingAudio.maybeWhen(
                     orElse: () => const SizedBox.shrink(),
                     success: (data) => Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -209,30 +210,6 @@ class _AudioPlayerHeader extends StatelessWidget {
               child: Icon(Icons.chevron_right),
             ),
           ),
-          Expanded(
-            child: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
-              builder: (context, state) {
-                if (state.playlistName == null) {
-                  return const SizedBox.shrink();
-                }
-
-                return const Column(
-                  children: [
-                    Text(
-                      'Playlist name',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      'Playlist',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
           IconButton(
             onPressed: () {},
             icon: SvgPicture.asset(Assets.svgQuillList),
@@ -270,10 +247,10 @@ class _MetaAndPlayMode extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Expanded(
-          child: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
-            buildWhen: (previous, current) => previous.currentSong != current.currentSong,
+          child: BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
+            buildWhen: (previous, current) => previous.nowPlayingAudio != current.nowPlayingAudio,
             builder: (_, state) {
-              return state.currentSong.maybeWhen(
+              return state.nowPlayingAudio.maybeWhen(
                 orElse: () => const SizedBox.shrink(),
                 success: (data) => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -313,7 +290,7 @@ class _Progress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+    return BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
       buildWhen: (previous, current) => previous.playbackProgress != current.playbackProgress,
       builder: (_, state) {
         if (state.playbackProgress == null) {
@@ -324,7 +301,7 @@ class _Progress extends StatelessWidget {
           progress: state.playbackProgress!.current,
           buffered: state.playbackProgress!.buffered,
           total: state.playbackProgress!.total,
-          onSeek: context.audioPlayerCubit.onSeek,
+          onSeek: context.audioPlayerControlsCubit.onSeek,
         );
       },
     );
@@ -342,13 +319,13 @@ class _Controls extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SvgPicture.asset(Assets.svgRepeat),
-        BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+        BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
           buildWhen: (previous, current) => previous.isFirstSong != current.isFirstSong,
           builder: (_, state) {
             final isDisabled = state.isFirstSong;
 
             return IconButton(
-              onPressed: isDisabled ? null : context.audioPlayerCubit.onSkipToPrevious,
+              onPressed: isDisabled ? null : context.audioPlayerControlsCubit.onSkipToPrevious,
               icon: SvgPicture.asset(
                 Assets.svgSkipBack,
                 colorFilter: svgColor(
@@ -359,13 +336,13 @@ class _Controls extends StatelessWidget {
           },
         ),
         const _PlayPauseButton(size: 38),
-        BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+        BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
           buildWhen: (previous, current) => previous.isLastSong != current.isLastSong,
           builder: (_, state) {
             final isDisabled = state.isLastSong;
 
             return IconButton(
-              onPressed: isDisabled ? null : context.audioPlayerCubit.onSkipToNext,
+              onPressed: isDisabled ? null : context.audioPlayerControlsCubit.onSkipToNext,
               icon: SvgPicture.asset(
                 Assets.svgSkipForward,
                 colorFilter: svgColor(
@@ -391,9 +368,9 @@ class _PlayPauseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: context.audioPlayerCubit.onPlayOrPause,
+      onPressed: context.audioPlayerControlsCubit.onPlayOrPause,
       iconSize: size,
-      icon: BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+      icon: BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
         buildWhen: (previous, current) => previous.playButtonState != current.playButtonState,
         builder: (_, state) {
           final isLoading = state.playButtonState == PlaybackButtonState.idle ||

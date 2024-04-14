@@ -1,47 +1,41 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:common_models/common_models.dart';
 import 'package:common_utilities/common_utilities.dart';
-import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
-import '../model/media_item_payload.dart';
 import '../model/playback_button_state.dart';
 import '../model/playback_progress_state.dart';
 
-part 'audio_player_state.freezed.dart';
+part 'audio_player_controls_state.freezed.dart';
 
 @freezed
-class AudioPlayerState with _$AudioPlayerState {
-  const factory AudioPlayerState({
-    String? playlistName,
-    required SimpleDataState<Audio> currentSong,
+class AudioPlayerControlsState with _$AudioPlayerControlsState {
+  const factory AudioPlayerControlsState({
     required PlaybackButtonState playButtonState,
     PlaybackProgressState? playbackProgress,
     required bool isFirstSong,
     required bool isLastSong,
-  }) = _AudioPldayerState;
+  }) = _AudioPlayerControlsState;
 
-  factory AudioPlayerState.initial() => AudioPlayerState(
-        currentSong: SimpleDataState.idle(),
+  factory AudioPlayerControlsState.initial() => const AudioPlayerControlsState(
         playButtonState: PlaybackButtonState.idle,
         isFirstSong: true,
         isLastSong: true,
       );
 }
 
-extension AudioPlayerCubitX on BuildContext {
-  AudioPlayerCubit get audioPlayerCubit => read<AudioPlayerCubit>();
+extension AudioPlayerControlsCubitX on BuildContext {
+  AudioPlayerControlsCubit get audioPlayerControlsCubit => read<AudioPlayerControlsCubit>();
 }
 
 @injectable
-class AudioPlayerCubit extends Cubit<AudioPlayerState> {
-  AudioPlayerCubit(
+class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
+  AudioPlayerControlsCubit(
     this._audioHandler,
-  ) : super(AudioPlayerState.initial()) {
+  ) : super(AudioPlayerControlsState.initial()) {
     _init();
   }
 
@@ -53,7 +47,7 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
     _subscriptions.add(_audioHandler.playbackState.listen(_onPlaybackStateChanged));
     _subscriptions.add(AudioService.position.listen(_onPositionChanged));
     _subscriptions.add(_audioHandler.mediaItem.listen(_onMediaItemChanged));
-    _subscriptions.add(_audioHandler.queue.listen(_onQueueChanged));
+    _subscriptions.add(_audioHandler.queue.listen((_) => _updateSkipButtons()));
 
     _updateSkipButtons();
   }
@@ -118,38 +112,13 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
   }
 
   Future<void> _onMediaItemChanged(MediaItem? mediaItem) async {
-    Logger.root.info('Media item changed to: $mediaItem');
+    _updateSkipButtons();
 
     final newProgress = (state.playbackProgress ?? PlaybackProgressState.zero()).copyWith(
       total: mediaItem?.duration ?? Duration.zero,
     );
 
-    emit(state.copyWith(
-      playbackProgress: newProgress,
-      currentSong: SimpleDataState.loading(),
-    ));
-
-    MediaItemPayload? payload;
-    try {
-      payload = MediaItemPayload.fromExtras(mediaItem?.extras ?? {});
-    } catch (e) {
-      Logger.root.warning('Failed to parse MediaItemPayload, mediaItem: $mediaItem, error: $e');
-    }
-
-    if (payload == null) {
-      emit(state.copyWith(currentSong: SimpleDataState.failure()));
-      return;
-    }
-
-    emit(state.copyWith(currentSong: SimpleDataState.success(payload.audio)));
-
-    await _audioHandler.play();
-
-    _updateSkipButtons();
-  }
-
-  Future<void> _onQueueChanged(List<MediaItem> playlist) async {
-    _updateSkipButtons();
+    emit(state.copyWith(playbackProgress: newProgress));
   }
 
   void _updateSkipButtons() {

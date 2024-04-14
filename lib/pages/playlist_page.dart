@@ -34,13 +34,17 @@ class PlaylistPage extends StatelessWidget {
         ),
         BlocProvider(create: (_) => getIt<AudioPlayerPanelCubit>()),
       ],
-      child: const _Content(),
+      child: _Content(args: args),
     );
   }
 }
 
 class _Content extends StatelessWidget {
-  const _Content();
+  const _Content({
+    required this.args,
+  });
+
+  final PlaylistPageArgs args;
 
   @override
   Widget build(BuildContext context) {
@@ -55,10 +59,13 @@ class _Content extends StatelessWidget {
               delegate: PlaylistAppBar(
                 maxExtent: mediaQuery.padding.top + mediaQuery.size.height * .35,
                 minExtent: mediaQuery.padding.top + 56,
+                playlistId: args.playlistId,
               ),
             ),
             const SliverSizedBox(height: 42),
-            const PlaylistItems(),
+            PlaylistItems(
+              playlistId: args.playlistId,
+            ),
           ],
         ),
       ),

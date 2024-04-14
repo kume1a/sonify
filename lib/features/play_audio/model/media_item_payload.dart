@@ -10,6 +10,8 @@ class MediaItemPayload with _$MediaItemPayload {
     required String? playlistId,
   }) = _MediaItemPayload;
 
+  const MediaItemPayload._();
+
   factory MediaItemPayload.fromExtras(Map<String, dynamic> extras) {
     return MediaItemPayload(
       audio: extras['audio'] as Audio,

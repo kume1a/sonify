@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:global_navigator/global_navigator.dart';
 
 import '../features/download_file/state/downloads_state.dart';
-import '../features/play_audio/state/audio_player_state.dart';
+import '../features/play_audio/state/audio_player_controls_state.dart';
+import '../features/play_audio/state/now_playing_audio_state.dart';
 import '../shared/values/app_theme.dart';
 import 'di/register_dependencies.dart';
 import 'intl/app_localizations.dart';
@@ -19,7 +20,8 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => getIt<DownloadsCubit>(), lazy: false),
-        BlocProvider(create: (_) => getIt<AudioPlayerCubit>()),
+        BlocProvider(create: (_) => getIt<AudioPlayerControlsCubit>()),
+        BlocProvider(create: (_) => getIt<NowPlayingAudioCubit>()),
       ],
       child: MaterialApp(
         title: 'Sonify',

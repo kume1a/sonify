@@ -40,7 +40,7 @@ class YoutubeRemoteServiceImpl with SafeHttpRequestWrap implements YoutubeRemote
 
       return right(videos);
     } catch (e) {
-      Logger.root.severe('YoutubeRepositoryImpl.search', e);
+      Logger.root.severe('YoutubeRepositoryImpl.search $e');
     }
 
     return left(FetchFailure.unknown);
@@ -53,7 +53,7 @@ class YoutubeRemoteServiceImpl with SafeHttpRequestWrap implements YoutubeRemote
 
       return right(video);
     } catch (e) {
-      Logger.root.severe('YoutubeRepositoryImpl.getVideo', e);
+      Logger.root.severe('YoutubeRepositoryImpl.getVideo $e');
     }
 
     return left(FetchFailure.unknown);
@@ -68,7 +68,7 @@ class YoutubeRemoteServiceImpl with SafeHttpRequestWrap implements YoutubeRemote
 
       return right(manifest.audioOnly);
     } catch (e) {
-      Logger.root.severe('YoutubeRepositoryImpl.getAudioOnlyStreams', e);
+      Logger.root.severe('YoutubeRepositoryImpl.getAudioOnlyStreams $e');
     }
 
     return left(FetchFailure.unknown);
@@ -84,7 +84,7 @@ class YoutubeRemoteServiceImpl with SafeHttpRequestWrap implements YoutubeRemote
 
       return right(streamInfo);
     } catch (e) {
-      Logger.root.severe('YoutubeRepositoryImpl.getHighestQualityMuxedStreamInfo', e);
+      Logger.root.severe('YoutubeRepositoryImpl.getHighestQualityMuxedStreamInfo, $e');
     }
 
     return left(FetchFailure.unknown);

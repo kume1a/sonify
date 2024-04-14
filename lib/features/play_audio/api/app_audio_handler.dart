@@ -3,6 +3,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
 
 import '../../../entities/audio/util/audio_extension.dart';
+import '../../../shared/util/utils.dart';
 import '../model/media_item_payload.dart';
 
 class AppAudioHandler extends BaseAudioHandler {
@@ -145,13 +146,10 @@ class AppAudioHandler extends BaseAudioHandler {
       return null;
     }
 
-    MediaItemPayload? payload;
-    try {
-      payload = MediaItemPayload.fromExtras(mediaItem.extras ?? {});
-    } catch (e) {
-      Logger.root.warning('Failed to parse MediaItemPayload, mediaItem: $mediaItem, error: $e');
-    }
-
+    final payload = callOrDefault(
+      () => MediaItemPayload.fromExtras(mediaItem.extras ?? {}),
+      null,
+    );
     if (payload == null) {
       Logger.root.warning('MediaItemPayload is null, mediaItem: $mediaItem');
       return null;

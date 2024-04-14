@@ -91,7 +91,7 @@ class ChunkedDownloader {
               try {
                 onProgress!(offset, fileSize, speedInKbs);
               } catch (e) {
-                Logger.root.severe('ChunkedDownloader error onProgress: ', e);
+                Logger.root.severe('ChunkedDownloader error onProgress: $e');
               }
             }
 

@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../app/intl/app_localizations.dart';
+import '../../../features/play_audio/model/playback_button_state.dart';
+import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/pulsing_fade.dart';
 import '../../../shared/ui/round_play_button.dart';
 import '../../../shared/util/color.dart';
@@ -17,6 +19,7 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
   const PlaylistAppBar({
     required this.minExtent,
     required this.maxExtent,
+    required this.playlistId,
   });
 
   @override
@@ -24,6 +27,8 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
 
   @override
   final double maxExtent;
+
+  final String playlistId;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
@@ -119,13 +124,16 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
         Positioned(
           right: 16,
           bottom: -20,
-          child: BlocBuilder<PlaylistCubit, PlaylistState>(
-            buildWhen: (previous, current) => previous.isPlaylistPlaying != current.isPlaylistPlaying,
+          child: BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
+            buildWhen: (previous, current) =>
+                previous.nowPlayingPlaylist != current.nowPlayingPlaylist ||
+                previous.playButtonState != current.playButtonState,
             builder: (_, state) {
               return RoundPlayButton(
                 size: 52,
-                isPlaying: state.isPlaylistPlaying,
-                onPressed: context.playlistCubit.onPlayPlaylistPressed,
+                isPlaying: state.nowPlayingPlaylist?.id == playlistId &&
+                    state.playButtonState == PlaybackButtonState.playing,
+                onPressed: () => context.nowPlayingAudioCubit.onPlayPlaylistPressed(playlistId: playlistId),
               );
             },
           ),
@@ -158,11 +166,10 @@ class _PlaylistImage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return BlocBuilder<PlaylistCubit, PlaylistState>(
-      buildWhen: (previous, current) => previous.playlist != current.playlist,
       builder: (_, state) {
-        return state.playlist.hasData
+        return state.hasData
             ? CachedNetworkImage(
-                imageUrl: state.playlist.getOrThrow.thumbnailUrl ?? '',
+                imageUrl: state.getOrThrow.thumbnailUrl ?? '',
                 fit: BoxFit.cover,
                 placeholder: (_, __) => ColoredBox(color: theme.colorScheme.secondaryContainer),
                 errorWidget: (_, __, ___) => ColoredBox(color: theme.colorScheme.secondaryContainer),
@@ -185,9 +192,8 @@ class _PlaylistTitle extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
 
     return BlocBuilder<PlaylistCubit, PlaylistState>(
-      buildWhen: (previous, current) => previous.playlist != current.playlist,
       builder: (_, state) {
-        return state.playlist.maybeWhen(
+        return state.maybeWhen(
           success: (data) => Text(
             data.name,
             maxLines: 2,

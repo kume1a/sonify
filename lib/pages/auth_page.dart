@@ -37,7 +37,7 @@ class _ShowOnOnlyAuth extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       buildWhen: (previous, current) => previous.isAuthenticated != current.isAuthenticated,
-      builder: (context, state) {
+      builder: (_, state) {
         return state.isAuthenticated.maybeWhen(
           orElse: () => const SizedBox.shrink(),
           success: (isAuthenticated) {

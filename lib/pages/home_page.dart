@@ -36,7 +36,7 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SpotifyAuthCubit, SpotifyAuthState>(
-      builder: (context, state) {
+      builder: (_, state) {
         return state.isSpotifyAuthenticated.maybeWhen(
           orElse: () => const SizedBox.shrink(),
           success: (isSpotifyAuthenticated) {

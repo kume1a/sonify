@@ -14,7 +14,7 @@ class SignInWithGoogleErrortext extends StatelessWidget {
 
     return BlocBuilder<AuthCubit, AuthState>(
       buildWhen: (previous, current) => previous.googleSignInAction != current.googleSignInAction,
-      builder: (context, state) {
+      builder: (_, state) {
         if (!state.googleSignInAction.isFailed) {
           return const SizedBox.shrink();
         }
