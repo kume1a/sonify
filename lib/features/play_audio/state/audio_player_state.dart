@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../model/playback_button_state.dart';
 import '../model/playback_progress_state.dart';
@@ -43,7 +42,6 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
 
   final AudioHandler _audioHandler;
 
-  final panelController = PanelController();
   final _subscriptions = SubscriptionComposite();
 
   Future<void> _init() async {
@@ -66,18 +64,6 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
     await _subscriptions.closeAll();
 
     return super.close();
-  }
-
-  void onMiniAudioPlayerPanelPressed() {
-    if (panelController.isAttached) {
-      panelController.open();
-    }
-  }
-
-  void onDownArrowPressed() {
-    if (panelController.isAttached) {
-      panelController.close();
-    }
   }
 
   void onPlayOrPause() {

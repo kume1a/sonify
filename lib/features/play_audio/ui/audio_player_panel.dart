@@ -11,6 +11,7 @@ import '../../../shared/ui/play_pause.dart';
 import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/values/assets.dart';
 import '../model/playback_button_state.dart';
+import '../state/audio_player_panel_state.dart';
 import '../state/audio_player_state.dart';
 
 class AudioPlayerPanel extends StatelessWidget {
@@ -54,7 +55,7 @@ class _Panel extends HookWidget {
     final panelPosition = useState(0.0);
 
     return SlidingUpPanel(
-      controller: context.audioPlayerCubit.panelController,
+      controller: context.audioPlayerPanelCubit.panelController,
       body: body,
       panel: _PanelContent(audio: audio),
       collapsed: panelPosition.value < 1 ? _MiniAudioPlayer(audio: audio) : null,
@@ -108,7 +109,7 @@ class _MiniAudioPlayer extends StatelessWidget {
     final theme = Theme.of(context);
 
     return GestureDetector(
-      onTap: context.audioPlayerCubit.onMiniAudioPlayerPanelPressed,
+      onTap: context.audioPlayerPanelCubit.onMiniAudioPlayerPanelPressed,
       child: Container(
         color: theme.colorScheme.secondaryContainer,
         padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -199,7 +200,7 @@ class _AudioPlayerHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            onPressed: context.audioPlayerCubit.onDownArrowPressed,
+            onPressed: context.audioPlayerPanelCubit.onDownArrowPressed,
             iconSize: 28,
             icon: const RotatedBox(
               quarterTurns: 1,
