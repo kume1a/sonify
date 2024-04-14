@@ -20,11 +20,15 @@ class AudioPlayerState with _$AudioPlayerState {
     required SimpleDataState<Audio> currentSong,
     required PlaybackButtonState playButtonState,
     PlaybackProgressState? playbackProgress,
+    required bool isFirstSong,
+    required bool isLastSong,
   }) = _AudioPldayerState;
 
   factory AudioPlayerState.initial() => AudioPlayerState(
         currentSong: SimpleDataState.idle(),
         playButtonState: PlaybackButtonState.idle,
+        isFirstSong: true,
+        isLastSong: true,
       );
 }
 
@@ -48,15 +52,9 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
     _subscriptions.add(_audioHandler.playbackState.listen(_onPlaybackStateChanged));
     _subscriptions.add(AudioService.position.listen(_onPositionChanged));
     _subscriptions.add(_audioHandler.mediaItem.listen(_onMediaItemChanged));
+    _subscriptions.add(_audioHandler.queue.listen(_onQueueChanged));
 
-    // await _loadPlaylist();
-
-    // _listenToChangesInPlaylist();
-    // _listenToCurrentPosition();
-    // _listenToBufferedPosition();
-    // _listenToTotalDuration();
-    // _listenToChangesInSong();
-    // _updateSkipButtons();
+    _updateSkipButtons();
   }
 
   @override
@@ -140,53 +138,27 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
     emit(state.copyWith(currentSong: SimpleDataState.success(audio)));
 
     await _audioHandler.play();
+
+    _updateSkipButtons();
   }
 
-  // Future<void> _loadPlaylist() async {
-  // final songRepository = getIt<PlaylistRepository>();
-  // final playlist = await songRepository.fetchInitialPlaylist();
-  // final mediaItems = playlist
-  //     .map((song) => MediaItem(
-  //           id: song['id'] ?? '',
-  //           album: song['album'] ?? '',
-  //           title: song['title'] ?? '',
-  //           extras: {'url': song['url']},
-  //         ))
-  //     .toList();
-  // _audioHandler.addQueueItems(mediaItems);
-  // }
+  Future<void> _onQueueChanged(List<MediaItem> playlist) async {
+    _updateSkipButtons();
+  }
 
-  // void _listenToChangesInPlaylist() {
-  // _audioHandler.queue.listen((playlist) {
-  //   if (playlist.isEmpty) {
-  //     playlistNotifier.value = [];
-  //     currentSongTitleNotifier.value = '';
-  //   } else {
-  //     final newList = playlist.map((item) => item.title).toList();
-  //     playlistNotifier.value = newList;
-  //   }
-  //   _updateSkipButtons();
-  // });
-  // }
+  void _updateSkipButtons() {
+    final mediaItem = _audioHandler.mediaItem.value;
+    final playlist = _audioHandler.queue.value;
 
-  // void _listenToChangesInSong() {
-  // _audioHandler.mediaItem.listen((mediaItem) {
-  //   currentSongTitleNotifier.value = mediaItem?.title ?? '';
-  //   _updateSkipButtons();
-  // });
-  // }
-
-  // void _updateSkipButtons() {
-  // final mediaItem = _audioHandler.mediaItem.value;
-  // final playlist = _audioHandler.queue.value;
-  // if (playlist.length < 2 || mediaItem == null) {
-  //   isFirstSongNotifier.value = true;
-  //   isLastSongNotifier.value = true;
-  // } else {
-  //   isFirstSongNotifier.value = playlist.first == mediaItem;
-  //   isLastSongNotifier.value = playlist.last == mediaItem;
-  // }
-  // }
+    if (playlist.length < 2 || mediaItem == null) {
+      emit(state.copyWith(isFirstSong: true, isLastSong: true));
+    } else {
+      emit(state.copyWith(
+        isFirstSong: playlist.first == mediaItem,
+        isLastSong: playlist.last == mediaItem,
+      ));
+    }
+  }
 
   // void repeat() {
   // repeatButtonNotifier.nextState();

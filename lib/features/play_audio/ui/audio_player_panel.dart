@@ -9,6 +9,8 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../../../shared/ui/optional_marquee.dart';
 import '../../../shared/ui/play_pause.dart';
 import '../../../shared/ui/thumbnail.dart';
+import '../../../shared/util/color.dart';
+import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
 import '../model/playback_button_state.dart';
 import '../state/audio_player_panel_state.dart';
@@ -334,18 +336,44 @@ class _Controls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SvgPicture.asset(Assets.svgRepeat),
-        IconButton(
-          onPressed: context.audioPlayerCubit.onSkipToPrevious,
-          icon: SvgPicture.asset(Assets.svgSkipBack),
+        BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+          buildWhen: (previous, current) => previous.isFirstSong != current.isFirstSong,
+          builder: (_, state) {
+            final isDisabled = state.isFirstSong;
+
+            return IconButton(
+              onPressed: isDisabled ? null : context.audioPlayerCubit.onSkipToPrevious,
+              icon: SvgPicture.asset(
+                Assets.svgSkipBack,
+                colorFilter: svgColor(
+                  isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onBackground,
+                ),
+              ),
+            );
+          },
         ),
         const _PlayPauseButton(size: 38),
-        IconButton(
-          onPressed: context.audioPlayerCubit.onSkipToNext,
-          icon: SvgPicture.asset(Assets.svgSkipForward),
+        BlocBuilder<AudioPlayerCubit, AudioPlayerState>(
+          buildWhen: (previous, current) => previous.isLastSong != current.isLastSong,
+          builder: (_, state) {
+            final isDisabled = state.isLastSong;
+
+            return IconButton(
+              onPressed: isDisabled ? null : context.audioPlayerCubit.onSkipToNext,
+              icon: SvgPicture.asset(
+                Assets.svgSkipForward,
+                colorFilter: svgColor(
+                  isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onBackground,
+                ),
+              ),
+            );
+          },
         ),
         SvgPicture.asset(Assets.svgHeart),
       ],
