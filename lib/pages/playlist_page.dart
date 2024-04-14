@@ -7,7 +7,6 @@ import '../entities/playlist/state/playlist_state.dart';
 import '../entities/playlist/ui/playlist_appbar.dart';
 import '../entities/playlist/ui/playlist_items.dart';
 import '../features/play_audio/state/audio_player_panel_state.dart';
-import '../features/play_audio/state/audio_player_state.dart';
 import '../features/play_audio/ui/audio_player_panel.dart';
 
 class PlaylistPageArgs {
@@ -33,7 +32,6 @@ class PlaylistPage extends StatelessWidget {
         BlocProvider(
           create: (_) => getIt<PlaylistCubit>()..init(args.playlistId),
         ),
-        BlocProvider(create: (_) => getIt<AudioPlayerCubit>()),
         BlocProvider(create: (_) => getIt<AudioPlayerPanelCubit>()),
       ],
       child: const _Content(),

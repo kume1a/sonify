@@ -14,8 +14,13 @@ final class EnqueuePlaylist {
   final AudioHandler _audioHandler;
   final MediaItemMapper _mediaItemMapper;
 
-  Future<void> call(List<Audio> audios) {
-    final mediaItems = audios.map(_mediaItemMapper.audioToMediaItem).toList();
+  Future<void> call({
+    required List<Audio> audios,
+    required String playlistId,
+  }) {
+    final mediaItems = audios
+        .map((audio) => _mediaItemMapper.audioToMediaItem(audio: audio, playlistId: playlistId))
+        .toList();
 
     return _audioHandler.updateQueue(mediaItems);
   }

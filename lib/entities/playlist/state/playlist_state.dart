@@ -172,7 +172,7 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
     final beforePlayingAudioInfo = await _nowPlayingAudioInfoStore.getNowPlayingAudioInfo();
 
     if (beforePlayingAudioInfo == null || beforePlayingAudioInfo.playlistId != _playlistId) {
-      await _enqueuePlaylist(playlist.audios!);
+      await _enqueuePlaylist(audios: playlist.audios!, playlistId: _playlistId!);
     }
   }
 }

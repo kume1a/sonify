@@ -15,7 +15,7 @@ final class EnqueueAudio {
   final MediaItemMapper _mediaItemMapper;
 
   Future<void> call(Audio audio) async {
-    final mediaItem = _mediaItemMapper.audioToMediaItem(audio);
+    final mediaItem = _mediaItemMapper.audioToMediaItem(audio: audio);
 
     return _audioHandler.updateQueue([mediaItem]);
   }

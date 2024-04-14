@@ -8,6 +8,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
+import '../model/media_item_payload.dart';
 import '../model/playback_button_state.dart';
 import '../model/playback_progress_state.dart';
 
@@ -128,14 +129,19 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
       currentSong: SimpleDataState.loading(),
     ));
 
-    final audio = mediaItem?.extras?['audio'] as Audio?;
+    MediaItemPayload? payload;
+    try {
+      payload = MediaItemPayload.fromExtras(mediaItem?.extras ?? {});
+    } catch (e) {
+      Logger.root.warning('Failed to parse MediaItemPayload, mediaItem: $mediaItem, error: $e');
+    }
 
-    if (audio == null) {
+    if (payload == null) {
       emit(state.copyWith(currentSong: SimpleDataState.failure()));
       return;
     }
 
-    emit(state.copyWith(currentSong: SimpleDataState.success(audio)));
+    emit(state.copyWith(currentSong: SimpleDataState.success(payload.audio)));
 
     await _audioHandler.play();
 
@@ -159,57 +165,4 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
       ));
     }
   }
-
-  // void repeat() {
-  // repeatButtonNotifier.nextState();
-  // final repeatMode = repeatButtonNotifier.value;
-  // switch (repeatMode) {
-  //   case RepeatState.off:
-  //     _audioHandler.setRepeatMode(AudioServiceRepeatMode.none);
-  //     break;
-  //   case RepeatState.repeatSong:
-  //     _audioHandler.setRepeatMode(AudioServiceRepeatMode.one);
-  //     break;
-  //   case RepeatState.repeatPlaylist:
-  //     _audioHandler.setRepeatMode(AudioServiceRepeatMode.all);
-  //     break;
-  // }
-  // }
-
-  // void shuffle() {
-  // final enable = !isShuffleModeEnabledNotifier.value;
-  // isShuffleModeEnabledNotifier.value = enable;
-  // if (enable) {
-  //   _audioHandler.setShuffleMode(AudioServiceShuffleMode.all);
-  // } else {
-  //   _audioHandler.setShuffleMode(AudioServiceShuffleMode.none);
-  // }
-  // }
-
-  // Future<void> add() async {
-  // final songRepository = getIt<PlaylistRepository>();
-  // final song = await songRepository.fetchAnotherSong();
-  // final mediaItem = MediaItem(
-  //   id: song['id'] ?? '',
-  //   album: song['album'] ?? '',
-  //   title: song['title'] ?? '',
-  //   extras: {'url': song['url']},
-  // );
-  // _audioHandler.addQueueItem(mediaItem);
-  // }
-
-  // void remove() {
-  // final lastIndex = _audioHandler.queue.value.length - 1;
-  // if (lastIndex < 0) return;
-  // _audioHandler.removeQueueItemAt(lastIndex);
-  // }
-
-  // void dispose() {
-  // _audioHandler.customAction('dispose');
-  // }
-
-  // void stop() {
-  // _audioHandler.stop();
-  // }
-// }
 }

@@ -1,9 +1,9 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:domain_data/domain_data.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
 
 import '../../../entities/audio/util/audio_extension.dart';
+import '../model/media_item_payload.dart';
 
 class AppAudioHandler extends BaseAudioHandler {
   AppAudioHandler() {
@@ -145,22 +145,21 @@ class AppAudioHandler extends BaseAudioHandler {
       return null;
     }
 
-    Audio? audio;
-    if (mediaItem.extras!.containsKey('audio')) {
-      final dynamic dynamicAudio = mediaItem.extras!['audio'];
-      if (dynamicAudio is Audio) {
-        audio = dynamicAudio;
-      }
+    MediaItemPayload? payload;
+    try {
+      payload = MediaItemPayload.fromExtras(mediaItem.extras ?? {});
+    } catch (e) {
+      Logger.root.warning('Failed to parse MediaItemPayload, mediaItem: $mediaItem, error: $e');
     }
 
-    if (audio == null) {
-      Logger.root.warning('Audio is null, mediaItem: $mediaItem');
+    if (payload == null) {
+      Logger.root.warning('MediaItemPayload is null, mediaItem: $mediaItem');
       return null;
     }
 
-    final audioUri = audio.audioUri;
+    final audioUri = payload.audio.audioUri;
     if (audioUri == null) {
-      Logger.root.warning('Audio uri is null, audio: $audio');
+      Logger.root.warning('Audio uri is null, audio: ${payload.audio}');
       return null;
     }
 
