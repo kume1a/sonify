@@ -6,11 +6,13 @@ class RoundPlayButton extends StatelessWidget {
   const RoundPlayButton({
     super.key,
     required this.size,
+    required this.iconSize,
     required this.isPlaying,
     required this.onPressed,
   });
 
   final double size;
+  final double iconSize;
   final bool isPlaying;
   final VoidCallback onPressed;
 
@@ -19,14 +21,15 @@ class RoundPlayButton extends StatelessWidget {
     final theme = Theme.of(context);
 
     return IconButton(
-      constraints: BoxConstraints.tightFor(width: size, height: size),
+      constraints: BoxConstraints.tight(Size.square(size)),
       alignment: Alignment.center,
+      padding: EdgeInsets.zero,
       style: IconButton.styleFrom(
         backgroundColor: theme.colorScheme.secondary,
       ),
       icon: PlayPause(
         isPlaying: isPlaying,
-        size: size / 2,
+        size: iconSize,
       ),
       onPressed: onPressed,
     );

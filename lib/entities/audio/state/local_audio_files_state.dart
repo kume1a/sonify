@@ -7,7 +7,6 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../../../features/auth/api/auth_user_info_provider.dart';
-import '../../../features/play_audio/util/enqueue_audio.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../model/event_user_audio.dart';
 
@@ -23,7 +22,6 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<UserAudio>> {
     this._audioLocalRepository,
     this._authUserInfoProvider,
     this._eventBus,
-    this._enqueueAudio,
   ) {
     _init();
 
@@ -33,7 +31,6 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<UserAudio>> {
   final AudioLocalRepository _audioLocalRepository;
   final AuthUserInfoProvider _authUserInfoProvider;
   final EventBus _eventBus;
-  final EnqueueAudio _enqueueAudio;
 
   final _subscriptions = SubscriptionComposite();
 
@@ -62,14 +59,7 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<UserAudio>> {
     return _audioLocalRepository.getAllByUserId(userId);
   }
 
-  Future<void> onUserAudioFilePressed(UserAudio userAudio) async {
-    if (userAudio.audio == null) {
-      Logger.root.warning('Audio is null, cannot enqueue audio.');
-      return;
-    }
-
-    return _enqueueAudio.call(userAudio.audio!);
-  }
+  void onSearchQueryChanged(String value) {}
 
   Future<void> _onEventUserAudio(EventUserAudio event) async {
     await event.when(
@@ -86,6 +76,4 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<UserAudio>> {
       },
     );
   }
-
-  void onSearchQueryChanged(String value) {}
 }

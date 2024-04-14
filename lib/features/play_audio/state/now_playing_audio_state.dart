@@ -9,6 +9,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../../../shared/util/utils.dart';
+import '../../auth/api/auth_user_info_provider.dart';
 import '../api/now_playing_audio_info_store.dart';
 import '../model/media_item_payload.dart';
 import '../model/playback_button_state.dart';
@@ -22,6 +23,7 @@ class NowPlayingAudioState with _$NowPlayingAudioState {
     String? playlistId,
     required SimpleDataState<Audio> nowPlayingAudio,
     Playlist? nowPlayingPlaylist,
+    List<Audio>? myLibraryAudios,
     required PlaybackButtonState playButtonState,
   }) = _NowPlayingAudioState;
 
@@ -40,16 +42,20 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   NowPlayingAudioCubit(
     this._audioHandler,
     this._playlistRemoteRepository,
+    this._audioLocalRepository,
     this._nowPlayingAudioInfoStore,
     this._enqueuePlaylist,
+    this._authUserInfoProvider,
   ) : super(NowPlayingAudioState.initial()) {
     _init();
   }
 
   final AudioHandler _audioHandler;
   final PlaylistRemoteRepository _playlistRemoteRepository;
+  final AudioLocalRepository _audioLocalRepository;
   final NowPlayingAudioInfoStore _nowPlayingAudioInfoStore;
   final EnqueuePlaylist _enqueuePlaylist;
+  final AuthUserInfoProvider _authUserInfoProvider;
 
   final _subscriptions = SubscriptionComposite();
 
@@ -68,7 +74,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
 
   Future<void> _onMediaItemChanged(MediaItem? mediaItem) async {
     if (mediaItem?.extras == null) {
-      Logger.root.info('NowPlayingAudioCubit._onMediaItemChanged: mediaItem.extras is null');
+      Logger.root.warning('NowPlayingAudioCubit._onMediaItemChanged: mediaItem.extras is null');
       return;
     }
 
@@ -90,7 +96,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
 
     await _nowPlayingAudioInfoStore.setNowPlayingAudioInfo(
       NowPlayingAudioInfo(
-        playlistId: state.nowPlayingPlaylist!.id,
+        playlistId: state.nowPlayingPlaylist?.id,
         audioId: payload.audio.id,
         localAudioId: payload.audio.localId,
         position: Duration.zero,
@@ -98,22 +104,55 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     );
   }
 
+  Future<void> onLocalAudioPressed(Audio? audio) async {
+    if (audio == null) {
+      Logger.root.warning('NowPlayingAudioCubit.onLocalAudioPressed: audio is null');
+      return;
+    }
+
+    if (state.nowPlayingAudio.getOrNull == audio) {
+      return;
+    }
+
+    final playlistEnqueued = await _ensurePlaylistEnqueued(playlistId: null);
+    if (!playlistEnqueued) {
+      Logger.root.warning('NowPlayingAudioCubit.onPlaylistAudioPressed: failed to enqueue playlist');
+      return;
+    }
+
+    if (state.nowPlayingPlaylist == null) {
+      Logger.root.warning('NowPlayingAudioCubit.onPlaylistAudioPressed: nowPlayingPlaylist is null');
+      return;
+    }
+
+    final audioIndex = state.nowPlayingPlaylist!.audios?.indexWhere((e) => e.id == audio.id) ?? -1;
+    if (audioIndex == -1) {
+      Logger.root.warning('PlaylistCubit.onAudioPressed: audioIndex is -1');
+      return;
+    }
+
+    await _audioHandler.skipToQueueItem(audioIndex);
+    _audioHandler.play();
+
+    emit(state.copyWith(nowPlayingAudio: SimpleDataState.success(audio)));
+  }
+
   Future<void> onPlaylistAudioPressed({
     required Audio audio,
     required String playlistId,
   }) async {
-    if (state.nowPlayingAudio == audio) {
+    if (state.nowPlayingAudio.getOrNull == audio) {
       return;
     }
 
     final playlistEnqueued = await _ensurePlaylistEnqueued(playlistId: playlistId);
     if (!playlistEnqueued) {
-      Logger.root.info('NowPlayingAudioCubit.onPlaylistAudioPressed: failed to enqueue playlist');
+      Logger.root.warning('NowPlayingAudioCubit.onPlaylistAudioPressed: failed to enqueue playlist');
       return;
     }
 
     if (state.nowPlayingPlaylist == null) {
-      Logger.root.info('NowPlayingAudioCubit.onPlaylistAudioPressed: nowPlayingPlaylist is null');
+      Logger.root.warning('NowPlayingAudioCubit.onPlaylistAudioPressed: nowPlayingPlaylist is null');
       return;
     }
 
@@ -134,7 +173,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   }) async {
     final playlistEnqueued = await _ensurePlaylistEnqueued(playlistId: playlistId);
     if (!playlistEnqueued) {
-      Logger.root.info('NowPlayingAudioCubit.onPlayPlaylistPressed: failed to enqueue playlist');
+      Logger.root.warning('NowPlayingAudioCubit.onPlayPlaylistPressed: failed to enqueue playlist');
       return;
     }
 
@@ -143,7 +182,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     if (beforePlayingAudioInfo == null || beforePlayingAudioInfo.playlistId != playlistId) {
       final firstAudio = state.nowPlayingPlaylist?.audios?.firstOrNull;
       if (firstAudio == null) {
-        Logger.root.info('PlaylistCubit.onPlayPlaylistPressed: firstAudio is null');
+        Logger.root.warning('PlaylistCubit.onPlayPlaylistPressed: firstAudio is null');
         return;
       }
 
@@ -162,40 +201,50 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   }
 
   Future<bool> _ensurePlaylistEnqueued({
-    required String playlistId,
+    required String? playlistId,
   }) async {
-    final nowPlayingPlaylist = await _loadNowPlayingPlaylist(playlistId: playlistId);
-    if (nowPlayingPlaylist == null) {
-      Logger.root.info('PlaylistCubit._ensurePlaylistEnqueued: nowPlayingPlaylist is null');
-      return false;
-    }
-
-    if (nowPlayingPlaylist.audios == null || nowPlayingPlaylist.audios?.isEmpty == true) {
-      Logger.root.info('PlaylistCubit._ensurePlaylistEnqueued: playlist.audios is null or empty');
+    final nowPlayingAudios = await _loadNowPlayingPlaylist(playlistId: playlistId);
+    if (nowPlayingAudios == null || nowPlayingAudios.isEmpty == true) {
+      Logger.root.warning('PlaylistCubit._ensurePlaylistEnqueued: playlist.audios empty');
       return false;
     }
 
     final beforePlayingAudioInfo = await _nowPlayingAudioInfoStore.getNowPlayingAudioInfo();
 
     if (beforePlayingAudioInfo == null || beforePlayingAudioInfo.playlistId != playlistId) {
-      await _enqueuePlaylist(nowPlayingPlaylist);
+      await _enqueuePlaylist(audios: nowPlayingAudios, playlistId: playlistId);
     }
 
     return true;
   }
 
-  Future<Playlist?> _loadNowPlayingPlaylist({
-    required String playlistId,
+  Future<List<Audio>?> _loadNowPlayingPlaylist({
+    required String? playlistId,
   }) async {
     if (state.nowPlayingPlaylist != null && state.nowPlayingPlaylist!.id == playlistId) {
-      return state.nowPlayingPlaylist;
+      return state.nowPlayingPlaylist?.audios;
+    }
+
+    final authUserId = await _authUserInfoProvider.getId();
+    if (authUserId == null) {
+      Logger.root.warning('PlaylistCubit._loadNowPlayingPlaylist: authUserId is null');
+      return null;
+    }
+
+    if (playlistId == null) {
+      final localUserAudios = await _audioLocalRepository.getAllByUserId(authUserId);
+      final localAudios = localUserAudios.map((e) => e.audio).where((e) => e != null).cast<Audio>().toList();
+
+      emit(state.copyWith(myLibraryAudios: localAudios, nowPlayingPlaylist: null));
+
+      return localAudios;
     }
 
     final playlist = await _playlistRemoteRepository.getPlaylistById(playlistId: playlistId);
 
-    emit(state.copyWith(nowPlayingPlaylist: playlist.rightOrNull));
+    emit(state.copyWith(nowPlayingPlaylist: playlist.rightOrNull, myLibraryAudios: null));
 
-    return playlist.rightOrNull;
+    return playlist.rightOrNull?.audios;
   }
 
   void _onPlaybackStateChanged(PlaybackState playbackState) {

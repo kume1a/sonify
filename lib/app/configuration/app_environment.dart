@@ -59,7 +59,7 @@ class _DotEnvLoader {
     try {
       envString = await rootBundle.loadString(filename);
     } catch (e) {
-      log('', error: e);
+      Logger.root.warning('Failed to load $filename, $e');
     }
 
     if (envString == null || envString.isEmpty) {

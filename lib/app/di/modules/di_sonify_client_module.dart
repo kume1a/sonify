@@ -16,7 +16,7 @@ abstract class DiSonifyClientModule {
   Dio dio() {
     return NetworkClientFactory.createNoInterceptorDio(
       apiUrl: AppEnvironment.apiUrl,
-      logPrint: Logger.root.info,
+      logPrint: Logger.root.finer,
       // logPrint: null,
     );
   }
@@ -32,8 +32,8 @@ abstract class DiSonifyClientModule {
       noInterceptorDio: noInterceptorDio,
       authTokenStore: authTokenStore,
       afterExit: afterSignOut.call,
-      // logPrint: Logger.root.info,
-      logPrint: null,
+      logPrint: Logger.root.finer,
+      // logPrint: null,
       apiUrl: AppEnvironment.apiUrl,
     );
   }

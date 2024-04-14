@@ -131,6 +131,7 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
             builder: (_, state) {
               return RoundPlayButton(
                 size: 52,
+                iconSize: 26,
                 isPlaying: state.nowPlayingPlaylist?.id == playlistId &&
                     state.playButtonState == PlaybackButtonState.playing,
                 onPressed: () => context.nowPlayingAudioCubit.onPlayPlaylistPressed(playlistId: playlistId),

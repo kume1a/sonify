@@ -153,15 +153,7 @@ class _MiniAudioPlayer extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             const _PlayPauseButton(size: 24),
-            IconButton(
-              visualDensity: VisualDensity.compact,
-              onPressed: () {},
-              icon: SvgPicture.asset(
-                Assets.svgSkipForward,
-                width: 20,
-                height: 20,
-              ),
-            ),
+            const _SkipToNextButton(size: 20),
           ],
         ),
       ),
@@ -313,45 +305,13 @@ class _Controls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SvgPicture.asset(Assets.svgRepeat),
-        BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
-          buildWhen: (previous, current) => previous.isFirstSong != current.isFirstSong,
-          builder: (_, state) {
-            final isDisabled = state.isFirstSong;
-
-            return IconButton(
-              onPressed: isDisabled ? null : context.audioPlayerControlsCubit.onSkipToPrevious,
-              icon: SvgPicture.asset(
-                Assets.svgSkipBack,
-                colorFilter: svgColor(
-                  isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onBackground,
-                ),
-              ),
-            );
-          },
-        ),
+        const _SkipToPreviousButton(size: 28),
         const _PlayPauseButton(size: 38),
-        BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
-          buildWhen: (previous, current) => previous.isLastSong != current.isLastSong,
-          builder: (_, state) {
-            final isDisabled = state.isLastSong;
-
-            return IconButton(
-              onPressed: isDisabled ? null : context.audioPlayerControlsCubit.onSkipToNext,
-              icon: SvgPicture.asset(
-                Assets.svgSkipForward,
-                colorFilter: svgColor(
-                  isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onBackground,
-                ),
-              ),
-            );
-          },
-        ),
+        const _SkipToNextButton(size: 28),
         SvgPicture.asset(Assets.svgHeart),
       ],
     );
@@ -389,6 +349,72 @@ class _PlayPauseButton extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class _SkipToPreviousButton extends StatelessWidget {
+  const _SkipToPreviousButton({
+    required this.size,
+  });
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
+      buildWhen: (previous, current) => previous.isFirstSong != current.isFirstSong,
+      builder: (_, state) {
+        final isDisabled = state.isFirstSong;
+
+        return IconButton(
+          onPressed: isDisabled ? null : context.audioPlayerControlsCubit.onSkipToPrevious,
+          visualDensity: VisualDensity.compact,
+          icon: SvgPicture.asset(
+            width: size,
+            height: size,
+            Assets.svgSkipBack,
+            colorFilter: svgColor(
+              isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onBackground,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _SkipToNextButton extends StatelessWidget {
+  const _SkipToNextButton({
+    required this.size,
+  });
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
+      buildWhen: (previous, current) => previous.isLastSong != current.isLastSong,
+      builder: (_, state) {
+        final isDisabled = state.isLastSong;
+
+        return IconButton(
+          onPressed: isDisabled ? null : context.audioPlayerControlsCubit.onSkipToNext,
+          visualDensity: VisualDensity.compact,
+          icon: SvgPicture.asset(
+            Assets.svgSkipForward,
+            width: size,
+            height: size,
+            colorFilter: svgColor(
+              isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onBackground,
+            ),
+          ),
+        );
+      },
     );
   }
 }

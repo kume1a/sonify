@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 import 'package:sonify_client/sonify_client.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -47,6 +48,8 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
   final AudioRemoteRepository _audioRemoteRepository;
 
   void init(String videoId) {
+    Logger.root.info('Loading Youtube video, videoId = $videoId');
+
     _loadVideo(videoId);
   }
 

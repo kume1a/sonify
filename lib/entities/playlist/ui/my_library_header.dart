@@ -17,6 +17,7 @@ class MyLibraryHeader extends StatelessWidget {
       children: [
         RoundPlayButton(
           size: 26,
+          iconSize: 18,
           isPlaying: false,
           onPressed: () {},
         ),

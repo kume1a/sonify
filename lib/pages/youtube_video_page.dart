@@ -28,7 +28,6 @@ class YoutubeVideoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Logger.root.info(args.videoId);
     return BlocProvider(
       create: (_) => getIt<YoutubeVideoCubit>()..init(args.videoId),
       lazy: false,
