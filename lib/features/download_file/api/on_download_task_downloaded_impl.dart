@@ -22,11 +22,9 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
   Future<void> call(DownloadedTask downloadedTask) async {
     switch (downloadedTask.fileType) {
       case FileType.audioMp3:
-        await _handleAudioMp3Downloaded(downloadedTask);
-        break;
+        return _handleAudioMp3Downloaded(downloadedTask);
       case FileType.videoMp4:
-        await _handleVideoMp4Downloaded(downloadedTask);
-        break;
+        return _handleVideoMp4Downloaded(downloadedTask);
     }
   }
 
@@ -34,6 +32,7 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
     final userAudio = downloadTask.payload.userAudio;
 
     if (userAudio == null) {
+      Logger.root.warning('UserAudio is null, $downloadTask');
       return;
     }
 

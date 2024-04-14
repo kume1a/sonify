@@ -6,7 +6,6 @@ import '../model/downloaded_task.dart';
 class DownloadedTaskMapper {
   DownloadedTask fromDownloadTask(
     DownloadTask downloadTask,
-    String? thumbnailSavePath,
   ) {
     return DownloadedTask(
       savePath: downloadTask.savePath,

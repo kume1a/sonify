@@ -11,11 +11,19 @@ class Audio with _$Audio {
     required String title,
     required int durationMs,
     required String path,
+    required String? localPath,
     required String author,
     required int sizeBytes,
     required String? youtubeVideoId,
+    required String? spotifyId,
     required String? thumbnailPath,
     required String? thumbnailUrl,
-    required String? spotifyId,
+    required String? localThumbnailPath,
   }) = _Audio;
+
+  const Audio._();
+
+  bool get isLocal => localId != null;
+
+  bool get isRemote => !isLocal;
 }

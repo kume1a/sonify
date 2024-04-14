@@ -22,12 +22,10 @@ extension AudioX on Audio? {
       return null;
     }
 
-    if (this!.localId != null) {
-      return Uri.tryParse(this!.path);
-    } else if (this!.id != null) {
-      return Uri.tryParse(assembleResourceUrl(this!.path));
+    if (this!.localPath != null) {
+      return Uri.tryParse(this!.localPath!);
     }
 
-    return null;
+    return Uri.tryParse(assembleResourceUrl(this!.path));
   }
 }

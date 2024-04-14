@@ -14,12 +14,14 @@ class AudioMapper {
       title: dto.title ?? '',
       durationMs: dto.durationMs ?? 0,
       path: dto.path ?? '',
+      localPath: null,
       author: dto.author ?? '',
       sizeBytes: dto.sizeBytes ?? 0,
-      thumbnailPath: dto.thumbnailPath,
       youtubeVideoId: dto.youtubeVideoId,
-      thumbnailUrl: dto.thumbnailUrl,
       spotifyId: dto.spotifyId,
+      thumbnailUrl: dto.thumbnailUrl,
+      thumbnailPath: dto.thumbnailPath,
+      localThumbnailPath: null,
     );
   }
 
@@ -34,9 +36,11 @@ class AudioMapper {
       thumbnailPath: e.thumbnailPath,
       youtubeVideoId: e.youtubeVideoId,
       path: e.path ?? '',
+      localPath: e.localPath,
       createdAt: tryMapDateMillis(e.createdAtMillis),
       spotifyId: e.spotifyId,
       thumbnailUrl: e.thumbnailUrl,
+      localThumbnailPath: e.localThumbnailPath,
     );
   }
 }

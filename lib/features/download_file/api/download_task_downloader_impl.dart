@@ -71,7 +71,18 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
       );
     }
 
-    return _downloadedTaskMapper.fromDownloadTask(downloadTask, thumbnailSavePath);
+    final newDownloadTask = downloadTask.copyWith(
+      payload: downloadTask.payload.copyWith(
+        userAudio: downloadTask.payload.userAudio?.copyWith(
+          audio: downloadTask.payload.userAudio?.audio?.copyWith(
+            localPath: downloadTask.savePath,
+            localThumbnailPath: thumbnailSavePath,
+          ),
+        ),
+      ),
+    );
+
+    return _downloadedTaskMapper.fromDownloadTask(newDownloadTask);
   }
 
   Uri? _resolveImageUri(DownloadTask downloadTask) {

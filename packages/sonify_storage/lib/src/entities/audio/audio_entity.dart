@@ -19,6 +19,8 @@ class AudioEntity {
 
   String? path;
 
+  String? localPath;
+
   String? author;
 
   int? sizeBytes;
@@ -30,4 +32,6 @@ class AudioEntity {
   String? thumbnailPath;
 
   String? thumbnailUrl;
+
+  String? localThumbnailPath;
 }
