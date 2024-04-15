@@ -15,14 +15,14 @@ class PermissionResolverImpl implements PermissionResolver {
   final PermissionManager _permissionManager;
 
   @override
-  Future<bool> resolveStoragePermission() async {
-    final bool isGranted = await _permissionManager.isStoragePermissionGranted();
+  Future<bool> resolveAudioPermission() async {
+    final bool isGranted = await _permissionManager.isStorageGranted();
 
     if (isGranted) {
       return true;
     }
 
-    final status = await _permissionManager.requestStoragePermission();
+    final status = await _permissionManager.requestAudio();
 
     switch (status) {
       case PermissionStatus.granted:
@@ -31,7 +31,7 @@ class PermissionResolverImpl implements PermissionResolver {
       case PermissionStatus.permanentlyDenied:
         GlobalNavigator.dialog(
           StatusDialog(
-            content: (l) => l.storagePermissionDenied,
+            content: (l) => l.audioPermissionPermanentlyDenied,
             buttonLabel: (l) => l.openSettings,
             onPressed: _permissionManager.openPermissionSettings,
           ),
@@ -42,7 +42,7 @@ class PermissionResolverImpl implements PermissionResolver {
       case PermissionStatus.provisional:
         GlobalNavigator.dialog(
           StatusDialog(
-            content: (l) => l.storagePermissionDenied,
+            content: (l) => l.audioPermissionDenied,
             buttonLabel: (l) => l.ok,
           ),
         );

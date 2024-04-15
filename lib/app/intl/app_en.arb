@@ -21,6 +21,8 @@
   "openSettings": "Open settings",
   "storagePermissionDenied": "Allow permisison to storage",
   "storagePermissionPermanentlyDenied": "Permission to storage has been denied, please allow from settings",
+  "audioPermissionDenied": "Allow permisison to audio",
+  "audioPermissionPermanentlyDenied": "Permission to audio has been denied, please allow from settings",
   "enterYourName": "Enter your name",
   "unknownError": "Unknown error",
   "noInternetConnection": "No internet connection",

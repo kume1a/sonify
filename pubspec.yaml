@@ -50,6 +50,7 @@ dependencies:
   audio_session: ^0.1.18
   audio_service: ^0.18.12
   just_audio: ^0.9.30
+  on_audio_query: ^2.9.0
 
   # Util
   logging: ^1.2.0

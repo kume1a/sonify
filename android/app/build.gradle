@@ -93,3 +93,9 @@ dependencies {
 
     implementation "androidx.multidex:multidex:$multidex_version"
 }
+
+configurations.all {
+    resolutionStrategy {
+        force 'androidx.lifecycle:lifecycle-viewmodel:2.3.1'
+    }
+}

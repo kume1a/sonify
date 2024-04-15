@@ -1,3 +1,3 @@
 abstract class PermissionResolver {
-  Future<bool> resolveStoragePermission();
+  Future<bool> resolveAudioPermission();
 }

@@ -12,10 +12,12 @@
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
   
-  <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
-
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" 
     android:minSdkVersion="34" />
+
+  <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+  <!-- <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+  <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/> -->
 
   <application
     android:label="sonify"

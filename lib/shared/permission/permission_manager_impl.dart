@@ -6,17 +6,17 @@ import 'permission_manager.dart';
 @LazySingleton(as: PermissionManager)
 class PermissionManagerImpl implements PermissionManager {
   @override
-  Future<bool> isStoragePermissionGranted() async => Permission.storage.isGranted;
+  Future<bool> isStorageGranted() => Permission.storage.isGranted;
 
   @override
-  Future<PermissionStatus> requestStoragePermission() async => Permission.storage.request();
+  Future<PermissionStatus> requestStorage() => Permission.storage.request();
+
+  @override
+  Future<bool> isAudioGranted() => Permission.audio.isGranted;
+
+  @override
+  Future<PermissionStatus> requestAudio() => Permission.audio.request();
 
   @override
   Future<void> openPermissionSettings() => openAppSettings();
-
-  @override
-  Future<bool> isCameraPermissionGranted() => Permission.camera.isGranted;
-
-  @override
-  Future<PermissionStatus> requestCameraPermission() => Permission.storage.request();
 }

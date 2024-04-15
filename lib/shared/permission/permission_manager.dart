@@ -1,13 +1,13 @@
 import 'package:permission_handler/permission_handler.dart';
 
 abstract class PermissionManager {
-  Future<bool> isStoragePermissionGranted();
+  Future<bool> isStorageGranted();
 
-  Future<PermissionStatus> requestStoragePermission();
+  Future<PermissionStatus> requestStorage();
 
-  Future<bool> isCameraPermissionGranted();
+  Future<bool> isAudioGranted();
 
-  Future<PermissionStatus> requestCameraPermission();
+  Future<PermissionStatus> requestAudio();
 
   Future<void> openPermissionSettings();
 }
