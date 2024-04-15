@@ -124,9 +124,10 @@ flutter_icons:
   adaptive_icon_background: '#ffffffff'
 
 flutter_native_splash:
-  color: '#ffffff'
+  color: '#000000'
   image: assets/logo/logo_transparent_bg.png
 
   android_12:
-    color: '#ffffff'
-    icon_background_color: '#ffffff'
+    image: assets/logo/logo_transparent_bg.png
+    color: '#000000'
+    icon_background_color: '#000000'

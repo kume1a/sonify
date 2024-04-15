@@ -12,7 +12,6 @@
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
   
-
   <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
 
   <application
@@ -32,32 +31,33 @@
 
       <meta-data
         android:name="io.flutter.embedding.android.NormalTheme"
-        android:resource="@style/NormalTheme"
-      />
+        android:resource="@style/NormalTheme" />
+      <meta-data
+        android:name="io.flutter.embedding.android.SplashScreenDrawable"
+        android:resource="@drawable/launch_background" />
 
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
 
-      <!-- Deep Link sample -->
+      <!-- Deep links -->
       <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
 
       <intent-filter>
           <action android:name="android.intent.action.VIEW" />
           <category android:name="android.intent.category.DEFAULT" />
           <category android:name="android.intent.category.BROWSABLE" />
-          <!-- Add optional android:host to distinguish your app
-                from others in case of conflicting scheme name -->
           <data android:scheme="app" android:host="sonify" android:pathPrefix="/spotifyauth" />
       </intent-filter>
-
+      <!-- Deep links -->
     </activity>
 
     <meta-data
       android:name="flutterEmbedding"
       android:value="2" />
 
+    <!-- Audio service -->
     <service 
       android:name="com.ryanheise.audioservice.AudioService"
       android:foregroundServiceType="mediaPlayback"
@@ -78,5 +78,6 @@
         <action android:name="android.intent.action.MEDIA_BUTTON" />
       </intent-filter>
     </receiver> 
+    <!-- Audio service -->
   </application>
 </manifest>
