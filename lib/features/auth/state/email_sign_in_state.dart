@@ -7,7 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sonify_client/sonify_client.dart';
 
-import '../../../app/navigation/page_navigator.dart';
+import '../api/after_sign_in.dart';
 
 part 'email_sign_in_state.freezed.dart';
 
@@ -36,13 +36,11 @@ extension EmailSignInStateX on BuildContext {
 class EmailSignInCubit extends Cubit<EmailSignInState> {
   EmailSignInCubit(
     this._authRemoteRepository,
-    this._authTokenStore,
-    this._pageNavigator,
+    this._afterSignIn,
   ) : super(EmailSignInState.initial());
 
   final AuthRemoteRepository _authRemoteRepository;
-  final AuthTokenStore _authTokenStore;
-  final PageNavigator _pageNavigator;
+  final AfterSignIn _afterSignIn;
 
   void onEmailChanged(String value) {
     emit(state.copyWith(email: Email(value)));
@@ -78,13 +76,7 @@ class EmailSignInCubit extends Cubit<EmailSignInState> {
       (payload) async {
         emit(state.copyWith(signInState: ActionState.executed()));
 
-        await _authTokenStore.writeAccessToken(payload.accessToken);
-
-        if (payload.user?.name.isEmpty == true) {
-          _pageNavigator.toUserName();
-        } else {
-          _pageNavigator.toMain();
-        }
+        await _afterSignIn(tokenPayload: payload);
       },
     );
   }

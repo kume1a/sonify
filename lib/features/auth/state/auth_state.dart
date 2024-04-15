@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:sonify_client/sonify_client.dart';
 
 import '../../../app/navigation/page_navigator.dart';
+import '../api/after_sign_in.dart';
 import '../api/auth_status_provider.dart';
 import '../api/auth_with_google.dart';
 
@@ -34,8 +34,8 @@ class AuthCubit extends Cubit<AuthState> {
     this._authStatusProvider,
     this._authRemoteRepository,
     this._pageNavigator,
-    this._authTokenStore,
     this._userRemoteRepository,
+    this._afterSignIn,
   ) : super(AuthState.initial()) {
     _init();
   }
@@ -44,8 +44,8 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthStatusProvider _authStatusProvider;
   final AuthRemoteRepository _authRemoteRepository;
   final PageNavigator _pageNavigator;
-  final AuthTokenStore _authTokenStore;
   final UserRemoteRepository _userRemoteRepository;
+  final AfterSignIn _afterSignIn;
 
   Future<void> _init() async {
     _loadAuthStatus();
@@ -99,13 +99,7 @@ class AuthCubit extends Cubit<AuthState> {
       (tokenPayload) async {
         emit(state.copyWith(googleSignInAction: ActionState.executed()));
 
-        await _authTokenStore.writeAccessToken(tokenPayload.accessToken);
-
-        if (tokenPayload.user?.name.isEmpty == true) {
-          _pageNavigator.toUserName();
-        } else {
-          _pageNavigator.toMain();
-        }
+        await _afterSignIn(tokenPayload: tokenPayload);
       },
     );
   }
