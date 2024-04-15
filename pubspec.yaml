@@ -99,6 +99,8 @@ dev_dependencies:
   freezed: ^2.4.7
   injectable_generator: ^2.4.1
   flutter_gen: ^5.4.0
+  flutter_native_splash: ^2.4.0
+  flutter_launcher_icons: ^0.13.1
 
 flutter:
   uses-material-design: true
@@ -110,3 +112,21 @@ flutter:
     - assets/
     - assets/icons/
     - assets/logo/
+
+flutter_icons:
+  android: 'launcher_icon'
+  ios: true
+  image_path: 'assets/logo/logo.png'
+  image_path_android: 'assets/logo/logo_transparent_bg.png'
+  min_sdk_android: 21
+
+  remove_alpha_ios: true
+  adaptive_icon_background: '#ffffffff'
+
+flutter_native_splash:
+  color: '#ffffff'
+  image: assets/logo/logo_transparent_bg.png
+
+  android_12:
+    color: '#ffffff'
+    icon_background_color: '#ffffff'
