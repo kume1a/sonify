@@ -23,7 +23,7 @@ class NowPlayingAudioState with _$NowPlayingAudioState {
     String? playlistId,
     required SimpleDataState<Audio> nowPlayingAudio,
     Playlist? nowPlayingPlaylist,
-    List<Audio>? myLibraryAudios,
+    List<Audio>? nowPlayingAudios,
     required PlaybackButtonState playButtonState,
   }) = _NowPlayingAudioState;
 
@@ -120,18 +120,21 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
-    if (state.nowPlayingPlaylist == null) {
-      Logger.root.warning('NowPlayingAudioCubit.onPlaylistAudioPressed: nowPlayingPlaylist is null');
+    if (state.nowPlayingAudios == null) {
+      Logger.root.warning('NowPlayingAudioCubit.onPlaylistAudioPressed: nowPlayingAudios is null');
       return;
     }
 
-    final audioIndex = state.nowPlayingPlaylist!.audios?.indexWhere((e) => e.id == audio.id) ?? -1;
+    final audioIndex = state.nowPlayingAudios?.indexWhere((e) => e.id == audio.id) ?? -1;
     if (audioIndex == -1) {
       Logger.root.warning('PlaylistCubit.onAudioPressed: audioIndex is -1');
       return;
     }
 
+    Logger.root
+        .info('NowPlayingAudioCubit.onLocalAudioPressed: audioIndex=$audioIndex, calling skipToQueueItem');
     await _audioHandler.skipToQueueItem(audioIndex);
+    Logger.root.info('NowPlayingAudioCubit.onLocalAudioPressed: calling play');
     _audioHandler.play();
 
     emit(state.copyWith(nowPlayingAudio: SimpleDataState.success(audio)));
@@ -235,14 +238,14 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       final localUserAudios = await _audioLocalRepository.getAllByUserId(authUserId);
       final localAudios = localUserAudios.map((e) => e.audio).where((e) => e != null).cast<Audio>().toList();
 
-      emit(state.copyWith(myLibraryAudios: localAudios, nowPlayingPlaylist: null));
+      emit(state.copyWith(nowPlayingAudios: localAudios, nowPlayingPlaylist: null));
 
       return localAudios;
     }
 
     final playlist = await _playlistRemoteRepository.getPlaylistById(playlistId: playlistId);
 
-    emit(state.copyWith(nowPlayingPlaylist: playlist.rightOrNull, myLibraryAudios: null));
+    emit(state.copyWith(nowPlayingPlaylist: playlist.rightOrNull, nowPlayingAudios: null));
 
     return playlist.rightOrNull?.audios;
   }
