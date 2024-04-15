@@ -73,6 +73,8 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   }
 
   Future<void> _onMediaItemChanged(MediaItem? mediaItem) async {
+    Logger.root.info('NowPlayingAudioCubit._onMediaItemChanged: mediaItem: $mediaItem');
+
     if (mediaItem?.extras == null) {
       Logger.root.warning('NowPlayingAudioCubit._onMediaItemChanged: mediaItem.extras is null');
       return;
@@ -131,10 +133,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
-    Logger.root
-        .info('NowPlayingAudioCubit.onLocalAudioPressed: audioIndex=$audioIndex, calling skipToQueueItem');
     await _audioHandler.skipToQueueItem(audioIndex);
-    Logger.root.info('NowPlayingAudioCubit.onLocalAudioPressed: calling play');
     _audioHandler.play();
 
     emit(state.copyWith(nowPlayingAudio: SimpleDataState.success(audio)));
