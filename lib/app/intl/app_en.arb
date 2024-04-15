@@ -85,6 +85,7 @@
   "signOut": "Sign out",
   "settings": "Settings",
   "downloads": "Downloads",
+  "importLocalAudioFiles": "Import local audio files",
   "invalidEmailOrPassword": "Invalid email or password",
   "emailAlreadyUsedWithDifferentAuthProvider": "Email already used with different authentication provider",
   "importingSpotifyPlaylists": "Importing Spotify Playlists",
@@ -107,5 +108,9 @@
     }
   },
   "shufflePlayback": "Shuffle Playback",
-  "liked": "Liked"
+  "liked": "Liked",
+  "allowAudioPermissionForLocalMusic": "Allow audio permission to import local music files",
+  "grant": "Grant",
+  "importLocalMusic": "Import Local Music",
+  "failedToImportLocalMusic": "Failed to import local music"
 }

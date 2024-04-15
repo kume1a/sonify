@@ -31,6 +31,7 @@ abstract final class Assets {
   static const svgArrowDownUp = '$_icons/arrow_down_up.svg';
   static const svgGear = '$_icons/gear.svg';
   static const svgSignOut = '$_icons/sign_out.svg';
+  static const svgImport = '$_icons/import.svg';
 
   static const imageBlackMetalWall = '$_images/black_metal_wall.jpg';
 }

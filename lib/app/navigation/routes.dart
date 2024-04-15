@@ -9,4 +9,5 @@ abstract class Routes {
   static const String emailSignIn = 'emailSignIn';
   static const String playlist = 'playlist';
   static const String myLibrary = 'myLibrary';
+  static const String importLocalMusic = 'importLocalMusic';
 }

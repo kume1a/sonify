@@ -38,6 +38,21 @@ class SettingsTile extends StatelessWidget {
   }
 }
 
+class ImportLocalAudioFilesTile extends StatelessWidget {
+  const ImportLocalAudioFilesTile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
+    return _ProfileTile(
+      iconAssetName: Assets.svgImport,
+      label: l.importLocalAudioFiles,
+      onPressed: context.profileTilesCubit.onImportLocalAudioFilesTilePressed,
+    );
+  }
+}
+
 class SignOutTile extends StatelessWidget {
   const SignOutTile({super.key});
 
