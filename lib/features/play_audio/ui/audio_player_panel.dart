@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:logging/logging.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../../shared/ui/optional_marquee.dart';
@@ -178,6 +179,7 @@ class _AudioPlayerImage extends HookWidget {
           size: size,
           thumbnailPath: audio.thumbnailPath,
           thumbnailUrl: audio.thumbnailUrl,
+          localThumbnailPath: audio.localThumbnailPath,
           borderRadius: BorderRadius.circular(size.longestSide * 0.1),
         );
       },

@@ -1,3 +1,4 @@
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 
 import '../../values/app_theme_extension.dart';
@@ -7,17 +8,11 @@ class AudioListItem extends StatelessWidget {
   const AudioListItem({
     super.key,
     required this.onTap,
-    this.thumbnailPath,
-    this.thumbnailUrl,
-    required this.title,
-    required this.author,
+    required this.audio,
   });
 
   final VoidCallback onTap;
-  final String? thumbnailPath;
-  final String? thumbnailUrl;
-  final String title;
-  final String author;
+  final Audio audio;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +24,13 @@ class AudioListItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           children: [
-            if (thumbnailPath != null || thumbnailUrl != null)
+            if (audio.thumbnailPath != null || audio.thumbnailUrl != null || audio.localThumbnailPath != null)
               Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: Thumbnail(
-                  thumbnailPath: thumbnailPath,
-                  thumbnailUrl: thumbnailUrl,
+                  thumbnailPath: audio.thumbnailPath,
+                  thumbnailUrl: audio.thumbnailUrl,
+                  localThumbnailPath: audio.localThumbnailPath,
                   borderRadius: BorderRadius.circular(8),
                   size: const Size.square(42),
                 ),
@@ -43,10 +39,10 @@ class AudioListItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title),
+                  Text(audio.title),
                   const SizedBox(height: 4),
                   Text(
-                    author,
+                    audio.author,
                     style: TextStyle(
                       fontSize: 12,
                       color: theme.appThemeExtension?.elSecondary,

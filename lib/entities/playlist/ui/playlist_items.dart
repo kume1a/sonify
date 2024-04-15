@@ -32,10 +32,7 @@ class PlaylistItems extends StatelessWidget {
                   audio: audio,
                   playlistId: playlistId,
                 ),
-                title: audio.title,
-                author: audio.author,
-                thumbnailUrl: audio.thumbnailUrl,
-                thumbnailPath: audio.thumbnailPath,
+                audio: audio,
               );
             },
           ),

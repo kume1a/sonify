@@ -69,6 +69,7 @@ class _PlaylistItem extends StatelessWidget {
           children: [
             Thumbnail(
               thumbnailUrl: playlist.thumbnailUrl,
+              thumbnailPath: playlist.thumbnailPath,
               size: const Size.square(125),
             ),
             const SizedBox(height: 4),

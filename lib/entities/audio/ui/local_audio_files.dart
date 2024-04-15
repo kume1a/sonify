@@ -18,13 +18,15 @@ class LocalAudioFiles extends StatelessWidget {
           success: (data) => SliverList.builder(
             itemCount: data.length,
             itemBuilder: (_, index) {
-              final localAudioFile = data[index];
+              final userAudio = data[index];
+
+              if (userAudio.audio == null) {
+                return const SizedBox.shrink();
+              }
 
               return AudioListItem(
-                onTap: () => context.nowPlayingAudioCubit.onLocalAudioPressed(localAudioFile.audio),
-                thumbnailPath: localAudioFile.audio?.thumbnailPath,
-                title: localAudioFile.audio?.title ?? '',
-                author: localAudioFile.audio?.author ?? '',
+                onTap: () => context.nowPlayingAudioCubit.onLocalAudioPressed(userAudio.audio),
+                audio: userAudio.audio!,
               );
             },
           ),

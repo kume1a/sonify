@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../util/assemble_resource_url.dart';
 import '../util/utils.dart';
 import '../values/assets.dart';
 
@@ -14,15 +15,17 @@ class Thumbnail extends HookWidget {
     super.key,
     this.thumbnailPath,
     this.thumbnailUrl,
+    this.localThumbnailPath,
     required this.size,
     this.borderRadius = BorderRadius.zero,
   }) : assert(
-          thumbnailPath != null || thumbnailUrl != null,
-          'Either thumbnailPath or thumbnailUrl must be provided',
+          thumbnailPath != null || thumbnailUrl != null || localThumbnailPath != null,
+          'Either thumbnailPath, thumbnailUrl or localThumbnailPath must be provided',
         );
 
   final String? thumbnailPath;
   final String? thumbnailUrl;
+  final String? localThumbnailPath;
   final Size size;
   final BorderRadiusGeometry borderRadius;
 
@@ -31,7 +34,7 @@ class Thumbnail extends HookWidget {
     final theme = Theme.of(context);
 
     final imageFile = useMemoized<File?>(
-      () => thumbnailPath.notNullOrEmpty ? File(thumbnailPath!) : null,
+      () => localThumbnailPath.notNullOrEmpty ? File(localThumbnailPath!) : null,
     );
 
     if (imageFile != null) {
@@ -47,14 +50,21 @@ class Thumbnail extends HookWidget {
       );
     }
 
-    return thumbnailUrl.notNullOrEmpty
+    final url = thumbnailUrl.notNullOrEmpty
+        ? thumbnailUrl!
+        : thumbnailPath.notNullOrEmpty
+            ? assembleResourceUrl(thumbnailPath!)
+            : null;
+
+    return url != null
         ? ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: CachedNetworkImage(
-              imageUrl: thumbnailUrl!,
+              imageUrl: url,
               width: size.width,
               height: size.height,
-              errorWidget: (_, __, ___) => _placeholder(theme),
+              fit: BoxFit.cover,
+              errorWidget: (_, __, err) => _placeholder(theme),
               placeholder: (context, url) => _placeholder(theme),
             ),
           )
