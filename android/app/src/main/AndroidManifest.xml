@@ -14,6 +14,9 @@
   
   <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
 
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" 
+    android:minSdkVersion="34" />
+
   <application
     android:label="sonify"
     android:name="${applicationName}"
