@@ -20,6 +20,7 @@ abstract final class AppTheme {
       primaryContainer: Palette.primaryContainer,
     ),
     scaffoldBackgroundColor: Palette.background,
+    dividerColor: Palette.elSecondary,
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: Palette.elPrimary,
       selectedLabelStyle: TextStyle(fontSize: 12),

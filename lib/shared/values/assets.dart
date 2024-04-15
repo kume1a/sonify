@@ -1,5 +1,5 @@
 abstract final class Assets {
-  // static const _images = 'assets/images';
+  static const _images = 'assets/images';
   static const _icons = 'assets/icons';
   static const _logo = 'assets/logo';
 
@@ -29,4 +29,8 @@ abstract final class Assets {
   static const svgMic = '$_icons/mic.svg';
   static const svgPlaylist = '$_icons/playlist.svg';
   static const svgArrowDownUp = '$_icons/arrow_down_up.svg';
+  static const svgGear = '$_icons/gear.svg';
+  static const svgSignOut = '$_icons/sign_out.svg';
+
+  static const imageBlackMetalWall = '$_images/black_metal_wall.jpg';
 }

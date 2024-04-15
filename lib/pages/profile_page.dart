@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../app/di/register_dependencies.dart';
+import '../entities/user/state/auth_user_state.dart';
+import '../entities/user/state/profile_tiles_state.dart';
+import '../entities/user/ui/auth_user_profile_header.dart';
+import '../entities/user/ui/profile_tiles.dart';
 import '../features/auth/state/sign_out_state.dart';
-import '../features/auth/ui/sign_out_button.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -12,9 +15,9 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) => getIt<SignOutCubit>(),
-        ),
+        BlocProvider(create: (_) => getIt<SignOutCubit>()),
+        BlocProvider(create: (_) => getIt<AuthUserCubit>()),
+        BlocProvider(create: (_) => getIt<ProfileTilesCubit>()),
       ],
       child: const _Content(),
     );
@@ -28,9 +31,16 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SignOutButton(),
+          AuthUserProfileHeader(),
+          SizedBox(height: 16),
+          DownloadsTile(),
+          Divider(
+            indent: 16,
+            endIndent: 16,
+          ),
+          SettingsTile(),
+          SignOutTile(),
         ],
       ),
     );

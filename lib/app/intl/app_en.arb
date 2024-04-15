@@ -83,6 +83,8 @@
   "passwordIsTooShort": "Password is too short",
   "passwordIsTooLong": "Password is too long",
   "signOut": "Sign out",
+  "settings": "Settings",
+  "downloads": "Downloads",
   "invalidEmailOrPassword": "Invalid email or password",
   "emailAlreadyUsedWithDifferentAuthProvider": "Email already used with different authentication provider",
   "importingSpotifyPlaylists": "Importing Spotify Playlists",
