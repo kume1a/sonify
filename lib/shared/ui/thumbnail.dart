@@ -31,8 +31,6 @@ class Thumbnail extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     final imageFile = useMemoized<File?>(
       () => localThumbnailPath.notNullOrEmpty ? File(localThumbnailPath!) : null,
     );
@@ -45,7 +43,7 @@ class Thumbnail extends HookWidget {
           width: size.width,
           height: size.height,
           fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => _placeholder(theme),
+          errorBuilder: (_, __, ___) => ThumbnailPlaceholder(size: size),
         ),
       );
     }
@@ -64,20 +62,35 @@ class Thumbnail extends HookWidget {
               width: size.width,
               height: size.height,
               fit: BoxFit.cover,
-              errorWidget: (_, __, err) => _placeholder(theme),
-              placeholder: (context, url) => _placeholder(theme),
+              errorWidget: (_, __, err) => ThumbnailPlaceholder(size: size),
+              placeholder: (context, url) => ThumbnailPlaceholder(size: size),
             ),
           )
-        : _placeholder(theme);
+        : ThumbnailPlaceholder(size: size);
   }
+}
 
-  Widget _placeholder(ThemeData theme) {
+class ThumbnailPlaceholder extends StatelessWidget {
+  const ThumbnailPlaceholder({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     final childDimension = max<double>(24, size.width * .25);
 
     return Container(
       width: size.width,
       height: size.height,
-      color: theme.colorScheme.secondaryContainer,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.secondaryContainer,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Align(
         child: SvgPicture.asset(
           Assets.svgLogoTransparentBg,

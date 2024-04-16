@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 import '../../../app/intl/app_localizations.dart';
+import '../../../shared/ui/thumbnail.dart';
+import '../../../shared/values/app_theme_extension.dart';
 import '../model/local_music.dart';
 import '../state/import_local_music_state.dart';
 
@@ -88,9 +91,26 @@ class _Item extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return ListTile(
+      leading: QueryArtworkWidget(
+        id: localMusic.id,
+        type: ArtworkType.AUDIO,
+        artworkBorder: BorderRadius.circular(8),
+        artworkWidth: 42,
+        artworkHeight: 42,
+        nullArtworkWidget: const ThumbnailPlaceholder(
+          size: Size.square(42),
+        ),
+      ),
       title: Text(localMusic.title),
+      titleTextStyle: const TextStyle(fontSize: 14),
       subtitle: Text(localMusic.artist ?? ''),
+      subtitleTextStyle: TextStyle(
+        fontSize: 12,
+        color: theme.appThemeExtension?.elSecondary,
+      ),
       onTap: () {},
     );
   }
