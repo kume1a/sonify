@@ -6,7 +6,7 @@ import 'package:on_audio_query/on_audio_query.dart';
 
 import 'query_local_music_artwork.dart';
 
-@LazySingleton(as: QueryLocalMusicArtworkImpl)
+@LazySingleton(as: QueryLocalMusicArtwork)
 class QueryLocalMusicArtworkImpl implements QueryLocalMusicArtwork {
   QueryLocalMusicArtworkImpl(this._audioQuery);
 

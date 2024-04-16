@@ -6,6 +6,7 @@ import '../feature/auth/api/auth_token_store.dart';
 import '../shared/types.dart';
 import 'api_client.dart';
 import 'authorization_interceptor.dart';
+import 'multipart_api_client.dart';
 
 const Duration _kTimeoutDuration = Duration(minutes: 5);
 
@@ -14,10 +15,14 @@ final class NetworkClientFactory {
     required Dio dio,
     required String apiUrl,
   }) {
-    return ApiClient(
-      dio,
-      baseUrl: apiUrl,
-    );
+    return ApiClient(dio, baseUrl: apiUrl);
+  }
+
+  static MultipartApiClient createMultipartApiClient({
+    required Dio dio,
+    required String apiUrl,
+  }) {
+    return MultipartApiClient(dio, apiUrl);
   }
 
   static Dio createNoInterceptorDio({

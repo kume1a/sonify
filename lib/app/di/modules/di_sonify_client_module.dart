@@ -39,8 +39,20 @@ abstract class DiSonifyClientModule {
   }
 
   @lazySingleton
-  ApiClient apiClient(@Named(InjectionToken.authenticatedDio) Dio dio) {
+  ApiClient apiClient(
+    @Named(InjectionToken.authenticatedDio) Dio dio,
+  ) {
     return NetworkClientFactory.createApiClient(
+      dio: dio,
+      apiUrl: AppEnvironment.apiUrl,
+    );
+  }
+
+  @lazySingleton
+  MultipartApiClient multipartApiClient(
+    @Named(InjectionToken.authenticatedDio) Dio dio,
+  ) {
+    return NetworkClientFactory.createMultipartApiClient(
       dio: dio,
       apiUrl: AppEnvironment.apiUrl,
     );
@@ -71,8 +83,8 @@ abstract class DiSonifyClientModule {
 
   // audio ----------------------------------------------------------------
   @lazySingleton
-  AudioRemoteService audioRepository(ApiClient apiClient) {
-    return AudioRemoteServiceImpl(apiClient);
+  AudioRemoteService audioRepository(ApiClient apiClient, MultipartApiClient multipartApiClient) {
+    return AudioRemoteServiceImpl(apiClient, multipartApiClient);
   }
 
   // user ----------------------------------------------------------------
