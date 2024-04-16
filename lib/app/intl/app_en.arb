@@ -112,5 +112,26 @@
   "allowAudioPermissionForLocalMusic": "Allow audio permission to import local music files",
   "grant": "Grant",
   "importLocalMusic": "Import Local Music",
-  "failedToImportLocalMusic": "Failed to import local music"
+  "failedToImportLocalMusic": "Failed to import local music",
+  "submit": "Submit",
+  "uploadingMusic": "Uploading {musicName}\nDon't close the page until it's done",
+  "@uploadingMusic": {
+    "placeholders": {
+      "musicName": {
+        "type": "String"
+      }
+    }
+  },
+  "uploadedProgress": "Uploaded {progress}%",
+  "@uploadedProgress": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      }
+    }
+  },
+  "goBack": "Go back",
+  "alreadyUploaded": "Already uploaded",
+  "noInternet": "No internet",
+  "uploaded": "Uploaded"
 }

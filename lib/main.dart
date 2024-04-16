@@ -29,7 +29,7 @@ Future<void> main() async {
 
   HttpOverrides.global = GlobalHttpOverrides();
 
-  Logger.root.level = Level.INFO;
+  Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
     log('${record.level.name}: ${record.time}: ${record.message}');
   });

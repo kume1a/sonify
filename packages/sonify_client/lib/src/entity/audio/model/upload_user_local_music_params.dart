@@ -12,8 +12,8 @@ class UploadUserLocalMusicParams {
 
   final String localId;
   final String title;
-  final String author;
-  final int durationMs;
+  final String? author;
+  final int? durationMs;
   final Uint8List audio;
   final Uint8List? thumbnail;
 }

@@ -36,6 +36,9 @@ abstract final class AppTheme {
         ),
       ),
     ),
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      linearTrackColor: Palette.secondaryDark,
+    ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: Palette.primaryContainer,
@@ -84,6 +87,7 @@ abstract final class AppTheme {
         myLibraryTileLikedBg: Palette.myLibraryTileLikedBg,
         myLibraryTilePlaylistsBg: Palette.myLibraryTilePlaylistsBg,
         myLibraryArtistsBg: Palette.myLibraryArtistsBg,
+        success: Palette.success,
       ),
     ],
   );

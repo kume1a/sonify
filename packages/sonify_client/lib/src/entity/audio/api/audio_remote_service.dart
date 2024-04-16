@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:common_models/common_models.dart';
 
 import '../model/download_youtube_audio_failure.dart';

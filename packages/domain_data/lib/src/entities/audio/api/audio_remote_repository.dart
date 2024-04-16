@@ -13,8 +13,8 @@ abstract interface class AudioRemoteRepository {
   Future<Either<UploadUserLocalMusicFailure, UserAudio>> uploadUserLocalMusic({
     required String localId,
     required String title,
-    required String author,
-    required int durationMs,
+    required String? author,
+    required int? durationMs,
     required Uint8List audio,
     required Uint8List? thumbnail,
   });

@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -20,8 +18,12 @@ class MultipartApiClient {
 
     formData.fields.add(MapEntry('localId', params.localId));
     formData.fields.add(MapEntry('title', params.title));
-    formData.fields.add(MapEntry('author', params.author));
-    formData.fields.add(MapEntry('durationMs', params.durationMs.toString()));
+    if (params.author != null) {
+      formData.fields.add(MapEntry('author', params.author!));
+    }
+    if (params.durationMs != null) {
+      formData.fields.add(MapEntry('durationMs', params.durationMs.toString()));
+    }
 
     formData.files.add(MapEntry('audio', MultipartFile.fromBytes(params.audio)));
     if (params.thumbnail != null) {

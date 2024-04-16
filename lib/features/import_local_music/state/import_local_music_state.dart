@@ -1,15 +1,30 @@
+import 'dart:io';
+
 import 'package:common_models/common_models.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
+import 'package:sonify_client/sonify_client.dart';
+import 'package:uri_to_file/uri_to_file.dart';
 
+import '../../../app/navigation/page_navigator.dart';
 import '../../../shared/permission/permission_manager.dart';
 import '../../../shared/permission/permission_resolver.dart';
 import '../api/query_local_music.dart';
+import '../api/query_local_music_artwork.dart';
 import '../model/local_music.dart';
+import '../model/uploaded_local_music_result.dart';
 
 part 'import_local_music_state.freezed.dart';
+
+enum ImportLocalMusicStage {
+  select,
+  upload,
+  finished,
+}
 
 @freezed
 class ImportLocalMusicState with _$ImportLocalMusicState {
@@ -17,12 +32,21 @@ class ImportLocalMusicState with _$ImportLocalMusicState {
     required SimpleDataState<bool> isAudioPermissionGranted,
     required SimpleDataState<List<LocalMusic>> localMusic,
     required List<int> selectedIds,
+    required List<LocalMusic> uploadingLocalMusicList,
+    required List<UploadedLocalMusicResult> uploadedLocalMusicResults,
+    required ImportLocalMusicStage stage,
+    required double uploadProgress,
+    LocalMusic? uploadingLocalMusic,
   }) = _ImportLocalMusicState;
 
   factory ImportLocalMusicState.initial() => ImportLocalMusicState(
         isAudioPermissionGranted: SimpleDataState.idle(),
         localMusic: SimpleDataState.idle(),
         selectedIds: [],
+        uploadingLocalMusicList: [],
+        uploadedLocalMusicResults: [],
+        stage: ImportLocalMusicStage.select,
+        uploadProgress: 0,
       );
 }
 
@@ -36,6 +60,9 @@ class ImportLocalMusicCubit extends Cubit<ImportLocalMusicState> {
     this._queryLocalMusic,
     this._permissionResolver,
     this._permissionManager,
+    this._audioRemoteRepository,
+    this._queryLocalMusicArtwork,
+    this._pageNavigator,
   ) : super(ImportLocalMusicState.initial()) {
     _init();
   }
@@ -43,6 +70,9 @@ class ImportLocalMusicCubit extends Cubit<ImportLocalMusicState> {
   final QueryLocalMusic _queryLocalMusic;
   final PermissionResolver _permissionResolver;
   final PermissionManager _permissionManager;
+  final AudioRemoteRepository _audioRemoteRepository;
+  final QueryLocalMusicArtwork _queryLocalMusicArtwork;
+  final PageNavigator _pageNavigator;
 
   Future<void> _init() async {
     emit(state.copyWith(isAudioPermissionGranted: SimpleDataState.loading()));
@@ -79,6 +109,66 @@ class ImportLocalMusicCubit extends Cubit<ImportLocalMusicState> {
     emit(state.copyWith(selectedIds: selectedIds));
   }
 
+  Future<void> onSubmit() async {
+    final localMusic = state.localMusic.getOrNull;
+    if (localMusic == null) {
+      Logger.root.warning('Local music is null');
+      return;
+    }
+
+    final selectedLocalMusic = localMusic.where((e) => state.selectedIds.contains(e.id)).toList();
+
+    emit(state.copyWith(
+      stage: ImportLocalMusicStage.upload,
+      uploadingLocalMusicList: selectedLocalMusic,
+    ));
+
+    for (final localMusic in selectedLocalMusic.sublist(0, 2)) {
+      emit(state.copyWith(uploadingLocalMusic: localMusic));
+
+      if (localMusic.uri == null) {
+        _emitUploadLocalMusicResult(UploadedLocalMusicResult(
+          localMusic: localMusic,
+          failure: const UploadUserLocalMusicFailure.unknown(),
+        ));
+        continue;
+      }
+
+      final audioFile = Platform.isAndroid ? await toFile(localMusic.uri!) : File(localMusic.uri!);
+      final audioBytes = await audioFile.readAsBytes();
+
+      final artworkBytes = await _queryLocalMusicArtwork(localMusicId: localMusic.id);
+
+      final result = await _audioRemoteRepository.uploadUserLocalMusic(
+        localId: localMusic.id.toString(),
+        title: localMusic.title,
+        audio: audioBytes,
+        author: localMusic.artist,
+        durationMs: localMusic.duration,
+        thumbnail: artworkBytes,
+      );
+
+      _emitUploadLocalMusicResult(UploadedLocalMusicResult(
+        localMusic: localMusic,
+        failure: result.leftOrNull,
+      ));
+    }
+
+    if (isClosed) {
+      return;
+    }
+
+    emit(state.copyWith(
+      stage: ImportLocalMusicStage.finished,
+      uploadProgress: 1,
+      uploadingLocalMusic: null,
+    ));
+  }
+
+  void onGoBackPressed() {
+    _pageNavigator.pop();
+  }
+
   Future<void> _importLocalMusic() async {
     emit(state.copyWith(localMusic: SimpleDataState.loading()));
 
@@ -92,6 +182,29 @@ class ImportLocalMusicCubit extends Cubit<ImportLocalMusicState> {
     emit(state.copyWith(
       localMusic: SimpleDataState.fromEither(localMusic),
       selectedIds: selectedIds,
+    ));
+  }
+
+  void _emitUploadLocalMusicResult(UploadedLocalMusicResult uploadedLocalMusicResult) {
+    final uploadedLocalMusicResults = List.of(state.uploadedLocalMusicResults)..add(uploadedLocalMusicResult);
+
+    final uploadingLocalMusic = uploadedLocalMusicResult.localMusic == null
+        ? state.uploadingLocalMusicList
+        : List.of(state.uploadingLocalMusicList)
+            .where((e) => e.id != uploadedLocalMusicResult.localMusic.id)
+            .toList();
+
+    final progress = uploadedLocalMusicResults.length /
+        (state.uploadingLocalMusicList.length + state.uploadedLocalMusicResults.length);
+
+    if (isClosed) {
+      return;
+    }
+
+    emit(state.copyWith(
+      uploadedLocalMusicResults: uploadedLocalMusicResults,
+      uploadingLocalMusicList: uploadingLocalMusic,
+      uploadProgress: progress,
     ));
   }
 }
