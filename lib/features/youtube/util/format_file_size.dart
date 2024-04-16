@@ -11,15 +11,15 @@ String formatFileSize(FileSize fileSize, AppLocalizations l) {
 
 String _getLargestSymbol(FileSize fileSize, AppLocalizations appLocalizations) {
   if (fileSize.totalGigaBytes.abs() >= 1) {
-    return appLocalizations.sizeGb;
+    return appLocalizations.gb;
   }
   if (fileSize.totalMegaBytes.abs() >= 1) {
-    return appLocalizations.sizeMb;
+    return appLocalizations.mb;
   }
   if (fileSize.totalKiloBytes.abs() >= 1) {
-    return appLocalizations.sizeKb;
+    return appLocalizations.kb;
   }
-  return appLocalizations.sizeB;
+  return appLocalizations.b;
 }
 
 num _getLargestValue(FileSize fileSize) {

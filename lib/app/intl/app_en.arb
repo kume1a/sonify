@@ -10,10 +10,10 @@
   "downloadAudio": "Download audio",
   "downloadVideoAs": "Download video as",
   "audio": "Audio",
-  "sizeB": "B",
-  "sizeKb": "KB",
-  "sizeMb": "MB",
-  "sizeGb": "GB",
+  "b": "B",
+  "kb": "KB",
+  "mb": "MB",
+  "gb": "GB",
   "bitrateB": "Bit/s",
   "bitrateKB": "Kbit/s",
   "bitrateMB": "Mbit/s",
@@ -133,5 +133,6 @@
   "goBack": "Go back",
   "alreadyUploaded": "Already uploaded",
   "noInternet": "No internet",
-  "uploaded": "Uploaded"
+  "uploaded": "Uploaded",
+  "timedOut": "Timed out"
 }

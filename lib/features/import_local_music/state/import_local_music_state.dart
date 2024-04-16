@@ -130,6 +130,7 @@ class ImportLocalMusicCubit extends Cubit<ImportLocalMusicState> {
         _emitUploadLocalMusicResult(UploadedLocalMusicResult(
           localMusic: localMusic,
           failure: const UploadUserLocalMusicFailure.unknown(),
+          uploadSizeMb: 0,
         ));
         continue;
       }
@@ -148,9 +149,13 @@ class ImportLocalMusicCubit extends Cubit<ImportLocalMusicState> {
         thumbnail: artworkBytes,
       );
 
+      final audioSizeMb = audioBytes.lengthInBytes / 1024 / 1024;
+      final artworkSizeMb = (artworkBytes?.lengthInBytes ?? 0) / 1024 / 1024;
+
       _emitUploadLocalMusicResult(UploadedLocalMusicResult(
         localMusic: localMusic,
         failure: result.leftOrNull,
+        uploadSizeMb: audioSizeMb + artworkSizeMb,
       ));
     }
 

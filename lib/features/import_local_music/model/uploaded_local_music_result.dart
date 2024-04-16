@@ -10,5 +10,6 @@ class UploadedLocalMusicResult with _$UploadedLocalMusicResult {
   const factory UploadedLocalMusicResult({
     required LocalMusic localMusic,
     required UploadUserLocalMusicFailure? failure,
+    required double uploadSizeMb,
   }) = _UploadedLocalMusicResult;
 }

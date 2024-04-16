@@ -10,7 +10,7 @@ import '../model/file_type.dart';
 import '../util/downloaded_task_mapper.dart';
 import 'download_task_downloader.dart';
 import 'downloader.dart';
-import 'file_size_resolver.dart';
+import 'resolve_file_size.dart';
 
 @LazySingleton(as: DownloadTaskDownloader)
 class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {

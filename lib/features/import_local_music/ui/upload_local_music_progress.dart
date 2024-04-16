@@ -73,10 +73,22 @@ class UploadLocalMusicProgress extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
-                              child: Text(
-                                uploadedResult.localMusic.title,
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    uploadedResult.localMusic.title,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    '${uploadedResult.uploadSizeMb.toStringAsFixed(2)} ${l.mb}',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: theme.appThemeExtension?.elSecondary,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -84,7 +96,7 @@ class UploadLocalMusicProgress extends StatelessWidget {
                               Text(
                                 uploadedResult.failure!.when(
                                   unknown: () => l.unknownError,
-                                  network: () => l.noInternet,
+                                  network: () => l.timedOut,
                                   alreadyUploaded: () => l.alreadyUploaded,
                                 ),
                                 style: TextStyle(

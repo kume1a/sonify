@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../../../app/di/injection_tokens.dart';
-import 'file_size_resolver.dart';
+import 'resolve_file_size.dart';
 
 @LazySingleton(as: ResolveFileSize)
 class ResolveFileSizeImpl implements ResolveFileSize {
