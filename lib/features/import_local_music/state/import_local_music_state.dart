@@ -123,7 +123,7 @@ class ImportLocalMusicCubit extends Cubit<ImportLocalMusicState> {
       uploadingLocalMusicList: selectedLocalMusic,
     ));
 
-    for (final localMusic in selectedLocalMusic.sublist(0, 2)) {
+    for (final localMusic in selectedLocalMusic) {
       emit(state.copyWith(uploadingLocalMusic: localMusic));
 
       if (localMusic.uri == null) {
@@ -188,11 +188,9 @@ class ImportLocalMusicCubit extends Cubit<ImportLocalMusicState> {
   void _emitUploadLocalMusicResult(UploadedLocalMusicResult uploadedLocalMusicResult) {
     final uploadedLocalMusicResults = List.of(state.uploadedLocalMusicResults)..add(uploadedLocalMusicResult);
 
-    final uploadingLocalMusic = uploadedLocalMusicResult.localMusic == null
-        ? state.uploadingLocalMusicList
-        : List.of(state.uploadingLocalMusicList)
-            .where((e) => e.id != uploadedLocalMusicResult.localMusic.id)
-            .toList();
+    final uploadingLocalMusic = List.of(state.uploadingLocalMusicList)
+        .where((e) => e.id != uploadedLocalMusicResult.localMusic.id)
+        .toList();
 
     final progress = uploadedLocalMusicResults.length /
         (state.uploadingLocalMusicList.length + state.uploadedLocalMusicResults.length);

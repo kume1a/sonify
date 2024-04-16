@@ -25,44 +25,25 @@ class MultipartApiClient {
       formData.fields.add(MapEntry('durationMs', params.durationMs.toString()));
     }
 
-    formData.files.add(MapEntry('audio', MultipartFile.fromBytes(params.audio)));
+    formData.files.add(MapEntry(
+      'audio',
+      MultipartFile.fromBytes(params.audio, filename: 'audio'),
+    ));
     if (params.thumbnail != null) {
-      formData.files.add(MapEntry('thumbnail', MultipartFile.fromBytes(params.thumbnail!)));
+      formData.files.add(MapEntry(
+        'thumbnail',
+        MultipartFile.fromBytes(params.thumbnail!, filename: 'thumbnail.png'),
+      ));
     }
 
     final result = await _requestForm(
       formData,
       method: HttpMethod.POST,
-      path: '/audio/importUserLocalMusic',
+      path: '/v1/audio/uploadUserLocalMusic',
     );
 
     return UserAudioDto.fromJson(result.data!);
   }
-
-  // void _addImagesToForm(FormData formData, Iterable<Uint8List> images) {
-  //   final Iterable<MultipartFile> imagesFormFile = images.map((Uint8List e) => MultipartFile.fromBytes(
-  //         e,
-  //         filename: 'image_${DateTime.now().millisecondsSinceEpoch}.jpg',
-  //         contentType: MediaType('image', 'jpeg'),
-  //       ));
-
-  //   formData.files
-  //       .addAll(imagesFormFile.map((MultipartFile e) => MapEntry<String, MultipartFile>('images', e)));
-  // }
-
-  // void _addImageFile(
-  //   FormData formData,
-  //   Uint8List image, {
-  //   required String fieldName,
-  // }) {
-  //   final imageFormFile = MultipartFile.fromBytes(
-  //     image,
-  //     filename: DateTime.now().millisecondsSinceEpoch.toString(),
-  //     contentType: MediaType('image', 'png'),
-  //   );
-
-  //   formData.files.add(MapEntry<String, MultipartFile>(fieldName, imageFormFile));
-  // }
 
   Future<Response<Map<String, dynamic>>> _requestForm<T>(
     FormData formData, {
