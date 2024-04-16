@@ -39,10 +39,15 @@ class AudioListItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(audio.title),
-                  const SizedBox(height: 4),
+                  Text(
+                    audio.title,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   Text(
                     audio.author,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 12,
                       color: theme.appThemeExtension?.elSecondary,

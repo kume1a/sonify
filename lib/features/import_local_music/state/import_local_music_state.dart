@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logging/logging.dart';
 
 import '../../../shared/permission/permission_manager.dart';
 import '../../../shared/permission/permission_resolver.dart';
@@ -17,11 +16,13 @@ class ImportLocalMusicState with _$ImportLocalMusicState {
   const factory ImportLocalMusicState({
     required SimpleDataState<bool> isAudioPermissionGranted,
     required SimpleDataState<List<LocalMusic>> localMusic,
+    required List<int> selectedIds,
   }) = _ImportLocalMusicState;
 
   factory ImportLocalMusicState.initial() => ImportLocalMusicState(
         isAudioPermissionGranted: SimpleDataState.idle(),
         localMusic: SimpleDataState.idle(),
+        selectedIds: [],
       );
 }
 
@@ -66,12 +67,31 @@ class ImportLocalMusicCubit extends Cubit<ImportLocalMusicState> {
     }
   }
 
+  Future<void> onMusicSelectToggled(LocalMusic localMusic) async {
+    final selectedIds = List.of(state.selectedIds);
+
+    if (selectedIds.contains(localMusic.id)) {
+      selectedIds.remove(localMusic.id);
+    } else {
+      selectedIds.add(localMusic.id);
+    }
+
+    emit(state.copyWith(selectedIds: selectedIds));
+  }
+
   Future<void> _importLocalMusic() async {
     emit(state.copyWith(localMusic: SimpleDataState.loading()));
+
     final localMusic = await _queryLocalMusic();
 
-    Logger.root.info('localMusic len: ${localMusic.rightOrNull?.length}');
+    final selectedIds = localMusic.fold(
+      (_) => <int>[],
+      (r) => r.map((e) => e.id).toList(),
+    );
 
-    emit(state.copyWith(localMusic: SimpleDataState.fromEither(localMusic)));
+    emit(state.copyWith(
+      localMusic: SimpleDataState.fromEither(localMusic),
+      selectedIds: selectedIds,
+    ));
   }
 }
