@@ -99,8 +99,6 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
         }
 
         return null;
-      case FileType.videoMp4:
-        return null;
     }
   }
 

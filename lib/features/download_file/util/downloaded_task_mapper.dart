@@ -8,6 +8,7 @@ class DownloadedTaskMapper {
     DownloadTask downloadTask,
   ) {
     return DownloadedTask(
+      id: downloadTask.id,
       savePath: downloadTask.savePath,
       fileType: downloadTask.fileType,
       payload: downloadTask.payload,

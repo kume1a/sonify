@@ -16,7 +16,10 @@ class DownloadTaskMapper {
 
   final UuidFactory _uuidFactory;
 
-  Future<DownloadTask?> fromUserAudio(UserAudio userAudio) async {
+  Future<DownloadTask?> userAudioToDownloadTask(
+    UserAudio userAudio, {
+    DownloadTaskSyncAudioPayload? syncAudioPayload,
+  }) async {
     final uri = tryMap(userAudio.audio?.path, (path) => Uri.tryParse(assembleResourceUrl(path)));
     if (uri == null) {
       return null;
@@ -27,6 +30,7 @@ class DownloadTaskMapper {
     final savePath = await _getSavePath(fileType);
 
     return DownloadTask(
+      id: _uuidFactory.generate(),
       savePath: savePath,
       uri: uri,
       progress: 0,
@@ -40,14 +44,12 @@ class DownloadTaskMapper {
   }
 
   Future<String> _getSavePath(FileType fileType) async {
-    String extension = switch (fileType) {
-      FileType.audioMp3 => 'mp3',
-      FileType.videoMp4 => 'mp4',
-    };
+    switch (fileType) {
+      case FileType.audioMp3:
+        final dirPath = await ResourceSavePathProvider.getAudioMp3SavePath();
+        final fileName = _uuidFactory.generate();
 
-    final dirPath = await ResourceSavePathProvider.getAudioMp3SavePath();
-    final fileName = _uuidFactory.generate();
-
-    return '$dirPath/$fileName.$extension';
+        return '$dirPath/$fileName.mp3';
+    }
   }
 }

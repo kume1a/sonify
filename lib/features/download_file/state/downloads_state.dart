@@ -44,7 +44,7 @@ extension DownloadsCubitX on BuildContext {
 class DownloadsCubit extends Cubit<DownloadsState> {
   DownloadsCubit(
     this._eventBus,
-    this._downloadTaskFactory,
+    this._downloadTaskMapper,
     this._downloadTaskDownloader,
     this._onDownloadTaskDownloaded,
   ) : super(DownloadsState.initial()) {
@@ -52,7 +52,7 @@ class DownloadsCubit extends Cubit<DownloadsState> {
   }
 
   final EventBus _eventBus;
-  final DownloadTaskMapper _downloadTaskFactory;
+  final DownloadTaskMapper _downloadTaskMapper;
   final DownloadTaskDownloader _downloadTaskDownloader;
   final OnDownloadTaskDownloaded _onDownloadTaskDownloaded;
 
@@ -80,13 +80,10 @@ class DownloadsCubit extends Cubit<DownloadsState> {
     return super.close();
   }
 
-  void enqueue(DownloadTask downloadTask) {
-    _enqueueDownloadTask(downloadTask);
-  }
-
   Future<void> _onDownloadsEvent(DownloadsEvent event) async {
     final downloadTask = await event.when(
-      enqueueUserAudio: _downloadTaskFactory.fromUserAudio,
+      enqueueUserAudio: (userAudio, syncAudioPayload) =>
+          _downloadTaskMapper.userAudioToDownloadTask(userAudio, syncAudioPayload: syncAudioPayload),
     );
 
     if (downloadTask == null) {
@@ -98,10 +95,7 @@ class DownloadsCubit extends Cubit<DownloadsState> {
   }
 
   Future<void> _enqueueDownloadTask(DownloadTask downloadTask) async {
-    // TODO split up downloadable and in progress tasks
-
-    // TODO use task ids instead of urls for identification
-    final failedDownloadTask = state.failed.firstWhereOrNull((e) => e.uri == downloadTask.uri);
+    final failedDownloadTask = state.failed.firstWhereOrNull((e) => e.id == downloadTask.id);
 
     if (failedDownloadTask != null) {
       final reEnqueuedDownloadTask = failedDownloadTask.copyWith(

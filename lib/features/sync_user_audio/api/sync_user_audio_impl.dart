@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../../auth/api/auth_user_info_provider.dart';
+import '../../download_file/model/download_task.dart';
 import '../../download_file/model/downloads_event.dart';
 import 'sync_user_audio.dart';
 
@@ -32,6 +33,7 @@ class SyncUserAudioImpl implements SyncUserAudio {
     }
 
     final userAudioIdsRes = await _audioRemoteRepository.getAuthUserAudioIds();
+
     if (userAudioIdsRes.isLeft) {
       Logger.root.fine('Failed to get user audio ids: ${userAudioIdsRes.leftOrNull}');
       return left(userAudioIdsRes.leftOrThrow.maybeWhen(
@@ -54,6 +56,7 @@ class SyncUserAudioImpl implements SyncUserAudio {
 
     final toDownloadUserAudiosRes =
         await _audioRemoteRepository.getAuthUserAudiosByAudioIds(toDownloadAudioIds);
+
     if (toDownloadUserAudiosRes.isLeft) {
       Logger.root.fine('Failed to download audios: ${toDownloadUserAudiosRes.leftOrNull}');
       return left(toDownloadUserAudiosRes.leftOrThrow.maybeWhen(
@@ -65,10 +68,20 @@ class SyncUserAudioImpl implements SyncUserAudio {
     final toDownloadUserAudios = toDownloadUserAudiosRes.rightOrThrow;
 
     await _audioLocalRepository.deleteUserAudioJoinsByIds(toDeleteLocalUserAudioIds);
-    for (final toDownloadUserAudio in toDownloadUserAudios) {
-      _eventBus.fire(DownloadsEvent.enqueueUserAudio(toDownloadUserAudio));
+
+    final toDownloadUserAudiosLen = toDownloadUserAudios.length;
+    for (int i = 0; i < toDownloadUserAudiosLen; i++) {
+      _eventBus.fire(
+        DownloadsEvent.enqueueUserAudio(
+          toDownloadUserAudios[i],
+          syncAudioPayload: DownloadTaskSyncAudioPayload(
+            index: i,
+            totalCount: toDownloadUserAudiosLen,
+          ),
+        ),
+      );
     }
 
-    return right(SyncUserAudioResult(queuedDownloadsCount: toDownloadUserAudios.length));
+    return right(SyncUserAudioResult(queuedDownloadsCount: toDownloadUserAudiosLen));
   }
 }

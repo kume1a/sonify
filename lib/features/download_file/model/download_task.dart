@@ -14,6 +14,7 @@ enum DownloadTaskState {
 @freezed
 class DownloadTask with _$DownloadTask {
   const factory DownloadTask({
+    required String id,
     required Uri uri,
     required String savePath,
     required double progress,
@@ -28,5 +29,14 @@ class DownloadTask with _$DownloadTask {
 class DownloadTaskPayload with _$DownloadTaskPayload {
   const factory DownloadTaskPayload({
     UserAudio? userAudio,
+    DownloadTaskSyncAudioPayload? syncAudioPayload,
   }) = _DownloadTaskPayload;
+}
+
+@freezed
+class DownloadTaskSyncAudioPayload with _$DownloadTaskSyncAudioPayload {
+  const factory DownloadTaskSyncAudioPayload({
+    required int index,
+    required int totalCount,
+  }) = _DownloadTaskSyncAudioPayload;
 }

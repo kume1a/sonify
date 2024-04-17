@@ -13,18 +13,18 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
   OnDownloadTaskDownloadedImpl(
     this._audioLocalRepository,
     this._eventBus,
+    this._userSyncDatumRemoteRepository,
   );
 
   final AudioLocalRepository _audioLocalRepository;
   final EventBus _eventBus;
+  final UserSyncDatumRemoteRepository _userSyncDatumRemoteRepository;
 
   @override
   Future<void> call(DownloadedTask downloadedTask) async {
     switch (downloadedTask.fileType) {
       case FileType.audioMp3:
         return _handleAudioMp3Downloaded(downloadedTask);
-      case FileType.videoMp4:
-        return _handleVideoMp4Downloaded(downloadedTask);
     }
   }
 
@@ -43,9 +43,14 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
     }
 
     _eventBus.fire(EventUserAudio.downloaded(insertedAudio));
-  }
 
-  Future<void> _handleVideoMp4Downloaded(DownloadedTask downloadTask) async {
-    throw Exception('Not implemented');
+    if (downloadTask.payload.syncAudioPayload != null) {
+      final syncAudioPayload = downloadTask.payload.syncAudioPayload!;
+
+      final isLast = syncAudioPayload.index == syncAudioPayload.totalCount - 1;
+      if (isLast) {
+        await _userSyncDatumRemoteRepository.markAuthUserAudioLastUpdatedAtAsNow();
+      }
+    }
   }
 }
