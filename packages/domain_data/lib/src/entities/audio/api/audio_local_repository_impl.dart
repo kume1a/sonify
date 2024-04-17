@@ -78,4 +78,9 @@ class AudioLocalRepositoryImpl implements AudioLocalRepository {
       audio: audio.copyWith(localId: ids.audioEntityId),
     );
   }
+
+  @override
+  Future<int> deleteUserAudioJoinsByIds(List<int> ids) {
+    return _userAudioEntityDao.deleteByIds(ids);
+  }
 }

@@ -11,12 +11,10 @@ class AudioRemoteRepositoryImpl implements AudioRemoteRepository {
   AudioRemoteRepositoryImpl(
     this._audioRemoteService,
     this._userAudioMapper,
-    this._audioMapper,
   );
 
   final AudioRemoteService _audioRemoteService;
   final UserAudioMapper _userAudioMapper;
-  final AudioMapper _audioMapper;
 
   @override
   Future<Either<DownloadYoutubeAudioFailure, UserAudio>> downloadYoutubeAudio({
@@ -49,14 +47,14 @@ class AudioRemoteRepositoryImpl implements AudioRemoteRepository {
   }
 
   @override
-  Future<Either<FetchFailure, List<int>>> getAuthUserAudioIds() {
+  Future<Either<FetchFailure, List<String>>> getAuthUserAudioIds() {
     return _audioRemoteService.getAuthUserAudioIds();
   }
 
   @override
-  Future<Either<FetchFailure, List<Audio>>> getAudiosByIds(List<int> ids) async {
-    final res = await _audioRemoteService.getAudiosByIds(ids);
+  Future<Either<FetchFailure, List<UserAudio>>> getAuthUserAudiosByAudioIds(List<String> audioIds) async {
+    final res = await _audioRemoteService.getAuthUserAudiosByAudioIds(audioIds);
 
-    return res.map((r) => r.map(_audioMapper.fromDto).toList());
+    return res.map((r) => r.map(_userAudioMapper.fromDto).toList());
   }
 }

@@ -16,4 +16,9 @@ class IsarUserAudioEntityDao implements UserAudioEntityDao {
 
     return res;
   }
+
+  @override
+  Future<int> deleteByIds(List<int> ids) {
+    return _isar.collection<UserAudioEntity>().deleteAll(ids);
+  }
 }

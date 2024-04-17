@@ -7,4 +7,6 @@ abstract interface class AudioLocalRepository {
   Future<Audio?> getById(int id);
 
   Future<UserAudio?> save(UserAudio audio);
+
+  Future<int> deleteUserAudioJoinsByIds(List<int> ids);
 }

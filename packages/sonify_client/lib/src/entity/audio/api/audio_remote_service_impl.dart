@@ -5,7 +5,6 @@ import '../../../api/api_client.dart';
 import '../../../api/multipart_api_client.dart';
 import '../../../shared/api_exception_message_code.dart';
 import '../../../shared/dto/error_response_dto.dart';
-import '../model/audio_dto.dart';
 import '../model/download_youtube_audio_body.dart';
 import '../model/download_youtube_audio_failure.dart';
 import '../model/get_audios_by_ids_body.dart';
@@ -66,16 +65,16 @@ class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteServ
   }
 
   @override
-  Future<Either<FetchFailure, List<int>>> getAuthUserAudioIds() {
+  Future<Either<FetchFailure, List<String>>> getAuthUserAudioIds() {
     return callCatchWithFetchFailure(() => _apiClient.getAuthUserAudioIds());
   }
 
   @override
-  Future<Either<FetchFailure, List<AudioDto>>> getAudiosByIds(List<int> ids) {
+  Future<Either<FetchFailure, List<UserAudioDto>>> getAuthUserAudiosByAudioIds(List<String> audioIds) {
     return callCatchWithFetchFailure(() {
-      final body = GetAudiosByIdsBody(ids: ids);
+      final body = GetAudiosByIdsBody(audioIds: audioIds);
 
-      return _apiClient.getAudiosByIds(body);
+      return _apiClient.getAuthUserUserAudios(body);
     });
   }
 }

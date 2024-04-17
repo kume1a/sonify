@@ -1,4 +1,5 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:collection/collection.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
 
@@ -21,8 +22,7 @@ class AppAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> addQueueItems(List<MediaItem> mediaItems) async {
-    final audioSource =
-        mediaItems.map(_createAudioSource).where((e) => e != null).cast<AudioSource>().toList();
+    final audioSource = mediaItems.map(_createAudioSource).whereNotNull().toList();
 
     _playlist.addAll(audioSource);
 

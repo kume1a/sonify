@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../app/di/register_dependencies.dart';
 import '../../features/play_audio/state/audio_player_panel_state.dart';
 import '../../features/play_audio/ui/audio_player_panel.dart';
+import '../../features/sync_user_audio/state/sync_user_audio_state.dart';
 import 'state/main_page_state.dart';
 import 'ui/main_navigation_bar.dart';
 import 'ui/page_content.dart';
@@ -17,6 +18,7 @@ class MainPage extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => getIt<AudioPlayerPanelCubit>()),
         BlocProvider(create: (_) => getIt<MainPageCubit>()),
+        BlocProvider(create: (_) => getIt<SyncUserAudioCubit>(), lazy: false),
       ],
       child: const _Content(),
     );
