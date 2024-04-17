@@ -5,8 +5,10 @@ import '../../../api/api_client.dart';
 import '../../../api/multipart_api_client.dart';
 import '../../../shared/api_exception_message_code.dart';
 import '../../../shared/dto/error_response_dto.dart';
+import '../model/audio_dto.dart';
 import '../model/download_youtube_audio_body.dart';
 import '../model/download_youtube_audio_failure.dart';
+import '../model/get_audios_by_ids_body.dart';
 import '../model/upload_user_local_music_failure.dart';
 import '../model/upload_user_local_music_params.dart';
 import '../model/user_audio_dto.dart';
@@ -61,5 +63,19 @@ class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteServ
         };
       },
     );
+  }
+
+  @override
+  Future<Either<FetchFailure, List<int>>> getAuthUserAudioIds() {
+    return callCatchWithFetchFailure(() => _apiClient.getAuthUserAudioIds());
+  }
+
+  @override
+  Future<Either<FetchFailure, List<AudioDto>>> getAudiosByIds(List<int> ids) {
+    return callCatchWithFetchFailure(() {
+      final body = GetAudiosByIdsBody(ids: ids);
+
+      return _apiClient.getAudiosByIds(body);
+    });
   }
 }

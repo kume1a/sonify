@@ -37,8 +37,13 @@ abstract class DiDomainModelModule {
   AudioRemoteRepository audioRemoteRepository(
     AudioRemoteService audioRemoteService,
     UserAudioMapper userAudioMapper,
+    AudioMapper audioMapper,
   ) {
-    return AudioRemoteRepositoryImpl(audioRemoteService, userAudioMapper);
+    return AudioRemoteRepositoryImpl(
+      audioRemoteService,
+      userAudioMapper,
+      audioMapper,
+    );
   }
 
   // playlist ----------------------------------------------------------------

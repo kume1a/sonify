@@ -18,4 +18,8 @@ abstract interface class AudioRemoteRepository {
     required Uint8List audio,
     required Uint8List? thumbnail,
   });
+
+  Future<Either<FetchFailure, List<int>>> getAuthUserAudioIds();
+
+  Future<Either<FetchFailure, List<Audio>>> getAudiosByIds(List<int> ids);
 }

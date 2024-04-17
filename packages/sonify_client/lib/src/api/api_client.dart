@@ -4,7 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
 
+import '../../sonify_client.dart';
 import '../entity/audio/model/download_youtube_audio_body.dart';
+import '../entity/audio/model/get_audios_by_ids_body.dart';
 import '../entity/audio/model/user_audio_dto.dart';
 import '../entity/playlist/model/playlist_dto.dart';
 import '../entity/server_time/model/server_time_dto.dart';
@@ -40,6 +42,12 @@ abstract class ApiClient {
   // audio -----------------------------
   @POST('/v1/audio/downloadYoutubeAudio')
   Future<UserAudioDto> downloadYoutubeAudio(@Body() DownloadYoutubeAudioBody body);
+
+  @GET('/v1/audio/myAudioIds')
+  Future<List<int>> getAuthUserAudioIds();
+
+  @GET('/v1/audio/all')
+  Future<List<AudioDto>> getAudiosByIds(@Body() GetAudiosByIdsBody body); // using body for big payload
 
   // auth ------------------------------
   @POST('/v1/auth/googleSignIn')
