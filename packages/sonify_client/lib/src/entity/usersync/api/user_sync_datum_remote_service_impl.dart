@@ -16,4 +16,13 @@ class UserSyncDatumRemoteServiceImpl with SafeHttpRequestWrap implements UserSyn
   Future<Either<FetchFailure, UserSyncDatumDto>> getAuthUserSyncDatum() {
     return callCatchWithFetchFailure(() => _apiClient.getAuthUserSyncDatum());
   }
+
+  @override
+  Future<Either<ActionFailure, Unit>> markAuthUserAudioLastUpdatedAtAsNow() {
+    return callCatchWithActionFailure(() async {
+      await _apiClient.markAuthUserAudioLastUpdatedAtAsNow();
+
+      return unit;
+    });
+  }
 }

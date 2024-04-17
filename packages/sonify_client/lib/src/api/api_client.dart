@@ -79,6 +79,9 @@ abstract class ApiClient {
   @GET('/v1/usersync/myUserSyncDatum')
   Future<UserSyncDatumDto> getAuthUserSyncDatum();
 
+  @POST('/v1/usersync/markUserAudioLastUpdatedAtAsNow')
+  Future<void> markAuthUserAudioLastUpdatedAtAsNow();
+
   // playlist ---------------------------
   @GET('/v1/playlists/myPlaylists')
   Future<List<PlaylistDto>> getAuthUserPlaylists();

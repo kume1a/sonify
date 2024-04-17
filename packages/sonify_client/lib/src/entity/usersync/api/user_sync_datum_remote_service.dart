@@ -4,4 +4,6 @@ import '../model/user_sync_datum_dto.dart';
 
 abstract interface class UserSyncDatumRemoteService {
   Future<Either<FetchFailure, UserSyncDatumDto>> getAuthUserSyncDatum();
+
+  Future<Either<ActionFailure, Unit>> markAuthUserAudioLastUpdatedAtAsNow();
 }

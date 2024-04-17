@@ -20,4 +20,9 @@ class UserSyncDatumRemoteRepositoryImpl implements UserSyncDatumRemoteRepository
 
     return res.map(_userSyncDatumMapper.dtoToModel);
   }
+
+  @override
+  Future<Either<ActionFailure, Unit>> markAuthUserAudioLastUpdatedAtAsNow() {
+    return _userSyncDatumRemoteService.markAuthUserAudioLastUpdatedAtAsNow();
+  }
 }
