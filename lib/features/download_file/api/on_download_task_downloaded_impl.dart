@@ -13,12 +13,10 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
   OnDownloadTaskDownloadedImpl(
     this._audioLocalRepository,
     this._eventBus,
-    this._userSyncDatumRemoteRepository,
   );
 
   final AudioLocalRepository _audioLocalRepository;
   final EventBus _eventBus;
-  final UserSyncDatumRemoteRepository _userSyncDatumRemoteRepository;
 
   @override
   Future<void> call(DownloadedTask downloadedTask) async {
@@ -43,14 +41,5 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
     }
 
     _eventBus.fire(EventUserAudio.downloaded(insertedAudio));
-
-    if (downloadTask.payload.syncAudioPayload != null) {
-      final syncAudioPayload = downloadTask.payload.syncAudioPayload!;
-
-      final isLast = syncAudioPayload.index == syncAudioPayload.totalCount - 1;
-      if (isLast) {
-        await _userSyncDatumRemoteRepository.markAuthUserAudioLastUpdatedAtAsNow();
-      }
-    }
   }
 }

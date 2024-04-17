@@ -17,6 +17,7 @@ abstract final class AppTheme {
       brightness: Brightness.dark,
       seedColor: Palette.secondary,
       secondary: Palette.secondary,
+      onSecondary: Palette.onSecondary,
       primaryContainer: Palette.primaryContainer,
     ),
     scaffoldBackgroundColor: Palette.background,
@@ -35,6 +36,10 @@ abstract final class AppTheme {
           topRight: Radius.circular(24),
         ),
       ),
+    ),
+    appBarTheme: const AppBarTheme(
+      centerTitle: true,
+      titleTextStyle: TextStyle(fontSize: 14),
     ),
     progressIndicatorTheme: const ProgressIndicatorThemeData(
       linearTrackColor: Palette.secondaryDark,

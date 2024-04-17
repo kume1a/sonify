@@ -134,5 +134,9 @@
   "alreadyUploaded": "Already uploaded",
   "noInternet": "No internet",
   "uploaded": "Uploaded",
-  "timedOut": "Timed out"
+  "timedOut": "Timed out",
+  "syncingAudio": "Syncing audio",
+  "seeDownloads": "See downloads",
+  "syncFailed": "Sync failed",
+  "nothingToSync": "Nothing to sync"
 }

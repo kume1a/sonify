@@ -8,7 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../app/intl/app_localizations.dart';
 import '../../../features/play_audio/model/playback_button_state.dart';
 import '../../../features/play_audio/state/now_playing_audio_state.dart';
-import '../../../shared/ui/pulsing_fade.dart';
+import '../../../shared/ui/animation/pulsing_fade.dart';
 import '../../../shared/ui/round_play_button.dart';
 import '../../../shared/util/color.dart';
 import '../../../shared/values/app_theme_extension.dart';

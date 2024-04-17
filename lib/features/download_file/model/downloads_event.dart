@@ -7,8 +7,5 @@ part 'downloads_event.freezed.dart';
 
 @freezed
 class DownloadsEvent with _$DownloadsEvent {
-  const factory DownloadsEvent.enqueueUserAudio(
-    UserAudio userAudio, {
-    DownloadTaskSyncAudioPayload? syncAudioPayload,
-  }) = _enqueueUserAudio;
+  const factory DownloadsEvent.enqueueUserAudio(UserAudio userAudio) = _enqueueUserAudio;
 }

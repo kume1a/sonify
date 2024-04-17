@@ -29,14 +29,5 @@ class DownloadTask with _$DownloadTask {
 class DownloadTaskPayload with _$DownloadTaskPayload {
   const factory DownloadTaskPayload({
     UserAudio? userAudio,
-    DownloadTaskSyncAudioPayload? syncAudioPayload,
   }) = _DownloadTaskPayload;
-}
-
-@freezed
-class DownloadTaskSyncAudioPayload with _$DownloadTaskSyncAudioPayload {
-  const factory DownloadTaskSyncAudioPayload({
-    required int index,
-    required int totalCount,
-  }) = _DownloadTaskSyncAudioPayload;
 }

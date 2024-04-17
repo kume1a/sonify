@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../pages/auth_page.dart';
+import '../../pages/downloads_page.dart';
 import '../../pages/email_sign_in_page.dart';
 import '../../pages/import_local_music_page.dart';
 import '../../pages/main/main_page.dart';
@@ -22,8 +23,16 @@ Route<dynamic> routeFactory(RouteSettings settings) {
     Routes.playlist => _createPlaylistRoute(settings),
     Routes.myLibrary => _createMyLibraryRoute(settings),
     Routes.importLocalMusic => _createImportLocalMusicRoute(settings),
+    Routes.downloads => _createDownloadsRoute(settings),
     _ => throw Exception('route $settings is not supported'),
   };
+}
+
+Route _createDownloadsRoute(RouteSettings settings) {
+  return MaterialPageRoute(
+    builder: (_) => const DownloadsPage(),
+    settings: settings,
+  );
 }
 
 Route _createImportLocalMusicRoute(RouteSettings settings) {

@@ -5,6 +5,7 @@ import '../../app/di/register_dependencies.dart';
 import '../../features/play_audio/state/audio_player_panel_state.dart';
 import '../../features/play_audio/ui/audio_player_panel.dart';
 import '../../features/sync_user_audio/state/sync_user_audio_state.dart';
+import '../../features/sync_user_audio/ui/sync_user_audio_indicator.dart';
 import 'state/main_page_state.dart';
 import 'ui/main_navigation_bar.dart';
 import 'ui/page_content.dart';
@@ -34,7 +35,17 @@ class _Content extends StatelessWidget {
       bottomNavigationBar: MainNavigationBar(),
       body: SafeArea(
         child: AudioPlayerPanel(
-          body: PageContent(),
+          body: Stack(
+            children: [
+              PageContent(),
+              Positioned(
+                bottom: 18,
+                left: 0,
+                right: 0,
+                child: Align(child: SyncUserAudioIndicator()),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -8,6 +8,7 @@ class Palette {
   static const background = Color(0xFF060606);
   static const primary = Color(0xFF140531);
   static const secondary = Color(0xFF7001FB);
+  static const onSecondary = Colors.white;
   static const secondaryDark = Color(0xFF923DFD);
   static const secondaryLight = Color.fromARGB(255, 155, 83, 243);
 

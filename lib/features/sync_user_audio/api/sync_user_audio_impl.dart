@@ -6,7 +6,6 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../../auth/api/auth_user_info_provider.dart';
-import '../../download_file/model/download_task.dart';
 import '../../download_file/model/downloads_event.dart';
 import 'sync_user_audio.dart';
 
@@ -72,13 +71,7 @@ class SyncUserAudioImpl implements SyncUserAudio {
     final toDownloadUserAudiosLen = toDownloadUserAudios.length;
     for (int i = 0; i < toDownloadUserAudiosLen; i++) {
       _eventBus.fire(
-        DownloadsEvent.enqueueUserAudio(
-          toDownloadUserAudios[i],
-          syncAudioPayload: DownloadTaskSyncAudioPayload(
-            index: i,
-            totalCount: toDownloadUserAudiosLen,
-          ),
-        ),
+        DownloadsEvent.enqueueUserAudio(toDownloadUserAudios[i]),
       );
     }
 

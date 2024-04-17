@@ -10,4 +10,5 @@ abstract class Routes {
   static const String playlist = 'playlist';
   static const String myLibrary = 'myLibrary';
   static const String importLocalMusic = 'importLocalMusic';
+  static const String downloads = 'downloads';
 }

@@ -32,8 +32,6 @@ class _Content extends StatelessWidget {
       appBar: AppBar(
         title: Text(l.importLocalMusic),
         leading: const DefaultBackButton(),
-        titleTextStyle: const TextStyle(fontSize: 14),
-        centerTitle: true,
       ),
       body: SafeArea(
         child: BlocBuilder<ImportLocalMusicCubit, ImportLocalMusicState>(
