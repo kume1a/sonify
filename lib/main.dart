@@ -15,6 +15,7 @@ import 'app/configuration/global_http_overrides.dart';
 import 'app/configuration/init_cached_stores.dart';
 import 'app/di/register_dependencies.dart';
 import 'app/navigation/page_navigator.dart';
+import 'shared/util/system_ui_manager.dart';
 
 // TODO fix ChunkDownloader dispose of streams
 // TODO migrate downloads to a separate isolate
@@ -38,6 +39,8 @@ Future<void> main() async {
   initCachedStores();
 
   VVOConfig.password.minLength = 6;
+
+  getIt<SystemUiManager>().lockPortraitOrientation();
 
   runApp(const App());
 }

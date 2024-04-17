@@ -45,8 +45,7 @@
 		<true/>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
-		<key>NSPhotoLibraryUsageDescription</key>
-		<string>Allow access to photo library to choose an image</string>
+	
 		<!-- Google Sign-in Section -->
 		<key>CFBundleURLTypes</key>
 		<array>
@@ -66,11 +65,21 @@
 			<string>audio</string>
 		</array>
 
-		<key>UIStatusBarHidden</key>
-		<false/>
-
+    <!-- Permissions -->
     <key>NSAppleMusicUsageDescription</key>
   	<string>$(PROJECT_NAME) requires access to media library</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+		<string>Allow access to photo library to choose an image</string>
+    <!-- End of permissions -->
+    
+    <!-- System UI -->
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+      <string>UIInterfaceOrientationPortrait</string>
+    </array>
+    <key>UIStatusBarHidden</key>
+		<false/>
+    <!-- End of system UI -->
 
 	</dict>
 </plist>
