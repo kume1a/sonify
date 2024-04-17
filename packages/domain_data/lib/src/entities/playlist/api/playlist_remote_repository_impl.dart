@@ -15,7 +15,7 @@ class PlaylistRemoteRepositoryImpl implements PlaylistRemoteRepository {
   final PlaylistMapper _playlistMapper;
 
   @override
-  Future<Either<ActionFailure, Unit>> importSpotifyUserPlaylists({
+  Future<Either<NetworkCallError, Unit>> importSpotifyUserPlaylists({
     required String spotifyAccessToken,
   }) {
     return _playlistRemoteService.importSpotifyUserPlaylists(
@@ -24,14 +24,14 @@ class PlaylistRemoteRepositoryImpl implements PlaylistRemoteRepository {
   }
 
   @override
-  Future<Either<FetchFailure, List<Playlist>>> getAuthUserPlaylists() async {
+  Future<Either<NetworkCallError, List<Playlist>>> getAuthUserPlaylists() async {
     final res = await _playlistRemoteService.getAuthUserPlaylists();
 
     return res.map((r) => r.map(_playlistMapper.dtoToModel).toList());
   }
 
   @override
-  Future<Either<FetchFailure, Playlist>> getPlaylistById({
+  Future<Either<NetworkCallError, Playlist>> getPlaylistById({
     required String playlistId,
   }) async {
     final res = await _playlistRemoteService.getPlaylistById(playlistId: playlistId);

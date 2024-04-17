@@ -13,13 +13,13 @@ class UserSyncDatumRemoteServiceImpl with SafeHttpRequestWrap implements UserSyn
   final ApiClient _apiClient;
 
   @override
-  Future<Either<FetchFailure, UserSyncDatumDto>> getAuthUserSyncDatum() {
-    return callCatchWithFetchFailure(() => _apiClient.getAuthUserSyncDatum());
+  Future<Either<NetworkCallError, UserSyncDatumDto>> getAuthUserSyncDatum() {
+    return callCatchHandleNetworkCallError(() => _apiClient.getAuthUserSyncDatum());
   }
 
   @override
-  Future<Either<ActionFailure, Unit>> markAuthUserAudioLastUpdatedAtAsNow() {
-    return callCatchWithActionFailure(() async {
+  Future<Either<NetworkCallError, Unit>> markAuthUserAudioLastUpdatedAtAsNow() {
+    return callCatchHandleNetworkCallError(() async {
       await _apiClient.markAuthUserAudioLastUpdatedAtAsNow();
 
       return unit;

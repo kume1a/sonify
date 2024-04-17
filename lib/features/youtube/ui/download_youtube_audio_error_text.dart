@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../app/intl/app_localizations.dart';
-import '../../../app/intl/extension/failure_intl.dart';
+import '../../../app/intl/extension/error_intl.dart';
 import '../state/youtube_video_state.dart';
 
 class DownloadYoutubeAudioErrorText extends StatelessWidget {
@@ -18,8 +18,8 @@ class DownloadYoutubeAudioErrorText extends StatelessWidget {
       builder: (_, state) {
         return state.downloadAudioState.maybeWhen(
           orElse: () => const SizedBox.shrink(),
-          failed: (failure) => Text(
-            failure.translate(l),
+          failed: (err) => Text(
+            err.translate(l),
             style: TextStyle(color: theme.colorScheme.error),
           ),
         );

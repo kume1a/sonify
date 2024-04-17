@@ -14,10 +14,10 @@ class UserRemoteServiceImpl with SafeHttpRequestWrap implements UserRemoteServic
   final ApiClient _apiClient;
 
   @override
-  Future<Either<ActionFailure, UserDto>> updateUser({
+  Future<Either<NetworkCallError, UserDto>> updateUser({
     String? name,
   }) {
-    return callCatchWithActionFailure(() {
+    return callCatchHandleNetworkCallError(() {
       final body = UpdateUserBody(
         name: name,
       );
@@ -27,7 +27,7 @@ class UserRemoteServiceImpl with SafeHttpRequestWrap implements UserRemoteServic
   }
 
   @override
-  Future<Either<FetchFailure, UserDto>> getAuthUser() {
-    return callCatchWithFetchFailure(() => _apiClient.getAuthUser());
+  Future<Either<NetworkCallError, UserDto>> getAuthUser() {
+    return callCatchHandleNetworkCallError(() => _apiClient.getAuthUser());
   }
 }

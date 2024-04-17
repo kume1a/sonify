@@ -19,7 +19,7 @@ class YoutubeRemoteRepositoryImpl with SafeHttpRequestWrap implements YoutubeRem
   final YoutubeSearchSuggestionsMapper _youtubeSearchSuggestionsMapper;
 
   @override
-  Future<Either<FetchFailure, String>> getYoutubeMusicUrl({
+  Future<Either<NetworkCallError, String>> getYoutubeMusicUrl({
     required String videoId,
   }) async {
     final res = await _youtubeRemoteService.getYoutubeMusicUrl(videoId);
@@ -28,7 +28,7 @@ class YoutubeRemoteRepositoryImpl with SafeHttpRequestWrap implements YoutubeRem
   }
 
   @override
-  Future<Either<FetchFailure, YoutubeSearchSuggestions>> getYoutubeSuggestions({
+  Future<Either<NetworkCallError, YoutubeSearchSuggestions>> getYoutubeSuggestions({
     required String keyword,
   }) async {
     final res = await _youtubeRemoteService.getYoutubeSuggestions(keyword);
@@ -37,28 +37,28 @@ class YoutubeRemoteRepositoryImpl with SafeHttpRequestWrap implements YoutubeRem
   }
 
   @override
-  Future<Either<FetchFailure, List<Video>>> search({
+  Future<Either<NetworkCallError, List<Video>>> search({
     required String query,
   }) async {
     return _youtubeRemoteService.search(query);
   }
 
   @override
-  Future<Either<FetchFailure, Video>> getVideo({
+  Future<Either<NetworkCallError, Video>> getVideo({
     required String videoId,
   }) async {
     return _youtubeRemoteService.getVideo(videoId);
   }
 
   @override
-  Future<Either<FetchFailure, UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams({
+  Future<Either<NetworkCallError, UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams({
     required String videoId,
   }) async {
     return _youtubeRemoteService.getAudioOnlyStreams(videoId);
   }
 
   @override
-  Future<Either<FetchFailure, MuxedStreamInfo>> getHighestQualityMuxedStreamInfo({
+  Future<Either<NetworkCallError, MuxedStreamInfo>> getHighestQualityMuxedStreamInfo({
     required String videoId,
   }) async {
     return _youtubeRemoteService.getHighestQualityMuxedStreamInfo(videoId);

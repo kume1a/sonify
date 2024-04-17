@@ -4,11 +4,11 @@ import 'package:sonify_client/sonify_client.dart';
 import '../model/token_payload.dart';
 
 abstract interface class AuthRemoteRepository {
-  Future<Either<ActionFailure, TokenPayload>> googleSignIn({
+  Future<Either<NetworkCallError, TokenPayload>> googleSignIn({
     required String token,
   });
 
-  Future<Either<EmailSignInFailure, TokenPayload>> emailSignIn({
+  Future<Either<EmailSignInError, TokenPayload>> emailSignIn({
     required String email,
     required String password,
   });

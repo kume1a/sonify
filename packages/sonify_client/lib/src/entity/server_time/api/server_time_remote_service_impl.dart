@@ -13,7 +13,7 @@ class ServerTimeRemoteServiceImpl with SafeHttpRequestWrap implements ServerTime
   final ApiClient _apiClient;
 
   @override
-  Future<Either<FetchFailure, ServerTimeDto>> getServerTime() {
-    return callCatchWithFetchFailure(() => _apiClient.getServerTime());
+  Future<Either<NetworkCallError, ServerTimeDto>> getServerTime() {
+    return callCatchHandleNetworkCallError(() => _apiClient.getServerTime());
   }
 }

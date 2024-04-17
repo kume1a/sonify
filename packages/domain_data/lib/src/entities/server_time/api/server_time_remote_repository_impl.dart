@@ -15,7 +15,7 @@ class ServerTimeRemoteRepositoryImpl implements ServerTimeRemoteRepository {
   final ServerTimeMapper _serverTimeMapper;
 
   @override
-  Future<Either<FetchFailure, ServerTime>> getServerTime() async {
+  Future<Either<NetworkCallError, ServerTime>> getServerTime() async {
     final res = await _serverTimeRemoteService.getServerTime();
 
     return res.map(_serverTimeMapper.dtoToModel);

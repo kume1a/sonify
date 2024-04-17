@@ -13,10 +13,10 @@ class PlaylistRemoteServiceImpl with SafeHttpRequestWrap implements PlaylistRemo
   final ApiClient _apiClient;
 
   @override
-  Future<Either<ActionFailure, Unit>> importSpotifyUserPlaylists({
+  Future<Either<NetworkCallError, Unit>> importSpotifyUserPlaylists({
     required String spotifyAccessToken,
   }) {
-    return callCatchWithActionFailure(
+    return callCatchHandleNetworkCallError(
       () async {
         await _apiClient.importSpotifyUserPlaylists(
           spotifyAccessToken,
@@ -28,16 +28,16 @@ class PlaylistRemoteServiceImpl with SafeHttpRequestWrap implements PlaylistRemo
   }
 
   @override
-  Future<Either<FetchFailure, List<PlaylistDto>>> getAuthUserPlaylists() {
-    return callCatchWithFetchFailure(
+  Future<Either<NetworkCallError, List<PlaylistDto>>> getAuthUserPlaylists() {
+    return callCatchHandleNetworkCallError(
       () => _apiClient.getAuthUserPlaylists(),
     );
   }
 
   @override
-  Future<Either<FetchFailure, PlaylistDto>> getPlaylistById({
+  Future<Either<NetworkCallError, PlaylistDto>> getPlaylistById({
     required String playlistId,
   }) {
-    return callCatchWithFetchFailure(() => _apiClient.getPlaylistById(playlistId));
+    return callCatchHandleNetworkCallError(() => _apiClient.getPlaylistById(playlistId));
   }
 }

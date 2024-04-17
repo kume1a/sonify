@@ -6,27 +6,27 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import '../model/youtube_search_suggestions.dart';
 
 abstract interface class YoutubeRemoteRepository {
-  Future<Either<FetchFailure, String>> getYoutubeMusicUrl({
+  Future<Either<NetworkCallError, String>> getYoutubeMusicUrl({
     required String videoId,
   });
 
-  Future<Either<FetchFailure, YoutubeSearchSuggestions>> getYoutubeSuggestions({
+  Future<Either<NetworkCallError, YoutubeSearchSuggestions>> getYoutubeSuggestions({
     required String keyword,
   });
 
-  Future<Either<FetchFailure, List<Video>>> search({
+  Future<Either<NetworkCallError, List<Video>>> search({
     required String query,
   });
 
-  Future<Either<FetchFailure, UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams({
+  Future<Either<NetworkCallError, UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams({
     required String videoId,
   });
 
-  Future<Either<FetchFailure, MuxedStreamInfo>> getHighestQualityMuxedStreamInfo({
+  Future<Either<NetworkCallError, MuxedStreamInfo>> getHighestQualityMuxedStreamInfo({
     required String videoId,
   });
 
-  Future<Either<FetchFailure, Video>> getVideo({
+  Future<Either<NetworkCallError, Video>> getVideo({
     required String videoId,
   });
 }

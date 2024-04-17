@@ -9,7 +9,7 @@ part 'uploaded_local_music_result.freezed.dart';
 class UploadedLocalMusicResult with _$UploadedLocalMusicResult {
   const factory UploadedLocalMusicResult({
     required LocalMusic localMusic,
-    required UploadUserLocalMusicFailure? failure,
+    required UploadUserLocalMusicError? error,
     required double uploadSizeMb,
   }) = _UploadedLocalMusicResult;
 }

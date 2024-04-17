@@ -15,14 +15,14 @@ class UserSyncDatumRemoteRepositoryImpl implements UserSyncDatumRemoteRepository
   final UserSyncDatumMapper _userSyncDatumMapper;
 
   @override
-  Future<Either<FetchFailure, UserSyncDatum>> getAuthUserSyncDatum() async {
+  Future<Either<NetworkCallError, UserSyncDatum>> getAuthUserSyncDatum() async {
     final res = await _userSyncDatumRemoteService.getAuthUserSyncDatum();
 
     return res.map(_userSyncDatumMapper.dtoToModel);
   }
 
   @override
-  Future<Either<ActionFailure, Unit>> markAuthUserAudioLastUpdatedAtAsNow() {
+  Future<Either<NetworkCallError, Unit>> markAuthUserAudioLastUpdatedAtAsNow() {
     return _userSyncDatumRemoteService.markAuthUserAudioLastUpdatedAtAsNow();
   }
 }

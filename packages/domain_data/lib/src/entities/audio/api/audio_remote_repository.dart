@@ -6,11 +6,11 @@ import 'package:sonify_client/sonify_client.dart';
 import '../model/index.dart';
 
 abstract interface class AudioRemoteRepository {
-  Future<Either<DownloadYoutubeAudioFailure, UserAudio>> downloadYoutubeAudio({
+  Future<Either<DownloadYoutubeAudioError, UserAudio>> downloadYoutubeAudio({
     required String videoId,
   });
 
-  Future<Either<UploadUserLocalMusicFailure, UserAudio>> uploadUserLocalMusic({
+  Future<Either<UploadUserLocalMusicError, UserAudio>> uploadUserLocalMusic({
     required String localId,
     required String title,
     required String? author,
@@ -19,7 +19,7 @@ abstract interface class AudioRemoteRepository {
     required Uint8List? thumbnail,
   });
 
-  Future<Either<FetchFailure, List<String>>> getAuthUserAudioIds();
+  Future<Either<NetworkCallError, List<String>>> getAuthUserAudioIds();
 
-  Future<Either<FetchFailure, List<UserAudio>>> getAuthUserAudiosByAudioIds(List<String> audioIds);
+  Future<Either<NetworkCallError, List<UserAudio>>> getAuthUserAudiosByAudioIds(List<String> audioIds);
 }

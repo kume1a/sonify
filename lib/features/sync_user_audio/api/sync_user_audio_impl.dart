@@ -24,11 +24,11 @@ class SyncUserAudioImpl implements SyncUserAudio {
   final EventBus _eventBus;
 
   @override
-  Future<Either<SyncUserAudioFailure, SyncUserAudioResult>> call() async {
+  Future<Either<SyncUserAudioError, SyncUserAudioResult>> call() async {
     final authUserId = await _authUserInfoProvider.getId();
     if (authUserId == null) {
       Logger.root.warning('Auth user id is null, cannot sync user audio');
-      return left(SyncUserAudioFailure.unknown);
+      return left(SyncUserAudioError.unknown);
     }
 
     final userAudioIdsRes = await _audioRemoteRepository.getAuthUserAudioIds();
@@ -36,8 +36,8 @@ class SyncUserAudioImpl implements SyncUserAudio {
     if (userAudioIdsRes.isLeft) {
       Logger.root.fine('Failed to get user audio ids: ${userAudioIdsRes.leftOrNull}');
       return left(userAudioIdsRes.leftOrThrow.maybeWhen(
-        orElse: () => SyncUserAudioFailure.unknown,
-        network: () => SyncUserAudioFailure.network,
+        orElse: () => SyncUserAudioError.unknown,
+        network: () => SyncUserAudioError.network,
       ));
     }
 
@@ -59,8 +59,8 @@ class SyncUserAudioImpl implements SyncUserAudio {
     if (toDownloadUserAudiosRes.isLeft) {
       Logger.root.fine('Failed to download audios: ${toDownloadUserAudiosRes.leftOrNull}');
       return left(toDownloadUserAudiosRes.leftOrThrow.maybeWhen(
-        orElse: () => SyncUserAudioFailure.unknown,
-        network: () => SyncUserAudioFailure.network,
+        orElse: () => SyncUserAudioError.unknown,
+        network: () => SyncUserAudioError.network,
       ));
     }
 

@@ -15,7 +15,7 @@ class UserRemoteRepositoryImpl implements UserRemoteRepository {
   final UserMapper _userMapper;
 
   @override
-  Future<Either<ActionFailure, User>> updateUser({
+  Future<Either<NetworkCallError, User>> updateUser({
     String? name,
   }) async {
     final res = await _userRemoteService.updateUser(
@@ -26,7 +26,7 @@ class UserRemoteRepositoryImpl implements UserRemoteRepository {
   }
 
   @override
-  Future<Either<FetchFailure, User>> getAuthUser() async {
+  Future<Either<NetworkCallError, User>> getAuthUser() async {
     final res = await _userRemoteService.getAuthUser();
 
     return res.map(_userMapper.dtoToModel);

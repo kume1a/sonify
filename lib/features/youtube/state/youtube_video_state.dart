@@ -19,7 +19,7 @@ class YoutubeVideoState with _$YoutubeVideoState {
     Uri? videoUri,
     required SimpleDataState<Video> video,
     required SimpleDataState<MuxedStreamInfo> highQualityMuxedStreamInfo,
-    required ActionState<DownloadYoutubeAudioFailure> downloadAudioState,
+    required ActionState<DownloadYoutubeAudioError> downloadAudioState,
     required bool isDownloadAvailable,
   }) = _YoutubeVideoState;
 

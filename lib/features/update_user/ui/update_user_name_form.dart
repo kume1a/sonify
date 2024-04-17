@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../app/intl/app_localizations.dart';
-import '../../../app/intl/extension/failure_intl.dart';
+import '../../../app/intl/extension/error_intl.dart';
 import '../state/update_user_name_state.dart';
 
 class UpdateUserNameForm extends StatelessWidget {
@@ -27,7 +27,7 @@ class UpdateUserNameForm extends StatelessWidget {
               TextFormField(
                 decoration: InputDecoration(hintText: l.enterYourName),
                 onChanged: context.updateUserNameCubit.onNameChanged,
-                validator: (value) => context.updateUserNameCubit.state.name.failureToString(
+                validator: (value) => context.updateUserNameCubit.state.name.errToString(
                   (f) => f.translate(l),
                 ),
               ),
@@ -36,7 +36,7 @@ class UpdateUserNameForm extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Text(
-                    state.submitState.failureOrNull?.translate(l) ?? '',
+                    state.submitState.errOrNull?.translate(l) ?? '',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: theme.colorScheme.error),
                   ),

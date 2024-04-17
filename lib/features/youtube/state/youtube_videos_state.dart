@@ -14,7 +14,7 @@ part 'youtube_videos_state.freezed.dart';
 @freezed
 class YoutubeVideosState with _$YoutubeVideosState {
   const factory YoutubeVideosState({
-    required DataState<FetchFailure, List<Video>> searchResults,
+    required DataState<NetworkCallError, List<Video>> searchResults,
     required String searchQuery,
   }) = _YoutubeVideosState;
 

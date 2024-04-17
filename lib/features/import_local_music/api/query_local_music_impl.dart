@@ -18,7 +18,7 @@ class QueryLocalMusicImpl implements QueryLocalMusic {
   final LocalMusicMapper _localMusicMapper;
 
   @override
-  Future<Either<ActionFailure, List<LocalMusic>>> call() async {
+  Future<Either<NetworkCallError, List<LocalMusic>>> call() async {
     try {
       final musicModels = await _audioQuery.querySongs(
         sortType: SongSortType.TITLE,
@@ -33,6 +33,6 @@ class QueryLocalMusicImpl implements QueryLocalMusic {
       Logger.root.severe('Error querying local music: $e');
     }
 
-    return left(ActionFailure.unknown);
+    return left(NetworkCallError.unknown);
   }
 }

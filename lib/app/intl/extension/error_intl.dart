@@ -3,7 +3,7 @@ import 'package:sonify_client/sonify_client.dart';
 
 import '../app_localizations.dart';
 
-extension ActionFailureIntl on ActionFailure {
+extension NetworkCallErrorIntl on NetworkCallError {
   String translate(AppLocalizations l) {
     return when(
       unknown: () => l.unknownError,
@@ -12,7 +12,7 @@ extension ActionFailureIntl on ActionFailure {
   }
 }
 
-extension NameFailureIntl on NameFailure {
+extension NameErrorIntl on NameError {
   String translate(AppLocalizations l) {
     return when(
       empty: () => l.fieldIsRequired,
@@ -22,7 +22,7 @@ extension NameFailureIntl on NameFailure {
   }
 }
 
-extension EmailFailureIntl on EmailFailure {
+extension EmailErrorIntl on EmailError {
   String translate(AppLocalizations l) {
     return when(
       empty: () => l.fieldIsRequired,
@@ -33,7 +33,7 @@ extension EmailFailureIntl on EmailFailure {
   }
 }
 
-extension PasswordFailureIntl on PasswordFailure {
+extension PasswordErrorIntl on PasswordError {
   String translate(AppLocalizations l) {
     return maybeWhen(
       orElse: () => '',
@@ -45,7 +45,7 @@ extension PasswordFailureIntl on PasswordFailure {
   }
 }
 
-extension DownloadYoutubeAudioFailureIntl on DownloadYoutubeAudioFailure {
+extension DownloadYoutubeAudioErrorIntl on DownloadYoutubeAudioError {
   String translate(AppLocalizations l) {
     return when(
       network: () => l.noInternetConnection,
@@ -55,7 +55,7 @@ extension DownloadYoutubeAudioFailureIntl on DownloadYoutubeAudioFailure {
   }
 }
 
-extension EmailSignInFailureIntl on EmailSignInFailure {
+extension EmailSignInErrorIntl on EmailSignInError {
   String translate(AppLocalizations l) {
     return when(
       invalidEmailOrPassword: () => l.invalidEmailOrPassword,

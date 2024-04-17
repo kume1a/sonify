@@ -20,21 +20,21 @@ class YoutubeRemoteServiceImpl with SafeHttpRequestWrap implements YoutubeRemote
   final YoutubeExplode _yt;
 
   @override
-  Future<Either<FetchFailure, UrlDto>> getYoutubeMusicUrl(String videoId) {
-    return callCatchWithFetchFailure(
+  Future<Either<NetworkCallError, UrlDto>> getYoutubeMusicUrl(String videoId) {
+    return callCatchHandleNetworkCallError(
       () => _apiClient.getYoutubeMusicUrl(videoId),
     );
   }
 
   @override
-  Future<Either<FetchFailure, YoutubeSearchSuggestionsDto>> getYoutubeSuggestions(String keyword) async {
-    return callCatchWithFetchFailure(
+  Future<Either<NetworkCallError, YoutubeSearchSuggestionsDto>> getYoutubeSuggestions(String keyword) async {
+    return callCatchHandleNetworkCallError(
       () => _apiClient.getYoutubeSuggestions(keyword),
     );
   }
 
   @override
-  Future<Either<FetchFailure, List<Video>>> search(String query) async {
+  Future<Either<NetworkCallError, List<Video>>> search(String query) async {
     try {
       final videos = await _yt.search.search(query);
 
@@ -43,11 +43,11 @@ class YoutubeRemoteServiceImpl with SafeHttpRequestWrap implements YoutubeRemote
       Logger.root.severe('YoutubeRepositoryImpl.search $e');
     }
 
-    return left(FetchFailure.unknown);
+    return left(NetworkCallError.unknown);
   }
 
   @override
-  Future<Either<FetchFailure, Video>> getVideo(String videoId) async {
+  Future<Either<NetworkCallError, Video>> getVideo(String videoId) async {
     try {
       final video = await _yt.videos.get(videoId);
 
@@ -56,11 +56,11 @@ class YoutubeRemoteServiceImpl with SafeHttpRequestWrap implements YoutubeRemote
       Logger.root.severe('YoutubeRepositoryImpl.getVideo $e');
     }
 
-    return left(FetchFailure.unknown);
+    return left(NetworkCallError.unknown);
   }
 
   @override
-  Future<Either<FetchFailure, UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams(
+  Future<Either<NetworkCallError, UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams(
     String videoId,
   ) async {
     try {
@@ -71,11 +71,11 @@ class YoutubeRemoteServiceImpl with SafeHttpRequestWrap implements YoutubeRemote
       Logger.root.severe('YoutubeRepositoryImpl.getAudioOnlyStreams $e');
     }
 
-    return left(FetchFailure.unknown);
+    return left(NetworkCallError.unknown);
   }
 
   @override
-  Future<Either<FetchFailure, MuxedStreamInfo>> getHighestQualityMuxedStreamInfo(
+  Future<Either<NetworkCallError, MuxedStreamInfo>> getHighestQualityMuxedStreamInfo(
     String videoId,
   ) async {
     try {
@@ -87,6 +87,6 @@ class YoutubeRemoteServiceImpl with SafeHttpRequestWrap implements YoutubeRemote
       Logger.root.severe('YoutubeRepositoryImpl.getHighestQualityMuxedStreamInfo, $e');
     }
 
-    return left(FetchFailure.unknown);
+    return left(NetworkCallError.unknown);
   }
 }

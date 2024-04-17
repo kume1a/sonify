@@ -5,7 +5,7 @@ import '../../../api/api_client.dart';
 import '../../../shared/api_exception_message_code.dart';
 import '../../../shared/dto/error_response_dto.dart';
 import '../model/email_sign_in_body.dart';
-import '../model/email_sign_in_failure.dart';
+import '../model/email_sign_in_error.dart';
 import '../model/google_sign_in_body.dart';
 import '../model/token_payload_dto.dart';
 import 'auth_remote_service.dart';
@@ -18,10 +18,10 @@ class AuthRemoteServiceImpl with SafeHttpRequestWrap implements AuthRemoteServic
   final ApiClient _apiClient;
 
   @override
-  Future<Either<ActionFailure, TokenPayloadDto>> googleSignIn({
+  Future<Either<NetworkCallError, TokenPayloadDto>> googleSignIn({
     required String token,
   }) {
-    return callCatchWithActionFailure(() {
+    return callCatchHandleNetworkCallError(() {
       final body = GoogleSignInBody(token: token);
 
       return _apiClient.googleSignIn(body);
@@ -29,7 +29,7 @@ class AuthRemoteServiceImpl with SafeHttpRequestWrap implements AuthRemoteServic
   }
 
   @override
-  Future<Either<EmailSignInFailure, TokenPayloadDto>> emailSignIn({
+  Future<Either<EmailSignInError, TokenPayloadDto>> emailSignIn({
     required String email,
     required String password,
   }) {
@@ -39,15 +39,15 @@ class AuthRemoteServiceImpl with SafeHttpRequestWrap implements AuthRemoteServic
 
         return _apiClient.emailSignIn(body);
       },
-      networkError: const EmailSignInFailure.network(),
-      unknownError: const EmailSignInFailure.unknown(),
+      networkError: const EmailSignInError.network(),
+      unknownError: const EmailSignInError.unknown(),
       onResponseError: (response) {
         final errorDto = ErrorResponseDto.fromJson(response?.data);
 
         return switch (errorDto.message) {
-          ApiExceptionMessageCode.invalidEmailOrPassword => const EmailSignInFailure.invalidEmailOrPassword(),
-          ApiExceptionMessageCode.invalidAuthMethod => const EmailSignInFailure.invalidAuthMethod(),
-          _ => const EmailSignInFailure.unknown(),
+          ApiExceptionMessageCode.invalidEmailOrPassword => const EmailSignInError.invalidEmailOrPassword(),
+          ApiExceptionMessageCode.invalidAuthMethod => const EmailSignInError.invalidAuthMethod(),
+          _ => const EmailSignInError.unknown(),
         };
       },
     );

@@ -22,7 +22,7 @@ class SyncUserAudioState with _$SyncUserAudioState {
   const factory SyncUserAudioState({
     required SyncAudiosState syncState,
     required int queuedDownloadsCount,
-    SyncUserAudioFailure? failure,
+    SyncUserAudioError? error,
   }) = _SyncUserAudioState;
 
   factory SyncUserAudioState.initial() => const SyncUserAudioState(
@@ -70,7 +70,7 @@ class SyncUserAudioCubit extends Cubit<SyncUserAudioState> {
       (l) async {
         emit(state.copyWith(
           syncState: SyncAudiosState.error,
-          failure: l,
+          error: l,
         ));
 
         await Future.delayed(const Duration(seconds: 3));

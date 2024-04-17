@@ -16,7 +16,7 @@ class EmailSignInState with _$EmailSignInState {
   const factory EmailSignInState({
     required Email email,
     required Password password,
-    required ActionState<EmailSignInFailure> signInState,
+    required ActionState<EmailSignInError> signInState,
     required bool validateForm,
   }) = _EmailSignInState;
 

@@ -7,7 +7,7 @@ import 'package:injectable/injectable.dart';
 import '../../../app/navigation/page_navigator.dart';
 import '../../../shared/util/debounce.dart';
 
-typedef YoutubeSearchState = DataState<FetchFailure, YoutubeSearchSuggestions>;
+typedef YoutubeSearchState = DataState<NetworkCallError, YoutubeSearchSuggestions>;
 
 extension YoutubeSearchCubitX on BuildContext {
   YoutubeSearchCubit get youtubeSearchCubit => read<YoutubeSearchCubit>();

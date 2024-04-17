@@ -129,7 +129,7 @@ class ImportLocalMusicCubit extends Cubit<ImportLocalMusicState> {
       if (localMusic.uri == null) {
         _emitUploadLocalMusicResult(UploadedLocalMusicResult(
           localMusic: localMusic,
-          failure: const UploadUserLocalMusicFailure.unknown(),
+          error: const UploadUserLocalMusicError.unknown(),
           uploadSizeMb: 0,
         ));
         continue;
@@ -154,7 +154,7 @@ class ImportLocalMusicCubit extends Cubit<ImportLocalMusicState> {
 
       _emitUploadLocalMusicResult(UploadedLocalMusicResult(
         localMusic: localMusic,
-        failure: result.leftOrNull,
+        error: result.leftOrNull,
         uploadSizeMb: audioSizeMb + artworkSizeMb,
       ));
     }

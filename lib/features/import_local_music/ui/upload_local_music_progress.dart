@@ -92,9 +92,9 @@ class UploadLocalMusicProgress extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 8),
-                            if (uploadedResult.failure != null)
+                            if (uploadedResult.error != null)
                               Text(
-                                uploadedResult.failure!.when(
+                                uploadedResult.error!.when(
                                   unknown: () => l.unknownError,
                                   network: () => l.timedOut,
                                   alreadyUploaded: () => l.alreadyUploaded,

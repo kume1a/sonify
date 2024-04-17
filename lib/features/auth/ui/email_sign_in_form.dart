@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../app/intl/app_localizations.dart';
-import '../../../app/intl/extension/failure_intl.dart';
+import '../../../app/intl/extension/error_intl.dart';
 import '../../../shared/ui/loading_text_button.dart';
 import '../../../shared/ui/logo_header.dart';
 import '../state/email_sign_in_state.dart';
@@ -76,7 +76,7 @@ class _FieldEmail extends StatelessWidget {
         hintText: l.email,
       ),
       onChanged: context.emailSignInCubit.onEmailChanged,
-      validator: (_) => context.emailSignInCubit.state.email.failureToString((f) => f.translate(l)),
+      validator: (_) => context.emailSignInCubit.state.email.errToString((f) => f.translate(l)),
     );
   }
 }
@@ -94,7 +94,7 @@ class _FieldPassword extends StatelessWidget {
         hintText: l.password,
       ),
       onChanged: context.emailSignInCubit.onPasswordChanged,
-      validator: (_) => context.emailSignInCubit.state.password.failureToString((f) => f.translate(l)),
+      validator: (_) => context.emailSignInCubit.state.password.errToString((f) => f.translate(l)),
     );
   }
 }
@@ -137,7 +137,7 @@ class _EmailSignInErrortext extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(12),
           child: Text(
-            state.signInState.failureOrNull?.translate(l) ?? '',
+            state.signInState.errOrNull?.translate(l) ?? '',
             textAlign: TextAlign.center,
             style: TextStyle(color: theme.colorScheme.error),
           ),

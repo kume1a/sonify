@@ -16,10 +16,10 @@ class SpotifyAuthRemoteServiceImpl with SafeHttpRequestWrap implements SpotifyAu
   final ApiClient _apiClient;
 
   @override
-  Future<Either<ActionFailure, SpotifyTokenPayloadDto>> authorizeSpotify({
+  Future<Either<NetworkCallError, SpotifyTokenPayloadDto>> authorizeSpotify({
     required String code,
   }) {
-    return callCatchWithActionFailure(() {
+    return callCatchHandleNetworkCallError(() {
       final body = AuthorizeSpotifyBody(code: code);
 
       return _apiClient.authorizeSpotify(body);
@@ -27,10 +27,10 @@ class SpotifyAuthRemoteServiceImpl with SafeHttpRequestWrap implements SpotifyAu
   }
 
   @override
-  Future<Either<ActionFailure, SpotifyRefreshTokenPayloadDto>> refreshSpotifyToken({
+  Future<Either<NetworkCallError, SpotifyRefreshTokenPayloadDto>> refreshSpotifyToken({
     required String spotifyRefreshToken,
   }) async {
-    return callCatchWithActionFailure(() {
+    return callCatchHandleNetworkCallError(() {
       final body = RefreshSpotifyTokenBody(spotifyRefreshToken: spotifyRefreshToken);
 
       return _apiClient.refreshSpotifyToken(body);

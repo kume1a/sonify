@@ -6,9 +6,9 @@ import '../../../api/multipart_api_client.dart';
 import '../../../shared/api_exception_message_code.dart';
 import '../../../shared/dto/error_response_dto.dart';
 import '../model/download_youtube_audio_body.dart';
-import '../model/download_youtube_audio_failure.dart';
+import '../model/download_youtube_audio_error.dart';
 import '../model/get_audios_by_ids_body.dart';
-import '../model/upload_user_local_music_failure.dart';
+import '../model/upload_user_local_music_error.dart';
 import '../model/upload_user_local_music_params.dart';
 import '../model/user_audio_dto.dart';
 import 'audio_remote_service.dart';
@@ -23,7 +23,7 @@ class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteServ
   final MultipartApiClient _multipartApiClient;
 
   @override
-  Future<Either<DownloadYoutubeAudioFailure, UserAudioDto>> downloadYoutubeAudio({
+  Future<Either<DownloadYoutubeAudioError, UserAudioDto>> downloadYoutubeAudio({
     required String videoId,
   }) {
     return callCatch(
@@ -32,46 +32,46 @@ class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteServ
 
         return _apiClient.downloadYoutubeAudio(body);
       },
-      networkError: const DownloadYoutubeAudioFailure.network(),
-      unknownError: const DownloadYoutubeAudioFailure.unknown(),
+      networkError: const DownloadYoutubeAudioError.network(),
+      unknownError: const DownloadYoutubeAudioError.unknown(),
       onResponseError: (response) {
         final res = ErrorResponseDto.fromJson(response!.data! as Map<String, dynamic>);
 
         return switch (res.message) {
-          ApiExceptionMessageCode.audioAlreadyExists => const DownloadYoutubeAudioFailure.alreadyDownloaded(),
-          _ => const DownloadYoutubeAudioFailure.unknown(),
+          ApiExceptionMessageCode.audioAlreadyExists => const DownloadYoutubeAudioError.alreadyDownloaded(),
+          _ => const DownloadYoutubeAudioError.unknown(),
         };
       },
     );
   }
 
   @override
-  Future<Either<UploadUserLocalMusicFailure, UserAudioDto>> uploadUserLocalMusic(
+  Future<Either<UploadUserLocalMusicError, UserAudioDto>> uploadUserLocalMusic(
     UploadUserLocalMusicParams params,
   ) {
     return callCatch(
       call: () => _multipartApiClient.importUserLocalMusic(params),
-      networkError: const UploadUserLocalMusicFailure.network(),
-      unknownError: const UploadUserLocalMusicFailure.unknown(),
+      networkError: const UploadUserLocalMusicError.network(),
+      unknownError: const UploadUserLocalMusicError.unknown(),
       onResponseError: (response) {
         final res = ErrorResponseDto.fromJson(response!.data! as Map<String, dynamic>);
 
         return switch (res.message) {
-          ApiExceptionMessageCode.audioAlreadyExists => const UploadUserLocalMusicFailure.alreadyUploaded(),
-          _ => const UploadUserLocalMusicFailure.unknown(),
+          ApiExceptionMessageCode.audioAlreadyExists => const UploadUserLocalMusicError.alreadyUploaded(),
+          _ => const UploadUserLocalMusicError.unknown(),
         };
       },
     );
   }
 
   @override
-  Future<Either<FetchFailure, List<String>>> getAuthUserAudioIds() {
-    return callCatchWithFetchFailure(() => _apiClient.getAuthUserAudioIds());
+  Future<Either<NetworkCallError, List<String>>> getAuthUserAudioIds() {
+    return callCatchHandleNetworkCallError(() => _apiClient.getAuthUserAudioIds());
   }
 
   @override
-  Future<Either<FetchFailure, List<UserAudioDto>>> getAuthUserAudiosByAudioIds(List<String> audioIds) {
-    return callCatchWithFetchFailure(() {
+  Future<Either<NetworkCallError, List<UserAudioDto>>> getAuthUserAudiosByAudioIds(List<String> audioIds) {
+    return callCatchHandleNetworkCallError(() {
       final body = GetAudiosByIdsBody(audioIds: audioIds);
 
       return _apiClient.getAuthUserUserAudios(body);

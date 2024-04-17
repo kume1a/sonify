@@ -1,6 +1,6 @@
 import 'package:common_models/common_models.dart';
 
-enum SyncUserAudioFailure {
+enum SyncUserAudioError {
   unknown,
   network,
 }
@@ -14,5 +14,5 @@ class SyncUserAudioResult {
 }
 
 abstract interface class SyncUserAudio {
-  Future<Either<SyncUserAudioFailure, SyncUserAudioResult>> call();
+  Future<Either<SyncUserAudioError, SyncUserAudioResult>> call();
 }

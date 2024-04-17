@@ -14,7 +14,7 @@ part 'import_spotify_playlists_state.freezed.dart';
 class ImportSpotifyPlaylistsState with _$ImportSpotifyPlaylistsState {
   const factory ImportSpotifyPlaylistsState({
     required SimpleDataState<bool> isSpotifyPlaylistsImported,
-    required ActionState<ActionFailure> importSpotifyPlaylistsState,
+    required ActionState<NetworkCallError> importSpotifyPlaylistsState,
   }) = _ImportSpotifyPlaylistsState;
 
   factory ImportSpotifyPlaylistsState.initial() => ImportSpotifyPlaylistsState(
@@ -60,7 +60,7 @@ class ImportSpotifyPlaylistsCubit extends Cubit<ImportSpotifyPlaylistsState> {
 
     final spotifyAccessToken = await _spotifyAccessTokenProvider.get();
     if (spotifyAccessToken == null) {
-      emit(state.copyWith(importSpotifyPlaylistsState: ActionState.failed(ActionFailure.unknown)));
+      emit(state.copyWith(importSpotifyPlaylistsState: ActionState.failed(NetworkCallError.unknown)));
 
       Logger.root.warning('Spotify access token is null, cannot import playlists');
       return;

@@ -12,7 +12,7 @@ part 'sign_out_state.freezed.dart';
 @freezed
 class SignOutState with _$SignOutState {
   const factory SignOutState({
-    required ActionState<ActionFailure> signOutState,
+    required ActionState<NetworkCallError> signOutState,
   }) = _SignOutState;
 
   factory SignOutState.initial() => SignOutState(

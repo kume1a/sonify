@@ -7,15 +7,16 @@ import '../../../shared/dto/url_dto.dart';
 import '../model/youtube_search_suggestions_dto.dart';
 
 abstract interface class YoutubeRemoteService {
-  Future<Either<FetchFailure, UrlDto>> getYoutubeMusicUrl(String videoId);
+  Future<Either<NetworkCallError, UrlDto>> getYoutubeMusicUrl(String videoId);
 
-  Future<Either<FetchFailure, YoutubeSearchSuggestionsDto>> getYoutubeSuggestions(String keyword);
+  Future<Either<NetworkCallError, YoutubeSearchSuggestionsDto>> getYoutubeSuggestions(String keyword);
 
-  Future<Either<FetchFailure, List<Video>>> search(String query);
+  Future<Either<NetworkCallError, List<Video>>> search(String query);
 
-  Future<Either<FetchFailure, UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams(String videoId);
+  Future<Either<NetworkCallError, UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams(
+      String videoId);
 
-  Future<Either<FetchFailure, MuxedStreamInfo>> getHighestQualityMuxedStreamInfo(String videoId);
+  Future<Either<NetworkCallError, MuxedStreamInfo>> getHighestQualityMuxedStreamInfo(String videoId);
 
-  Future<Either<FetchFailure, Video>> getVideo(String videoId);
+  Future<Either<NetworkCallError, Video>> getVideo(String videoId);
 }

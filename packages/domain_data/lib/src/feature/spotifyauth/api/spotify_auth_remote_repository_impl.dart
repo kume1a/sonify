@@ -19,7 +19,7 @@ class SpotifyAuthRemoteRepositoryImpl implements SpotifyAuthRemoteRepository {
   final SpotifyRefreshTokenPayloadMapper _spotifyRefreshTokenPayloadMapper;
 
   @override
-  Future<Either<ActionFailure, SpotifyTokenPayload>> authorizeSpotify({
+  Future<Either<NetworkCallError, SpotifyTokenPayload>> authorizeSpotify({
     required String code,
   }) async {
     final res = await _spotifyAuthRemoteService.authorizeSpotify(code: code);
@@ -28,7 +28,7 @@ class SpotifyAuthRemoteRepositoryImpl implements SpotifyAuthRemoteRepository {
   }
 
   @override
-  Future<Either<ActionFailure, SpotifyRefreshTokenPayload>> refreshSpotifyToken({
+  Future<Either<NetworkCallError, SpotifyRefreshTokenPayload>> refreshSpotifyToken({
     required String spotifyRefreshToken,
   }) async {
     final res = await _spotifyAuthRemoteService.refreshSpotifyToken(

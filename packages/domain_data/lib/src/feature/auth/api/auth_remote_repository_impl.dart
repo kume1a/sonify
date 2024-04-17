@@ -15,7 +15,7 @@ class AuthRemoteRepositoryImpl implements AuthRemoteRepository {
   final TokenPayloadMapper _tokenPayloadMapper;
 
   @override
-  Future<Either<ActionFailure, TokenPayload>> googleSignIn({
+  Future<Either<NetworkCallError, TokenPayload>> googleSignIn({
     required String token,
   }) async {
     final res = await _authRemoteService.googleSignIn(token: token);
@@ -24,7 +24,7 @@ class AuthRemoteRepositoryImpl implements AuthRemoteRepository {
   }
 
   @override
-  Future<Either<EmailSignInFailure, TokenPayload>> emailSignIn({
+  Future<Either<EmailSignInError, TokenPayload>> emailSignIn({
     required String email,
     required String password,
   }) async {

@@ -14,7 +14,7 @@ class UpdateUserNameState with _$UpdateUserNameState {
   const factory UpdateUserNameState({
     required Name name,
     required bool validateForm,
-    required ActionState<ActionFailure> submitState,
+    required ActionState<NetworkCallError> submitState,
   }) = _UpdateUserNameState;
 
   factory UpdateUserNameState.initial() => UpdateUserNameState(

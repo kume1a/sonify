@@ -2,11 +2,11 @@ import 'package:common_models/common_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-abstract base class EntityWithFailureCubit<F, T> extends Cubit<DataState<F, T>> {
-  EntityWithFailureCubit() : super(DataState.idle());
+abstract base class EntityWithErrorCubit<E, T> extends Cubit<DataState<E, T>> {
+  EntityWithErrorCubit() : super(DataState.idle());
 
   @protected
-  Future<Either<F, T>> loadEntity();
+  Future<Either<E, T>> loadEntity();
 
   Future<void> onRefresh() => loadEntityAndEmit();
 
@@ -14,7 +14,7 @@ abstract base class EntityWithFailureCubit<F, T> extends Cubit<DataState<F, T>> 
   Future<void> loadEntityAndEmit() async {
     final T? previousData = state.getOrNull;
 
-    emit(DataState<F, T>.loading());
+    emit(DataState<E, T>.loading());
 
     final entity = await loadEntity();
 
@@ -23,7 +23,7 @@ abstract base class EntityWithFailureCubit<F, T> extends Cubit<DataState<F, T>> 
     }
 
     entity.fold(
-      (F failure) => emit(DataState.failure(failure, previousData)),
+      (E err) => emit(DataState.failure(err, previousData)),
       (T data) => emit(DataState.success(data)),
     );
   }

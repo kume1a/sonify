@@ -1,20 +1,20 @@
 import 'package:common_models/common_models.dart';
 
-import '../model/download_youtube_audio_failure.dart';
-import '../model/upload_user_local_music_failure.dart';
+import '../model/download_youtube_audio_error.dart';
+import '../model/upload_user_local_music_error.dart';
 import '../model/upload_user_local_music_params.dart';
 import '../model/user_audio_dto.dart';
 
 abstract interface class AudioRemoteService {
-  Future<Either<DownloadYoutubeAudioFailure, UserAudioDto>> downloadYoutubeAudio({
+  Future<Either<DownloadYoutubeAudioError, UserAudioDto>> downloadYoutubeAudio({
     required String videoId,
   });
 
-  Future<Either<UploadUserLocalMusicFailure, UserAudioDto>> uploadUserLocalMusic(
+  Future<Either<UploadUserLocalMusicError, UserAudioDto>> uploadUserLocalMusic(
     UploadUserLocalMusicParams params,
   );
 
-  Future<Either<FetchFailure, List<String>>> getAuthUserAudioIds();
+  Future<Either<NetworkCallError, List<String>>> getAuthUserAudioIds();
 
-  Future<Either<FetchFailure, List<UserAudioDto>>> getAuthUserAudiosByAudioIds(List<String> audioIds);
+  Future<Either<NetworkCallError, List<UserAudioDto>>> getAuthUserAudiosByAudioIds(List<String> audioIds);
 }
