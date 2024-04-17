@@ -138,5 +138,6 @@
   "syncingAudio": "Syncing audio",
   "seeDownloads": "See downloads",
   "syncFailed": "Sync failed",
-  "nothingToSync": "Nothing to sync"
+  "nothingToSync": "Nothing to sync",
+  "syncAudios": "Sync audios"
 }

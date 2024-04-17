@@ -41,6 +41,7 @@ class _Content extends StatelessWidget {
           ),
           SettingsTile(),
           ImportLocalAudioFilesTile(),
+          SyncAudioFiles(),
           SignOutTile(),
         ],
       ),

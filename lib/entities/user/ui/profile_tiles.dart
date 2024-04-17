@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../../../features/auth/state/sign_out_state.dart';
+import '../../../features/sync_user_audio/state/sync_user_audio_state.dart';
 import '../../../shared/util/color.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
@@ -49,6 +50,21 @@ class ImportLocalAudioFilesTile extends StatelessWidget {
       iconAssetName: Assets.svgImport,
       label: l.importLocalAudioFiles,
       onPressed: context.profileTilesCubit.onImportLocalAudioFilesTilePressed,
+    );
+  }
+}
+
+class SyncAudioFiles extends StatelessWidget {
+  const SyncAudioFiles({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
+    return _ProfileTile(
+      iconAssetName: Assets.svgSync,
+      label: l.syncAudios,
+      onPressed: context.syncUserAudioCubit.onSyncAudioFilesPressed,
     );
   }
 }

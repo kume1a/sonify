@@ -48,6 +48,22 @@ class SyncUserAudioCubit extends Cubit<SyncUserAudioState> {
   final PageNavigator _pageNavigator;
 
   Future<void> _init() async {
+    return _startSync();
+  }
+
+  void onSeeDownloadsPressed() {
+    _pageNavigator.toDownloads();
+  }
+
+  Future<void> onSyncAudioFilesPressed() async {
+    if (state.syncState != SyncAudiosState.idle) {
+      return;
+    }
+
+    return _startSync();
+  }
+
+  Future<void> _startSync() async {
     emit(state.copyWith(syncState: SyncAudiosState.loading));
 
     await _syncUserAudio().awaitFold(
@@ -83,9 +99,5 @@ class SyncUserAudioCubit extends Cubit<SyncUserAudioState> {
         }
       },
     );
-  }
-
-  void onSeeDownloadsPressed() {
-    _pageNavigator.toDownloads();
   }
 }
