@@ -1,16 +1,38 @@
-# sonify
+# Sonify
 
-Music streaming app
+Music streaming app<br>
 
-## Getting Started
+Connect to spotify your account, import playlists, download Youtube audios, upload your local music.
+<br>
+Upon application launch your saved audios are synced to the server so you'll keep your local 
+downloaded audios after device change.  
 
-This project is a starting point for a Flutter application.
+### Invite link
+https://appdistribution.firebase.dev/i/9438bda8d8d6d57a
 
-A few resources to get you started if this is your first Flutter project:
+## Launching the project
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Get packages and generate code
+```bash
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs
+cd packages/domain_data
+dart run build_runner build --delete-conflicting-outputs
+cd ../sonify_client
+dart run build_runner build --delete-conflicting-outputs
+cd ../sonify_storage
+dart run build_runner build --delete-conflicting-outputs
+cd ../..
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Run it
+```
+flutter run
+```
+
+Build apk
+```
+flutter clean 
+flutter pub get
+flutter build apk
+```
