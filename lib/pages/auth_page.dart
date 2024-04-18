@@ -68,8 +68,8 @@ class _Content extends StatelessWidget {
             children: [
               LogoHeaderMedium(),
               SizedBox(height: 28),
-              SignInWithGoogleButton(),
-              SignInWithGoogleErrortext(),
+              // SignInWithGoogleButton(),
+              // SignInWithGoogleErrortext(),
               SignInWithEmailButton(),
             ],
           ),
