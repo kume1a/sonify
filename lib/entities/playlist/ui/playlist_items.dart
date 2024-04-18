@@ -1,3 +1,5 @@
+import 'package:common_models/common_models.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,15 +29,44 @@ class PlaylistItems extends StatelessWidget {
                 return const SizedBox.shrink();
               }
 
-              return AudioListItem(
-                onTap: () => context.nowPlayingAudioCubit.onPlaylistAudioPressed(
-                  audio: audio,
-                  playlistId: playlistId,
-                ),
+              return _Item(
                 audio: audio,
+                playlistId: playlistId,
               );
             },
           ),
+        );
+      },
+    );
+  }
+}
+
+class _Item extends StatelessWidget {
+  const _Item({
+    required this.audio,
+    required this.playlistId,
+  });
+
+  final Audio audio;
+  final String playlistId;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
+      buildWhen: (previous, current) => previous.nowPlayingAudio != current.nowPlayingAudio,
+      builder: (_, nowPlayingAudioState) {
+        final nowPlayingAudio = nowPlayingAudioState.nowPlayingAudio.getOrNull;
+
+        final isPlaying = (nowPlayingAudio?.id != null && nowPlayingAudio?.id == audio.id) ||
+            (nowPlayingAudio?.localId != null && nowPlayingAudio?.localId == audio.localId);
+
+        return AudioListItem(
+          onTap: () => context.nowPlayingAudioCubit.onPlaylistAudioPressed(
+            audio: audio,
+            playlistId: playlistId,
+          ),
+          audio: audio,
+          isPlaying: isPlaying,
         );
       },
     );

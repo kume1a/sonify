@@ -1,3 +1,4 @@
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,19 +18,39 @@ class LocalAudioFiles extends StatelessWidget {
           loading: () => const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator())),
           success: (data) => SliverList.builder(
             itemCount: data.length,
-            itemBuilder: (_, index) {
-              final userAudio = data[index];
-
-              if (userAudio.audio == null) {
-                return const SizedBox.shrink();
-              }
-
-              return AudioListItem(
-                onTap: () => context.nowPlayingAudioCubit.onLocalAudioPressed(userAudio.audio),
-                audio: userAudio.audio!,
-              );
-            },
+            itemBuilder: (_, index) => _Item(userAudio: data[index]),
           ),
+        );
+      },
+    );
+  }
+}
+
+class _Item extends StatelessWidget {
+  const _Item({
+    required this.userAudio,
+  });
+
+  final UserAudio userAudio;
+
+  @override
+  Widget build(BuildContext context) {
+    if (userAudio.audio == null) {
+      return const SizedBox.shrink();
+    }
+
+    return BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
+      buildWhen: (previous, current) => previous.nowPlayingAudio != current.nowPlayingAudio,
+      builder: (_, nowPlayingAudioState) {
+        final nowPlayingAudio = nowPlayingAudioState.nowPlayingAudio.getOrNull;
+
+        final isPlaying = nowPlayingAudio?.id == userAudio.audio?.id ||
+            nowPlayingAudio?.localId == userAudio.audio?.localId;
+
+        return AudioListItem(
+          onTap: () => context.nowPlayingAudioCubit.onLocalAudioPressed(userAudio.audio),
+          audio: userAudio.audio!,
+          isPlaying: isPlaying,
         );
       },
     );

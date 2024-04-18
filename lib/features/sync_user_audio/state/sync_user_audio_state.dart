@@ -91,9 +91,11 @@ class SyncUserAudioCubit extends Cubit<SyncUserAudioState> {
             queuedDownloadsCount: 0,
           ));
         } else {
+          await Future.delayed(const Duration(seconds: 1));
+
           emit(state.copyWith(syncState: SyncAudiosState.nothingToSync));
 
-          await Future.delayed(const Duration(seconds: 3));
+          await Future.delayed(const Duration(seconds: 1, milliseconds: 500));
 
           emit(state.copyWith(syncState: SyncAudiosState.idle));
         }
