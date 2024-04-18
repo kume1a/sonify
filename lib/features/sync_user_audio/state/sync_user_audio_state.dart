@@ -66,6 +66,8 @@ class SyncUserAudioCubit extends Cubit<SyncUserAudioState> {
   Future<void> _startSync() async {
     emit(state.copyWith(syncState: SyncAudiosState.loading));
 
+    await Future.delayed(const Duration(seconds: 1));
+
     await _syncUserAudio().awaitFold(
       (l) async {
         emit(state.copyWith(
@@ -91,8 +93,6 @@ class SyncUserAudioCubit extends Cubit<SyncUserAudioState> {
             queuedDownloadsCount: 0,
           ));
         } else {
-          await Future.delayed(const Duration(seconds: 1));
-
           emit(state.copyWith(syncState: SyncAudiosState.nothingToSync));
 
           await Future.delayed(const Duration(seconds: 1, milliseconds: 500));
