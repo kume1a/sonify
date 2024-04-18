@@ -19,7 +19,7 @@ class DownloadsList extends StatelessWidget {
       builder: (_, state) {
         final queueList = List.of(state.queue);
 
-        return SliverList.builder(
+        return ListView.builder(
           itemCount: state.queue.length,
           itemBuilder: (_, index) => _QueueItem(
             downloadTask: queueList[index],

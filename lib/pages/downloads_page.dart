@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../app/intl/app_localizations.dart';
+import '../features/download_file/ui/downloads_list.dart';
 
 class DownloadsPage extends StatelessWidget {
   const DownloadsPage({super.key});
@@ -22,8 +23,8 @@ class _Content extends StatelessWidget {
       appBar: AppBar(
         title: Text(l.downloads),
       ),
-      body: SafeArea(
-        child: Container(),
+      body: const SafeArea(
+        child: DownloadsList(),
       ),
     );
   }
