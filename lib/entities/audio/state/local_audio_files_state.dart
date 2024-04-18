@@ -56,7 +56,9 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<UserAudio>> {
       return null;
     }
 
-    return _audioLocalRepository.getAllByUserId(userId);
+    final res = await _audioLocalRepository.getAllByUserId(userId);
+
+    return res.dataOrNull;
   }
 
   void onSearchQueryChanged(String value) {}

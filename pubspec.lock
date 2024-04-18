@@ -262,7 +262,7 @@ packages:
     description:
       path: "packages/common_models"
       ref: HEAD
-      resolved-ref: f459ac4a9cbe026bec94db6b2952457c8354da48
+      resolved-ref: "544f432249936849ca47b20e2b099dfe2740d51b"
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.4"
@@ -271,7 +271,7 @@ packages:
     description:
       path: "packages/common_network_components"
       ref: HEAD
-      resolved-ref: f459ac4a9cbe026bec94db6b2952457c8354da48
+      resolved-ref: "544f432249936849ca47b20e2b099dfe2740d51b"
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.7"
@@ -280,7 +280,7 @@ packages:
     description:
       path: "packages/common_utilities"
       ref: HEAD
-      resolved-ref: f459ac4a9cbe026bec94db6b2952457c8354da48
+      resolved-ref: "544f432249936849ca47b20e2b099dfe2740d51b"
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.1"
@@ -289,7 +289,7 @@ packages:
     description:
       path: "packages/common_widgets"
       ref: HEAD
-      resolved-ref: f459ac4a9cbe026bec94db6b2952457c8354da48
+      resolved-ref: "544f432249936849ca47b20e2b099dfe2740d51b"
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.6"
@@ -637,10 +637,10 @@ packages:
     dependency: transitive
     description:
       name: google_sign_in_ios
-      sha256: "1e0d4fde6cc07a8ff423f6bc931e83a74163d6af702004bacaee752649fdd2e7"
+      sha256: a058c9880be456f21e2e8571c1126eaacd570bdc5b6c6d9d15aea4bdf22ca9fe
       url: "https://pub.dev"
     source: hosted
-    version: "5.7.5"
+    version: "5.7.6"
   google_sign_in_platform_interface:
     dependency: transitive
     description:

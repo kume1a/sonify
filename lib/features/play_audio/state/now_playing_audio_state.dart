@@ -235,7 +235,13 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
 
     if (playlistId == null) {
       final localUserAudios = await _audioLocalRepository.getAllByUserId(authUserId);
-      final localAudios = localUserAudios.map((e) => e.audio).where((e) => e != null).cast<Audio>().toList();
+      if (localUserAudios.isErr) {
+        Logger.root.warning('PlaylistCubit._loadNowPlayingPlaylist: failed to get local user audios');
+        return null;
+      }
+
+      final localAudios =
+          localUserAudios.dataOrThrow.map((e) => e.audio).where((e) => e != null).cast<Audio>().toList();
 
       emit(state.copyWith(nowPlayingAudios: localAudios, nowPlayingPlaylist: null));
 

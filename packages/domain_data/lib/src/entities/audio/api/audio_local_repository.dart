@@ -1,12 +1,14 @@
+import 'package:common_models/common_models.dart';
+
 import '../model/audio.dart';
 import '../model/user_audio.dart';
 
 abstract interface class AudioLocalRepository {
-  Future<List<UserAudio>> getAllByUserId(String userId);
+  Future<Result<List<UserAudio>>> getAllByUserId(String userId);
 
-  Future<Audio?> getById(int id);
+  Future<Result<Audio?>> getById(int id);
 
-  Future<UserAudio?> save(UserAudio audio);
+  Future<Result<UserAudio>> save(UserAudio audio);
 
-  Future<int> deleteUserAudioJoinsByIds(List<int> ids);
+  Future<Result<int>> deleteUserAudioJoinsByIds(List<int> ids);
 }

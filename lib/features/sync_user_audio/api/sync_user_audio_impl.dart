@@ -41,8 +41,13 @@ class SyncUserAudioImpl implements SyncUserAudio {
       ));
     }
 
-    final userLocalAudios = await _audioLocalRepository.getAllByUserId(authUserId);
+    final userLocalAudiosRes = await _audioLocalRepository.getAllByUserId(authUserId);
+    if (userLocalAudiosRes.isErr) {
+      Logger.root.fine('Failed to get local user audios: $userLocalAudiosRes');
+      return left(SyncUserAudioError.unknown);
+    }
 
+    final userLocalAudios = userLocalAudiosRes.dataOrThrow;
     final remoteUserAudioIds = userAudioIdsRes.rightOrThrow.toSet();
     final userLocalAudioIds = userLocalAudios.map((e) => e.audio?.id).whereNotNull().toSet();
 
