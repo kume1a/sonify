@@ -41,14 +41,14 @@ class _Content extends StatelessWidget {
           orElse: () => const SizedBox.shrink(),
           success: (isSpotifyAuthenticated) {
             if (isSpotifyAuthenticated) {
-              return EnsureSpotifyPlaylistsImported(
-                child: ListView(
-                  children: const [
-                    SizedBox(height: 24),
-                    PlaylistTiles(),
-                    SpotifyPlaylistsList(),
-                  ],
-                ),
+              return ListView(
+                children: const [
+                  SizedBox(height: 24),
+                  PlaylistTiles(),
+                  EnsureSpotifyPlaylistsImported(
+                    child: SpotifyPlaylistsList(),
+                  ),
+                ],
               );
             }
 

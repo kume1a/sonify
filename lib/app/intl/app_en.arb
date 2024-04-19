@@ -139,5 +139,8 @@
   "seeDownloads": "See downloads",
   "syncFailed": "Sync failed",
   "nothingToSync": "Nothing to sync",
-  "syncAudios": "Sync audios"
+  "syncAudios": "Sync audios",
+  "reimportSpotifyPlaylists": "Reimport Spotify Playlists",
+  "retry": "Retry",
+  "failedToImportSpotifyPlaylists": "Failed to import Spotify Playlists"
 }

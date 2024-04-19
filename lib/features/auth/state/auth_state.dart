@@ -64,7 +64,9 @@ class AuthCubit extends Cubit<AuthState> {
 
     if (isAuthenticated) {
       await _userRemoteRepository.getAuthUser().awaitFold(
-        (_) => _pageNavigator.toMain(),
+        (_) {
+          _pageNavigator.toMain();
+        },
         (r) {
           if (r.name.isEmpty) {
             _pageNavigator.toUserName();

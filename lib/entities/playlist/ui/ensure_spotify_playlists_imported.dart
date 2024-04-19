@@ -15,16 +15,35 @@ class EnsureSpotifyPlaylistsImported extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+
     return BlocBuilder<ImportSpotifyPlaylistsCubit, ImportSpotifyPlaylistsState>(
       buildWhen: (previous, current) =>
           previous.isSpotifyPlaylistsImported != current.isSpotifyPlaylistsImported,
       builder: (_, state) {
         return state.isSpotifyPlaylistsImported.maybeWhen(
           orElse: () => const Center(child: CircularProgressIndicator()),
-          failure: (l) => Center(
-            child: IconButton(
-              onPressed: context.importSpotifyPlaylistsCubit.onRefreshSpotifyPlaylistImportStatus,
-              icon: const Icon(Icons.refresh),
+          failure: (_) => Center(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    l.failedToImportSpotifyPlaylists,
+                    style: TextStyle(color: theme.appThemeExtension?.elSecondary),
+                  ),
+                  const SizedBox(height: 4),
+                  TextButton(
+                    onPressed: context.importSpotifyPlaylistsCubit.onRefreshSpotifyPlaylistImportStatus,
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.all(8),
+                    ),
+                    child: Text(l.retry),
+                  ),
+                ],
+              ),
             ),
           ),
           success: (isSpotifyPlaylistsImported) {
