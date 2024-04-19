@@ -91,7 +91,7 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
         final audio = downloadTask.payload.userAudio?.audio;
 
         if (audio?.thumbnailPath != null) {
-          return Uri.tryParse(assembleResourceUrl(audio!.thumbnailPath!));
+          return Uri.tryParse(assembleRemoteMediaUrl(audio!.thumbnailPath!));
         }
 
         if (audio?.thumbnailUrl != null) {

@@ -51,7 +51,7 @@ class Thumbnail extends HookWidget {
     final url = thumbnailUrl.notNullOrEmpty
         ? thumbnailUrl!
         : thumbnailPath.notNullOrEmpty
-            ? assembleResourceUrl(thumbnailPath!)
+            ? assembleRemoteMediaUrl(thumbnailPath!)
             : null;
 
     return url != null

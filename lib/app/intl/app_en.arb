@@ -142,5 +142,6 @@
   "syncAudios": "Sync audios",
   "reimportSpotifyPlaylists": "Reimport Spotify Playlists",
   "retry": "Retry",
-  "failedToImportSpotifyPlaylists": "Failed to import Spotify Playlists"
+  "failedToImportSpotifyPlaylists": "Failed to import Spotify Playlists",
+  "authorizeSpotifyCaption": "To import Spotify playlists,please authorize with Spotify."
 }

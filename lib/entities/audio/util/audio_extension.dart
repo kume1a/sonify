@@ -10,9 +10,9 @@ extension AudioX on Audio? {
     }
 
     if (this!.localThumbnailPath.notNullOrEmpty) {
-      return Uri.tryParse(this!.localThumbnailPath!);
+      return Uri.tryParse(assembleLocalFileUrl(this!.localThumbnailPath!));
     } else if (this!.thumbnailPath.notNullOrEmpty) {
-      return Uri.tryParse(assembleResourceUrl(this!.thumbnailPath!));
+      return Uri.tryParse(assembleRemoteMediaUrl(this!.thumbnailPath!));
     } else if (this!.thumbnailUrl.notNullOrEmpty) {
       return Uri.tryParse(this!.thumbnailUrl!);
     }
@@ -26,9 +26,9 @@ extension AudioX on Audio? {
     }
 
     if (this!.localPath.notNullOrEmpty) {
-      return Uri.tryParse(this!.localPath!);
+      return Uri.tryParse(assembleLocalFileUrl(this!.localPath!));
     }
 
-    return Uri.tryParse(assembleResourceUrl(this!.path));
+    return Uri.tryParse(assembleRemoteMediaUrl(this!.path));
   }
 }

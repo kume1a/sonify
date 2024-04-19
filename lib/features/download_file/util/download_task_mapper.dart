@@ -17,7 +17,7 @@ class DownloadTaskMapper {
   final UuidFactory _uuidFactory;
 
   Future<DownloadTask?> userAudioToDownloadTask(UserAudio userAudio) async {
-    final uri = tryMap(userAudio.audio?.path, (path) => Uri.tryParse(assembleResourceUrl(path)));
+    final uri = tryMap(userAudio.audio?.path, (path) => Uri.tryParse(assembleRemoteMediaUrl(path)));
     if (uri == null) {
       return null;
     }
