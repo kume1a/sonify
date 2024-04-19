@@ -7,6 +7,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../../../app/navigation/page_navigator.dart';
+import '../../../shared/util/utils.dart';
 import '../api/after_sign_in.dart';
 import '../api/auth_status_provider.dart';
 import '../api/auth_user_info_provider.dart';
@@ -71,7 +72,7 @@ class AuthCubit extends Cubit<AuthState> {
         return;
       }
 
-      if (authUserInfo.name.isEmpty) {
+      if (authUserInfo.name.isNullOrEmpty) {
         _pageNavigator.toUserName();
       } else {
         _pageNavigator.toMain();

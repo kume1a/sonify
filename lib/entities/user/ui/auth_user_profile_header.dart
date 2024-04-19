@@ -44,7 +44,7 @@ class AuthUserProfileHeader extends StatelessWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    data.name,
+                    data.name ?? '',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontWeight: FontWeight.w500),

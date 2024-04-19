@@ -4,6 +4,7 @@ import 'package:logging/logging.dart';
 import 'package:sonify_client/sonify_client.dart';
 
 import '../../../app/navigation/page_navigator.dart';
+import '../../../shared/util/utils.dart';
 import 'after_sign_in.dart';
 import 'auth_user_info_provider.dart';
 
@@ -25,14 +26,15 @@ class AfterSignInImpl implements AfterSignIn {
   }) async {
     await _authTokenStore.writeAccessToken(tokenPayload.accessToken);
 
-    if (tokenPayload.user == null) {
+    final user = tokenPayload.user;
+    if (user == null) {
       Logger.root.warning('AfterSignIn.call: user is null, $tokenPayload');
       return;
     }
 
     await _authUserInfoProvider.write(tokenPayload.user!);
 
-    if (tokenPayload.user!.name.isEmpty == true) {
+    if (user.name.isNullOrEmpty) {
       _pageNavigator.toUserName();
     } else {
       _pageNavigator.toMain();

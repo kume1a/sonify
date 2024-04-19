@@ -83,7 +83,7 @@ class AuthUserInfoProviderImpl implements AuthUserInfoProvider {
       _sharedPreferences.setString(_keyAuthUserId, user.id),
       if (user.createdAt != null)
         _sharedPreferences.setInt(_keyAuthUserCreatedAt, user.createdAt!.millisecondsSinceEpoch),
-      _sharedPreferences.setString(_keyAuthUserName, user.name),
+      if (user.name != null) _sharedPreferences.setString(_keyAuthUserName, user.name!),
       _sharedPreferences.setString(_keyAuthUserEmail, user.email),
     ]);
   }

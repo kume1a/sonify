@@ -24,6 +24,8 @@ T callOrDefault<T>(T Function() fn, T defaultValue) {
 
 extension StringX on String? {
   bool get notNullOrEmpty => this != null && this?.isNotEmpty == true;
+
+  bool get isNullOrEmpty => this == null || this?.isEmpty == true;
 }
 
 double deg2rad(double deg) {
