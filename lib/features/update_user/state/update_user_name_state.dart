@@ -1,11 +1,12 @@
 import 'package:common_models/common_models.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:sonify_client/sonify_client.dart';
 
 import '../../../app/navigation/page_navigator.dart';
+import '../../auth/api/auth_user_info_provider.dart';
 
 part 'update_user_name_state.freezed.dart';
 
@@ -33,10 +34,12 @@ class UpdateUserNameCubit extends Cubit<UpdateUserNameState> {
   UpdateUserNameCubit(
     this._userRemoteRepository,
     this._pageNavigator,
+    this._authUserInfoProvider,
   ) : super(UpdateUserNameState.initial());
 
-  final UserRemoteService _userRemoteRepository;
+  final UserRemoteRepository _userRemoteRepository;
   final PageNavigator _pageNavigator;
+  final AuthUserInfoProvider _authUserInfoProvider;
 
   void onNameChanged(String value) {
     emit(state.copyWith(name: Name(value)));
@@ -51,10 +54,12 @@ class UpdateUserNameCubit extends Cubit<UpdateUserNameState> {
 
     emit(state.copyWith(submitState: ActionState.executing()));
 
-    _userRemoteRepository.updateUser(name: state.name.getOrThrow).awaitFold(
+    return _userRemoteRepository.updateUser(name: state.name.getOrThrow).awaitFold(
       (l) => emit(state.copyWith(submitState: ActionState.failed(l))),
-      (_) {
+      (user) async {
         emit(state.copyWith(submitState: ActionState.executed()));
+
+        await _authUserInfoProvider.write(user);
 
         _pageNavigator.toMain();
       },

@@ -65,6 +65,8 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
       audioEntity.spotifyId = audio.spotifyId;
       audioEntity.thumbnailPath = audio.thumbnailPath;
       audioEntity.thumbnailUrl = audio.thumbnailUrl;
+      audioEntity.localPath = audio.localPath;
+      audioEntity.localThumbnailPath = audio.localThumbnailPath;
 
       final userAudioEntity = UserAudioEntity();
 

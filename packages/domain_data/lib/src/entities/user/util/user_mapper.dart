@@ -9,7 +9,7 @@ class UserMapper {
     return User(
       id: dto.id ?? kInvalidId,
       createdAt: tryMapDate(dto.createdAt),
-      name: dto.name ?? '',
+      name: dto.name,
       email: dto.email ?? '',
     );
   }

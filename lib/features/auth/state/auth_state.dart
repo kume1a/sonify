@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 
 import '../../../app/navigation/page_navigator.dart';
 import '../api/after_sign_in.dart';
 import '../api/auth_status_provider.dart';
+import '../api/auth_user_info_provider.dart';
 import '../api/auth_with_google.dart';
 
 part 'auth_state.freezed.dart';
@@ -34,8 +36,8 @@ class AuthCubit extends Cubit<AuthState> {
     this._authStatusProvider,
     this._authRemoteRepository,
     this._pageNavigator,
-    this._userRemoteRepository,
     this._afterSignIn,
+    this._authUserInfoProvider,
   ) : super(AuthState.initial()) {
     _init();
   }
@@ -44,8 +46,8 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthStatusProvider _authStatusProvider;
   final AuthRemoteRepository _authRemoteRepository;
   final PageNavigator _pageNavigator;
-  final UserRemoteRepository _userRemoteRepository;
   final AfterSignIn _afterSignIn;
+  final AuthUserInfoProvider _authUserInfoProvider;
 
   Future<void> _init() async {
     _loadAuthStatus();
@@ -63,18 +65,17 @@ class AuthCubit extends Cubit<AuthState> {
     ));
 
     if (isAuthenticated) {
-      await _userRemoteRepository.getAuthUser().awaitFold(
-        (_) {
-          _pageNavigator.toMain();
-        },
-        (r) {
-          if (r.name.isEmpty) {
-            _pageNavigator.toUserName();
-          } else {
-            _pageNavigator.toMain();
-          }
-        },
-      );
+      final authUserInfo = await _authUserInfoProvider.read();
+      if (authUserInfo == null) {
+        Logger.root.warning('authUserInfo is null while isAuthenticated is true.');
+        return;
+      }
+
+      if (authUserInfo.name.isEmpty) {
+        _pageNavigator.toUserName();
+      } else {
+        _pageNavigator.toMain();
+      }
     }
   }
 
