@@ -6,7 +6,7 @@ import '../../../shared/constant.dart';
 import '../model/audio.dart';
 
 class AudioMapper {
-  Audio fromDto(AudioDto dto) {
+  Audio dtoToModel(AudioDto dto) {
     return Audio(
       id: dto.id ?? kInvalidId,
       localId: null,
@@ -25,7 +25,7 @@ class AudioMapper {
     );
   }
 
-  Audio fromEntity(AudioEntity e) {
+  Audio entityToModel(AudioEntity e) {
     return Audio(
       id: e.remoteId,
       localId: e.id,
@@ -42,5 +42,25 @@ class AudioMapper {
       thumbnailUrl: e.thumbnailUrl,
       localThumbnailPath: e.localThumbnailPath,
     );
+  }
+
+  AudioEntity modelToEntity(Audio m) {
+    final e = AudioEntity();
+
+    e.remoteId = m.id;
+    e.createdAtMillis = m.createdAt?.millisecondsSinceEpoch;
+    e.title = m.title;
+    e.durationMs = m.durationMs;
+    e.path = m.path;
+    e.author = m.author;
+    e.sizeBytes = m.sizeBytes;
+    e.youtubeVideoId = m.youtubeVideoId;
+    e.spotifyId = m.spotifyId;
+    e.thumbnailPath = m.thumbnailPath;
+    e.thumbnailUrl = m.thumbnailUrl;
+    e.localPath = m.localPath;
+    e.localThumbnailPath = m.localThumbnailPath;
+
+    return e;
   }
 }

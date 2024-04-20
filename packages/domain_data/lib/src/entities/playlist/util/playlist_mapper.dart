@@ -20,7 +20,7 @@ class PlaylistMapper {
       thumbnailPath: dto.thumbnailPath,
       thumbnailUrl: dto.thumbnailUrl,
       spotifyId: dto.spotifyId,
-      audios: tryMapList(dto.audios, _audioMapper.fromDto),
+      audios: tryMapList(dto.audios, _audioMapper.dtoToModel),
     );
   }
 }

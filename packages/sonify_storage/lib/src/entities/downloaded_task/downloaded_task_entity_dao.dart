@@ -4,7 +4,7 @@ import 'downloaded_task_entity.dart';
 abstract interface class DownloadedTaskEntityDao {
   Future<int> insert(
     DownloadedTaskEntity entity, {
-    UserAudioEntity? payloadUserAudio,
+    UserAudioEntity? payloadUserAudioEntity,
   });
 
   Future<List<DownloadedTaskEntity>> getAllByUserId(String userId);

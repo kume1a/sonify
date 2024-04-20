@@ -12,10 +12,10 @@ class IsarDownloadedTaskEntityDao implements DownloadedTaskEntityDao {
   @override
   Future<int> insert(
     DownloadedTaskEntity entity, {
-    UserAudioEntity? payloadUserAudio,
+    UserAudioEntity? payloadUserAudioEntity,
   }) {
-    if (payloadUserAudio != null) {
-      entity.payloadUserAudio.value = payloadUserAudio;
+    if (payloadUserAudioEntity != null) {
+      entity.payloadUserAudio.value = payloadUserAudioEntity;
     }
 
     return _isar.writeTxn(() async {

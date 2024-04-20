@@ -22,7 +22,7 @@ class AudioRemoteRepositoryImpl implements AudioRemoteRepository {
   }) async {
     final res = await _audioRemoteService.downloadYoutubeAudio(videoId: videoId);
 
-    return res.map(_userAudioMapper.fromDto);
+    return res.map(_userAudioMapper.dtoToModel);
   }
 
   @override
@@ -43,7 +43,7 @@ class AudioRemoteRepositoryImpl implements AudioRemoteRepository {
       thumbnail: thumbnail,
     ));
 
-    return res.map(_userAudioMapper.fromDto);
+    return res.map(_userAudioMapper.dtoToModel);
   }
 
   @override
@@ -55,6 +55,6 @@ class AudioRemoteRepositoryImpl implements AudioRemoteRepository {
   Future<Either<NetworkCallError, List<UserAudio>>> getAuthUserAudiosByAudioIds(List<String> audioIds) async {
     final res = await _audioRemoteService.getAuthUserAudiosByAudioIds(audioIds);
 
-    return res.map((r) => r.map(_userAudioMapper.fromDto).toList());
+    return res.map((r) => r.map(_userAudioMapper.dtoToModel).toList());
   }
 }

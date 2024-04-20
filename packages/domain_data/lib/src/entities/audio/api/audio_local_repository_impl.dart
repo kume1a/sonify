@@ -27,7 +27,7 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
     return wrapWithResult(() async {
       final audioEntities = await _userAudioEntityDao.getAllByUserId(userId);
 
-      return audioEntities.map(_userAudioMapper.fromEntity).toList();
+      return audioEntities.map(_userAudioMapper.entityToModel).toList();
     });
   }
 
@@ -40,7 +40,7 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
         return null;
       }
 
-      return _audioMapper.fromEntity(entity);
+      return _audioMapper.entityToModel(entity);
     });
   }
 
@@ -52,29 +52,8 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
     }
 
     return wrapWithResult(() async {
-      final audioEntity = AudioEntity();
-
-      audioEntity.remoteId = audio.id;
-      audioEntity.createdAtMillis = audio.createdAt?.millisecondsSinceEpoch;
-      audioEntity.title = audio.title;
-      audioEntity.durationMs = audio.durationMs;
-      audioEntity.path = audio.path;
-      audioEntity.author = audio.author;
-      audioEntity.sizeBytes = audio.sizeBytes;
-      audioEntity.youtubeVideoId = audio.youtubeVideoId;
-      audioEntity.spotifyId = audio.spotifyId;
-      audioEntity.thumbnailPath = audio.thumbnailPath;
-      audioEntity.thumbnailUrl = audio.thumbnailUrl;
-      audioEntity.localPath = audio.localPath;
-      audioEntity.localThumbnailPath = audio.localThumbnailPath;
-
-      final userAudioEntity = UserAudioEntity();
-
-      userAudioEntity.bUserId = userAudio.userId;
-      userAudioEntity.bAudioId = userAudio.audioId;
-      userAudioEntity.createdAtMillis = userAudio.createdAt?.millisecondsSinceEpoch;
-
-      // ---------------------
+      final audioEntity = _audioMapper.modelToEntity(audio);
+      final userAudioEntity = _userAudioMapper.modelToEntity(userAudio);
 
       final ids = await _createUserAudioWithAudio(
         audio: audioEntity,

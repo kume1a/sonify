@@ -26,4 +26,10 @@ abstract class DiSonifyStorageModule {
   CreateUserAudioWithAudio createUserAudioWithAudio(Isar isar) {
     return IsarCreateUserAudioWithAudio(isar);
   }
+
+  // downloaded task -----------------------------------------------------------
+  @lazySingleton
+  DownloadedTaskEntityDao downloadedTaskEntityDao(Isar isar) {
+    return IsarDownloadedTaskEntityDao(isar);
+  }
 }

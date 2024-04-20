@@ -168,7 +168,7 @@ abstract class DiDomainModelModule {
   }
 
   @lazySingleton
-  DownloadedTaskMapper downloadedTaskMapper() {
-    return DownloadedTaskMapper();
+  DownloadedTaskMapper downloadedTaskMapper(UserAudioMapper userAudioMapper) {
+    return DownloadedTaskMapper(userAudioMapper);
   }
 }

@@ -76,7 +76,7 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
       ),
     );
 
-    return _downloadedTaskMapper.fromDownloadTask(newDownloadTask);
+    return _downloadedTaskMapper.downloadTaskToModel(newDownloadTask);
   }
 
   Uri? _resolveImageUri(DownloadTask downloadTask) {
