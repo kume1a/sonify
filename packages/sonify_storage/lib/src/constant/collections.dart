@@ -7,3 +7,7 @@ abstract final class AudioEntity_ {
 abstract final class UserAudioEntity_ {
   static const String collectionName = 'user_audios';
 }
+
+abstract final class DownloadTaskEntity_ {
+  static const String collectionName = 'downloaded_tasks';
+}
