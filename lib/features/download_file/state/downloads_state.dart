@@ -17,18 +17,16 @@ import '../model/downloads_event.dart';
 
 part 'downloads_state.freezed.dart';
 
-typedef _DownloadTaskQueueMutation = void Function(Queue<DownloadTask> queue);
-
 @freezed
 class DownloadsState with _$DownloadsState {
   const factory DownloadsState({
-    required Queue<DownloadTask> queue,
+    required List<DownloadTask> downloading,
     required List<DownloadedTask> downloaded,
     required List<DownloadTask> failed,
   }) = _DownloadsState;
 
-  factory DownloadsState.initial() => DownloadsState(
-        queue: Queue(),
+  factory DownloadsState.initial() => const DownloadsState(
+        downloading: [],
         downloaded: [],
         failed: [],
       );
@@ -45,14 +43,20 @@ class DownloadsCubit extends Cubit<DownloadsState> {
     this._downloadTaskMapper,
     this._downloadTaskDownloader,
     this._onDownloadTaskDownloaded,
+    this._downloadedTaskLocalRepository,
+    this._authUserInfoProvider,
   ) : super(DownloadsState.initial()) {
     _init();
   }
+
+  final _queue = Queue<DownloadTask>();
 
   final EventBus _eventBus;
   final DownloadTaskMapper _downloadTaskMapper;
   final DownloadTaskDownloader _downloadTaskDownloader;
   final OnDownloadTaskDownloaded _onDownloadTaskDownloaded;
+  final DownloadedTaskLocalRepository _downloadedTaskLocalRepository;
+  final AuthUserInfoProvider _authUserInfoProvider;
 
   final _lock = Lock();
   Timer? _timer;
@@ -68,6 +72,8 @@ class DownloadsCubit extends Cubit<DownloadsState> {
     _subscriptionComposite.add(
       _eventBus.on<DownloadsEvent>().listen(_onDownloadsEvent),
     );
+
+    _loadDownloadedTasks();
   }
 
   @override
@@ -101,17 +107,21 @@ class DownloadsCubit extends Cubit<DownloadsState> {
       );
 
       await _lock.synchronized(() {
-        final queue = Queue.of(state.queue)..add(reEnqueuedDownloadTask);
+        _queue.add(reEnqueuedDownloadTask);
+
         final failed = List.of(state.failed)..remove(failedDownloadTask);
 
-        emit(state.copyWith(queue: queue, failed: failed));
+        emit(state.copyWith(downloading: List.of(_queue), failed: failed));
       });
 
       return;
     }
 
     _lock.synchronized(
-      () => _mutateQueueAndEmit((queue) => queue.add(downloadTask)),
+      () {
+        _queue.add(downloadTask);
+        emit(state.copyWith(downloading: List.of(_queue)));
+      },
     );
   }
 
@@ -121,7 +131,7 @@ class DownloadsCubit extends Cubit<DownloadsState> {
     }
 
     _lock.synchronized(() async {
-      final downloadTask = state.queue.firstOrNull;
+      final downloadTask = _queue.firstOrNull;
 
       if (downloadTask == null || downloadTask.state != DownloadTaskState.idle) {
         return;
@@ -130,7 +140,8 @@ class DownloadsCubit extends Cubit<DownloadsState> {
       // synchronized won't allow inProgress state before finished
       // so it should be only idle in queue here
       if (downloadTask.state != DownloadTaskState.idle) {
-        _mutateQueueAndEmit((queue) => queue.removeFirst());
+        _queue.removeFirst();
+        emit(state.copyWith(downloading: List.of(_queue)));
         return;
       }
 
@@ -142,23 +153,26 @@ class DownloadsCubit extends Cubit<DownloadsState> {
               return;
             }
 
-            _mutateQueueAndEmit((queue) => queue
+            _queue
               ..removeFirst()
               ..addFirst(downloadTask.copyWith(
                 progress: count / total,
                 speedInKbs: speed,
                 state: DownloadTaskState.inProgress,
-              )));
+              ));
+
+            emit(state.copyWith(downloading: List.of(_queue)));
           },
         );
 
         if (downloadedTask != null) {
           await _onDownloadTaskDownloaded(downloadedTask);
 
-          final queue = Queue.of(state.queue)..removeFirst();
+          _queue.removeFirst();
+
           final downloaded = List.of(state.downloaded)..insert(0, downloadedTask);
 
-          emit(state.copyWith(queue: queue, downloaded: downloaded));
+          emit(state.copyWith(downloading: List.of(_queue), downloaded: downloaded));
           return;
         }
       } catch (e) {
@@ -170,16 +184,22 @@ class DownloadsCubit extends Cubit<DownloadsState> {
         state: DownloadTaskState.failed,
       );
 
-      final queue = Queue.of(state.queue)..removeFirst();
+      _queue.removeFirst();
+
       final failed = List.of(state.failed)..insert(0, failedDownloadTask);
 
-      emit(state.copyWith(queue: queue, failed: failed));
+      emit(state.copyWith(downloading: List.of(_queue), failed: failed));
     });
   }
 
-  void _mutateQueueAndEmit(_DownloadTaskQueueMutation mutation) {
-    final queue = Queue.of(state.queue);
-    mutation(queue);
-    emit(state.copyWith(queue: queue));
+  Future<void> _loadDownloadedTasks() async {
+    final authUserId = await _authUserInfoProvider.getId();
+    if (authUserId == null) {
+      Logger.root.warning('Failed to load downloaded tasks, authUserId is null');
+      return;
+    }
+
+    final downloadedTasksRes = await _downloadedTaskLocalRepository.getAllByUserId(authUserId);
+    downloadedTasksRes.ifSuccess((data) => emit(state.copyWith(downloaded: data)));
   }
 }

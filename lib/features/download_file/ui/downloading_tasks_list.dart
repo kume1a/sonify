@@ -8,20 +8,22 @@ import '../../../entities/audio/util/audio_extension.dart';
 import '../../../shared/util/equality.dart';
 import '../state/downloads_state.dart';
 
-class DownloadsList extends StatelessWidget {
-  const DownloadsList({super.key});
+class DownloadingTasksList extends StatelessWidget {
+  const DownloadingTasksList({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DownloadsCubit, DownloadsState>(
-      buildWhen: (previous, current) => notDeepEquals(previous.queue, current.queue),
+      buildWhen: (previous, current) => notDeepEquals(previous.downloading, current.downloading),
       builder: (_, state) {
-        final queueList = List.of(state.queue);
+        if (state.downloading.isEmpty) {
+          return const SliverToBoxAdapter();
+        }
 
-        return ListView.builder(
-          itemCount: state.queue.length,
+        return SliverList.builder(
+          itemCount: state.downloading.length,
           itemBuilder: (_, index) => _QueueItem(
-            downloadTask: queueList[index],
+            downloadTask: state.downloading[index],
           ),
         );
       },

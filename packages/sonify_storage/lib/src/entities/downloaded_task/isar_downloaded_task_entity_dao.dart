@@ -31,7 +31,13 @@ class IsarDownloadedTaskEntityDao implements DownloadedTaskEntityDao {
   Future<List<DownloadedTaskEntity>> getAllByUserId(String userId) async {
     final res = await _isar.collection<DownloadedTaskEntity>().filter().userIdEqualTo(userId).findAll();
 
-    await Future.wait(res.map((e) => e.payloadUserAudio.load()));
+    await Future.wait(res.map((e) async {
+      await e.payloadUserAudio.load();
+
+      if (e.payloadUserAudio.value?.audio != null) {
+        return e.payloadUserAudio.value!.audio.load();
+      }
+    }));
 
     return res;
   }

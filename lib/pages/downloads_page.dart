@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../app/intl/app_localizations.dart';
-import '../features/download_file/ui/downloads_list.dart';
+import '../features/download_file/ui/downloaded_tasks_list.dart';
+import '../features/download_file/ui/downloading_tasks_list.dart';
+import '../shared/ui/list_header.dart';
 
 class DownloadsPage extends StatelessWidget {
   const DownloadsPage({super.key});
@@ -23,8 +25,23 @@ class _Content extends StatelessWidget {
       appBar: AppBar(
         title: Text(l.downloads),
       ),
-      body: const SafeArea(
-        child: DownloadsList(),
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: ListHeader(
+                text: l.downloads,
+              ),
+            ),
+            const DownloadingTasksList(),
+            SliverToBoxAdapter(
+              child: ListHeader(
+                text: l.downloaded,
+              ),
+            ),
+            const DownloadedTasksList(),
+          ],
+        ),
       ),
     );
   }
