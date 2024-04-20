@@ -6,7 +6,6 @@ import 'package:sonify_client/sonify_client.dart';
 import '../../../app/navigation/page_navigator.dart';
 import '../../../shared/util/utils.dart';
 import 'after_sign_in.dart';
-import 'auth_user_info_provider.dart';
 
 @LazySingleton(as: AfterSignIn)
 class AfterSignInImpl implements AfterSignIn {

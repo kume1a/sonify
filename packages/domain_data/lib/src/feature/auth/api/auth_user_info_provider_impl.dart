@@ -1,14 +1,12 @@
 import 'package:common_network_components/common_network_components.dart';
 import 'package:common_utilities/common_utilities.dart';
-import 'package:domain_data/domain_data.dart';
-import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sonify_client/sonify_client.dart';
 
+import '../../../entities/user/model/user.dart';
 import 'auth_user_info_provider.dart';
 
-@LazySingleton(as: AuthUserInfoProvider)
 class AuthUserInfoProviderImpl implements AuthUserInfoProvider {
   AuthUserInfoProviderImpl(
     this._authTokenStore,

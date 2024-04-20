@@ -8,7 +8,7 @@ import 'api_client.dart';
 import 'authorization_interceptor.dart';
 import 'multipart_api_client.dart';
 
-const Duration _kTimeoutDuration = Duration(minutes: 5);
+const Duration _kTimeoutDuration = Duration(minutes: 1);
 
 final class NetworkClientFactory {
   static ApiClient createApiClient({

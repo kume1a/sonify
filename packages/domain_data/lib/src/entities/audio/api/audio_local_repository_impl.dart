@@ -48,7 +48,7 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
   Future<Result<UserAudio>> save(UserAudio userAudio) async {
     final audio = userAudio.audio;
     if (audio == null) {
-      return resultErr();
+      return Result.err();
     }
 
     return wrapWithResult(() async {

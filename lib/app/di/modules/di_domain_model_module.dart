@@ -1,5 +1,6 @@
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sonify_client/sonify_client.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 import 'package:uuid/uuid.dart';
@@ -93,6 +94,19 @@ abstract class DiDomainModelModule {
     return AuthRemoteRepositoryImpl(authRemoteService, tokenPayloadMapper);
   }
 
+  @lazySingleton
+  AuthUserInfoProvider authUserInfoProvider(
+    AuthTokenStore authTokenStore,
+    SharedPreferences sharedPreferences,
+  ) {
+    return AuthUserInfoProviderImpl(authTokenStore, sharedPreferences);
+  }
+
+  @lazySingleton
+  AuthStatusProvider authStatusProvider(AuthTokenStore authTokenStore) {
+    return AuthStatusProviderImpl(authTokenStore);
+  }
+
   // user ----------------------------------------------------------------
   @lazySingleton
   UserMapper userMapper() {
@@ -170,5 +184,20 @@ abstract class DiDomainModelModule {
   @lazySingleton
   DownloadedTaskMapper downloadedTaskMapper(UserAudioMapper userAudioMapper) {
     return DownloadedTaskMapper(userAudioMapper);
+  }
+
+  @lazySingleton
+  DownloadedTaskLocalRepository downloadedTaskLocalRepository(
+    DownloadedTaskEntityDao downloadedTaskEntityDao,
+    DownloadedTaskMapper downloadedTaskMapper,
+    UserAudioMapper userAudioMapper,
+    AuthUserInfoProvider authUserInfoProvider,
+  ) {
+    return DownloadedTaskLocalRepositoryImpl(
+      downloadedTaskEntityDao,
+      downloadedTaskMapper,
+      userAudioMapper,
+      authUserInfoProvider,
+    );
   }
 }

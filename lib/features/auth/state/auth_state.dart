@@ -9,8 +9,6 @@ import 'package:logging/logging.dart';
 import '../../../app/navigation/page_navigator.dart';
 import '../../../shared/util/utils.dart';
 import '../api/after_sign_in.dart';
-import '../api/auth_status_provider.dart';
-import '../api/auth_user_info_provider.dart';
 import '../api/auth_with_google.dart';
 
 part 'auth_state.freezed.dart';

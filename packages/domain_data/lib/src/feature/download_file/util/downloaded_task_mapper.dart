@@ -27,10 +27,12 @@ class DownloadedTaskMapper {
   }
 
   DownloadedTaskEntity modelToEntity(
-    DownloadedTask m,
-  ) {
+    DownloadedTask m, {
+    String? userId,
+  }) {
     final e = DownloadedTaskEntity();
 
+    e.userId = userId;
     e.taskId = m.id;
     e.savePath = m.savePath;
     e.fileType = m.fileType.name;

@@ -262,7 +262,7 @@ packages:
     description:
       path: "packages/common_models"
       ref: HEAD
-      resolved-ref: "544f432249936849ca47b20e2b099dfe2740d51b"
+      resolved-ref: "76655679e5e419cf2229dc1be5767e762952a385"
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.4"
@@ -271,7 +271,7 @@ packages:
     description:
       path: "packages/common_network_components"
       ref: HEAD
-      resolved-ref: "544f432249936849ca47b20e2b099dfe2740d51b"
+      resolved-ref: "76655679e5e419cf2229dc1be5767e762952a385"
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.7"
@@ -280,7 +280,7 @@ packages:
     description:
       path: "packages/common_utilities"
       ref: HEAD
-      resolved-ref: "544f432249936849ca47b20e2b099dfe2740d51b"
+      resolved-ref: "76655679e5e419cf2229dc1be5767e762952a385"
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.1"
@@ -289,7 +289,7 @@ packages:
     description:
       path: "packages/common_widgets"
       ref: HEAD
-      resolved-ref: "544f432249936849ca47b20e2b099dfe2740d51b"
+      resolved-ref: "76655679e5e419cf2229dc1be5767e762952a385"
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.6"
@@ -1149,10 +1149,10 @@ packages:
     dependency: transitive
     description:
       name: pointycastle
-      sha256: "70fe966348fe08c34bf929582f1d8247d9d9408130723206472b4687227e4333"
+      sha256: "79fbafed02cfdbe85ef3fd06c7f4bc2cbcba0177e61b765264853d4253b21744"
       url: "https://pub.dev"
     source: hosted
-    version: "3.8.0"
+    version: "3.9.0"
   pool:
     dependency: transitive
     description:

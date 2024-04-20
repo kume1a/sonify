@@ -2,6 +2,7 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'entities/audio/audio_entity.dart';
+import 'entities/downloaded_task/downloaded_task_entity.dart';
 import 'entities/user_audio/user_audio_entity.dart';
 
 abstract class IsarFactory {
@@ -9,7 +10,11 @@ abstract class IsarFactory {
     final dir = await getApplicationDocumentsDirectory();
 
     final isar = await Isar.open(
-      [AudioEntitySchema, UserAudioEntitySchema],
+      [
+        AudioEntitySchema,
+        UserAudioEntitySchema,
+        DownloadedTaskEntitySchema,
+      ],
       directory: dir.path,
       maxSizeMiB: 1024 * 10,
     );

@@ -5,7 +5,6 @@ import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
-import '../../auth/api/auth_user_info_provider.dart';
 import '../../download_file/model/downloads_event.dart';
 import 'sync_user_audio.dart';
 

@@ -9,7 +9,6 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../../../shared/util/utils.dart';
-import '../../auth/api/auth_user_info_provider.dart';
 import '../api/now_playing_audio_info_store.dart';
 import '../model/media_item_payload.dart';
 import '../model/playback_button_state.dart';

@@ -1,9 +1,9 @@
+import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../app/navigation/page_navigator.dart';
 import '../../spotifyauth/api/spotify_creds_store.dart';
 import 'after_sign_out.dart';
-import 'auth_user_info_provider.dart';
 
 @LazySingleton(as: AfterSignOut)
 class AfterSignOutImpl implements AfterSignOut {

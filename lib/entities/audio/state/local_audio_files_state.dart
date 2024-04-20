@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
-import '../../../features/auth/api/auth_user_info_provider.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../model/event_user_audio.dart';
 

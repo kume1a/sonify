@@ -10,10 +10,12 @@ import 'on_download_task_downloaded.dart';
 class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
   OnDownloadTaskDownloadedImpl(
     this._audioLocalRepository,
+    this._downloadedTaskLocalRepository,
     this._eventBus,
   );
 
   final AudioLocalRepository _audioLocalRepository;
+  final DownloadedTaskLocalRepository _downloadedTaskLocalRepository;
   final EventBus _eventBus;
 
   @override
@@ -32,16 +34,23 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
       return;
     }
 
-    Logger.root.info('UserAudio downloaded, $userAudio');
-
     final insertedAudio = await _audioLocalRepository.save(userAudio);
     if (insertedAudio.isErr) {
       Logger.root.warning('Failed to save userAudio, $userAudio');
       return;
     }
 
-    Logger.root.info('UserAudio saved, $insertedAudio');
-
     _eventBus.fire(EventUserAudio.downloaded(insertedAudio.dataOrThrow));
+
+    final downloadedTaskRes = await _downloadedTaskLocalRepository.save(
+      downloadTask,
+      payloadUserAudio: insertedAudio.dataOrThrow,
+    );
+    if (downloadedTaskRes.isErr) {
+      Logger.root.warning('Failed to save downloadedTask, $downloadTask');
+      return;
+    }
+
+    Logger.root.info('download task downloaded, $downloadTask');
   }
 }

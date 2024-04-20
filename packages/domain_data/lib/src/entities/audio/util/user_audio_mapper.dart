@@ -36,6 +36,7 @@ class UserAudioMapper {
   UserAudioEntity modelToEntity(UserAudio m) {
     final e = UserAudioEntity();
 
+    e.id = m.localId;
     e.bUserId = m.userId;
     e.bAudioId = m.audioId;
     e.createdAtMillis = m.createdAt?.millisecondsSinceEpoch;

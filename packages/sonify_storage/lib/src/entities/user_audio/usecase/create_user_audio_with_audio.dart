@@ -8,6 +8,11 @@ class UserAudioAndAudioEntityIds {
 
   final int userAudioEntityId;
   final int audioEntityId;
+
+  @override
+  String toString() {
+    return 'UserAudioAndAudioEntityIds(userAudioEntityId: $userAudioEntityId, audioEntityId: $audioEntityId)';
+  }
 }
 
 abstract interface class CreateUserAudioWithAudio {

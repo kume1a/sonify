@@ -6,7 +6,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../app/navigation/page_navigator.dart';
-import '../../auth/api/auth_user_info_provider.dart';
 
 part 'update_user_name_state.freezed.dart';
 

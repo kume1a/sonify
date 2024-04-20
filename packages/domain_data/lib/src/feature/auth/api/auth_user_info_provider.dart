@@ -1,4 +1,4 @@
-import 'package:domain_data/domain_data.dart';
+import '../../../entities/user/model/user.dart';
 
 abstract interface class AuthUserInfoProvider {
   Future<String?> getId();
