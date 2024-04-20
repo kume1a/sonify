@@ -3,6 +3,7 @@ import 'dart:collection';
 
 import 'package:collection/collection.dart';
 import 'package:common_utilities/common_utilities.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -12,10 +13,7 @@ import 'package:synchronized/synchronized.dart';
 
 import '../api/download_task_downloader.dart';
 import '../api/on_download_task_downloaded.dart';
-import '../model/download_task.dart';
-import '../model/downloaded_task.dart';
 import '../model/downloads_event.dart';
-import '../util/download_task_mapper.dart';
 
 part 'downloads_state.freezed.dart';
 

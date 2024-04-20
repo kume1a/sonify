@@ -2,9 +2,16 @@ import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sonify_client/sonify_client.dart';
 import 'package:sonify_storage/sonify_storage.dart';
+import 'package:uuid/uuid.dart';
 
 @module
 abstract class DiDomainModelModule {
+  // shared ----------------------------------------------------------------
+  @lazySingleton
+  UuidFactory uuidFactory(Uuid uuid) {
+    return UuidFactoryImpl(uuid);
+  }
+
   // audio ----------------------------------------------------------------
   @lazySingleton
   AudioMapper audioMapper() {
@@ -152,5 +159,16 @@ abstract class DiDomainModelModule {
       youtubeRemoteService,
       youtubeSearchSuggestionsMapper,
     );
+  }
+
+  // download_file ----------------------------------------------------------------
+  @lazySingleton
+  DownloadTaskMapper downloadTaskMapper(UuidFactory uuidFactory) {
+    return DownloadTaskMapper(uuidFactory);
+  }
+
+  @lazySingleton
+  DownloadedTaskMapper downloadedTaskMapper() {
+    return DownloadedTaskMapper();
   }
 }

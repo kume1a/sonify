@@ -1,5 +1,5 @@
-import '../model/download_task.dart';
-import '../model/downloaded_task.dart';
+import 'package:domain_data/domain_data.dart';
+
 import 'downloader.dart';
 
 abstract interface class DownloadTaskDownloader {

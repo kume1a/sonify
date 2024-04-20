@@ -1,12 +1,11 @@
 import 'package:common_widgets/common_widgets.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../../entities/audio/util/audio_extension.dart';
 import '../../../shared/util/equality.dart';
-import '../model/download_task.dart';
-import '../model/file_type.dart';
 import '../state/downloads_state.dart';
 
 class DownloadsList extends StatelessWidget {

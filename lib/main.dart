@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:common_models/common_models.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:global_navigator/global_navigator.dart';
@@ -9,7 +10,6 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import 'app/app.dart';
-import 'app/configuration/app_environment.dart';
 import 'app/configuration/configure_audio_components.dart';
 import 'app/configuration/global_http_overrides.dart';
 import 'app/configuration/init_cached_stores.dart';

@@ -4,8 +4,6 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../../../entities/audio/model/event_user_audio.dart';
-import '../model/downloaded_task.dart';
-import '../model/file_type.dart';
 import 'on_download_task_downloaded.dart';
 
 @LazySingleton(as: OnDownloadTaskDownloaded)

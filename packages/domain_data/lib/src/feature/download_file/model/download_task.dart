@@ -1,6 +1,6 @@
-import 'package:domain_data/domain_data.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../entities/audio/model/user_audio.dart';
 import 'file_type.dart';
 
 part 'download_task.freezed.dart';

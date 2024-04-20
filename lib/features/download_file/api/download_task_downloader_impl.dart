@@ -1,13 +1,7 @@
+import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
-import '../../../shared/util/assemble_resource_url.dart';
-import '../../../shared/util/resource_save_path_provider.dart';
-import '../../../shared/util/uuid_factory.dart';
-import '../model/download_task.dart';
-import '../model/downloaded_task.dart';
-import '../model/file_type.dart';
-import '../util/downloaded_task_mapper.dart';
 import 'download_task_downloader.dart';
 import 'downloader.dart';
 import 'resolve_file_size.dart';

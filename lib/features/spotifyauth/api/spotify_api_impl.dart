@@ -1,6 +1,6 @@
+import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../app/configuration/app_environment.dart';
 import '../../../shared/values/constant.dart';
 import 'spotify_api.dart';
 

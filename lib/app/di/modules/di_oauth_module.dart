@@ -1,9 +1,8 @@
 import 'dart:io';
 
+import 'package:domain_data/domain_data.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
-
-import '../../configuration/app_environment.dart';
 
 @module
 abstract class DiOauthModule {

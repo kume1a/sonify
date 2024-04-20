@@ -1,4 +1,4 @@
-import '../../app/configuration/app_environment.dart';
+import 'app_environment.dart';
 
 String assembleRemoteMediaUrl(String path) {
   return '${AppEnvironment.apiUrl}/$path';

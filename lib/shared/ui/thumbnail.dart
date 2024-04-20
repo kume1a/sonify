@@ -2,11 +2,11 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../util/assemble_resource_url.dart';
 import '../util/utils.dart';
 import '../values/assets.dart';
 

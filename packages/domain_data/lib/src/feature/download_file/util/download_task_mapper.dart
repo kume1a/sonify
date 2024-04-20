@@ -1,14 +1,12 @@
 import 'package:common_utilities/common_utilities.dart';
-import 'package:domain_data/domain_data.dart';
-import 'package:injectable/injectable.dart';
 
-import '../../../shared/util/assemble_resource_url.dart';
-import '../../../shared/util/resource_save_path_provider.dart';
-import '../../../shared/util/uuid_factory.dart';
+import '../../../entities/audio/model/user_audio.dart';
+import '../../../shared/assemble_resource_url.dart';
+import '../../../shared/resource_save_path_provider.dart';
+import '../../../shared/uuid_factory.dart';
 import '../model/download_task.dart';
 import '../model/file_type.dart';
 
-@lazySingleton
 class DownloadTaskMapper {
   DownloadTaskMapper(
     this._uuidFactory,
