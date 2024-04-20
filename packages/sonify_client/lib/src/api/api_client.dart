@@ -6,6 +6,8 @@ import 'package:retrofit/retrofit.dart';
 
 import '../entity/audio/model/download_youtube_audio_body.dart';
 import '../entity/audio/model/get_audios_by_ids_body.dart';
+import '../entity/audio/model/like_audio_body.dart';
+import '../entity/audio/model/unlike_audio_body.dart';
 import '../entity/audio/model/user_audio_dto.dart';
 import '../entity/playlist/model/playlist_dto.dart';
 import '../entity/server_time/model/server_time_dto.dart';
@@ -49,6 +51,12 @@ abstract class ApiClient {
   Future<List<UserAudioDto>> getAuthUserUserAudios(
     @Body() GetAudiosByIdsBody body, // using body for big payload
   );
+
+  @POST('/v1/audio/like')
+  Future<void> likeAudio(@Body() LikeAudioBody body);
+
+  @POST('/v1/audio/unlike')
+  Future<void> unlikeAudio(@Body() UnlikeAudioBody body);
 
   // auth ------------------------------
   @POST('/v1/auth/googleSignIn')

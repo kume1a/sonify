@@ -8,6 +8,8 @@ import '../../../shared/dto/error_response_dto.dart';
 import '../model/download_youtube_audio_body.dart';
 import '../model/download_youtube_audio_error.dart';
 import '../model/get_audios_by_ids_body.dart';
+import '../model/like_audio_body.dart';
+import '../model/unlike_audio_body.dart';
 import '../model/upload_user_local_music_error.dart';
 import '../model/upload_user_local_music_params.dart';
 import '../model/user_audio_dto.dart';
@@ -75,6 +77,30 @@ class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteServ
       final body = GetAudiosByIdsBody(audioIds: audioIds);
 
       return _apiClient.getAuthUserUserAudios(body);
+    });
+  }
+
+  @override
+  Future<Either<NetworkCallError, Unit>> likeAudio({
+    required String audioId,
+  }) {
+    return callCatchHandleNetworkCallError(() async {
+      final body = LikeAudioBody(audioId: audioId);
+
+      await _apiClient.likeAudio(body);
+
+      return unit;
+    });
+  }
+
+  @override
+  Future<Either<NetworkCallError, Unit>> unlikeAudio({required String audioId}) {
+    return callCatchHandleNetworkCallError(() async {
+      final body = UnlikeAudioBody(audioId: audioId);
+
+      await _apiClient.unlikeAudio(body);
+
+      return unit;
     });
   }
 }

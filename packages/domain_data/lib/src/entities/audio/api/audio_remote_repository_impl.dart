@@ -57,4 +57,18 @@ class AudioRemoteRepositoryImpl implements AudioRemoteRepository {
 
     return res.map((r) => r.map(_userAudioMapper.dtoToModel).toList());
   }
+
+  @override
+  Future<Either<NetworkCallError, Unit>> likeAudio({
+    required String audioId,
+  }) {
+    return _audioRemoteService.likeAudio(audioId: audioId);
+  }
+
+  @override
+  Future<Either<NetworkCallError, Unit>> unlikeAudio({
+    required String audioId,
+  }) {
+    return _audioRemoteService.unlikeAudio(audioId: audioId);
+  }
 }
