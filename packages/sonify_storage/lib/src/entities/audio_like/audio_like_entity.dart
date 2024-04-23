@@ -1,6 +1,7 @@
 import 'package:isar/isar.dart';
 
 import '../../constant/collections.dart';
+import '../audio/audio_entity.dart';
 
 part 'audio_like_entity.g.dart';
 
@@ -14,4 +15,6 @@ class AudioLikeEntity {
   String? userId;
 
   int? localAudioId;
+
+  final audio = IsarLink<AudioEntity>();
 }

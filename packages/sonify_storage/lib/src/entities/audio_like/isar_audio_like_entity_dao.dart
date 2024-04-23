@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 
+import '../audio/audio_entity.dart';
 import 'audio_like_entity.dart';
 import 'audio_like_entity_dao.dart';
 
@@ -10,6 +11,16 @@ class IsarAudioLikeEntityDao implements AudioLikeEntityDao {
 
   @override
   Future<int> insert(AudioLikeEntity entity) {
-    return _isar.writeTxn(() => _isar.collection<AudioLikeEntity>().put(entity));
+    final audio = AudioEntity()..id = entity.localAudioId;
+
+    entity.audio.value = audio;
+
+    return _isar.writeTxn(() async {
+      final audioLikeEntityId = await _isar.collection<AudioLikeEntity>().put(entity);
+
+      await entity.audio.save();
+
+      return audioLikeEntityId;
+    });
   }
 }
