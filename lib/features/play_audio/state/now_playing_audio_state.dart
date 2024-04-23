@@ -72,8 +72,6 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   }
 
   Future<void> _onMediaItemChanged(MediaItem? mediaItem) async {
-    Logger.root.info('NowPlayingAudioCubit._onMediaItemChanged: mediaItem: $mediaItem');
-
     if (mediaItem?.extras == null) {
       Logger.root.warning('NowPlayingAudioCubit._onMediaItemChanged: mediaItem.extras is null');
       return;

@@ -11,3 +11,7 @@ abstract final class UserAudioEntity_ {
 abstract final class DownloadTaskEntity_ {
   static const String collectionName = 'downloaded_tasks';
 }
+
+abstract final class AudioLikeEntity_ {
+  static const String collectionName = 'audio_likes';
+}
