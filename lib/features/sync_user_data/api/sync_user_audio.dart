@@ -1,10 +1,5 @@
 import 'package:common_models/common_models.dart';
 
-enum SyncUserAudioError {
-  unknown,
-  network,
-}
-
 class SyncUserAudioResult {
   SyncUserAudioResult({
     required this.queuedDownloadsCount,
@@ -14,5 +9,5 @@ class SyncUserAudioResult {
 }
 
 abstract interface class SyncUserAudio {
-  Future<Either<SyncUserAudioError, SyncUserAudioResult>> call();
+  Future<Result<SyncUserAudioResult>> call();
 }

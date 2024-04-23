@@ -1,5 +1,6 @@
 import 'package:common_models/common_models.dart';
 
+import '../model/audio_like.dart';
 import '../model/user_audio.dart';
 
 abstract interface class AudioLocalRepository {
@@ -22,5 +23,9 @@ abstract interface class AudioLocalRepository {
   Future<EmptyResult> unlike({
     required String userId,
     required String audioId,
+  });
+
+  Future<Result<List<AudioLike>>> getAllLikedAudiosByUserId({
+    required String userId,
   });
 }

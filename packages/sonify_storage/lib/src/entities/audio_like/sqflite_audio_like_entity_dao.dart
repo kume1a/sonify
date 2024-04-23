@@ -51,4 +51,17 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
 
     return count != null && count > 0;
   }
+
+  @override
+  Future<List<AudioLikeEntity>> getAllByUserId(String userId) async {
+    final query = await _db.rawQuery(
+      '''
+      SELECT * FROM ${AudioLike_.tn}
+        WHERE ${AudioLike_.bUserId} = ?;
+      ''',
+      [userId],
+    );
+
+    return query.map((e) => _audioLikeEntityMapper.mapToEntity(e)).toList();
+  }
 }

@@ -25,4 +25,8 @@ abstract interface class AudioRemoteService {
   Future<Either<NetworkCallError, Unit>> unlikeAudio({
     required String audioId,
   });
+
+  Future<Either<NetworkCallError, Unit>> syncAudioLikes({
+    required List<String> audioIds,
+  });
 }

@@ -45,6 +45,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     this._nowPlayingAudioInfoStore,
     this._enqueuePlaylist,
     this._authUserInfoProvider,
+    this._audioRemoteRepository,
   ) : super(NowPlayingAudioState.initial()) {
     _init();
   }
@@ -55,6 +56,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   final NowPlayingAudioInfoStore _nowPlayingAudioInfoStore;
   final EnqueuePlaylist _enqueuePlaylist;
   final AuthUserInfoProvider _authUserInfoProvider;
+  final AudioRemoteRepository _audioRemoteRepository;
 
   final _subscriptions = SubscriptionComposite();
 
@@ -232,6 +234,8 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
           );
 
           emit(state.copyWith(nowPlayingAudio: nowPlayingAudio));
+
+          return _audioRemoteRepository.unlikeAudio(audioId: audioId);
         },
       );
     } else {
@@ -244,6 +248,8 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
           );
 
           emit(state.copyWith(nowPlayingAudio: nowPlayingAudio));
+
+          return _audioRemoteRepository.likeAudio(audioId: audioId);
         },
       );
     }

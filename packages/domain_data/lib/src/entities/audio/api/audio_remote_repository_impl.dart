@@ -71,4 +71,11 @@ class AudioRemoteRepositoryImpl implements AudioRemoteRepository {
   }) {
     return _audioRemoteService.unlikeAudio(audioId: audioId);
   }
+
+  @override
+  Future<Either<NetworkCallError, Unit>> syncAudioLikes({
+    required List<String> audioIds,
+  }) async {
+    return _audioRemoteService.syncAudioLikes(audioIds: audioIds);
+  }
 }

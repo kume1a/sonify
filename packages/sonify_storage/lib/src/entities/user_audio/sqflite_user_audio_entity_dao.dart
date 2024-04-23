@@ -46,7 +46,7 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
         ${AudioLike_.tn}.${AudioLike_.id} AS ${AudioLike_.joinedId}
       FROM ${UserAudio_.tn}
       INNER JOIN ${Audio_.tn} ON ${UserAudio_.tn}.${UserAudio_.audioId} = ${Audio_.tn}.${Audio_.id}
-      INNER JOIN ${AudioLike_.tn} ON ${AudioLike_.tn}.${AudioLike_.bUserId} = ? 
+      LEFT JOIN ${AudioLike_.tn} ON ${AudioLike_.tn}.${AudioLike_.bUserId} = ? 
         AND ${AudioLike_.tn}.${AudioLike_.bAudioId} = ${UserAudio_.tn}.${UserAudio_.bAudioId}
       WHERE ${UserAudio_.tn}.${UserAudio_.bUserId} = ?;
       ''',

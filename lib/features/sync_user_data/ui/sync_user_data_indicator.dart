@@ -6,17 +6,17 @@ import '../../../app/intl/app_localizations.dart';
 import '../../../shared/ui/animation/infinite_rotation.dart';
 import '../../../shared/util/color.dart';
 import '../../../shared/values/assets.dart';
-import '../state/sync_user_audio_state.dart';
+import '../state/sync_user_data_state.dart';
 
-class SyncUserAudioIndicator extends StatelessWidget {
-  const SyncUserAudioIndicator({super.key});
+class SyncUserDataIndicator extends StatelessWidget {
+  const SyncUserDataIndicator({super.key});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l = AppLocalizations.of(context);
 
-    return BlocBuilder<SyncUserAudioCubit, SyncUserAudioState>(
+    return BlocBuilder<SyncUserDataCubit, SyncUserDataState>(
       buildWhen: (previous, current) =>
           previous.syncState != current.syncState ||
           previous.queuedDownloadsCount != current.queuedDownloadsCount,

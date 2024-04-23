@@ -7,6 +7,7 @@ import 'package:retrofit/retrofit.dart';
 import '../entity/audio/model/download_youtube_audio_body.dart';
 import '../entity/audio/model/get_audios_by_ids_body.dart';
 import '../entity/audio/model/like_audio_body.dart';
+import '../entity/audio/model/sync_audio_likes_body.dart';
 import '../entity/audio/model/unlike_audio_body.dart';
 import '../entity/audio/model/user_audio_dto.dart';
 import '../entity/playlist/model/playlist_dto.dart';
@@ -57,6 +58,9 @@ abstract class ApiClient {
 
   @POST('/v1/audio/unlike')
   Future<void> unlikeAudio(@Body() UnlikeAudioBody body);
+
+  @POST('/v1/audio/syncLikes')
+  Future<void> syncAudioLikes(@Body() SyncAudioLikesBody body);
 
   // auth ------------------------------
   @POST('/v1/auth/googleSignIn')

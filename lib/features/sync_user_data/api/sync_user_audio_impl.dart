@@ -23,27 +23,24 @@ class SyncUserAudioImpl implements SyncUserAudio {
   final EventBus _eventBus;
 
   @override
-  Future<Either<SyncUserAudioError, SyncUserAudioResult>> call() async {
+  Future<Result<SyncUserAudioResult>> call() async {
     final authUserId = await _authUserInfoProvider.getId();
     if (authUserId == null) {
       Logger.root.warning('Auth user id is null, cannot sync user audio');
-      return left(SyncUserAudioError.unknown);
+      return Result.err();
     }
 
     final userAudioIdsRes = await _audioRemoteRepository.getAuthUserAudioIds();
 
     if (userAudioIdsRes.isLeft) {
       Logger.root.fine('Failed to get user audio ids: ${userAudioIdsRes.leftOrNull}');
-      return left(userAudioIdsRes.leftOrThrow.maybeWhen(
-        orElse: () => SyncUserAudioError.unknown,
-        network: () => SyncUserAudioError.network,
-      ));
+      return Result.err();
     }
 
     final userLocalAudiosRes = await _audioLocalRepository.getAllByUserId(authUserId);
     if (userLocalAudiosRes.isErr) {
       Logger.root.fine('Failed to get local user audios: $userLocalAudiosRes');
-      return left(SyncUserAudioError.unknown);
+      return Result.err();
     }
 
     final userLocalAudios = userLocalAudiosRes.dataOrThrow;
@@ -62,10 +59,7 @@ class SyncUserAudioImpl implements SyncUserAudio {
 
     if (toDownloadUserAudiosRes.isLeft) {
       Logger.root.fine('Failed to download audios: ${toDownloadUserAudiosRes.leftOrNull}');
-      return left(toDownloadUserAudiosRes.leftOrThrow.maybeWhen(
-        orElse: () => SyncUserAudioError.unknown,
-        network: () => SyncUserAudioError.network,
-      ));
+      return Result.err();
     }
 
     final toDownloadUserAudios = toDownloadUserAudiosRes.rightOrThrow;
@@ -79,6 +73,7 @@ class SyncUserAudioImpl implements SyncUserAudio {
       );
     }
 
-    return right(SyncUserAudioResult(queuedDownloadsCount: toDownloadUserAudiosLen));
+    final res = SyncUserAudioResult(queuedDownloadsCount: toDownloadUserAudiosLen);
+    return Result.success(res);
   }
 }

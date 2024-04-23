@@ -6,8 +6,9 @@ import 'package:injectable/injectable.dart';
 
 import '../../../app/navigation/page_navigator.dart';
 import '../api/sync_user_audio.dart';
+import '../api/sync_user_audio_likes.dart';
 
-part 'sync_user_audio_state.freezed.dart';
+part 'sync_user_data_state.freezed.dart';
 
 enum SyncAudiosState {
   idle,
@@ -18,33 +19,34 @@ enum SyncAudiosState {
 }
 
 @freezed
-class SyncUserAudioState with _$SyncUserAudioState {
-  const factory SyncUserAudioState({
+class SyncUserDataState with _$SyncUserDataState {
+  const factory SyncUserDataState({
     required SyncAudiosState syncState,
     required int queuedDownloadsCount,
-    SyncUserAudioError? error,
-  }) = _SyncUserAudioState;
+  }) = _SyncUserDataState;
 
-  factory SyncUserAudioState.initial() => const SyncUserAudioState(
+  factory SyncUserDataState.initial() => const SyncUserDataState(
         syncState: SyncAudiosState.idle,
         queuedDownloadsCount: 0,
       );
 }
 
 extension SyncUserAudioCubitX on BuildContext {
-  SyncUserAudioCubit get syncUserAudioCubit => read<SyncUserAudioCubit>();
+  SyncUserDataCubit get syncUserAudioCubit => read<SyncUserDataCubit>();
 }
 
 @injectable
-class SyncUserAudioCubit extends Cubit<SyncUserAudioState> {
-  SyncUserAudioCubit(
+class SyncUserDataCubit extends Cubit<SyncUserDataState> {
+  SyncUserDataCubit(
     this._syncUserAudio,
+    this._syncUserAudioLikes,
     this._pageNavigator,
-  ) : super(SyncUserAudioState.initial()) {
+  ) : super(SyncUserDataState.initial()) {
     _init();
   }
 
   final SyncUserAudio _syncUserAudio;
+  final SyncUserAudioLikes _syncUserAudioLikes;
   final PageNavigator _pageNavigator;
 
   Future<void> _init() async {
@@ -68,17 +70,15 @@ class SyncUserAudioCubit extends Cubit<SyncUserAudioState> {
 
     await Future.delayed(const Duration(seconds: 1));
 
-    await _syncUserAudio().awaitFold(
-      (l) async {
-        emit(state.copyWith(
-          syncState: SyncAudiosState.error,
-          error: l,
-        ));
+    final syncUserAudioLikesRes = await _syncUserAudioLikes();
+    if (syncUserAudioLikesRes.isErr) {
+      return _handleSyncFailure();
+    }
 
-        await Future.delayed(const Duration(seconds: 3));
+    final syncUserAudioRes = await _syncUserAudio();
 
-        emit(state.copyWith(syncState: SyncAudiosState.idle));
-      },
+    await syncUserAudioRes.foldAsync(
+      () => _handleSyncFailure(),
       (r) async {
         if (r.queuedDownloadsCount > 0) {
           emit(state.copyWith(
@@ -101,5 +101,13 @@ class SyncUserAudioCubit extends Cubit<SyncUserAudioState> {
         }
       },
     );
+  }
+
+  Future<void> _handleSyncFailure() async {
+    emit(state.copyWith(syncState: SyncAudiosState.error));
+
+    await Future.delayed(const Duration(seconds: 3));
+
+    emit(state.copyWith(syncState: SyncAudiosState.idle));
   }
 }
