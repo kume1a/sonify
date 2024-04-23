@@ -1,5 +1,5 @@
 library;
 
-export 'package:isar/isar.dart' show Isar;
+export 'package:sqflite/sqflite.dart' show Database;
 
 export 'src/index.dart';

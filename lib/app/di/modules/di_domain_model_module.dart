@@ -26,18 +26,18 @@ abstract class DiDomainModelModule {
 
   @lazySingleton
   AudioLocalRepository audioLocalRepository(
-    AudioEntityDao audioEntityDao,
     UserAudioEntityDao userAudioEntityDao,
     AudioMapper audioMapper,
     UserAudioMapper userAudioMapper,
-    CreateUserAudioWithAudio createUserAudioWithAudio,
+    AudioLikeEntityDao audioLikeEntityDao,
+    AudioEntityDao audioEntityDao,
   ) {
     return AudioLocalRepositoryImpl(
-      audioEntityDao,
       userAudioEntityDao,
       audioMapper,
       userAudioMapper,
-      createUserAudioWithAudio,
+      audioLikeEntityDao,
+      audioEntityDao,
     );
   }
 

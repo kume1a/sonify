@@ -1,2 +1,3 @@
+export 'db/index.dart';
 export 'entities/index.dart';
-export 'isar_factory.dart';
+export 'shared/index.dart';

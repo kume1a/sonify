@@ -6,30 +6,63 @@ import 'package:sonify_storage/sonify_storage.dart';
 abstract class DiSonifyStorageModule {
   @preResolve
   @lazySingleton
-  Future<Isar> isar() {
-    return IsarFactory.newInstance();
+  Future<Database> db() {
+    return DbFactory.create();
   }
 
   // audio ---------------------------------------------------------------------
   @lazySingleton
-  AudioEntityDao audioEntityDao(Isar isar) {
-    return IsarAudioEntityDao(isar);
+  AudioEntityMapper audioEntityMapper() {
+    return AudioEntityMapper();
+  }
+
+  @lazySingleton
+  AudioEntityDao audioEntityDao(
+    Database db,
+    AudioEntityMapper audioEntityMapper,
+  ) {
+    return SqliteAudioEntityDao(db, audioEntityMapper);
   }
 
   // user audio ----------------------------------------------------------------
   @lazySingleton
-  UserAudioEntityDao userAudioEntityDao(Isar isar) {
-    return IsarUserAudioEntityDao(isar);
+  UserAudioEntityMapper userAudioEntityMapper(AudioEntityMapper audioEntityMapper) {
+    return UserAudioEntityMapper(audioEntityMapper);
   }
 
   @lazySingleton
-  CreateUserAudioWithAudio createUserAudioWithAudio(Isar isar) {
-    return IsarCreateUserAudioWithAudio(isar);
+  UserAudioEntityDao userAudioEntityDao(
+    Database db,
+    UserAudioEntityMapper userAudioEntityMapper,
+  ) {
+    return SqfliteUserAudioEntityDao(db, userAudioEntityMapper);
   }
 
   // downloaded task -----------------------------------------------------------
   @lazySingleton
-  DownloadedTaskEntityDao downloadedTaskEntityDao(Isar isar) {
-    return IsarDownloadedTaskEntityDao(isar);
+  DownloadedTaskEntityMapper downloadedTaskEntityMapper(UserAudioEntityMapper userAudioEntityMapper) {
+    return DownloadedTaskEntityMapper(userAudioEntityMapper);
+  }
+
+  @lazySingleton
+  DownloadedTaskEntityDao downloadedTaskEntityDao(
+    Database db,
+    DownloadedTaskEntityMapper downloadedTaskEntityMapper,
+  ) {
+    return SqfliteDownloadedTaskEntityDao(db, downloadedTaskEntityMapper);
+  }
+
+  // audio like
+  @lazySingleton
+  AudioLikeEntityMapper audioLikeEntityMapper() {
+    return AudioLikeEntityMapper();
+  }
+
+  @lazySingleton
+  AudioLikeEntityDao audioLikeEntityDao(
+    Database db,
+    AudioLikeEntityMapper audioLikeEntityMapper,
+  ) {
+    return SqfliteAudioLikeEntityDao(db, audioLikeEntityMapper);
   }
 }

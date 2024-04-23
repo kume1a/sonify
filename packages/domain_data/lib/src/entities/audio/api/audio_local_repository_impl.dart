@@ -1,7 +1,7 @@
 import 'package:common_models/common_models.dart';
+import 'package:logging/logging.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
-import '../model/audio.dart';
 import '../model/user_audio.dart';
 import '../util/audio_mapper.dart';
 import '../util/user_audio_mapper.dart';
@@ -9,18 +9,18 @@ import 'audio_local_repository.dart';
 
 class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
   AudioLocalRepositoryImpl(
-    this._audioEntityDao,
     this._userAudioEntityDao,
     this._audioMapper,
     this._userAudioMapper,
-    this._createUserAudioWithAudio,
+    this._audioLikeEntityDao,
+    this._audioEntityDao,
   );
 
-  final AudioEntityDao _audioEntityDao;
   final UserAudioEntityDao _userAudioEntityDao;
   final AudioMapper _audioMapper;
   final UserAudioMapper _userAudioMapper;
-  final CreateUserAudioWithAudio _createUserAudioWithAudio;
+  final AudioLikeEntityDao _audioLikeEntityDao;
+  final AudioEntityDao _audioEntityDao;
 
   @override
   Future<Result<List<UserAudio>>> getAllByUserId(String userId) {
@@ -28,19 +28,6 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
       final audioEntities = await _userAudioEntityDao.getAllByUserId(userId);
 
       return audioEntities.map(_userAudioMapper.entityToModel).toList();
-    });
-  }
-
-  @override
-  Future<Result<Audio?>> getById(int id) {
-    return wrapWithResult(() async {
-      final entity = await _audioEntityDao.getById(id);
-
-      if (entity == null) {
-        return null;
-      }
-
-      return _audioMapper.entityToModel(entity);
     });
   }
 
@@ -55,14 +42,16 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
       final audioEntity = _audioMapper.modelToEntity(audio);
       final userAudioEntity = _userAudioMapper.modelToEntity(userAudio);
 
-      final ids = await _createUserAudioWithAudio(
-        audio: audioEntity,
-        userAudio: userAudioEntity,
+      final audioEntityId = await _audioEntityDao.insert(audioEntity);
+      final userAudioEntityId = await _userAudioEntityDao.insert(
+        userAudioEntity.copyWith(
+          audioId: Wrapped(audioEntityId),
+        ),
       );
 
       return userAudio.copyWith(
-        localId: ids.userAudioEntityId,
-        audio: audio.copyWith(localId: ids.audioEntityId),
+        localId: userAudioEntityId,
+        audio: audio.copyWith(localId: audioEntityId),
       );
     });
   }
@@ -70,5 +59,23 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
   @override
   Future<Result<int>> deleteUserAudioJoinsByIds(List<int> ids) {
     return wrapWithResult(() => _userAudioEntityDao.deleteByIds(ids));
+  }
+
+  @override
+  Future<void> like({
+    required String userId,
+    required String audioId,
+  }) async {
+    try {
+      final audioLikeEntity = AudioLikeEntity(
+        id: null,
+        bAudioId: audioId,
+        bUserId: userId,
+      );
+
+      await _audioLikeEntityDao.insert(audioLikeEntity);
+    } catch (e) {
+      Logger.root.info('Error in like: $e');
+    }
   }
 }

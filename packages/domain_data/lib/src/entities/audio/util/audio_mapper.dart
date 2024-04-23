@@ -22,45 +22,46 @@ class AudioMapper {
       thumbnailUrl: dto.thumbnailUrl,
       thumbnailPath: dto.thumbnailPath,
       localThumbnailPath: null,
+      isLiked: dto.isLiked ?? false,
     );
   }
 
   Audio entityToModel(AudioEntity e) {
     return Audio(
-      id: e.remoteId,
+      id: e.bId,
       localId: e.id,
       title: e.title ?? '',
       author: e.author ?? '',
       durationMs: e.durationMs ?? 0,
       sizeBytes: e.sizeBytes ?? 0,
-      thumbnailPath: e.thumbnailPath,
+      thumbnailPath: e.bThumbnailPath,
       youtubeVideoId: e.youtubeVideoId,
-      path: e.path ?? '',
+      path: e.bPath ?? '',
       localPath: e.localPath,
-      createdAt: tryMapDateMillis(e.createdAtMillis),
+      createdAt: tryMapDateMillis(e.bCreatedAtMillis),
       spotifyId: e.spotifyId,
       thumbnailUrl: e.thumbnailUrl,
       localThumbnailPath: e.localThumbnailPath,
+      isLiked: false,
     );
   }
 
   AudioEntity modelToEntity(Audio m) {
-    final e = AudioEntity();
-
-    e.remoteId = m.id;
-    e.createdAtMillis = m.createdAt?.millisecondsSinceEpoch;
-    e.title = m.title;
-    e.durationMs = m.durationMs;
-    e.path = m.path;
-    e.author = m.author;
-    e.sizeBytes = m.sizeBytes;
-    e.youtubeVideoId = m.youtubeVideoId;
-    e.spotifyId = m.spotifyId;
-    e.thumbnailPath = m.thumbnailPath;
-    e.thumbnailUrl = m.thumbnailUrl;
-    e.localPath = m.localPath;
-    e.localThumbnailPath = m.localThumbnailPath;
-
-    return e;
+    return AudioEntity(
+      id: m.localId,
+      bId: m.id,
+      bCreatedAtMillis: m.createdAt?.millisecondsSinceEpoch,
+      title: m.title,
+      durationMs: m.durationMs,
+      bPath: m.path,
+      localPath: m.localPath,
+      author: m.author,
+      sizeBytes: m.sizeBytes,
+      youtubeVideoId: m.youtubeVideoId,
+      spotifyId: m.spotifyId,
+      bThumbnailPath: m.thumbnailPath,
+      thumbnailUrl: m.thumbnailUrl,
+      localThumbnailPath: m.localThumbnailPath,
+    );
   }
 }

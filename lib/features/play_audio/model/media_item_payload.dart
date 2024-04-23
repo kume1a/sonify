@@ -30,6 +30,7 @@ class MediaItemPayload with _$MediaItemPayload {
         thumbnailPath: extras['audio.thumbnailPath'],
         thumbnailUrl: extras['audio.thumbnailUrl'],
         localThumbnailPath: extras['audio.localThumbnailPath'],
+        isLiked: extras['audio.isLiked'],
       ),
       playlistId: extras['playlistId'] as String?,
     );
@@ -51,6 +52,7 @@ class MediaItemPayload with _$MediaItemPayload {
       'audio.thumbnailPath': audio.thumbnailPath,
       'audio.thumbnailUrl': audio.thumbnailUrl,
       'audio.localThumbnailPath': audio.localThumbnailPath,
+      'audio.isLiked': audio.isLiked,
       'playlistId': playlistId,
     };
   }

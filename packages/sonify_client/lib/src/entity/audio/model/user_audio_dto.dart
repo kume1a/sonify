@@ -13,6 +13,7 @@ class UserAudioDto with _$UserAudioDto {
     String? userId,
     String? audioId,
     AudioDto? audio,
+    bool? isLiked,
   }) = _UserAudioDto;
 
   factory UserAudioDto.fromJson(Map<String, dynamic> json) => _$UserAudioDtoFromJson(json);

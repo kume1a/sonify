@@ -10,7 +10,8 @@ class UserAudio with _$UserAudio {
     required int? localId,
     required DateTime? createdAt,
     required String userId,
-    required String audioId,
+    required String? audioId,
+    required int? localAudioId,
     required Audio? audio,
   }) = _UserAudio;
 }

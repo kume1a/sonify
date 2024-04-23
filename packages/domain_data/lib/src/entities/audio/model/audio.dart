@@ -19,6 +19,7 @@ class Audio with _$Audio {
     required String? thumbnailPath,
     required String? thumbnailUrl,
     required String? localThumbnailPath,
+    required bool isLiked,
   }) = _Audio;
 
   const Audio._();

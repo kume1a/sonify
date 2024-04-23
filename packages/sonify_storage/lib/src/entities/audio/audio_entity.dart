@@ -1,37 +1,33 @@
-import 'package:isar/isar.dart';
-
-import '../../constant/collections.dart';
-
-part 'audio_entity.g.dart';
-
-@collection
-@Name(AudioEntity_.collectionName)
 class AudioEntity {
-  Id? id = Isar.autoIncrement;
+  AudioEntity({
+    required this.id,
+    required this.bId,
+    required this.bCreatedAtMillis,
+    required this.title,
+    required this.durationMs,
+    required this.bPath,
+    required this.localPath,
+    required this.author,
+    required this.sizeBytes,
+    required this.youtubeVideoId,
+    required this.spotifyId,
+    required this.bThumbnailPath,
+    required this.thumbnailUrl,
+    required this.localThumbnailPath,
+  });
 
-  String? remoteId;
-
-  int? createdAtMillis;
-
-  String? title;
-
-  int? durationMs;
-
-  String? path;
-
-  String? localPath;
-
-  String? author;
-
-  int? sizeBytes;
-
-  String? youtubeVideoId;
-
-  String? spotifyId;
-
-  String? thumbnailPath;
-
-  String? thumbnailUrl;
-
-  String? localThumbnailPath;
+  final int? id;
+  final String? bId;
+  final int? bCreatedAtMillis;
+  final String? title;
+  final int? durationMs;
+  final String? bPath;
+  final String? localPath;
+  final String? author;
+  final int? sizeBytes;
+  final String? youtubeVideoId;
+  final String? spotifyId;
+  final String? bThumbnailPath;
+  final String? thumbnailUrl;
+  final String? localThumbnailPath;
 }

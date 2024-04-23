@@ -1,20 +1,11 @@
-import 'package:isar/isar.dart';
-
-import '../../constant/collections.dart';
-import '../audio/audio_entity.dart';
-
-part 'audio_like_entity.g.dart';
-
-@collection
-@Name(AudioLikeEntity_.collectionName)
 class AudioLikeEntity {
-  Id? id = Isar.autoIncrement;
+  AudioLikeEntity({
+    required this.id,
+    required this.bAudioId,
+    required this.bUserId,
+  });
 
-  String? audioId;
-
-  String? userId;
-
-  int? localAudioId;
-
-  final audio = IsarLink<AudioEntity>();
+  final int? id;
+  final String? bAudioId;
+  final String? bUserId;
 }

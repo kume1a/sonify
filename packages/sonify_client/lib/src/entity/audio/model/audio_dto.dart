@@ -19,6 +19,7 @@ class AudioDto with _$AudioDto {
     String? thumbnailPath,
     String? thumbnailUrl,
     String? spotifyId,
+    bool? isLiked,
   }) = _AudioDto;
 
   factory AudioDto.fromJson(Map<String, dynamic> json) => _$AudioDtoFromJson(json);
