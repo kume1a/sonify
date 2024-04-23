@@ -14,6 +14,7 @@ class AudioEntity {
     required this.bThumbnailPath,
     required this.thumbnailUrl,
     required this.localThumbnailPath,
+    this.isLiked,
   });
 
   final int? id;
@@ -30,4 +31,7 @@ class AudioEntity {
   final String? bThumbnailPath;
   final String? thumbnailUrl;
   final String? localThumbnailPath;
+
+  // Transient
+  final bool? isLiked;
 }

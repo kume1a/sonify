@@ -1,6 +1,6 @@
 // ignore_for_file: camel_case_types
 
-abstract class AudioEntity_ {
+abstract class Audio_ {
   static const tn = 'audios';
   static const joinPrefix = 'audio_entity_';
 
@@ -38,7 +38,7 @@ abstract class AudioEntity_ {
   static final joinedLocalThumbnailPath = joinPrefixColumn(localThumbnailPath);
 }
 
-abstract class AudioLikeEntity_ {
+abstract class AudioLike_ {
   static const tn = 'audio_likes';
   static const joinPrefix = 'audio_like_entity_';
 
@@ -54,7 +54,7 @@ abstract class AudioLikeEntity_ {
   static final joinedBUserId = joinPrefixColumn(bUserId);
 }
 
-abstract class DownloadedTaskEntity_ {
+abstract class DownloadedTask_ {
   static const tn = 'downloaded_tasks';
   static const joinPrefix = 'downloaded_task_entity_';
 
@@ -76,7 +76,7 @@ abstract class DownloadedTaskEntity_ {
   static final joinedPayloadUserAudioId = joinPrefixColumn(payloadUserAudioId);
 }
 
-abstract class UserAudioEntity_ {
+abstract class UserAudio_ {
   static const String tn = 'user_audios';
   static const String joinPrefix = 'user_audio_entity_';
 

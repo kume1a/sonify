@@ -17,7 +17,7 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
   @override
   Future<int> insert(AudioLikeEntity entity) {
     return _db.insert(
-      AudioLikeEntity_.tn,
+      AudioLike_.tn,
       _audioLikeEntityMapper.entityToMap(entity),
     );
   }
@@ -25,8 +25,8 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
   @override
   Future<int> deleteByUserIdAndAudioId({required String userId, required String audioId}) {
     return _db.delete(
-      AudioLikeEntity_.tn,
-      where: '${AudioLikeEntity_.bUserId} = ? AND ${AudioLikeEntity_.bAudioId} = ?',
+      AudioLike_.tn,
+      where: '${AudioLike_.bUserId} = ? AND ${AudioLike_.bAudioId} = ?',
       whereArgs: [userId, audioId],
     );
   }
@@ -40,9 +40,9 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
       '''
       SELECT 
         COUNT(*) 
-      FROM ${AudioLikeEntity_.tn}
-      WHERE ${AudioLikeEntity_.bUserId} = ?
-        AND ${AudioLikeEntity_.bAudioId} = ?;
+      FROM ${AudioLike_.tn}
+      WHERE ${AudioLike_.bUserId} = ?
+        AND ${AudioLike_.bAudioId} = ?;
     ''',
       [userId, audioId],
     );

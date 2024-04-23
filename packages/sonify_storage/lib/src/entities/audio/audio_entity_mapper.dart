@@ -4,63 +4,65 @@ import 'audio_entity.dart';
 class AudioEntityMapper {
   AudioEntity mapToEntity(Map<String, dynamic> m) {
     return AudioEntity(
-      id: m[AudioEntity_.id] as int?,
-      bId: m[AudioEntity_.bId] as String?,
-      bCreatedAtMillis: m[AudioEntity_.bCreatedAtMillis] as int?,
-      title: m[AudioEntity_.title] as String?,
-      durationMs: m[AudioEntity_.durationMs] as int?,
-      bPath: m[AudioEntity_.bPath] as String?,
-      localPath: m[AudioEntity_.localPath] as String?,
-      author: m[AudioEntity_.author] as String?,
-      sizeBytes: m[AudioEntity_.sizeBytes] as int?,
-      youtubeVideoId: m[AudioEntity_.youtubeVideoId] as String?,
-      spotifyId: m[AudioEntity_.spotifyId] as String?,
-      bThumbnailPath: m[AudioEntity_.bThumbnailPath] as String?,
-      thumbnailUrl: m[AudioEntity_.thumbnailUrl] as String?,
-      localThumbnailPath: m[AudioEntity_.localThumbnailPath] as String?,
+      id: m[Audio_.id] as int?,
+      bId: m[Audio_.bId] as String?,
+      bCreatedAtMillis: m[Audio_.bCreatedAtMillis] as int?,
+      title: m[Audio_.title] as String?,
+      durationMs: m[Audio_.durationMs] as int?,
+      bPath: m[Audio_.bPath] as String?,
+      localPath: m[Audio_.localPath] as String?,
+      author: m[Audio_.author] as String?,
+      sizeBytes: m[Audio_.sizeBytes] as int?,
+      youtubeVideoId: m[Audio_.youtubeVideoId] as String?,
+      spotifyId: m[Audio_.spotifyId] as String?,
+      bThumbnailPath: m[Audio_.bThumbnailPath] as String?,
+      thumbnailUrl: m[Audio_.thumbnailUrl] as String?,
+      localThumbnailPath: m[Audio_.localThumbnailPath] as String?,
+      isLiked: (m[AudioLike_.joinedId] as int?) != null,
     );
   }
 
   AudioEntity? joinedMapToEntity(Map<String, dynamic> m) {
-    final id = m[AudioEntity_.joinedId] as int?;
+    final id = m[Audio_.joinedId] as int?;
     if (id == null) {
       return null;
     }
 
     return AudioEntity(
       id: id,
-      bId: m[AudioEntity_.joinedBId] as String?,
-      bCreatedAtMillis: m[AudioEntity_.joinedBCreatedAtMillis] as int?,
-      title: m[AudioEntity_.joinedTitle] as String?,
-      durationMs: m[AudioEntity_.joinedDurationMs] as int?,
-      bPath: m[AudioEntity_.joinedBPath] as String?,
-      localPath: m[AudioEntity_.joinedLocalPath] as String?,
-      author: m[AudioEntity_.joinedAuthor] as String?,
-      sizeBytes: m[AudioEntity_.joinedSizeBytes] as int?,
-      youtubeVideoId: m[AudioEntity_.joinedYoutubeVideoId] as String?,
-      spotifyId: m[AudioEntity_.joinedSpotifyId] as String?,
-      bThumbnailPath: m[AudioEntity_.joinedBThumbnailPath] as String?,
-      thumbnailUrl: m[AudioEntity_.joinedThumbnailUrl] as String?,
-      localThumbnailPath: m[AudioEntity_.joinedLocalThumbnailPath] as String?,
+      bId: m[Audio_.joinedBId] as String?,
+      bCreatedAtMillis: m[Audio_.joinedBCreatedAtMillis] as int?,
+      title: m[Audio_.joinedTitle] as String?,
+      durationMs: m[Audio_.joinedDurationMs] as int?,
+      bPath: m[Audio_.joinedBPath] as String?,
+      localPath: m[Audio_.joinedLocalPath] as String?,
+      author: m[Audio_.joinedAuthor] as String?,
+      sizeBytes: m[Audio_.joinedSizeBytes] as int?,
+      youtubeVideoId: m[Audio_.joinedYoutubeVideoId] as String?,
+      spotifyId: m[Audio_.joinedSpotifyId] as String?,
+      bThumbnailPath: m[Audio_.joinedBThumbnailPath] as String?,
+      thumbnailUrl: m[Audio_.joinedThumbnailUrl] as String?,
+      localThumbnailPath: m[Audio_.joinedLocalThumbnailPath] as String?,
+      isLiked: (m[AudioLike_.joinedId] as int?) != null,
     );
   }
 
   Map<String, dynamic> entityToMap(AudioEntity e) {
     return {
-      AudioEntity_.id: e.id,
-      AudioEntity_.bId: e.bId,
-      AudioEntity_.bCreatedAtMillis: e.bCreatedAtMillis,
-      AudioEntity_.title: e.title,
-      AudioEntity_.durationMs: e.durationMs,
-      AudioEntity_.bPath: e.bPath,
-      AudioEntity_.localPath: e.localPath,
-      AudioEntity_.author: e.author,
-      AudioEntity_.sizeBytes: e.sizeBytes,
-      AudioEntity_.youtubeVideoId: e.youtubeVideoId,
-      AudioEntity_.spotifyId: e.spotifyId,
-      AudioEntity_.bThumbnailPath: e.bThumbnailPath,
-      AudioEntity_.thumbnailUrl: e.thumbnailUrl,
-      AudioEntity_.localThumbnailPath: e.localThumbnailPath,
+      Audio_.id: e.id,
+      Audio_.bId: e.bId,
+      Audio_.bCreatedAtMillis: e.bCreatedAtMillis,
+      Audio_.title: e.title,
+      Audio_.durationMs: e.durationMs,
+      Audio_.bPath: e.bPath,
+      Audio_.localPath: e.localPath,
+      Audio_.author: e.author,
+      Audio_.sizeBytes: e.sizeBytes,
+      Audio_.youtubeVideoId: e.youtubeVideoId,
+      Audio_.spotifyId: e.spotifyId,
+      Audio_.bThumbnailPath: e.bThumbnailPath,
+      Audio_.thumbnailUrl: e.thumbnailUrl,
+      Audio_.localThumbnailPath: e.localThumbnailPath,
     };
   }
 }

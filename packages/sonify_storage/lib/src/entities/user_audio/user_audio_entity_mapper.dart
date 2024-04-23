@@ -11,38 +11,38 @@ class UserAudioEntityMapper {
 
   UserAudioEntity mapToEntity(Map<String, dynamic> m) {
     return UserAudioEntity(
-      id: m[UserAudioEntity_.id] as int?,
-      bCreatedAtMillis: m[UserAudioEntity_.bCreatedAtMillis] as int?,
-      bUserId: m[UserAudioEntity_.bUserId] as String?,
-      bAudioId: m[UserAudioEntity_.bAudioId] as String?,
-      audioId: m[UserAudioEntity_.audioId] as int?,
+      id: m[UserAudio_.id] as int?,
+      bCreatedAtMillis: m[UserAudio_.bCreatedAtMillis] as int?,
+      bUserId: m[UserAudio_.bUserId] as String?,
+      bAudioId: m[UserAudio_.bAudioId] as String?,
+      audioId: m[UserAudio_.audioId] as int?,
       audio: _audioEntityMapper.joinedMapToEntity(m),
     );
   }
 
   UserAudioEntity? joinedMapToEntity(Map<String, dynamic> m) {
-    final id = m[UserAudioEntity_.joinedId] as int?;
+    final id = m[UserAudio_.joinedId] as int?;
     if (id == null) {
       return null;
     }
 
     return UserAudioEntity(
       id: id,
-      bCreatedAtMillis: m[UserAudioEntity_.joinedBCreatedAtMillis] as int?,
-      bUserId: m[UserAudioEntity_.joinedBUserId] as String?,
-      bAudioId: m[UserAudioEntity_.joinedBAudioId] as String?,
-      audioId: m[UserAudioEntity_.joinedAudioId] as int?,
+      bCreatedAtMillis: m[UserAudio_.joinedBCreatedAtMillis] as int?,
+      bUserId: m[UserAudio_.joinedBUserId] as String?,
+      bAudioId: m[UserAudio_.joinedBAudioId] as String?,
+      audioId: m[UserAudio_.joinedAudioId] as int?,
       audio: _audioEntityMapper.joinedMapToEntity(m),
     );
   }
 
   Map<String, dynamic> entityToMap(UserAudioEntity e) {
     return {
-      UserAudioEntity_.id: e.id,
-      UserAudioEntity_.bCreatedAtMillis: e.bCreatedAtMillis,
-      UserAudioEntity_.bUserId: e.bUserId,
-      UserAudioEntity_.bAudioId: e.bAudioId,
-      UserAudioEntity_.audioId: e.audioId,
+      UserAudio_.id: e.id,
+      UserAudio_.bCreatedAtMillis: e.bCreatedAtMillis,
+      UserAudio_.bUserId: e.bUserId,
+      UserAudio_.bAudioId: e.bAudioId,
+      UserAudio_.audioId: e.audioId,
     };
   }
 }

@@ -17,7 +17,7 @@ class SqliteAudioEntityDao implements AudioEntityDao {
   @override
   Future<int> insert(AudioEntity entity) async {
     return _db.insert(
-      AudioEntity_.tn,
+      Audio_.tn,
       _audioEntityMapper.entityToMap(entity),
     );
   }

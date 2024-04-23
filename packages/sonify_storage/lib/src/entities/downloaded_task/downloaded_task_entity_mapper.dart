@@ -11,41 +11,41 @@ class DownloadedTaskEntityMapper {
 
   DownloadedTaskEntity mapToEntity(Map<String, dynamic> m) {
     return DownloadedTaskEntity(
-      id: m[DownloadedTaskEntity_.id] as int?,
-      bUserId: m[DownloadedTaskEntity_.bUserId] as String?,
-      taskId: m[DownloadedTaskEntity_.taskId] as String?,
-      savePath: m[DownloadedTaskEntity_.savePath] as String?,
-      fileType: m[DownloadedTaskEntity_.fileType] as String?,
-      payloadUserAudioId: m[DownloadedTaskEntity_.payloadUserAudioId] as int?,
+      id: m[DownloadedTask_.id] as int?,
+      bUserId: m[DownloadedTask_.bUserId] as String?,
+      taskId: m[DownloadedTask_.taskId] as String?,
+      savePath: m[DownloadedTask_.savePath] as String?,
+      fileType: m[DownloadedTask_.fileType] as String?,
+      payloadUserAudioId: m[DownloadedTask_.payloadUserAudioId] as int?,
       payloadUserAudio: _userAudioEntityMapper.joinedMapToEntity(m),
     );
   }
 
   DownloadedTaskEntity? joinedMapToEntity(Map<String, dynamic> m) {
-    final id = m[DownloadedTaskEntity_.joinedId] as int?;
+    final id = m[DownloadedTask_.joinedId] as int?;
     if (id == null) {
       return null;
     }
 
     return DownloadedTaskEntity(
       id: id,
-      bUserId: m[DownloadedTaskEntity_.joinedBUserId] as String?,
-      taskId: m[DownloadedTaskEntity_.joinedTaskId] as String?,
-      savePath: m[DownloadedTaskEntity_.joinedSavePath] as String?,
-      fileType: m[DownloadedTaskEntity_.joinedFileType] as String?,
-      payloadUserAudioId: m[DownloadedTaskEntity_.joinedPayloadUserAudioId] as int?,
+      bUserId: m[DownloadedTask_.joinedBUserId] as String?,
+      taskId: m[DownloadedTask_.joinedTaskId] as String?,
+      savePath: m[DownloadedTask_.joinedSavePath] as String?,
+      fileType: m[DownloadedTask_.joinedFileType] as String?,
+      payloadUserAudioId: m[DownloadedTask_.joinedPayloadUserAudioId] as int?,
       payloadUserAudio: _userAudioEntityMapper.joinedMapToEntity(m),
     );
   }
 
   Map<String, dynamic> entityToMap(DownloadedTaskEntity e) {
     return {
-      DownloadedTaskEntity_.id: e.id,
-      DownloadedTaskEntity_.bUserId: e.bUserId,
-      DownloadedTaskEntity_.taskId: e.taskId,
-      DownloadedTaskEntity_.savePath: e.savePath,
-      DownloadedTaskEntity_.fileType: e.fileType,
-      DownloadedTaskEntity_.payloadUserAudioId: e.payloadUserAudioId,
+      DownloadedTask_.id: e.id,
+      DownloadedTask_.bUserId: e.bUserId,
+      DownloadedTask_.taskId: e.taskId,
+      DownloadedTask_.savePath: e.savePath,
+      DownloadedTask_.fileType: e.fileType,
+      DownloadedTask_.payloadUserAudioId: e.payloadUserAudioId,
     };
   }
 }

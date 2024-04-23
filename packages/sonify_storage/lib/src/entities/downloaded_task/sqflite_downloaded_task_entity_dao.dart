@@ -21,7 +21,7 @@ class SqfliteDownloadedTaskEntityDao implements DownloadedTaskEntityDao {
     UserAudioEntity? payloadUserAudioEntity,
   }) {
     return _db.insert(
-      UserAudioEntity_.tn,
+      UserAudio_.tn,
       _downloadedTaskEntityMapper.entityToMap(entity),
     );
   }
@@ -31,29 +31,29 @@ class SqfliteDownloadedTaskEntityDao implements DownloadedTaskEntityDao {
     final res = await _db.rawQuery(
       '''
       SELECT
-        ${DownloadedTaskEntity_.tn}.*,
-        ${UserAudioEntity_.tn}.${UserAudioEntity_.id} AS ${UserAudioEntity_.joinedId},
-        ${UserAudioEntity_.tn}.${UserAudioEntity_.bCreatedAtMillis} AS ${UserAudioEntity_.joinedBCreatedAtMillis},
-        ${UserAudioEntity_.tn}.${UserAudioEntity_.bUserId} AS ${UserAudioEntity_.joinedBUserId},
-        ${UserAudioEntity_.tn}.${UserAudioEntity_.bAudioId} AS ${UserAudioEntity_.joinPrefix} ,
-        ${AudioEntity_.tn}.${AudioEntity_.id} AS ${AudioEntity_.joinedId},
-        ${AudioEntity_.tn}.${AudioEntity_.bId} AS ${AudioEntity_.joinedBId},
-        ${AudioEntity_.tn}.${AudioEntity_.bCreatedAtMillis} AS ${AudioEntity_.joinedBCreatedAtMillis},
-        ${AudioEntity_.tn}.${AudioEntity_.title} AS ${AudioEntity_.joinedTitle},
-        ${AudioEntity_.tn}.${AudioEntity_.durationMs} AS ${AudioEntity_.joinedDurationMs},
-        ${AudioEntity_.tn}.${AudioEntity_.bPath} AS ${AudioEntity_.joinedBPath},
-        ${AudioEntity_.tn}.${AudioEntity_.localPath} AS ${AudioEntity_.joinedLocalPath},
-        ${AudioEntity_.tn}.${AudioEntity_.author} AS ${AudioEntity_.joinedAuthor},
-        ${AudioEntity_.tn}.${AudioEntity_.sizeBytes} AS ${AudioEntity_.joinedSizeBytes},
-        ${AudioEntity_.tn}.${AudioEntity_.youtubeVideoId} AS ${AudioEntity_.joinedYoutubeVideoId},
-        ${AudioEntity_.tn}.${AudioEntity_.spotifyId} AS ${AudioEntity_.joinedSpotifyId},
-        ${AudioEntity_.tn}.${AudioEntity_.bThumbnailPath} AS ${AudioEntity_.joinedBThumbnailPath},
-        ${AudioEntity_.tn}.${AudioEntity_.thumbnailUrl} AS ${AudioEntity_.joinedThumbnailUrl},
-        ${AudioEntity_.tn}.${AudioEntity_.localThumbnailPath} AS ${AudioEntity_.joinedLocalThumbnailPath}
-      FROM ${DownloadedTaskEntity_.tn}
-      INNER JOIN ${UserAudioEntity_.tn} ON ${DownloadedTaskEntity_.tn}.${DownloadedTaskEntity_.payloadUserAudioId} = ${UserAudioEntity_.tn}.${UserAudioEntity_.id}
-      INNER JOIN ${AudioEntity_.tn} ON ${UserAudioEntity_.tn}.${UserAudioEntity_.audioId} = ${AudioEntity_.tn}.${AudioEntity_.id}
-      WHERE ${DownloadedTaskEntity_.tn}.${DownloadedTaskEntity_.bUserId} = ?;
+        ${DownloadedTask_.tn}.*,
+        ${UserAudio_.tn}.${UserAudio_.id} AS ${UserAudio_.joinedId},
+        ${UserAudio_.tn}.${UserAudio_.bCreatedAtMillis} AS ${UserAudio_.joinedBCreatedAtMillis},
+        ${UserAudio_.tn}.${UserAudio_.bUserId} AS ${UserAudio_.joinedBUserId},
+        ${UserAudio_.tn}.${UserAudio_.bAudioId} AS ${UserAudio_.joinPrefix} ,
+        ${Audio_.tn}.${Audio_.id} AS ${Audio_.joinedId},
+        ${Audio_.tn}.${Audio_.bId} AS ${Audio_.joinedBId},
+        ${Audio_.tn}.${Audio_.bCreatedAtMillis} AS ${Audio_.joinedBCreatedAtMillis},
+        ${Audio_.tn}.${Audio_.title} AS ${Audio_.joinedTitle},
+        ${Audio_.tn}.${Audio_.durationMs} AS ${Audio_.joinedDurationMs},
+        ${Audio_.tn}.${Audio_.bPath} AS ${Audio_.joinedBPath},
+        ${Audio_.tn}.${Audio_.localPath} AS ${Audio_.joinedLocalPath},
+        ${Audio_.tn}.${Audio_.author} AS ${Audio_.joinedAuthor},
+        ${Audio_.tn}.${Audio_.sizeBytes} AS ${Audio_.joinedSizeBytes},
+        ${Audio_.tn}.${Audio_.youtubeVideoId} AS ${Audio_.joinedYoutubeVideoId},
+        ${Audio_.tn}.${Audio_.spotifyId} AS ${Audio_.joinedSpotifyId},
+        ${Audio_.tn}.${Audio_.bThumbnailPath} AS ${Audio_.joinedBThumbnailPath},
+        ${Audio_.tn}.${Audio_.thumbnailUrl} AS ${Audio_.joinedThumbnailUrl},
+        ${Audio_.tn}.${Audio_.localThumbnailPath} AS ${Audio_.joinedLocalThumbnailPath}
+      FROM ${DownloadedTask_.tn}
+      INNER JOIN ${UserAudio_.tn} ON ${DownloadedTask_.tn}.${DownloadedTask_.payloadUserAudioId} = ${UserAudio_.tn}.${UserAudio_.id}
+      INNER JOIN ${Audio_.tn} ON ${UserAudio_.tn}.${UserAudio_.audioId} = ${Audio_.tn}.${Audio_.id}
+      WHERE ${DownloadedTask_.tn}.${DownloadedTask_.bUserId} = ?;
     ''',
       [userId],
     );

@@ -42,7 +42,7 @@ class AudioMapper {
       spotifyId: e.spotifyId,
       thumbnailUrl: e.thumbnailUrl,
       localThumbnailPath: e.localThumbnailPath,
-      isLiked: false,
+      isLiked: e.isLiked ?? false,
     );
   }
 
@@ -62,6 +62,7 @@ class AudioMapper {
       bThumbnailPath: m.thumbnailPath,
       thumbnailUrl: m.thumbnailUrl,
       localThumbnailPath: m.localThumbnailPath,
+      isLiked: m.isLiked,
     );
   }
 }

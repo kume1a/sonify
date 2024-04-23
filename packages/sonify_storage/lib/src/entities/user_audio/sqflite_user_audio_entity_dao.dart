@@ -18,7 +18,7 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
   @override
   Future<int> insert(UserAudioEntity entity) {
     return _db.insert(
-      UserAudioEntity_.tn,
+      UserAudio_.tn,
       _userAudioEntityMapper.entityToMap(entity),
     );
   }
@@ -28,26 +28,29 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
     final res = await _db.rawQuery(
       '''
       SELECT 
-        ${UserAudioEntity_.tn}.*,
-        ${AudioEntity_.tn}.${AudioEntity_.id} AS ${AudioEntity_.joinedId},
-        ${AudioEntity_.tn}.${AudioEntity_.bId} AS ${AudioEntity_.joinedBId},
-        ${AudioEntity_.tn}.${AudioEntity_.bCreatedAtMillis} AS ${AudioEntity_.joinedBCreatedAtMillis},
-        ${AudioEntity_.tn}.${AudioEntity_.title} AS ${AudioEntity_.joinedTitle},
-        ${AudioEntity_.tn}.${AudioEntity_.durationMs} AS ${AudioEntity_.joinedDurationMs},
-        ${AudioEntity_.tn}.${AudioEntity_.bPath} AS ${AudioEntity_.joinedBPath},
-        ${AudioEntity_.tn}.${AudioEntity_.localPath} AS ${AudioEntity_.joinedLocalPath},
-        ${AudioEntity_.tn}.${AudioEntity_.author} AS ${AudioEntity_.joinedAuthor},
-        ${AudioEntity_.tn}.${AudioEntity_.sizeBytes} AS ${AudioEntity_.joinedSizeBytes},
-        ${AudioEntity_.tn}.${AudioEntity_.youtubeVideoId} AS ${AudioEntity_.joinedYoutubeVideoId},
-        ${AudioEntity_.tn}.${AudioEntity_.spotifyId} AS ${AudioEntity_.joinedSpotifyId},
-        ${AudioEntity_.tn}.${AudioEntity_.bThumbnailPath} AS ${AudioEntity_.joinedBThumbnailPath},
-        ${AudioEntity_.tn}.${AudioEntity_.thumbnailUrl} AS ${AudioEntity_.joinedThumbnailUrl},
-        ${AudioEntity_.tn}.${AudioEntity_.localThumbnailPath} AS ${AudioEntity_.joinedLocalThumbnailPath}
-      FROM ${UserAudioEntity_.tn}
-      INNER JOIN ${AudioEntity_.tn} ON ${UserAudioEntity_.tn}.${UserAudioEntity_.audioId} = ${AudioEntity_.tn}.${AudioEntity_.id}
-      WHERE ${UserAudioEntity_.tn}.${UserAudioEntity_.bUserId} = ?;
+        ${UserAudio_.tn}.*,
+        ${Audio_.tn}.${Audio_.id} AS ${Audio_.joinedId},
+        ${Audio_.tn}.${Audio_.bId} AS ${Audio_.joinedBId},
+        ${Audio_.tn}.${Audio_.bCreatedAtMillis} AS ${Audio_.joinedBCreatedAtMillis},
+        ${Audio_.tn}.${Audio_.title} AS ${Audio_.joinedTitle},
+        ${Audio_.tn}.${Audio_.durationMs} AS ${Audio_.joinedDurationMs},
+        ${Audio_.tn}.${Audio_.bPath} AS ${Audio_.joinedBPath},
+        ${Audio_.tn}.${Audio_.localPath} AS ${Audio_.joinedLocalPath},
+        ${Audio_.tn}.${Audio_.author} AS ${Audio_.joinedAuthor},
+        ${Audio_.tn}.${Audio_.sizeBytes} AS ${Audio_.joinedSizeBytes},
+        ${Audio_.tn}.${Audio_.youtubeVideoId} AS ${Audio_.joinedYoutubeVideoId},
+        ${Audio_.tn}.${Audio_.spotifyId} AS ${Audio_.joinedSpotifyId},
+        ${Audio_.tn}.${Audio_.bThumbnailPath} AS ${Audio_.joinedBThumbnailPath},
+        ${Audio_.tn}.${Audio_.thumbnailUrl} AS ${Audio_.joinedThumbnailUrl},
+        ${Audio_.tn}.${Audio_.localThumbnailPath} AS ${Audio_.joinedLocalThumbnailPath},
+        ${AudioLike_.tn}.${AudioLike_.id} AS ${AudioLike_.joinedId}
+      FROM ${UserAudio_.tn}
+      INNER JOIN ${Audio_.tn} ON ${UserAudio_.tn}.${UserAudio_.audioId} = ${Audio_.tn}.${Audio_.id}
+      INNER JOIN ${AudioLike_.tn} ON ${AudioLike_.tn}.${AudioLike_.bUserId} = ? 
+        AND ${AudioLike_.tn}.${AudioLike_.bAudioId} = ${UserAudio_.tn}.${UserAudio_.bAudioId}
+      WHERE ${UserAudio_.tn}.${UserAudio_.bUserId} = ?;
       ''',
-      [userId],
+      [userId, userId],
     );
 
     return res.map(_userAudioEntityMapper.mapToEntity).toList();
@@ -57,8 +60,8 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
   Future<int> deleteByIds(List<int> ids) {
     return _db.rawDelete(
       '''
-      DELETE FROM ${UserAudioEntity_.tn}
-      WHERE ${UserAudioEntity_.id} IN ${sqlListPlaceholders(ids.length)};
+      DELETE FROM ${UserAudio_.tn}
+      WHERE ${UserAudio_.id} IN ${sqlListPlaceholders(ids.length)};
       ''',
       ids,
     );
