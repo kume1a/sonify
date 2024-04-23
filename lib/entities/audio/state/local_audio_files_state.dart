@@ -65,7 +65,7 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<UserAudio>> {
   Future<void> _onEventUserAudio(EventUserAudio event) async {
     await event.when(
       downloaded: (audio) async {
-        final newState = await state.modifyData((data) {
+        final newState = await state.map((data) {
           final dataCopy = List.of(data);
 
           dataCopy.insert(0, audio);

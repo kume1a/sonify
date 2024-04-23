@@ -28,7 +28,8 @@ class SqfliteDownloadedTaskEntityDao implements DownloadedTaskEntityDao {
 
   @override
   Future<List<DownloadedTaskEntity>> getAllByUserId(String userId) async {
-    final res = await _db.rawQuery('''
+    final res = await _db.rawQuery(
+      '''
       SELECT
         ${DownloadedTaskEntity_.tn}.*,
         ${UserAudioEntity_.tn}.${UserAudioEntity_.id} AS ${UserAudioEntity_.joinedId},
@@ -53,7 +54,9 @@ class SqfliteDownloadedTaskEntityDao implements DownloadedTaskEntityDao {
       INNER JOIN ${UserAudioEntity_.tn} ON ${DownloadedTaskEntity_.tn}.${DownloadedTaskEntity_.payloadUserAudioId} = ${UserAudioEntity_.tn}.${UserAudioEntity_.id}
       INNER JOIN ${AudioEntity_.tn} ON ${UserAudioEntity_.tn}.${UserAudioEntity_.audioId} = ${AudioEntity_.tn}.${AudioEntity_.id}
       WHERE ${DownloadedTaskEntity_.tn}.${DownloadedTaskEntity_.bUserId} = ?;
-    ''');
+    ''',
+      [userId],
+    );
 
     return res.map(_downloadedTaskEntityMapper.mapToEntity).toList();
   }

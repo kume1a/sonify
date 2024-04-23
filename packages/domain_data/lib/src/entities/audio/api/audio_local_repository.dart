@@ -9,7 +9,17 @@ abstract interface class AudioLocalRepository {
 
   Future<Result<int>> deleteUserAudioJoinsByIds(List<int> ids);
 
-  Future<void> like({
+  Future<Result<bool>> existsByUserAndAudioId({
+    required String userId,
+    required String audioId,
+  });
+
+  Future<EmptyResult> like({
+    required String userId,
+    required String audioId,
+  });
+
+  Future<EmptyResult> unlike({
     required String userId,
     required String audioId,
   });

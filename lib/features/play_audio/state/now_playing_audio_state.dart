@@ -199,6 +199,56 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     }
   }
 
+  Future<void> onLikePressed() async {
+    final audioId = state.nowPlayingAudio.getOrNull?.id;
+    if (audioId == null) {
+      Logger.root.warning('NowPlayingAudioCubit.onLikePressed: audioId is null');
+      return;
+    }
+
+    final authUserId = await _authUserInfoProvider.getId();
+    if (authUserId == null) {
+      Logger.root.warning('NowPlayingAudioCubit.onLikePressed: authUserId is null');
+      return;
+    }
+
+    final alreadyLikedRes = await _audioLocalRepository.existsByUserAndAudioId(
+      userId: authUserId,
+      audioId: audioId,
+    );
+
+    if (alreadyLikedRes.isErr) {
+      Logger.root.warning('NowPlayingAudioCubit.onLikePressed: failed to check if already liked');
+      return;
+    }
+
+    if (alreadyLikedRes.dataOrThrow) {
+      final unlikeRes = await _audioLocalRepository.unlike(userId: authUserId, audioId: audioId);
+
+      await unlikeRes.ifSuccess(
+        () async {
+          final nowPlayingAudio = await state.nowPlayingAudio.map(
+            (data) => data.copyWith(isLiked: false),
+          );
+
+          emit(state.copyWith(nowPlayingAudio: nowPlayingAudio));
+        },
+      );
+    } else {
+      final likeRes = await _audioLocalRepository.like(userId: authUserId, audioId: audioId);
+
+      await likeRes.ifSuccess(
+        () async {
+          final nowPlayingAudio = await state.nowPlayingAudio.map(
+            (data) => data.copyWith(isLiked: true),
+          );
+
+          emit(state.copyWith(nowPlayingAudio: nowPlayingAudio));
+        },
+      );
+    }
+  }
+
   Future<bool> _ensurePlaylistEnqueued({
     required String? playlistId,
   }) async {

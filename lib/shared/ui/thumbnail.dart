@@ -33,6 +33,7 @@ class Thumbnail extends HookWidget {
   Widget build(BuildContext context) {
     final imageFile = useMemoized<File?>(
       () => localThumbnailPath.notNullOrEmpty ? File(localThumbnailPath!) : null,
+      [localThumbnailPath],
     );
 
     if (imageFile != null) {

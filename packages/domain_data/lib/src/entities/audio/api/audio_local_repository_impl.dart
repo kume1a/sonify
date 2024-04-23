@@ -1,5 +1,4 @@
 import 'package:common_models/common_models.dart';
-import 'package:logging/logging.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
 import '../model/user_audio.dart';
@@ -62,20 +61,42 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
   }
 
   @override
-  Future<void> like({
+  Future<EmptyResult> like({
     required String userId,
     required String audioId,
   }) async {
-    try {
+    return wrapWithEmptyResult(() {
       final audioLikeEntity = AudioLikeEntity(
         id: null,
         bAudioId: audioId,
         bUserId: userId,
       );
 
-      await _audioLikeEntityDao.insert(audioLikeEntity);
-    } catch (e) {
-      Logger.root.info('Error in like: $e');
-    }
+      return _audioLikeEntityDao.insert(audioLikeEntity);
+    });
+  }
+
+  @override
+  Future<EmptyResult> unlike({
+    required String userId,
+    required String audioId,
+  }) async {
+    return wrapWithEmptyResult(() => _audioLikeEntityDao.deleteByUserIdAndAudioId(
+          audioId: audioId,
+          userId: userId,
+        ));
+  }
+
+  @override
+  Future<Result<bool>> existsByUserAndAudioId({
+    required String userId,
+    required String audioId,
+  }) {
+    return wrapWithResult(
+      () => _audioLikeEntityDao.existsByUserAndAudioId(
+        userId: userId,
+        audioId: audioId,
+      ),
+    );
   }
 }

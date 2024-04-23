@@ -90,9 +90,9 @@ class _PanelContent extends StatelessWidget {
           );
         }),
         const SizedBox(height: 32),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: _AudioPlayerControls(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: _AudioPlayerControls(audio: audio),
         ),
         const Spacer(flex: 3),
       ],
@@ -214,18 +214,22 @@ class _AudioPlayerHeader extends StatelessWidget {
 }
 
 class _AudioPlayerControls extends StatelessWidget {
-  const _AudioPlayerControls();
+  const _AudioPlayerControls({
+    required this.audio,
+  });
+
+  final Audio audio;
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _MetaAndPlayMode(),
-        SizedBox(height: 20),
-        _Progress(),
-        SizedBox(height: 24),
-        _Controls(),
+        const _MetaAndPlayMode(),
+        const SizedBox(height: 20),
+        const _Progress(),
+        const SizedBox(height: 24),
+        _Controls(audio: audio),
       ],
     );
   }
@@ -302,18 +306,33 @@ class _Progress extends StatelessWidget {
 }
 
 class _Controls extends StatelessWidget {
-  const _Controls();
+  const _Controls({
+    required this.audio,
+  });
+
+  final Audio audio;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SvgPicture.asset(Assets.svgRepeat),
+        SvgPicture.asset(
+          Assets.svgRepeat,
+          width: 24,
+          height: 24,
+        ),
         const _SkipToPreviousButton(size: 28),
         const _PlayPauseButton(size: 38),
         const _SkipToNextButton(size: 28),
-        SvgPicture.asset(Assets.svgHeart),
+        IconButton(
+          onPressed: context.nowPlayingAudioCubit.onLikePressed,
+          icon: SvgPicture.asset(
+            audio.isLiked ? Assets.svgHeartFilled : Assets.svgHeart,
+            width: 24,
+            height: 24,
+          ),
+        ),
       ],
     );
   }
