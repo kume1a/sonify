@@ -1,7 +1,14 @@
 import '../../db/tables.dart';
+import '../audio_like/audio_like_entity_mapper.dart';
 import 'audio_entity.dart';
 
 class AudioEntityMapper {
+  AudioEntityMapper(
+    this._audioLikeEntityMapper,
+  );
+
+  final AudioLikeEntityMapper _audioLikeEntityMapper;
+
   AudioEntity mapToEntity(Map<String, dynamic> m) {
     return AudioEntity(
       id: m[Audio_.id] as int?,
@@ -18,7 +25,7 @@ class AudioEntityMapper {
       bThumbnailPath: m[Audio_.bThumbnailPath] as String?,
       thumbnailUrl: m[Audio_.thumbnailUrl] as String?,
       localThumbnailPath: m[Audio_.localThumbnailPath] as String?,
-      isLiked: (m[AudioLike_.joinedId] as int?) != null,
+      audioLike: _audioLikeEntityMapper.joinedMapToEntity(m),
     );
   }
 
@@ -43,7 +50,7 @@ class AudioEntityMapper {
       bThumbnailPath: m[Audio_.joinedBThumbnailPath] as String?,
       thumbnailUrl: m[Audio_.joinedThumbnailUrl] as String?,
       localThumbnailPath: m[Audio_.joinedLocalThumbnailPath] as String?,
-      isLiked: (m[AudioLike_.joinedId] as int?) != null,
+      audioLike: _audioLikeEntityMapper.joinedMapToEntity(m),
     );
   }
 

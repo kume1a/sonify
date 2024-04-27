@@ -1,3 +1,5 @@
+import '../audio_like/audio_like_entity.dart';
+
 class AudioEntity {
   AudioEntity({
     required this.id,
@@ -14,7 +16,7 @@ class AudioEntity {
     required this.bThumbnailPath,
     required this.thumbnailUrl,
     required this.localThumbnailPath,
-    this.isLiked,
+    required this.audioLike,
   });
 
   final int? id;
@@ -32,6 +34,5 @@ class AudioEntity {
   final String? thumbnailUrl;
   final String? localThumbnailPath;
 
-  // Transient
-  final bool? isLiked;
+  final AudioLikeEntity? audioLike;
 }

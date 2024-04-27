@@ -10,10 +10,24 @@ abstract class DiSonifyStorageModule {
     return DbFactory.create();
   }
 
+  // audio like
+  @lazySingleton
+  AudioLikeEntityMapper audioLikeEntityMapper() {
+    return AudioLikeEntityMapper();
+  }
+
+  @lazySingleton
+  AudioLikeEntityDao audioLikeEntityDao(
+    Database db,
+    AudioLikeEntityMapper audioLikeEntityMapper,
+  ) {
+    return SqfliteAudioLikeEntityDao(db, audioLikeEntityMapper);
+  }
+
   // audio ---------------------------------------------------------------------
   @lazySingleton
-  AudioEntityMapper audioEntityMapper() {
-    return AudioEntityMapper();
+  AudioEntityMapper audioEntityMapper(AudioLikeEntityMapper audioLikeEntityMapper) {
+    return AudioEntityMapper(audioLikeEntityMapper);
   }
 
   @lazySingleton
@@ -50,19 +64,5 @@ abstract class DiSonifyStorageModule {
     DownloadedTaskEntityMapper downloadedTaskEntityMapper,
   ) {
     return SqfliteDownloadedTaskEntityDao(db, downloadedTaskEntityMapper);
-  }
-
-  // audio like
-  @lazySingleton
-  AudioLikeEntityMapper audioLikeEntityMapper() {
-    return AudioLikeEntityMapper();
-  }
-
-  @lazySingleton
-  AudioLikeEntityDao audioLikeEntityDao(
-    Database db,
-    AudioLikeEntityMapper audioLikeEntityMapper,
-  ) {
-    return SqfliteAudioLikeEntityDao(db, audioLikeEntityMapper);
   }
 }

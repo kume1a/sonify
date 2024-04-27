@@ -4,8 +4,15 @@ import 'package:sonify_storage/sonify_storage.dart';
 
 import '../../../shared/constant.dart';
 import '../model/audio.dart';
+import 'audio_like_mapper.dart';
 
 class AudioMapper {
+  AudioMapper(
+    this._audioLikeMapper,
+  );
+
+  final AudioLikeMapper _audioLikeMapper;
+
   Audio dtoToModel(AudioDto dto) {
     return Audio(
       id: dto.id ?? kInvalidId,
@@ -22,7 +29,7 @@ class AudioMapper {
       thumbnailUrl: dto.thumbnailUrl,
       thumbnailPath: dto.thumbnailPath,
       localThumbnailPath: null,
-      isLiked: dto.isLiked ?? false,
+      audioLike: tryMap(dto.audioLike, _audioLikeMapper.dtoToModel),
     );
   }
 
@@ -42,7 +49,7 @@ class AudioMapper {
       spotifyId: e.spotifyId,
       thumbnailUrl: e.thumbnailUrl,
       localThumbnailPath: e.localThumbnailPath,
-      isLiked: e.isLiked ?? false,
+      audioLike: tryMap(e.audioLike, _audioLikeMapper.entityToModel),
     );
   }
 
@@ -62,7 +69,7 @@ class AudioMapper {
       bThumbnailPath: m.thumbnailPath,
       thumbnailUrl: m.thumbnailUrl,
       localThumbnailPath: m.localThumbnailPath,
-      isLiked: m.isLiked,
+      audioLike: tryMap(m.audioLike, _audioLikeMapper.modelToEntity),
     );
   }
 }

@@ -5,6 +5,7 @@ import '../../../api/api_client.dart';
 import '../../../api/multipart_api_client.dart';
 import '../../../shared/api_exception_message_code.dart';
 import '../../../shared/dto/error_response_dto.dart';
+import '../model/audio_like_dto.dart';
 import '../model/download_youtube_audio_body.dart';
 import '../model/download_youtube_audio_error.dart';
 import '../model/get_audios_by_ids_body.dart';
@@ -82,15 +83,13 @@ class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteServ
   }
 
   @override
-  Future<Either<NetworkCallError, Unit>> likeAudio({
+  Future<Either<NetworkCallError, AudioLikeDto>> likeAudio({
     required String audioId,
   }) {
-    return callCatchHandleNetworkCallError(() async {
+    return callCatchHandleNetworkCallError(() {
       final body = LikeAudioBody(audioId: audioId);
 
-      await _apiClient.likeAudio(body);
-
-      return unit;
+      return _apiClient.likeAudio(body);
     });
   }
 

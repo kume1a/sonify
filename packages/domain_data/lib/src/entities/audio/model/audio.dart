@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'audio_like.dart';
+
 part 'audio.freezed.dart';
 
 @freezed
@@ -19,7 +21,7 @@ class Audio with _$Audio {
     required String? thumbnailPath,
     required String? thumbnailUrl,
     required String? localThumbnailPath,
-    required bool isLiked,
+    required AudioLike? audioLike,
   }) = _Audio;
 
   const Audio._();
@@ -27,4 +29,6 @@ class Audio with _$Audio {
   bool get isLocal => localId != null;
 
   bool get isRemote => !isLocal;
+
+  bool get isLiked => audioLike != null;
 }

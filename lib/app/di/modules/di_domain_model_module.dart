@@ -15,18 +15,18 @@ abstract class DiDomainModelModule {
 
   // audio ----------------------------------------------------------------
   @lazySingleton
-  AudioMapper audioMapper() {
-    return AudioMapper();
+  AudioLikeMapper audioLikeMapper() {
+    return AudioLikeMapper();
+  }
+
+  @lazySingleton
+  AudioMapper audioMapper(AudioLikeMapper audioLikeMapper) {
+    return AudioMapper(audioLikeMapper);
   }
 
   @lazySingleton
   UserAudioMapper userAudioMapper(AudioMapper audioMapper) {
     return UserAudioMapper(audioMapper);
-  }
-
-  @lazySingleton
-  AudioLikeMapper audioLikeMapper() {
-    return AudioLikeMapper();
   }
 
   @lazySingleton
@@ -52,10 +52,12 @@ abstract class DiDomainModelModule {
   AudioRemoteRepository audioRemoteRepository(
     AudioRemoteService audioRemoteService,
     UserAudioMapper userAudioMapper,
+    AudioLikeMapper audioLikeMapper,
   ) {
     return AudioRemoteRepositoryImpl(
       audioRemoteService,
       userAudioMapper,
+      audioLikeMapper,
     );
   }
 

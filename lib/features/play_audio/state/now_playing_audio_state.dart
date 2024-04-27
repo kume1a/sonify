@@ -13,6 +13,7 @@ import '../api/now_playing_audio_info_store.dart';
 import '../model/media_item_payload.dart';
 import '../model/playback_button_state.dart';
 import '../util/enqueue_playlist.dart';
+import '../util/like_or_unlike_audio.dart';
 
 part 'now_playing_audio_state.freezed.dart';
 
@@ -46,6 +47,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     this._enqueuePlaylist,
     this._authUserInfoProvider,
     this._audioRemoteRepository,
+    this._likeOrUnlikeAudio,
   ) : super(NowPlayingAudioState.initial()) {
     _init();
   }
@@ -57,6 +59,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   final EnqueuePlaylist _enqueuePlaylist;
   final AuthUserInfoProvider _authUserInfoProvider;
   final AudioRemoteRepository _audioRemoteRepository;
+  final LikeOrUnlikeAudio _likeOrUnlikeAudio;
 
   final _subscriptions = SubscriptionComposite();
 
@@ -202,57 +205,23 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   }
 
   Future<void> onLikePressed() async {
-    final audioId = state.nowPlayingAudio.getOrNull?.id;
-    if (audioId == null) {
-      Logger.root.warning('NowPlayingAudioCubit.onLikePressed: audioId is null');
-      return;
-    }
-
-    final authUserId = await _authUserInfoProvider.getId();
-    if (authUserId == null) {
-      Logger.root.warning('NowPlayingAudioCubit.onLikePressed: authUserId is null');
-      return;
-    }
-
-    final alreadyLikedRes = await _audioLocalRepository.existsByUserAndAudioId(
-      userId: authUserId,
-      audioId: audioId,
+    final res = await _likeOrUnlikeAudio(
+      nowPlayingAudio: state.nowPlayingAudio.getOrNull,
+      nowPlayingAudios: state.nowPlayingAudios ?? state.nowPlayingPlaylist?.audios,
     );
 
-    if (alreadyLikedRes.isErr) {
-      Logger.root.warning('NowPlayingAudioCubit.onLikePressed: failed to check if already liked');
+    if (res == null) {
+      Logger.root.warning('NowPlayingAudioCubit.onLikePressed: failed to like or unlike audio, res is null');
       return;
     }
 
-    if (alreadyLikedRes.dataOrThrow) {
-      final unlikeRes = await _audioLocalRepository.unlike(userId: authUserId, audioId: audioId);
-
-      await unlikeRes.ifSuccess(
-        () async {
-          final nowPlayingAudio = await state.nowPlayingAudio.map(
-            (data) => data.copyWith(isLiked: false),
-          );
-
-          emit(state.copyWith(nowPlayingAudio: nowPlayingAudio));
-
-          return _audioRemoteRepository.unlikeAudio(audioId: audioId);
-        },
-      );
-    } else {
-      final likeRes = await _audioLocalRepository.like(userId: authUserId, audioId: audioId);
-
-      await likeRes.ifSuccess(
-        () async {
-          final nowPlayingAudio = await state.nowPlayingAudio.map(
-            (data) => data.copyWith(isLiked: true),
-          );
-
-          emit(state.copyWith(nowPlayingAudio: nowPlayingAudio));
-
-          return _audioRemoteRepository.likeAudio(audioId: audioId);
-        },
-      );
-    }
+    emit(state.copyWith(
+      nowPlayingAudio: SimpleDataState.success(res.nowPlayingAudio),
+      nowPlayingAudios: state.nowPlayingAudios != null ? res.nowPlayingAudios : null,
+      nowPlayingPlaylist: state.nowPlayingPlaylist != null
+          ? state.nowPlayingPlaylist?.copyWith(audios: res.nowPlayingAudios)
+          : null,
+    ));
   }
 
   Future<bool> _ensurePlaylistEnqueued({

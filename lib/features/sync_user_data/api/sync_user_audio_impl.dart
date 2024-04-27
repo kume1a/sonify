@@ -54,6 +54,14 @@ class SyncUserAudioImpl implements SyncUserAudio {
         .whereNotNull()
         .toList();
 
+    if (toDeleteLocalUserAudioIds.isNotEmpty) {
+      await _audioLocalRepository.deleteUserAudioJoinsByIds(toDeleteLocalUserAudioIds);
+    }
+
+    if (toDownloadAudioIds.isEmpty) {
+      return Result.success(SyncUserAudioResult(queuedDownloadsCount: 0));
+    }
+
     final toDownloadUserAudiosRes =
         await _audioRemoteRepository.getAuthUserAudiosByAudioIds(toDownloadAudioIds);
 
@@ -63,8 +71,6 @@ class SyncUserAudioImpl implements SyncUserAudio {
     }
 
     final toDownloadUserAudios = toDownloadUserAudiosRes.rightOrThrow;
-
-    await _audioLocalRepository.deleteUserAudioJoinsByIds(toDeleteLocalUserAudioIds);
 
     final toDownloadUserAudiosLen = toDownloadUserAudios.length;
     for (int i = 0; i < toDownloadUserAudiosLen; i++) {

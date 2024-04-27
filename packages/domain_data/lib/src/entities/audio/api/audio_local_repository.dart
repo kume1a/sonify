@@ -15,7 +15,7 @@ abstract interface class AudioLocalRepository {
     required String audioId,
   });
 
-  Future<EmptyResult> like({
+  Future<Result<AudioLike>> like({
     required String userId,
     required String audioId,
   });

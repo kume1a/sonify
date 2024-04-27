@@ -30,7 +30,11 @@ class SyncUserAudioLikesImpl implements SyncUserAudioLikes {
     }
 
     final localUserAudioLikeAudioIds =
-        localUserAudioLikesRes.getOrElse(() => []).map((e) => e.audioId).whereNotNull().toList();
+        localUserAudioLikesRes.dataOrThrow.map((e) => e.audioId).whereNotNull().toList();
+
+    if (localUserAudioLikeAudioIds.isEmpty) {
+      return EmptyResult.success();
+    }
 
     final syncUserAudioLikesRes =
         await _audioRemoteRepository.syncAudioLikes(audioIds: localUserAudioLikeAudioIds);

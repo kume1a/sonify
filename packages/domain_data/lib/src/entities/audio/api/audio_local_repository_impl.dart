@@ -65,18 +65,22 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
   }
 
   @override
-  Future<EmptyResult> like({
+  Future<Result<AudioLike>> like({
     required String userId,
     required String audioId,
   }) async {
-    return wrapWithEmptyResult(() {
+    return wrapWithResult(() async {
       final audioLikeEntity = AudioLikeEntity(
         id: null,
         bAudioId: audioId,
         bUserId: userId,
       );
 
-      return _audioLikeEntityDao.insert(audioLikeEntity);
+      final localId = await _audioLikeEntityDao.insert(audioLikeEntity);
+
+      final insertedEntity = audioLikeEntity.copyWith(id: Wrapped(localId));
+
+      return _audioLikeMapper.entityToModel(insertedEntity);
     });
   }
 

@@ -14,6 +14,18 @@ class MediaItemPayload with _$MediaItemPayload {
   const MediaItemPayload._();
 
   factory MediaItemPayload.fromExtras(Map<String, dynamic> extras) {
+    final audioLikeLocalId = extras['audio.audioLike.localId'] as int?;
+    final audioLikeAudioId = extras['audio.audioLike.audioId'] as String?;
+    final audioLikeUserId = extras['audio.audioLike.userId'] as String?;
+
+    final audioLike = audioLikeAudioId != null && audioLikeUserId != null
+        ? AudioLike(
+            localId: audioLikeLocalId,
+            audioId: audioLikeAudioId,
+            userId: audioLikeUserId,
+          )
+        : null;
+
     return MediaItemPayload(
       audio: Audio(
         id: extras['audio.id'],
@@ -30,7 +42,7 @@ class MediaItemPayload with _$MediaItemPayload {
         thumbnailPath: extras['audio.thumbnailPath'],
         thumbnailUrl: extras['audio.thumbnailUrl'],
         localThumbnailPath: extras['audio.localThumbnailPath'],
-        isLiked: extras['audio.isLiked'],
+        audioLike: audioLike,
       ),
       playlistId: extras['playlistId'] as String?,
     );
@@ -53,6 +65,9 @@ class MediaItemPayload with _$MediaItemPayload {
       'audio.thumbnailUrl': audio.thumbnailUrl,
       'audio.localThumbnailPath': audio.localThumbnailPath,
       'audio.isLiked': audio.isLiked,
+      'audio.audioLike.audioId': audio.audioLike?.audioId,
+      'audio.audioLike.userId': audio.audioLike?.userId,
+      'audio.audioLike.localId': audio.audioLike?.localId,
       'playlistId': playlistId,
     };
   }

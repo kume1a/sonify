@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
 
+import '../entity/audio/model/audio_like_dto.dart';
 import '../entity/audio/model/download_youtube_audio_body.dart';
 import '../entity/audio/model/get_audios_by_ids_body.dart';
 import '../entity/audio/model/like_audio_body.dart';
@@ -54,7 +55,7 @@ abstract class ApiClient {
   );
 
   @POST('/v1/audio/like')
-  Future<void> likeAudio(@Body() LikeAudioBody body);
+  Future<AudioLikeDto> likeAudio(@Body() LikeAudioBody body);
 
   @POST('/v1/audio/unlike')
   Future<void> unlikeAudio(@Body() UnlikeAudioBody body);
