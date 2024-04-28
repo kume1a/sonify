@@ -36,6 +36,11 @@ final class SyncUserAudioImpl extends SyncEntityBase implements SyncUserAudio {
     }
 
     for (final pendingChange in pendingChanges.dataOrThrow) {
+      if (pendingChange.localId == null) {
+        Logger.root.warning('Local id is null, cannot sync audio like: $pendingChange');
+        return EmptyResult.err();
+      }
+
       final res = await pendingChange.payload.maybeWhen<Future<Either<NetworkCallError, Object?>?>>(
         orElse: () => Future.value(),
         createLike: (audioLike) {
@@ -61,7 +66,7 @@ final class SyncUserAudioImpl extends SyncEntityBase implements SyncUserAudio {
         return EmptyResult.err();
       }
 
-      await _pendingChangeLocalRepository.deleteByLocalId(pendingChange.localId);
+      await _pendingChangeLocalRepository.deleteByLocalId(pendingChange.localId!);
     }
 
     return EmptyResult.success();

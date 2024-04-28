@@ -24,11 +24,13 @@ class LikeOrUnlikeAudio {
     this._authUserInfoProvider,
     this._audioRemoteRepository,
     this._audioLocalRepository,
+    this._pendingChangeLocalRepository,
   );
 
   final AuthUserInfoProvider _authUserInfoProvider;
   final AudioRemoteRepository _audioRemoteRepository;
   final AudioLocalRepository _audioLocalRepository;
+  final PendingChangeLocalRepository _pendingChangeLocalRepository;
 
   Future<LikeOrUnlikeAudioResult?> call({
     required Audio? nowPlayingAudio,
@@ -64,7 +66,7 @@ class LikeOrUnlikeAudio {
       return unlikeRes.ifSuccess(
         () {
           // don't await for speed
-          _audioRemoteRepository.unlikeAudio(audioId: nowPlayingAudioId);
+          _unlikeAudioRemote(audioId: nowPlayingAudioId, userId: authUserId);
 
           return _updateAudioLikeAndResolveResult(
             audioLike: null,
@@ -85,7 +87,7 @@ class LikeOrUnlikeAudio {
       return likeRes.ifSuccess(
         (r) {
           // don't await for speed
-          _audioRemoteRepository.likeAudio(audioId: nowPlayingAudioId);
+          _likeAudioRemote(audioId: nowPlayingAudioId, userId: authUserId);
 
           return _updateAudioLikeAndResolveResult(
             audioLike: r,
@@ -112,5 +114,51 @@ class LikeOrUnlikeAudio {
       nowPlayingAudio: updatedNowPlayingAudio,
       nowPlayingAudios: updatedNowPlayingAudios,
     );
+  }
+
+  Future<void> _likeAudioRemote({
+    required String audioId,
+    required String userId,
+  }) async {
+    final res = await _audioRemoteRepository.likeAudio(audioId: audioId);
+
+    await res.ifLeft((_) {
+      final pendingChange = PendingChange(
+        localId: null,
+        type: PendingChangeType.createLike,
+        payload: PendingChangePayload.createLike(
+          AudioLike(
+            localId: null,
+            audioId: audioId,
+            userId: userId,
+          ),
+        ),
+      );
+
+      return _pendingChangeLocalRepository.create(pendingChange);
+    });
+  }
+
+  Future<void> _unlikeAudioRemote({
+    required String audioId,
+    required String userId,
+  }) async {
+    final res = await _audioRemoteRepository.unlikeAudio(audioId: audioId);
+
+    await res.ifLeft((_) {
+      final pendingChange = PendingChange(
+        localId: null,
+        type: PendingChangeType.deleteLike,
+        payload: PendingChangePayload.deleteLike(
+          AudioLike(
+            localId: null,
+            audioId: audioId,
+            userId: userId,
+          ),
+        ),
+      );
+
+      return _pendingChangeLocalRepository.create(pendingChange);
+    });
   }
 }
