@@ -46,7 +46,6 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     this._nowPlayingAudioInfoStore,
     this._enqueuePlaylist,
     this._authUserInfoProvider,
-    this._audioRemoteRepository,
     this._likeOrUnlikeAudio,
   ) : super(NowPlayingAudioState.initial()) {
     _init();
@@ -58,7 +57,6 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   final NowPlayingAudioInfoStore _nowPlayingAudioInfoStore;
   final EnqueuePlaylist _enqueuePlaylist;
   final AuthUserInfoProvider _authUserInfoProvider;
-  final AudioRemoteRepository _audioRemoteRepository;
   final LikeOrUnlikeAudio _likeOrUnlikeAudio;
 
   final _subscriptions = SubscriptionComposite();
@@ -82,8 +80,6 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
-    emit(state.copyWith(nowPlayingAudio: SimpleDataState.loading()));
-
     final payload = callOrDefault(
       () => MediaItemPayload.fromExtras(mediaItem?.extras ?? {}),
       null,
@@ -93,10 +89,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
-    emit(state.copyWith(
-      nowPlayingAudio: SimpleDataState.success(payload.audio),
-      playlistId: payload.playlistId,
-    ));
+    emit(state.copyWith(playlistId: payload.playlistId));
 
     await _nowPlayingAudioInfoStore.setNowPlayingAudioInfo(
       NowPlayingAudioInfo(
@@ -135,17 +128,23 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
+    final audioFromPlaylist = state.nowPlayingAudios?.elementAt(audioIndex);
+    if (audioFromPlaylist == null) {
+      Logger.root.warning('NowPlayingAudioCubit.onPlaylistAudioPressed: audioFromPlaylist is null');
+      return;
+    }
+
     await _audioHandler.skipToQueueItem(audioIndex);
     _audioHandler.play();
 
-    emit(state.copyWith(nowPlayingAudio: SimpleDataState.success(audio)));
+    emit(state.copyWith(nowPlayingAudio: SimpleDataState.success(audioFromPlaylist)));
   }
 
   Future<void> onPlaylistAudioPressed({
     required Audio audio,
     required String playlistId,
   }) async {
-    if (state.nowPlayingAudio.getOrNull == audio) {
+    if (state.nowPlayingAudio.getOrNull?.id == audio.id) {
       return;
     }
 
@@ -166,10 +165,16 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
+    final audioFromPlaylist = state.nowPlayingPlaylist?.audios?.elementAt(audioIndex);
+    if (audioFromPlaylist == null) {
+      Logger.root.warning('NowPlayingAudioCubit.onPlaylistAudioPressed: audioFromPlaylist is null');
+      return;
+    }
+
     await _audioHandler.skipToQueueItem(audioIndex);
     _audioHandler.play();
 
-    emit(state.copyWith(nowPlayingAudio: SimpleDataState.success(audio)));
+    emit(state.copyWith(nowPlayingAudio: SimpleDataState.success(audioFromPlaylist)));
   }
 
   Future<void> onPlayPlaylistPressed({

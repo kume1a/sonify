@@ -21,7 +21,7 @@ class SqfliteDownloadedTaskEntityDao implements DownloadedTaskEntityDao {
     UserAudioEntity? payloadUserAudioEntity,
   }) {
     return _db.insert(
-      UserAudio_.tn,
+      DownloadedTask_.tn,
       _downloadedTaskEntityMapper.entityToMap(entity),
     );
   }

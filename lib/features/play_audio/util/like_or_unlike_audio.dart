@@ -11,6 +11,11 @@ class LikeOrUnlikeAudioResult {
 
   final Audio nowPlayingAudio;
   final List<Audio>? nowPlayingAudios;
+
+  @override
+  String toString() {
+    return 'LikeOrUnlikeAudioResult{nowPlayingAudio: $nowPlayingAudio, nowPlayingAudios: $nowPlayingAudios}';
+  }
 }
 
 @lazySingleton
