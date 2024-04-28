@@ -1,4 +1,5 @@
 import 'package:common_models/common_models.dart';
+import 'package:common_utilities/common_utilities.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
 import '../model/audio_like.dart';
@@ -116,6 +117,18 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
       final res = await _audioLikeEntityDao.getAllByUserId(userId);
 
       return res.map(_audioLikeMapper.entityToModel).toList();
+    });
+  }
+
+  @override
+  Future<Result<AudioLike?>> getAudioLikeByUserAndAudioId({
+    required String userId,
+    required String audioId,
+  }) {
+    return wrapWithResult(() async {
+      final res = await _audioLikeEntityDao.getByUserAndAudioId(userId: userId, audioId: audioId);
+
+      return tryMap(res, _audioLikeMapper.entityToModel);
     });
   }
 }

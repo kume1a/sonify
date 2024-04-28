@@ -28,4 +28,9 @@ abstract interface class AudioLocalRepository {
   Future<Result<List<AudioLike>>> getAllLikedAudiosByUserId({
     required String userId,
   });
+
+  Future<Result<AudioLike?>> getAudioLikeByUserAndAudioId({
+    required String userId,
+    required String audioId,
+  });
 }

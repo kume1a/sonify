@@ -9,6 +9,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../../../shared/util/utils.dart';
+import '../../../shared/values/constant.dart';
 import '../api/now_playing_audio_info_store.dart';
 import '../model/media_item_payload.dart';
 import '../model/playback_button_state.dart';
@@ -74,33 +75,6 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     return super.close();
   }
 
-  Future<void> _onMediaItemChanged(MediaItem? mediaItem) async {
-    if (mediaItem?.extras == null) {
-      Logger.root.warning('NowPlayingAudioCubit._onMediaItemChanged: mediaItem.extras is null');
-      return;
-    }
-
-    final payload = callOrDefault(
-      () => MediaItemPayload.fromExtras(mediaItem?.extras ?? {}),
-      null,
-    );
-    if (payload == null) {
-      emit(state.copyWith(nowPlayingAudio: SimpleDataState.failure()));
-      return;
-    }
-
-    emit(state.copyWith(playlistId: payload.playlistId));
-
-    await _nowPlayingAudioInfoStore.setNowPlayingAudioInfo(
-      NowPlayingAudioInfo(
-        playlistId: state.nowPlayingPlaylist?.id,
-        audioId: payload.audio.id,
-        localAudioId: payload.audio.localId,
-        position: Duration.zero,
-      ),
-    );
-  }
-
   Future<void> onLocalAudioPressed(Audio? audio) async {
     if (audio == null) {
       Logger.root.warning('NowPlayingAudioCubit.onLocalAudioPressed: audio is null');
@@ -128,16 +102,8 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
-    final audioFromPlaylist = state.nowPlayingAudios?.elementAt(audioIndex);
-    if (audioFromPlaylist == null) {
-      Logger.root.warning('NowPlayingAudioCubit.onPlaylistAudioPressed: audioFromPlaylist is null');
-      return;
-    }
-
     await _audioHandler.skipToQueueItem(audioIndex);
     _audioHandler.play();
-
-    emit(state.copyWith(nowPlayingAudio: SimpleDataState.success(audioFromPlaylist)));
   }
 
   Future<void> onPlaylistAudioPressed({
@@ -165,16 +131,8 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
-    final audioFromPlaylist = state.nowPlayingPlaylist?.audios?.elementAt(audioIndex);
-    if (audioFromPlaylist == null) {
-      Logger.root.warning('NowPlayingAudioCubit.onPlaylistAudioPressed: audioFromPlaylist is null');
-      return;
-    }
-
     await _audioHandler.skipToQueueItem(audioIndex);
     _audioHandler.play();
-
-    emit(state.copyWith(nowPlayingAudio: SimpleDataState.success(audioFromPlaylist)));
   }
 
   Future<void> onPlayPlaylistPressed({
@@ -189,16 +147,9 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     final beforePlayingAudioInfo = await _nowPlayingAudioInfoStore.getNowPlayingAudioInfo();
 
     if (beforePlayingAudioInfo == null || beforePlayingAudioInfo.playlistId != playlistId) {
-      final firstAudio = state.nowPlayingPlaylist?.audios?.firstOrNull;
-      if (firstAudio == null) {
-        Logger.root.warning('PlaylistCubit.onPlayPlaylistPressed: firstAudio is null');
-        return;
-      }
-
       await _audioHandler.skipToQueueItem(0);
       _audioHandler.play();
 
-      emit(state.copyWith(nowPlayingAudio: SimpleDataState.success(firstAudio)));
       return;
     }
 
@@ -280,6 +231,49 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     emit(state.copyWith(nowPlayingPlaylist: playlist.rightOrNull, nowPlayingAudios: null));
 
     return playlist.rightOrNull?.audios;
+  }
+
+  Future<void> _onMediaItemChanged(MediaItem? mediaItem) async {
+    if (mediaItem?.extras == null) {
+      Logger.root.warning('NowPlayingAudioCubit._onMediaItemChanged: mediaItem.extras is null');
+      return;
+    }
+
+    final authUserId = await _authUserInfoProvider.getId();
+    if (authUserId == null) {
+      Logger.root.warning('NowPlayingAudioCubit._onMediaItemChanged: authUserId is null');
+      return;
+    }
+
+    final payload = callOrDefault(
+      () => MediaItemPayload.fromExtras(mediaItem?.extras ?? {}),
+      null,
+    );
+    if (payload == null) {
+      emit(state.copyWith(nowPlayingAudio: SimpleDataState.failure()));
+      return;
+    }
+
+    final nowPlayingAudioLike = await _audioLocalRepository.getAudioLikeByUserAndAudioId(
+      userId: authUserId,
+      audioId: payload.audio.id ?? kInvalidId,
+    );
+
+    final nowPlayingAudio = payload.audio.copyWith(audioLike: nowPlayingAudioLike.dataOrNull);
+
+    emit(state.copyWith(
+      playlistId: payload.playlistId,
+      nowPlayingAudio: SimpleDataState.success(nowPlayingAudio),
+    ));
+
+    await _nowPlayingAudioInfoStore.setNowPlayingAudioInfo(
+      NowPlayingAudioInfo(
+        playlistId: state.nowPlayingPlaylist?.id,
+        audioId: payload.audio.id,
+        localAudioId: payload.audio.localId,
+        position: Duration.zero,
+      ),
+    );
   }
 
   void _onPlaybackStateChanged(PlaybackState playbackState) {

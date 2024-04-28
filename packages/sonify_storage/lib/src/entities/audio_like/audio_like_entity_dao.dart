@@ -14,4 +14,9 @@ abstract interface class AudioLikeEntityDao {
   });
 
   Future<List<AudioLikeEntity>> getAllByUserId(String userId);
+
+  Future<AudioLikeEntity?> getByUserAndAudioId({
+    required String userId,
+    required String audioId,
+  });
 }
