@@ -6,10 +6,11 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../../download_file/model/downloads_event.dart';
+import '../util/sync_entity_base.dart';
 import 'sync_user_audio.dart';
 
 @LazySingleton(as: SyncUserAudio)
-class SyncUserAudioImpl implements SyncUserAudio {
+final class SyncUserAudioImpl extends SyncEntityBase implements SyncUserAudio {
   SyncUserAudioImpl(
     this._audioRemoteRepository,
     this._audioLocalRepository,
@@ -23,63 +24,44 @@ class SyncUserAudioImpl implements SyncUserAudio {
   final EventBus _eventBus;
 
   @override
-  Future<Result<SyncUserAudioResult>> call() async {
-    final authUserId = await _authUserInfoProvider.getId();
-    if (authUserId == null) {
-      Logger.root.warning('Auth user id is null, cannot sync user audio');
-      return Result.err();
-    }
+  Future<EmptyResult> deleteLocalEntities(List<String> ids) async {
+    final res = await _audioLocalRepository.deleteUserAudioJoinsByAudioIds(ids);
 
-    final userAudioIdsRes = await _audioRemoteRepository.getAuthUserAudioIds();
+    return res.toEmptyResult();
+  }
 
-    if (userAudioIdsRes.isLeft) {
-      Logger.root.fine('Failed to get user audio ids: ${userAudioIdsRes.leftOrNull}');
-      return Result.err();
-    }
-
-    final userLocalAudiosRes = await _audioLocalRepository.getAllByUserId(authUserId);
-    if (userLocalAudiosRes.isErr) {
-      Logger.root.fine('Failed to get local user audios: $userLocalAudiosRes');
-      return Result.err();
-    }
-
-    final userLocalAudios = userLocalAudiosRes.dataOrThrow;
-    final remoteUserAudioIds = userAudioIdsRes.rightOrThrow.toSet();
-    final userLocalAudioIds = userLocalAudios.map((e) => e.audio?.id).whereNotNull().toSet();
-
-    final toDownloadAudioIds = remoteUserAudioIds.difference(userLocalAudioIds).toList();
-    final toDeleteLocalUserAudioIds = userLocalAudios
-        .where((e) => e.audio != null && !remoteUserAudioIds.contains(e.audio?.id))
-        .map((e) => e.localId)
-        .whereNotNull()
-        .toList();
-
-    if (toDeleteLocalUserAudioIds.isNotEmpty) {
-      await _audioLocalRepository.deleteUserAudioJoinsByIds(toDeleteLocalUserAudioIds);
-    }
-
-    if (toDownloadAudioIds.isEmpty) {
-      return Result.success(SyncUserAudioResult(queuedDownloadsCount: 0));
-    }
-
-    final toDownloadUserAudiosRes =
-        await _audioRemoteRepository.getAuthUserAudiosByAudioIds(toDownloadAudioIds);
-
+  @override
+  Future<EmptyResult> downloadEntities(List<String> ids) async {
+    final toDownloadUserAudiosRes = await _audioRemoteRepository.getAuthUserAudiosByAudioIds(ids);
     if (toDownloadUserAudiosRes.isLeft) {
       Logger.root.fine('Failed to download audios: ${toDownloadUserAudiosRes.leftOrNull}');
-      return Result.err();
+      return EmptyResult.err();
     }
 
-    final toDownloadUserAudios = toDownloadUserAudiosRes.rightOrThrow;
-
-    final toDownloadUserAudiosLen = toDownloadUserAudios.length;
-    for (int i = 0; i < toDownloadUserAudiosLen; i++) {
+    for (final userAudio in toDownloadUserAudiosRes.rightOrThrow) {
       _eventBus.fire(
-        DownloadsEvent.enqueueUserAudio(toDownloadUserAudios[i]),
+        DownloadsEvent.enqueueUserAudio(userAudio),
       );
     }
 
-    final res = SyncUserAudioResult(queuedDownloadsCount: toDownloadUserAudiosLen);
-    return Result.success(res);
+    return EmptyResult.success();
+  }
+
+  @override
+  Future<List<String>?> getLocalEntityIds() async {
+    final authUserId = await _authUserInfoProvider.getId();
+    if (authUserId == null) {
+      Logger.root.warning('Auth user id is null, cannot sync user audio');
+      return null;
+    }
+
+    final userLocalAudiosRes = await _audioLocalRepository.getAllIdsByUserId(authUserId);
+
+    return userLocalAudiosRes.dataOrNull;
+  }
+
+  @override
+  Future<List<String>?> getRemoteEntityIds() {
+    return _audioRemoteRepository.getAuthUserAudioIds().then((value) => value.rightOrNull);
   }
 }

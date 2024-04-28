@@ -6,9 +6,11 @@ import '../model/user_audio.dart';
 abstract interface class AudioLocalRepository {
   Future<Result<List<UserAudio>>> getAllByUserId(String userId);
 
+  Future<Result<List<String>>> getAllIdsByUserId(String userId);
+
   Future<Result<UserAudio>> save(UserAudio audio);
 
-  Future<Result<int>> deleteUserAudioJoinsByIds(List<int> ids);
+  Future<Result<int>> deleteUserAudioJoinsByAudioIds(List<String> ids);
 
   Future<Result<bool>> existsByUserAndAudioId({
     required String userId,

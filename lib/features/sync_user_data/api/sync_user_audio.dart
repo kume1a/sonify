@@ -1,13 +1,7 @@
 import 'package:common_models/common_models.dart';
 
-class SyncUserAudioResult {
-  SyncUserAudioResult({
-    required this.queuedDownloadsCount,
-  });
-
-  final int queuedDownloadsCount;
-}
+import '../util/sync_entity_base.dart';
 
 abstract interface class SyncUserAudio {
-  Future<Result<SyncUserAudioResult>> call();
+  Future<Result<SyncEntitiesResult>> call();
 }

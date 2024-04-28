@@ -61,8 +61,8 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
   }
 
   @override
-  Future<Result<int>> deleteUserAudioJoinsByIds(List<int> ids) {
-    return wrapWithResult(() => _userAudioEntityDao.deleteByIds(ids));
+  Future<Result<int>> deleteUserAudioJoinsByAudioIds(List<String> ids) {
+    return wrapWithResult(() => _userAudioEntityDao.deleteByBAudioIds(ids));
   }
 
   @override
@@ -130,5 +130,10 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
 
       return tryMap(res, _audioLikeMapper.entityToModel);
     });
+  }
+
+  @override
+  Future<Result<List<String>>> getAllIdsByUserId(String userId) {
+    return wrapWithResult(() => _userAudioEntityDao.getAllBAudioIdsByUserId(userId));
   }
 }

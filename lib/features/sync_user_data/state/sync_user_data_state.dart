@@ -79,10 +79,10 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
     await syncUserAudioRes.foldAsync(
       () => _handleSyncFailure(),
       (r) async {
-        if (r.queuedDownloadsCount > 0) {
+        if (r.toDownloadCount > 0) {
           emit(state.copyWith(
             syncState: SyncAudiosState.loaded,
-            queuedDownloadsCount: r.queuedDownloadsCount,
+            queuedDownloadsCount: r.toDownloadCount,
           ));
 
           await Future.delayed(const Duration(seconds: 10));
