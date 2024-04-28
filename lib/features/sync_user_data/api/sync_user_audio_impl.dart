@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:common_models/common_models.dart';
 import 'package:common_utilities/common_utilities.dart';
 import 'package:domain_data/domain_data.dart';

@@ -17,6 +17,7 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
     this._audioLikeEntityDao,
     this._audioEntityDao,
     this._audioLikeMapper,
+    this._dbBatchProviderFactory,
   );
 
   final UserAudioEntityDao _userAudioEntityDao;
@@ -25,6 +26,7 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
   final AudioLikeEntityDao _audioLikeEntityDao;
   final AudioEntityDao _audioEntityDao;
   final AudioLikeMapper _audioLikeMapper;
+  final DbBatchProviderFactory _dbBatchProviderFactory;
 
   @override
   Future<Result<List<UserAudio>>> getAllByUserId(String userId) {
@@ -66,34 +68,27 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
   }
 
   @override
-  Future<Result<AudioLike>> like({
-    required String userId,
-    required String audioId,
-  }) async {
+  Future<Result<AudioLike>> createAudioLike(AudioLike audioLike) async {
     return wrapWithResult(() async {
-      final audioLikeEntity = AudioLikeEntity(
-        id: null,
-        bAudioId: audioId,
-        bUserId: userId,
+      await _audioLikeEntityDao.insert(
+        _audioLikeMapper.modelToEntity(audioLike),
       );
 
-      final localId = await _audioLikeEntityDao.insert(audioLikeEntity);
-
-      final insertedEntity = audioLikeEntity.copyWith(id: Wrapped(localId));
-
-      return _audioLikeMapper.entityToModel(insertedEntity);
+      return audioLike;
     });
   }
 
   @override
-  Future<EmptyResult> unlike({
+  Future<EmptyResult> deleteAudioLikeByAudioAndUserId({
     required String userId,
     required String audioId,
   }) async {
-    return wrapWithEmptyResult(() => _audioLikeEntityDao.deleteByUserIdAndAudioId(
-          audioId: audioId,
-          userId: userId,
-        ));
+    return wrapWithEmptyResult(
+      () => _audioLikeEntityDao.deleteByUserIdAndAudioId(
+        audioId: audioId,
+        userId: userId,
+      ),
+    );
   }
 
   @override
@@ -110,7 +105,7 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
   }
 
   @override
-  Future<Result<List<AudioLike>>> getAllLikedAudiosByUserId({
+  Future<Result<List<AudioLike>>> getAllAudioLikesByUserId({
     required String userId,
   }) {
     return wrapWithResult(() async {
@@ -135,5 +130,33 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
   @override
   Future<Result<List<String>>> getAllIdsByUserId(String userId) {
     return wrapWithResult(() => _userAudioEntityDao.getAllBAudioIdsByUserId(userId));
+  }
+
+  @override
+  Future<EmptyResult> bulkWriteAudioLikes(List<AudioLike> audioLikes) {
+    return wrapWithEmptyResult(() async {
+      final batchProvider = _dbBatchProviderFactory.newBatchProvider();
+
+      for (final audioLike in audioLikes) {
+        final audioLikeEntity = _audioLikeMapper.modelToEntity(audioLike);
+
+        _audioLikeEntityDao.insert(audioLikeEntity, batchProvider);
+      }
+
+      await batchProvider.commit();
+    });
+  }
+
+  @override
+  Future<Result<int>> deleteAudioLikesByUserIdAndAudioIds({
+    required String userId,
+    required List<String> audioIds,
+  }) {
+    return wrapWithResult(
+      () => _audioLikeEntityDao.deleteByBUserIdAndBAudioIds(
+        userId: userId,
+        bAudioIds: audioIds,
+      ),
+    );
   }
 }

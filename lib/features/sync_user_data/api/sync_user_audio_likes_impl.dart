@@ -2,11 +2,13 @@ import 'package:collection/collection.dart';
 import 'package:common_models/common_models.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 
+import '../util/sync_entity_base.dart';
 import 'sync_user_audio_likes.dart';
 
 @LazySingleton(as: SyncUserAudioLikes)
-class SyncUserAudioLikesImpl implements SyncUserAudioLikes {
+final class SyncUserAudioLikesImpl extends SyncEntityBase implements SyncUserAudioLikes {
   SyncUserAudioLikesImpl(
     this._audioLocalRepository,
     this._audioRemoteRepository,
@@ -18,31 +20,48 @@ class SyncUserAudioLikesImpl implements SyncUserAudioLikes {
   final AuthUserInfoProvider _authUserInfoProvider;
 
   @override
-  Future<EmptyResult> call() async {
+  Future<EmptyResult> deleteLocalEntities(List<String> ids) async {
     final authUserId = await _authUserInfoProvider.getId();
     if (authUserId == null) {
+      Logger.root.warning('sync audio likes, authUserId is null');
       return EmptyResult.err();
     }
 
-    final localUserAudioLikesRes = await _audioLocalRepository.getAllLikedAudiosByUserId(userId: authUserId);
-    if (localUserAudioLikesRes.isErr) {
+    final res = await _audioLocalRepository.deleteAudioLikesByUserIdAndAudioIds(
+      userId: authUserId,
+      audioIds: ids,
+    );
+
+    return res.toEmptyResult();
+  }
+
+  @override
+  Future<EmptyResult> downloadEntities(List<String> ids) async {
+    final audioLikes = await _audioRemoteRepository.getAuthUserAudioLikesByAudioIds(audioIds: ids);
+    if (audioLikes.isLeft) {
       return EmptyResult.err();
     }
 
-    final localUserAudioLikeAudioIds =
-        localUserAudioLikesRes.dataOrThrow.map((e) => e.audioId).whereNotNull().toList();
+    return _audioLocalRepository.bulkWriteAudioLikes(audioLikes.rightOrThrow);
+  }
 
-    if (localUserAudioLikeAudioIds.isEmpty) {
-      return EmptyResult.success();
+  @override
+  Future<List<String>?> getLocalEntityIds() async {
+    final authUserId = await _authUserInfoProvider.getId();
+    if (authUserId == null) {
+      Logger.root.warning('sync audio likes, authUserId is null');
+      return null;
     }
 
-    final syncUserAudioLikesRes =
-        await _audioRemoteRepository.syncAudioLikes(audioIds: localUserAudioLikeAudioIds);
+    final localUserAudioLikesRes = await _audioLocalRepository.getAllAudioLikesByUserId(userId: authUserId);
 
-    if (syncUserAudioLikesRes.isLeft) {
-      return EmptyResult.err();
-    }
+    return localUserAudioLikesRes.dataOrNull?.map((e) => e.audioId).whereNotNull().toList();
+  }
 
-    return EmptyResult.success();
+  @override
+  Future<List<String>?> getRemoteEntityIds() async {
+    final audioLikes = await _audioRemoteRepository.getAuthUserAudioLikes();
+
+    return audioLikes.rightOrNull?.map((e) => e.audioId).whereNotNull().toList();
   }
 }

@@ -37,6 +37,7 @@ abstract class DiDomainModelModule {
     AudioLikeEntityDao audioLikeEntityDao,
     AudioEntityDao audioEntityDao,
     AudioLikeMapper audioLikeMapper,
+    DbBatchProviderFactory dbBatchProviderFactory,
   ) {
     return AudioLocalRepositoryImpl(
       userAudioEntityDao,
@@ -45,6 +46,7 @@ abstract class DiDomainModelModule {
       audioLikeEntityDao,
       audioEntityDao,
       audioLikeMapper,
+      dbBatchProviderFactory,
     );
   }
 

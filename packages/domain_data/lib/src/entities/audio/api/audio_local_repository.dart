@@ -17,22 +17,26 @@ abstract interface class AudioLocalRepository {
     required String audioId,
   });
 
-  Future<Result<AudioLike>> like({
+  Future<Result<AudioLike>> createAudioLike(AudioLike audioLike);
+
+  Future<EmptyResult> deleteAudioLikeByAudioAndUserId({
     required String userId,
     required String audioId,
   });
 
-  Future<EmptyResult> unlike({
-    required String userId,
-    required String audioId,
-  });
-
-  Future<Result<List<AudioLike>>> getAllLikedAudiosByUserId({
+  Future<Result<List<AudioLike>>> getAllAudioLikesByUserId({
     required String userId,
   });
 
   Future<Result<AudioLike?>> getAudioLikeByUserAndAudioId({
     required String userId,
     required String audioId,
+  });
+
+  Future<EmptyResult> bulkWriteAudioLikes(List<AudioLike> audioLikes);
+
+  Future<Result<int>> deleteAudioLikesByUserIdAndAudioIds({
+    required String userId,
+    required List<String> audioIds,
   });
 }

@@ -4,11 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
 
+import '../entity/audio/model/audio_ids_body.dart';
 import '../entity/audio/model/audio_like_dto.dart';
 import '../entity/audio/model/download_youtube_audio_body.dart';
-import '../entity/audio/model/get_audios_by_ids_body.dart';
 import '../entity/audio/model/like_audio_body.dart';
-import '../entity/audio/model/sync_audio_likes_body.dart';
 import '../entity/audio/model/unlike_audio_body.dart';
 import '../entity/audio/model/user_audio_dto.dart';
 import '../entity/playlist/model/playlist_dto.dart';
@@ -49,9 +48,9 @@ abstract class ApiClient {
   @GET('/v1/audio/myAudioIds')
   Future<List<String>> getAuthUserAudioIds();
 
-  @GET('/v1/audio/myUserAudios')
-  Future<List<UserAudioDto>> getAuthUserUserAudios(
-    @Body() GetAudiosByIdsBody body, // using body for big payload
+  @GET('/v1/audio/myUserAudiosByIds')
+  Future<List<UserAudioDto>> getAuthUserUserAudiosByIds(
+    @Body() AudioIdsBody body, // using body for big payload
   );
 
   @POST('/v1/audio/like')
@@ -60,8 +59,11 @@ abstract class ApiClient {
   @POST('/v1/audio/unlike')
   Future<void> unlikeAudio(@Body() UnlikeAudioBody body);
 
-  @POST('/v1/audio/syncLikes')
-  Future<void> syncAudioLikes(@Body() SyncAudioLikesBody body);
+  @GET('/v1/audio/myLikes')
+  Future<List<AudioLikeDto>> getAuthUserAudioLikes();
+
+  @GET('/v1/audio/myLikesByIds')
+  Future<List<AudioLikeDto>> getAuthUserAudioLikesByAudioIds(@Body() AudioIdsBody body);
 
   // auth ------------------------------
   @POST('/v1/auth/googleSignIn')

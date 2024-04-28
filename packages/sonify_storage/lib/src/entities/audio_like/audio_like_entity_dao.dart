@@ -1,7 +1,11 @@
+import '../../db/db_batch.dart';
 import 'audio_like_entity.dart';
 
 abstract interface class AudioLikeEntityDao {
-  Future<int> insert(AudioLikeEntity entity);
+  Future<void> insert(
+    AudioLikeEntity entity, [
+    DbBatchProvider? batchProvider,
+  ]);
 
   Future<int> deleteByUserIdAndAudioId({
     required String userId,
@@ -18,5 +22,10 @@ abstract interface class AudioLikeEntityDao {
   Future<AudioLikeEntity?> getByUserAndAudioId({
     required String userId,
     required String audioId,
+  });
+
+  Future<int> deleteByBUserIdAndBAudioIds({
+    required String userId,
+    required List<String> bAudioIds,
   });
 }

@@ -77,9 +77,18 @@ class AudioRemoteRepositoryImpl implements AudioRemoteRepository {
   }
 
   @override
-  Future<Either<NetworkCallError, Unit>> syncAudioLikes({
+  Future<Either<NetworkCallError, List<AudioLike>>> getAuthUserAudioLikes() async {
+    final res = await _audioRemoteService.getAuthUserAudioLikes();
+
+    return res.map((r) => r.map(_audioLikeMapper.dtoToModel).toList());
+  }
+
+  @override
+  Future<Either<NetworkCallError, List<AudioLike>>> getAuthUserAudioLikesByAudioIds({
     required List<String> audioIds,
   }) async {
-    return _audioRemoteService.syncAudioLikes(audioIds: audioIds);
+    final res = await _audioRemoteService.getAuthUserAudioLikesByAudioIds(audioIds: audioIds);
+
+    return res.map((r) => r.map(_audioLikeMapper.dtoToModel).toList());
   }
 }

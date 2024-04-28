@@ -10,7 +10,12 @@ abstract class DiSonifyStorageModule {
     return DbFactory.create();
   }
 
-  // audio like
+  @lazySingleton
+  DbBatchProviderFactory dbBatchProviderFactory(Database db) {
+    return SqfliteBatchProviderFactory(db);
+  }
+
+  // audio like ---------------------------------------------------------------
   @lazySingleton
   AudioLikeEntityMapper audioLikeEntityMapper() {
     return AudioLikeEntityMapper();

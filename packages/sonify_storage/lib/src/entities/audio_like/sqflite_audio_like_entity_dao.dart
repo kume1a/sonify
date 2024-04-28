@@ -1,5 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 
+import '../../db/db_batch.dart';
+import '../../db/sqlite_helpers.dart';
 import '../../db/tables.dart';
 import 'audio_like_entity.dart';
 import 'audio_like_entity_dao.dart';
@@ -15,11 +17,18 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
   final AudioLikeEntityMapper _audioLikeEntityMapper;
 
   @override
-  Future<int> insert(AudioLikeEntity entity) {
-    return _db.insert(
-      AudioLike_.tn,
-      _audioLikeEntityMapper.entityToMap(entity),
-    );
+  Future<void> insert(
+    AudioLikeEntity entity, [
+    DbBatchProvider? batchProvider,
+  ]) {
+    final entityMap = _audioLikeEntityMapper.entityToMap(entity);
+
+    if (batchProvider != null) {
+      batchProvider.get.insert(AudioLike_.tn, entityMap);
+      return Future.value();
+    }
+
+    return _db.insert(AudioLike_.tn, entityMap);
   }
 
   @override
@@ -80,5 +89,20 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
     );
 
     return query.isNotEmpty ? _audioLikeEntityMapper.mapToEntity(query.first) : null;
+  }
+
+  @override
+  Future<int> deleteByBUserIdAndBAudioIds({
+    required String userId,
+    required List<String> bAudioIds,
+  }) {
+    return _db.delete(
+      AudioLike_.tn,
+      where: '''
+        ${AudioLike_.bUserId} = ? 
+        AND ${AudioLike_.bAudioId} IN ${sqlListPlaceholders(bAudioIds.length)}
+      ''',
+      whereArgs: [userId, ...bAudioIds],
+    );
   }
 }

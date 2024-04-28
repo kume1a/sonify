@@ -58,7 +58,8 @@ class LikeOrUnlikeAudio {
     }
 
     if (alreadyLikedRes.dataOrThrow) {
-      final unlikeRes = await _audioLocalRepository.unlike(userId: authUserId, audioId: nowPlayingAudioId);
+      final unlikeRes = await _audioLocalRepository.deleteAudioLikeByAudioAndUserId(
+          userId: authUserId, audioId: nowPlayingAudioId);
 
       return unlikeRes.ifSuccess(
         () {
@@ -73,7 +74,13 @@ class LikeOrUnlikeAudio {
         },
       );
     } else {
-      final likeRes = await _audioLocalRepository.like(userId: authUserId, audioId: nowPlayingAudioId);
+      final audioLike = AudioLike(
+        localId: null,
+        audioId: nowPlayingAudioId,
+        userId: authUserId,
+      );
+
+      final likeRes = await _audioLocalRepository.createAudioLike(audioLike);
 
       return likeRes.ifSuccess(
         (r) {
