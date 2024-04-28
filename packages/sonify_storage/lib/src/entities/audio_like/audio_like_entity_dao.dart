@@ -7,17 +7,17 @@ abstract interface class AudioLikeEntityDao {
     DbBatchProvider? batchProvider,
   ]);
 
-  Future<int> deleteByUserIdAndAudioId({
+  Future<int> deleteByBUserIdAndBAudioId({
+    required String bUserId,
+    required String bAudioId,
+  });
+
+  Future<bool> existsByBUserIdAndBAudioId({
     required String userId,
     required String audioId,
   });
 
-  Future<bool> existsByUserAndAudioId({
-    required String userId,
-    required String audioId,
-  });
-
-  Future<List<AudioLikeEntity>> getAllByUserId(String userId);
+  Future<List<AudioLikeEntity>> getAllByBUserId(String userId);
 
   Future<AudioLikeEntity?> getByUserAndAudioId({
     required String userId,

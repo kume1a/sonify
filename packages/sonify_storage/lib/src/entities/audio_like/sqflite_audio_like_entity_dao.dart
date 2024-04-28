@@ -32,28 +32,27 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
   }
 
   @override
-  Future<int> deleteByUserIdAndAudioId({required String userId, required String audioId}) {
+  Future<int> deleteByBUserIdAndBAudioId({
+    required String bUserId,
+    required String bAudioId,
+  }) {
     return _db.delete(
       AudioLike_.tn,
       where: '${AudioLike_.bUserId} = ? AND ${AudioLike_.bAudioId} = ?',
-      whereArgs: [userId, audioId],
+      whereArgs: [bUserId, bAudioId],
     );
   }
 
   @override
-  Future<bool> existsByUserAndAudioId({
+  Future<bool> existsByBUserIdAndBAudioId({
     required String userId,
     required String audioId,
   }) async {
-    final query = await _db.rawQuery(
-      '''
-      SELECT 
-        COUNT(*) 
-      FROM ${AudioLike_.tn}
-      WHERE ${AudioLike_.bUserId} = ?
-        AND ${AudioLike_.bAudioId} = ?;
-    ''',
-      [userId, audioId],
+    final query = await _db.query(
+      AudioLike_.tn,
+      columns: ['COUNT(*)'],
+      where: '${AudioLike_.bUserId} = ? AND ${AudioLike_.bAudioId} = ?',
+      whereArgs: [userId, audioId],
     );
 
     final count = Sqflite.firstIntValue(query);
@@ -62,13 +61,11 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
   }
 
   @override
-  Future<List<AudioLikeEntity>> getAllByUserId(String userId) async {
-    final query = await _db.rawQuery(
-      '''
-      SELECT * FROM ${AudioLike_.tn}
-        WHERE ${AudioLike_.bUserId} = ?;
-      ''',
-      [userId],
+  Future<List<AudioLikeEntity>> getAllByBUserId(String userId) async {
+    final query = await _db.query(
+      AudioLike_.tn,
+      where: '${AudioLike_.bUserId} = ?',
+      whereArgs: [userId],
     );
 
     return query.map((e) => _audioLikeEntityMapper.mapToEntity(e)).toList();
@@ -79,13 +76,10 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
     required String userId,
     required String audioId,
   }) async {
-    final query = await _db.rawQuery(
-      '''
-      SELECT * FROM ${AudioLike_.tn}
-        WHERE ${AudioLike_.bUserId} = ?
-           AND ${AudioLike_.bAudioId} = ?;
-      ''',
-      [userId, audioId],
+    final query = await _db.query(
+      AudioLike_.tn,
+      where: '${AudioLike_.bUserId} = ? AND ${AudioLike_.bAudioId} = ?',
+      whereArgs: [userId, audioId],
     );
 
     return query.isNotEmpty ? _audioLikeEntityMapper.mapToEntity(query.first) : null;

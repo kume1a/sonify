@@ -20,7 +20,17 @@ abstract base class SyncEntityBase {
 
   Future<EmptyResult> downloadEntities(List<String> ids);
 
+  Future<EmptyResult> beforeSync() {
+    return Future.value(EmptyResult.success());
+  }
+
   Future<Result<SyncEntitiesResult>> call() async {
+    final beforeSyncRes = await beforeSync();
+    if (beforeSyncRes.isErr) {
+      Logger.root.fine('Failed to run before sync');
+      return Result.err();
+    }
+
     final remoteIds = await getRemoteEntityIds();
 
     if (remoteIds == null) {

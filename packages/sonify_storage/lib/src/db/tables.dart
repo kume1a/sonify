@@ -2,7 +2,7 @@
 
 abstract class Audio_ {
   static const tn = 'audios';
-  static const joinPrefix = 'audio_entity_';
+  static const joinPrefix = '${tn}_entity_';
 
   static String joinPrefixColumn(String column) => '$joinPrefix$column';
 
@@ -40,7 +40,7 @@ abstract class Audio_ {
 
 abstract class AudioLike_ {
   static const tn = 'audio_likes';
-  static const joinPrefix = 'audio_like_entity_';
+  static const joinPrefix = '${tn}_entity_';
 
   static String joinPrefixColumn(String column) => '$joinPrefix$column';
 
@@ -56,7 +56,7 @@ abstract class AudioLike_ {
 
 abstract class DownloadedTask_ {
   static const tn = 'downloaded_tasks';
-  static const joinPrefix = 'downloaded_task_entity_';
+  static const joinPrefix = '${tn}_entity_';
 
   static String joinPrefixColumn(String column) => '$joinPrefix$column';
 
@@ -78,7 +78,7 @@ abstract class DownloadedTask_ {
 
 abstract class UserAudio_ {
   static const String tn = 'user_audios';
-  static const String joinPrefix = 'user_audio_entity_';
+  static const String joinPrefix = '${tn}_entity_';
 
   static String joinPrefixColumn(String column) => '$joinPrefix$column';
 
@@ -94,4 +94,20 @@ abstract class UserAudio_ {
   static final joinedBUserId = joinPrefixColumn(bUserId);
   static final joinedBAudioId = joinPrefixColumn(bAudioId);
   static final joinedAudioId = joinPrefixColumn(audioId);
+}
+
+abstract class PendingChange_ {
+  static const tn = 'pending_changes';
+  static const joinPrefix = '${tn}_entity_';
+
+  static String joinPrefixColumn(String column) => '$joinPrefix$column';
+
+  static const id = 'id';
+  static const type = 'type';
+  static const payloadJSON = 'payload_json';
+
+  // joined columns
+  static final joinedId = joinPrefixColumn(id);
+  static final joinedType = joinPrefixColumn(type);
+  static final joinedPayloadJSON = joinPrefixColumn(payloadJSON);
 }

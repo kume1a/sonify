@@ -70,4 +70,18 @@ abstract class DiSonifyStorageModule {
   ) {
     return SqfliteDownloadedTaskEntityDao(db, downloadedTaskEntityMapper);
   }
+
+  // pending change ------------------------------------------------------------
+  @lazySingleton
+  PendingChangeEntityMapper pendingChangeEntityMapper() {
+    return PendingChangeEntityMapper();
+  }
+
+  @lazySingleton
+  PendingChangeEntityDao pendingChangeEntityDao(
+    Database db,
+    PendingChangeEntityMapper pendingChangeEntityMapper,
+  ) {
+    return SqflitePendingChangeEntityDao(db, pendingChangeEntityMapper);
+  }
 }

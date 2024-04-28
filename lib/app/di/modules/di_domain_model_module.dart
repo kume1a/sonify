@@ -211,4 +211,21 @@ abstract class DiDomainModelModule {
       authUserInfoProvider,
     );
   }
+
+  // pending change ------------------------------------------------------------
+  @lazySingleton
+  PendingChangeMapper pendingChangeMapper() {
+    return PendingChangeMapper();
+  }
+
+  @lazySingleton
+  PendingChangeLocalRepository pendingChangeLocalRepository(
+    PendingChangeEntityDao pendingChangeEntityDao,
+    PendingChangeMapper pendingChangeMapper,
+  ) {
+    return PendingChangeLocalRepositoryImpl(
+      pendingChangeEntityDao,
+      pendingChangeMapper,
+    );
+  }
 }

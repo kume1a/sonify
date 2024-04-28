@@ -58,22 +58,20 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
 
   @override
   Future<int> deleteByBAudioIds(List<String> bAudioIds) {
-    return _db.rawDelete(
-      '''
-      DELETE FROM ${UserAudio_.tn}
-      WHERE ${UserAudio_.bAudioId} IN ${sqlListPlaceholders(bAudioIds.length)};
-      ''',
-      bAudioIds,
+    return _db.delete(
+      UserAudio_.tn,
+      where: '${UserAudio_.bAudioId} IN ${sqlListPlaceholders(bAudioIds.length)}',
+      whereArgs: bAudioIds,
     );
   }
 
   @override
   Future<List<String>> getAllBAudioIdsByUserId(String userId) async {
-    final query = await _db.rawQuery(
-      '''
-      SELECT ${UserAudio_.bAudioId} FROM ${UserAudio_.tn} WHERE ${UserAudio_.bUserId} = ?;
-      ''',
-      [userId],
+    final query = await _db.query(
+      UserAudio_.tn,
+      columns: [UserAudio_.bAudioId],
+      where: '${UserAudio_.bUserId} = ?',
+      whereArgs: [userId],
     );
 
     return query.map((e) => e[UserAudio_.bAudioId] as String).toList();

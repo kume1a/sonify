@@ -14,13 +14,58 @@ final class SyncUserAudioImpl extends SyncEntityBase implements SyncUserAudio {
     this._audioRemoteRepository,
     this._audioLocalRepository,
     this._authUserInfoProvider,
+    this._pendingChangeLocalRepository,
     this._eventBus,
   );
 
   final AudioRemoteRepository _audioRemoteRepository;
   final AudioLocalRepository _audioLocalRepository;
   final AuthUserInfoProvider _authUserInfoProvider;
+  final PendingChangeLocalRepository _pendingChangeLocalRepository;
   final EventBus _eventBus;
+
+  @override
+  Future<EmptyResult> beforeSync() async {
+    final pendingChanges = await _pendingChangeLocalRepository.getAllByTypes([
+      PendingChangeType.createLike,
+      PendingChangeType.deleteLike,
+    ]);
+
+    if (pendingChanges.isErr) {
+      return EmptyResult.err();
+    }
+
+    for (final pendingChange in pendingChanges.dataOrThrow) {
+      final res = await pendingChange.payload.maybeWhen<Future<Either<NetworkCallError, Object?>?>>(
+        orElse: () => Future.value(),
+        createLike: (audioLike) {
+          if (audioLike.audioId == null) {
+            Logger.root.warning('Audio id is null, cannot sync audio like: $audioLike');
+            return Future.value();
+          }
+
+          return _audioRemoteRepository.likeAudio(audioId: audioLike.audioId!);
+        },
+        deleteLike: (audioLike) {
+          if (audioLike.audioId == null) {
+            Logger.root.warning('Audio id is null, cannot sync audio like: $audioLike');
+            return Future.value();
+          }
+
+          return _audioRemoteRepository.unlikeAudio(audioId: audioLike.audioId!);
+        },
+      );
+
+      if (res == null || res.isLeft) {
+        Logger.root.warning('Failed to sync audio like: ${pendingChange.payload.audioLike}');
+        return EmptyResult.err();
+      }
+
+      await _pendingChangeLocalRepository.deleteByLocalId(pendingChange.localId);
+    }
+
+    return EmptyResult.success();
+  }
 
   @override
   Future<EmptyResult> deleteLocalEntities(List<String> ids) async {

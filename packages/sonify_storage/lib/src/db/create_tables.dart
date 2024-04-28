@@ -62,4 +62,15 @@ void createDbTables(Batch batch) {
       );
     ''',
   );
+
+  batch.execute(
+    '''
+      CREATE TABLE IF NOT EXISTS ${PendingChange_.tn} 
+      (
+        ${PendingChange_.id} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        ${PendingChange_.type} TEXT,
+        ${PendingChange_.payloadJSON} TEXT
+      );
+    ''',
+  );
 }

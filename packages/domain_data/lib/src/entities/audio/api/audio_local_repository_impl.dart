@@ -84,9 +84,9 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
     required String audioId,
   }) async {
     return wrapWithEmptyResult(
-      () => _audioLikeEntityDao.deleteByUserIdAndAudioId(
-        audioId: audioId,
-        userId: userId,
+      () => _audioLikeEntityDao.deleteByBUserIdAndBAudioId(
+        bAudioId: audioId,
+        bUserId: userId,
       ),
     );
   }
@@ -97,7 +97,7 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
     required String audioId,
   }) {
     return wrapWithResult(
-      () => _audioLikeEntityDao.existsByUserAndAudioId(
+      () => _audioLikeEntityDao.existsByBUserIdAndBAudioId(
         userId: userId,
         audioId: audioId,
       ),
@@ -109,7 +109,7 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
     required String userId,
   }) {
     return wrapWithResult(() async {
-      final res = await _audioLikeEntityDao.getAllByUserId(userId);
+      final res = await _audioLikeEntityDao.getAllByBUserId(userId);
 
       return res.map(_audioLikeMapper.entityToModel).toList();
     });
