@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:common_models/common_models.dart';
 import 'package:common_utilities/common_utilities.dart';
 import 'package:domain_data/domain_data.dart';
@@ -9,14 +10,14 @@ import 'package:logging/logging.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../model/event_user_audio.dart';
 
-typedef LocalAudioFilesState = SimpleDataState<List<UserAudio>>;
+typedef LocalAudioFilesState = SimpleDataState<List<Audio>>;
 
 extension LocalAudioFilesCubitX on BuildContext {
   LocalAudioFilesCubit get localAudioFilesCubit => read<LocalAudioFilesCubit>();
 }
 
 @injectable
-final class LocalAudioFilesCubit extends EntityLoaderCubit<List<UserAudio>> {
+final class LocalAudioFilesCubit extends EntityLoaderCubit<List<Audio>> {
   LocalAudioFilesCubit(
     this._audioLocalRepository,
     this._authUserInfoProvider,
@@ -47,7 +48,7 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<UserAudio>> {
   }
 
   @override
-  Future<List<UserAudio>?> loadEntity() async {
+  Future<List<Audio>?> loadEntity() async {
     final userId = await _authUserInfoProvider.getId();
 
     if (userId == null) {
@@ -57,18 +58,23 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<UserAudio>> {
 
     final res = await _audioLocalRepository.getAllByUserId(userId);
 
-    return res.dataOrNull;
+    return res.dataOrNull?.map((e) => e.audio).whereNotNull().toList();
   }
 
   void onSearchQueryChanged(String value) {}
 
   Future<void> _onEventUserAudio(EventUserAudio event) async {
     await event.when(
-      downloaded: (audio) async {
+      downloaded: (userAudio) async {
+        if (userAudio.audio == null) {
+          Logger.root.warning('User audio is null, cannot add to local audio files.');
+          return;
+        }
+
         final newState = await state.map((data) {
           final dataCopy = List.of(data);
 
-          dataCopy.insert(0, audio);
+          dataCopy.insert(0, userAudio.audio!);
 
           return dataCopy;
         });

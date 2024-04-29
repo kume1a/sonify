@@ -20,6 +20,7 @@ class PlaylistItems extends StatelessWidget {
       builder: (_, state) {
         return state.maybeWhen(
           orElse: () => const SliverToBoxAdapter(),
+          loading: () => const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator())),
           success: (data) => SliverList.builder(
             itemCount: data.audios?.length ?? 0,
             itemBuilder: (_, index) {

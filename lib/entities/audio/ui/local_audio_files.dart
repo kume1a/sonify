@@ -18,7 +18,7 @@ class LocalAudioFiles extends StatelessWidget {
           loading: () => const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator())),
           success: (data) => SliverList.builder(
             itemCount: data.length,
-            itemBuilder: (_, index) => _Item(userAudio: data[index]),
+            itemBuilder: (_, index) => _Item(audio: data[index]),
           ),
         );
       },
@@ -28,28 +28,24 @@ class LocalAudioFiles extends StatelessWidget {
 
 class _Item extends StatelessWidget {
   const _Item({
-    required this.userAudio,
+    required this.audio,
   });
 
-  final UserAudio userAudio;
+  final Audio audio;
 
   @override
   Widget build(BuildContext context) {
-    if (userAudio.audio == null) {
-      return const SizedBox.shrink();
-    }
-
     return BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
       buildWhen: (previous, current) => previous.nowPlayingAudio != current.nowPlayingAudio,
       builder: (_, nowPlayingAudioState) {
         final nowPlayingAudio = nowPlayingAudioState.nowPlayingAudio.getOrNull;
 
-        final isPlaying = nowPlayingAudio?.id == userAudio.audio?.id ||
-            nowPlayingAudio?.localId == userAudio.audio?.localId;
+        final isPlaying = (nowPlayingAudio?.id != null && nowPlayingAudio?.id == audio.id) ||
+            (nowPlayingAudio?.localId != null && nowPlayingAudio?.localId == audio.localId);
 
         return AudioListItem(
-          onTap: () => context.nowPlayingAudioCubit.onLocalAudioPressed(userAudio.audio),
-          audio: userAudio.audio!,
+          onTap: () => context.nowPlayingAudioCubit.onLocalAudioPressed(audio),
+          audio: audio,
           isPlaying: isPlaying,
         );
       },
