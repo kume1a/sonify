@@ -6,6 +6,7 @@ import '../app/di/register_dependencies.dart';
 import '../app/intl/app_localizations.dart';
 import '../entities/audio/state/local_audio_files_state.dart';
 import '../entities/audio/ui/local_audio_files.dart';
+import '../entities/audio/ui/local_audio_files_alphabet.dart';
 import '../entities/playlist/ui/my_library_header.dart';
 import '../entities/playlist/ui/my_library_tiles.dart';
 import '../features/play_audio/state/audio_player_panel_state.dart';
@@ -60,24 +61,26 @@ class _Content extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               const Expanded(
-                child: CustomScrollView(
-                  slivers: [
-                    SliverPadding(
-                      padding: padding,
-                      sliver: SliverToBoxAdapter(
-                        child: MyLibraryTiles(),
+                child: LocalAudioFilesAlphabet(
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverPadding(
+                        padding: padding,
+                        sliver: SliverToBoxAdapter(
+                          child: MyLibraryTiles(),
+                        ),
                       ),
-                    ),
-                    SliverSizedBox(height: 20),
-                    SliverPadding(
-                      padding: padding,
-                      sliver: SliverToBoxAdapter(
-                        child: MyLibraryHeader(),
+                      SliverSizedBox(height: 20),
+                      SliverPadding(
+                        padding: padding,
+                        sliver: SliverToBoxAdapter(
+                          child: MyLibraryHeader(),
+                        ),
                       ),
-                    ),
-                    SliverSizedBox(height: 16),
-                    LocalAudioFiles(),
-                  ],
+                      SliverSizedBox(height: 16),
+                      LocalAudioFiles(),
+                    ],
+                  ),
                 ),
               ),
             ],

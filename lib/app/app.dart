@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:global_navigator/global_navigator.dart';
 
 import '../features/download_file/state/downloads_state.dart';
@@ -17,23 +18,29 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => getIt<DownloadsCubit>(), lazy: false),
-        BlocProvider(create: (_) => getIt<AudioPlayerControlsCubit>()),
-        BlocProvider(create: (_) => getIt<NowPlayingAudioCubit>()),
-      ],
-      child: MaterialApp(
-        title: 'Sonify',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.darkTheme,
-        initialRoute: Routes.root,
-        navigatorObservers: [GNObserver()],
-        onGenerateRoute: routeFactory,
-        navigatorKey: navigatorKey,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-      ),
+    return ScreenUtilInit(
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (_, child) {
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => getIt<DownloadsCubit>(), lazy: false),
+            BlocProvider(create: (_) => getIt<AudioPlayerControlsCubit>()),
+            BlocProvider(create: (_) => getIt<NowPlayingAudioCubit>()),
+          ],
+          child: MaterialApp(
+            title: 'Sonify',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.darkTheme,
+            initialRoute: Routes.root,
+            navigatorObservers: [GNObserver()],
+            onGenerateRoute: routeFactory,
+            navigatorKey: navigatorKey,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
+        );
+      },
     );
   }
 }

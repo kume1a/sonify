@@ -83,8 +83,12 @@ abstract class DiSonifyClientModule {
 
   // audio ----------------------------------------------------------------
   @lazySingleton
-  AudioRemoteService audioRepository(ApiClient apiClient, MultipartApiClient multipartApiClient) {
-    return AudioRemoteServiceImpl(apiClient, multipartApiClient);
+  AudioRemoteService audioRepository(
+    ApiClient apiClient,
+    MultipartApiClient multipartApiClient,
+    @Named(InjectionToken.authenticatedDio) Dio dio,
+  ) {
+    return AudioRemoteServiceImpl(apiClient, multipartApiClient, dio);
   }
 
   // user ----------------------------------------------------------------

@@ -42,9 +42,6 @@ abstract class ApiClient {
   Future<YoutubeSearchSuggestionsDto> getYoutubeSuggestions(@Query('keyword') String keyword);
 
   // audio -----------------------------
-  @POST('/v1/audio/downloadYoutubeAudio')
-  Future<UserAudioDto> downloadYoutubeAudio(@Body() DownloadYoutubeAudioBody body);
-
   @GET('/v1/audio/myAudioIds')
   Future<List<String>> getAuthUserAudioIds();
 

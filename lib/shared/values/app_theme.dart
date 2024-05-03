@@ -19,6 +19,7 @@ abstract final class AppTheme {
       secondary: Palette.secondary,
       onSecondary: Palette.onSecondary,
       primaryContainer: Palette.primaryContainer,
+      secondaryContainer: Palette.secondaryContainer,
     ),
     scaffoldBackgroundColor: Palette.background,
     dividerColor: Palette.elSecondary,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../app/intl/app_localizations.dart';
+import '../../../shared/ui/small_circular_progress_indicator.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../state/import_spotify_playlists_state.dart';
 
@@ -18,15 +19,20 @@ class EnsureSpotifyPlaylistsImported extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
+    const padding = EdgeInsets.fromLTRB(16, 48, 16, 16);
+
     return BlocBuilder<ImportSpotifyPlaylistsCubit, ImportSpotifyPlaylistsState>(
       buildWhen: (previous, current) =>
           previous.isSpotifyPlaylistsImported != current.isSpotifyPlaylistsImported,
       builder: (_, state) {
         return state.isSpotifyPlaylistsImported.maybeWhen(
-          orElse: () => const Center(child: CircularProgressIndicator()),
+          orElse: () => const Padding(
+            padding: padding,
+            child: Center(child: SmallCircularProgressIndicator()),
+          ),
           failure: (_) => Center(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
+              padding: padding,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

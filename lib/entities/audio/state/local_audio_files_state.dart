@@ -52,7 +52,7 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<Audio>> {
     final userId = await _authUserInfoProvider.getId();
 
     if (userId == null) {
-      Logger.root.severe('User id is null, cannot load local audio files.');
+      Logger.root.warning('User id is null, cannot load local audio files.');
       return null;
     }
 
