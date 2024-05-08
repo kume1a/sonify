@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../app/intl/app_localizations.dart';
@@ -8,6 +9,8 @@ import '../../../shared/values/assets.dart';
 
 class MyLibraryTiles extends StatelessWidget {
   const MyLibraryTiles({super.key});
+
+  static final double tileHeight = 62.h;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,7 @@ class MyLibraryTiles extends StatelessWidget {
             label: l.liked,
           ),
         ),
-        const SizedBox(width: 10),
+        SizedBox(width: 10.w),
         Expanded(
           child: _MyLibraryTile(
             backgroundColor: theme.appThemeExtension?.myLibraryTilePlaylistsBg,
@@ -31,7 +34,7 @@ class MyLibraryTiles extends StatelessWidget {
             label: l.playlists,
           ),
         ),
-        const SizedBox(width: 10),
+        SizedBox(width: 10.w),
         Expanded(
           child: _MyLibraryTile(
             backgroundColor: theme.appThemeExtension?.myLibraryArtistsBg,
@@ -58,25 +61,26 @@ class _MyLibraryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MyLibraryTiles.tileHeight,
       alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SvgPicture.asset(
             iconAssetPath,
-            width: 20,
-            height: 20,
+            width: 20.w,
+            height: 20.w,
             colorFilter: svgColor(Colors.white),
           ),
-          const SizedBox(height: 2),
+          SizedBox(height: 2.h),
           Text(
             label,
-            style: const TextStyle(fontSize: 13),
+            style: TextStyle(fontSize: 13.sp),
           ),
         ],
       ),

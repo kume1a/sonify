@@ -3,11 +3,12 @@ import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../../shared/ui/optional_marquee.dart';
 import '../../../shared/ui/play_pause.dart';
+import '../../../shared/ui/sliding_up_panel.dart';
 import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/util/color.dart';
 import '../../../shared/values/app_theme_extension.dart';
@@ -30,12 +31,10 @@ class AudioPlayerPanel extends StatelessWidget {
     return SafeArea(
       child: BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
         buildWhen: (previous, current) => previous.nowPlayingAudio != current.nowPlayingAudio,
-        builder: (_, state) {
-          return state.nowPlayingAudio.maybeWhen(
-            orElse: () => body,
-            success: (data) => _Panel(body: body, audio: data),
-          );
-        },
+        builder: (_, state) => _Panel(
+          body: body,
+          audio: state.nowPlayingAudio.getOrNull,
+        ),
       ),
     );
   }
@@ -48,7 +47,7 @@ class _Panel extends HookWidget {
   });
 
   final Widget body;
-  final Audio audio;
+  final Audio? audio;
 
   @override
   Widget build(BuildContext context) {
@@ -58,14 +57,14 @@ class _Panel extends HookWidget {
     final panelPosition = useState(0.0);
 
     return SlidingUpPanel(
-      controller: context.audioPlayerPanelCubit.panelController,
       body: body,
-      panel: _PanelContent(audio: audio),
-      collapsed: panelPosition.value < 1 ? _MiniAudioPlayer(audio: audio) : null,
+      controller: context.audioPlayerPanelCubit.panelController,
+      minHeight: audio != null ? 56.h : 0,
+      maxHeight: mediaQuery.size.height + 100,
+      panel: audio != null ? _PanelContent(audio: audio!) : const SizedBox.shrink(),
+      collapsed: audio != null && panelPosition.value < 1 ? _MiniAudioPlayer(audio: audio!) : null,
       onPanelSlide: (position) => panelPosition.value = position,
-      minHeight: 56,
       color: theme.scaffoldBackgroundColor,
-      maxHeight: mediaQuery.size.height,
     );
   }
 }

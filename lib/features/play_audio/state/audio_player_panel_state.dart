@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+import '../../../shared/ui/sliding_up_panel.dart';
 
 part 'audio_player_panel_state.freezed.dart';
 

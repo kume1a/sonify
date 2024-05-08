@@ -26,6 +26,7 @@ class RoundPlayButton extends StatelessWidget {
       padding: EdgeInsets.zero,
       style: IconButton.styleFrom(
         backgroundColor: theme.colorScheme.secondary,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
       icon: PlayPause(
         isPlaying: isPlaying,

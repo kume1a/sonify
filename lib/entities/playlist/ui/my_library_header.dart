@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../app/intl/app_localizations.dart';
@@ -9,6 +10,8 @@ import '../../../shared/values/assets.dart';
 class MyLibraryHeader extends StatelessWidget {
   const MyLibraryHeader({super.key});
 
+  static final double height = 26.h;
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -16,22 +19,22 @@ class MyLibraryHeader extends StatelessWidget {
     return Row(
       children: [
         RoundPlayButton(
-          size: 26,
-          iconSize: 18,
+          size: height,
+          iconSize: 16.h,
           isPlaying: false,
           onPressed: () {},
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8.w),
         Expanded(
           child: Text(
             l.shufflePlayback,
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
           ),
         ),
         SvgPicture.asset(
           Assets.svgArrowDownUp,
-          width: 18,
-          height: 18,
+          width: 16.h,
+          height: 16.h,
         ),
       ],
     );

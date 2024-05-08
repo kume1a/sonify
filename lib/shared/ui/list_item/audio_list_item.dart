@@ -1,5 +1,6 @@
 import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../util/color.dart';
@@ -13,31 +14,39 @@ class AudioListItem extends StatelessWidget {
     required this.onTap,
     required this.audio,
     required this.isPlaying,
+    this.padding,
   });
+
+  static final height = 46.h;
 
   final VoidCallback onTap;
   final Audio audio;
   final bool isPlaying;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    final hasThumbnail =
+        audio.thumbnailPath != null || audio.thumbnailUrl != null || audio.localThumbnailPath != null;
+
     return InkWell(
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Container(
+        height: height,
+        padding: padding ?? EdgeInsets.symmetric(horizontal: 16.r),
         child: Row(
           children: [
-            if (audio.thumbnailPath != null || audio.thumbnailUrl != null || audio.localThumbnailPath != null)
+            if (hasThumbnail)
               Padding(
-                padding: const EdgeInsets.only(right: 10),
+                padding: EdgeInsets.only(right: 10.w),
                 child: Thumbnail(
                   thumbnailPath: audio.thumbnailPath,
                   thumbnailUrl: audio.thumbnailUrl,
                   localThumbnailPath: audio.localThumbnailPath,
-                  borderRadius: BorderRadius.circular(8),
-                  size: const Size.square(42),
+                  borderRadius: BorderRadius.circular(8.r),
+                  size: Size.square(36.r),
                 ),
               ),
             Expanded(
@@ -46,12 +55,14 @@ class AudioListItem extends StatelessWidget {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           audio.title,
-                          maxLines: 3,
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
+                            fontSize: 13.sp,
                             color: isPlaying ? theme.colorScheme.secondary : null,
                           ),
                         ),
@@ -60,7 +71,7 @@ class AudioListItem extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 11.sp,
                             color: theme.appThemeExtension?.elSecondary,
                           ),
                         ),
@@ -69,7 +80,7 @@ class AudioListItem extends StatelessWidget {
                   ),
                   if (isPlaying)
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      padding: EdgeInsets.symmetric(horizontal: 6.w),
                       child: SvgPicture.asset(
                         Assets.svgAudioLines,
                         width: 16,

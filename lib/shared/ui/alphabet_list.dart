@@ -41,7 +41,6 @@ typedef OverlayWidgetBuilder = Widget Function(String letter);
 class AlphabetList extends StatefulWidget {
   const AlphabetList({
     super.key,
-    required this.child,
     required this.keywords,
     required this.onIndexChanged,
     this.alignment = LetterAlignment.right,
@@ -52,7 +51,6 @@ class AlphabetList extends StatefulWidget {
     this.padding,
   });
 
-  final Widget child;
   final List<String> keywords;
   final ValueChanged<int> onIndexChanged;
   final LetterAlignment alignment;
@@ -168,7 +166,6 @@ class _AlphabetListState extends State<AlphabetList> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        widget.child,
         Align(
           alignment: widget.alignment == LetterAlignment.left ? Alignment.centerLeft : Alignment.centerRight,
           child: GestureDetector(
