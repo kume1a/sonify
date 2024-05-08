@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/list_item/audio_list_item.dart';
+import '../../../shared/ui/small_circular_progress_indicator.dart';
 import '../state/local_audio_files_state.dart';
 
 class LocalAudioFiles extends StatelessWidget {
@@ -15,7 +16,7 @@ class LocalAudioFiles extends StatelessWidget {
       builder: (_, state) {
         return state.maybeWhen(
           orElse: () => const SliverToBoxAdapter(),
-          loading: () => const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator())),
+          loading: () => const SliverToBoxAdapter(child: Center(child: SmallCircularProgressIndicator())),
           success: (data) => SliverList.builder(
             itemCount: data.length,
             itemBuilder: (_, index) => _Item(audio: data[index]),

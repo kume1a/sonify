@@ -33,6 +33,7 @@ const List<String> _alphabet = [
   'x',
   'y',
   'z',
+  '#',
 ];
 
 typedef OverlayWidgetBuilder = Widget Function(String letter);
@@ -44,29 +45,30 @@ class AlphabetList extends StatefulWidget {
     required this.keywords,
     required this.onIndexChanged,
     this.alignment = LetterAlignment.right,
-    this.itemExtent = 40,
     this.overlayWidgetBuilder,
     this.textStyle,
     this.backgroundColor,
+    this.margin,
+    this.padding,
   });
 
   final Widget child;
   final List<String> keywords;
   final ValueChanged<int> onIndexChanged;
   final LetterAlignment alignment;
-  final double itemExtent;
   final OverlayWidgetBuilder? overlayWidgetBuilder;
   final TextStyle? textStyle;
   final Color? backgroundColor;
+  final EdgeInsets? padding;
+  final EdgeInsets? margin;
 
   @override
   _AlphabetListState createState() => _AlphabetListState();
 }
 
 class _AlphabetListState extends State<AlphabetList> {
-  final key = GlobalKey();
   final letterKey = GlobalKey();
-  final firstIndexPosition = <String, int>{};
+  final firstIndexPositions = <String, int>{};
 
   int _selectedIndex = 0;
   double _overlayPositionY = 0;
@@ -85,7 +87,7 @@ class _AlphabetListState extends State<AlphabetList> {
 
     if (notDeepEquals(oldWidget.keywords, widget.keywords)) {
       _keywords.clear();
-      firstIndexPosition.clear();
+      firstIndexPositions.clear();
       _init();
     }
   }
@@ -100,8 +102,8 @@ class _AlphabetListState extends State<AlphabetList> {
 
   void calculateFirstIndex() {
     if (_keywords.isEmpty) {
-      firstIndexPosition.clear();
-      firstIndexPosition.addAll(
+      firstIndexPositions.clear();
+      firstIndexPositions.addAll(
         _alphabet.asMap().map((_, value) => MapEntry(value, 0)),
       );
       return;
@@ -113,40 +115,39 @@ class _AlphabetListState extends State<AlphabetList> {
 
       if (firstElement != null) {
         int index = _keywords.indexOf(firstElement);
-        firstIndexPosition[letter] = index;
+        firstIndexPositions[letter] = index;
         lastLetter = letter;
       }
     }
 
     for (var letter in _alphabet.reversed) {
-      if (firstIndexPosition.containsKey(letter)) {
+      if (firstIndexPositions.containsKey(letter)) {
         lastLetter = letter;
         continue;
       }
 
-      firstIndexPosition[letter] = firstIndexPosition[lastLetter] ?? 0;
+      firstIndexPositions[letter] = firstIndexPositions[lastLetter] ?? 0;
     }
   }
 
-  void scrolltoIndex(int x, double overlayPositionY) {
-    final index = firstIndexPosition[_alphabet[x].toLowerCase()];
+  void onIndexChanged(int selectedIndex, double overlayPositionY) {
+    final index = firstIndexPositions[_alphabet[selectedIndex].toLowerCase()];
     if (index == null) {
       Logger.root.warning('Index is null');
       return;
     }
 
-    setState(() {
-      _overlayPositionY = letterKey.currentContext!.size!.height * _selectedIndex;
-    });
+    widget.onIndexChanged(index);
   }
 
   void onVerticalDrag(Offset offset) {
-    final alphabetHeight = letterKey.currentContext?.size?.height;
-    if (alphabetHeight == null) {
+    final letterHeight = letterKey.currentContext?.size?.height;
+    if (letterHeight == null) {
       return;
     }
 
-    final index = offset.dy ~/ alphabetHeight;
+    final topOffset = (widget.padding?.top ?? 0) + (widget.margin?.top ?? 0);
+    final index = (offset.dy - topOffset) ~/ letterHeight;
     if (index < 0 || index >= _alphabet.length) {
       return;
     }
@@ -154,8 +155,10 @@ class _AlphabetListState extends State<AlphabetList> {
     setState(() {
       _selectedIndex = index;
       _isFocused = true;
+      _overlayPositionY = letterHeight * _selectedIndex;
     });
-    scrolltoIndex(index, offset.dy);
+
+    onIndexChanged(index, offset.dy);
   }
 
   @override
@@ -166,13 +169,12 @@ class _AlphabetListState extends State<AlphabetList> {
         Align(
           alignment: widget.alignment == LetterAlignment.left ? Alignment.centerLeft : Alignment.centerRight,
           child: GestureDetector(
-            onVerticalDragStart: (z) => onVerticalDrag(z.localPosition),
-            onVerticalDragUpdate: (z) => onVerticalDrag(z.localPosition),
+            onVerticalDragStart: (details) => onVerticalDrag(details.localPosition),
+            onVerticalDragUpdate: (details) => onVerticalDrag(details.localPosition),
             onVerticalDragEnd: (_) => setState(() => _isFocused = false),
             child: Container(
-              key: key,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              margin: const EdgeInsets.symmetric(vertical: 12),
+              padding: widget.padding,
+              margin: widget.margin,
               decoration: BoxDecoration(
                 color: widget.backgroundColor,
                 borderRadius: BorderRadius.circular(12),
@@ -189,12 +191,13 @@ class _AlphabetListState extends State<AlphabetList> {
                         key: x == _selectedIndex ? letterKey : null,
                         onTap: () {
                           setState(() => _selectedIndex = x);
-                          scrolltoIndex(x, _overlayPositionY);
+                          onIndexChanged(x, _overlayPositionY);
                         },
                         child: Container(
                           height: containerHeight,
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: FittedBox(
+                            fit: BoxFit.scaleDown,
                             child: Text(
                               _alphabet[x].toUpperCase(),
                               style: widget.textStyle,
@@ -213,7 +216,7 @@ class _AlphabetListState extends State<AlphabetList> {
           Positioned(
             right: widget.alignment == LetterAlignment.right ? 32 : null,
             left: widget.alignment == LetterAlignment.left ? 32 : null,
-            top: _overlayPositionY + 8,
+            top: _overlayPositionY,
             child: widget.overlayWidgetBuilder!(_alphabet[_selectedIndex]),
           ),
       ],

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../shared/ui/alphabet_list.dart';
+import '../../../shared/ui/small_circular_progress_indicator.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../state/local_audio_files_state.dart';
 
@@ -21,13 +22,14 @@ class LocalAudioFilesAlphabet extends StatelessWidget {
     return BlocBuilder<LocalAudioFilesCubit, LocalAudioFilesState>(
       builder: (_, state) {
         return state.maybeWhen(
-          orElse: () => const SliverToBoxAdapter(),
-          loading: () => const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator())),
+          orElse: () => const SizedBox.shrink(),
+          loading: () => const Center(child: SmallCircularProgressIndicator()),
           success: (data) => AlphabetList(
             keywords: data.map((e) => e.title).toList(),
-            itemExtent: 60,
             backgroundColor: theme.colorScheme.primaryContainer,
             onIndexChanged: (value) {},
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            margin: const EdgeInsets.only(top: 12, bottom: 90),
             textStyle: TextStyle(
               fontSize: 10.sp,
               fontWeight: FontWeight.normal,
