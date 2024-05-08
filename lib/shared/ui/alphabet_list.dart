@@ -152,10 +152,13 @@ class _AlphabetListState extends State<AlphabetList> {
       return;
     }
 
+    const unknownOffsetAdjustment = 6;
+    final overlayPositionY = letterHeight * index + topOffset - unknownOffsetAdjustment;
+
     setState(() {
       _selectedIndex = index;
       _isFocused = true;
-      _overlayPositionY = letterHeight * _selectedIndex;
+      _overlayPositionY = overlayPositionY;
     });
 
     onIndexChanged(index, offset.dy);
@@ -214,8 +217,8 @@ class _AlphabetListState extends State<AlphabetList> {
         ),
         if (_isFocused && widget.overlayWidgetBuilder != null)
           Positioned(
-            right: widget.alignment == LetterAlignment.right ? 32 : null,
-            left: widget.alignment == LetterAlignment.left ? 32 : null,
+            right: widget.alignment == LetterAlignment.right ? 24 : null,
+            left: widget.alignment == LetterAlignment.left ? 24 : null,
             top: _overlayPositionY,
             child: widget.overlayWidgetBuilder!(_alphabet[_selectedIndex]),
           ),
