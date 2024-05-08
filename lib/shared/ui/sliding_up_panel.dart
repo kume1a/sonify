@@ -13,11 +13,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 
 enum SlideDirection {
-  UP,
-  DOWN,
+  up,
+  down,
 }
 
-enum PanelState { OPEN, CLOSED }
+enum PanelState { open, closed }
 
 class SlidingUpPanel extends StatefulWidget {
   const SlidingUpPanel({
@@ -53,8 +53,8 @@ class SlidingUpPanel extends StatefulWidget {
     this.parallaxEnabled = false,
     this.parallaxOffset = 0.1,
     this.isDraggable = true,
-    this.slideDirection = SlideDirection.UP,
-    this.defaultPanelState = PanelState.CLOSED,
+    this.slideDirection = SlideDirection.up,
+    this.defaultPanelState = PanelState.closed,
     this.header,
     this.footer,
   })  : assert(panel != null || panelBuilder != null),
@@ -220,23 +220,31 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
     _ac = AnimationController(
         vsync: this,
         duration: const Duration(milliseconds: 300),
-        value: widget.defaultPanelState == PanelState.CLOSED
+        value: widget.defaultPanelState == PanelState.closed
             ? 0.0
             : 1.0 //set the default panel state (i.e. set initial value of _ac)
         )
       ..addListener(() {
-        if (widget.onPanelSlide != null) widget.onPanelSlide!(_ac.value);
+        if (widget.onPanelSlide != null) {
+          widget.onPanelSlide!(_ac.value);
+        }
 
-        if (widget.onPanelOpened != null && _ac.value == 1.0) widget.onPanelOpened!();
+        if (widget.onPanelOpened != null && _ac.value == 1.0) {
+          widget.onPanelOpened!();
+        }
 
-        if (widget.onPanelClosed != null && _ac.value == 0.0) widget.onPanelClosed!();
+        if (widget.onPanelClosed != null && _ac.value == 0.0) {
+          widget.onPanelClosed!();
+        }
       });
 
     // prevent the panel content from being scrolled only if the widget is
     // draggable and panel scrolling is enabled
     _sc = ScrollController();
     _sc.addListener(() {
-      if (widget.isDraggable && !_scrollingEnabled) _sc.jumpTo(0);
+      if (widget.isDraggable && !_scrollingEnabled) {
+        _sc.jumpTo(0);
+      }
     });
 
     widget.controller?._addState(this);
@@ -245,7 +253,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Stack(
-      alignment: widget.slideDirection == SlideDirection.UP ? Alignment.bottomCenter : Alignment.topCenter,
+      alignment: widget.slideDirection == SlideDirection.up ? Alignment.bottomCenter : Alignment.topCenter,
       children: <Widget>[
         //make the back widget take up the entire back side
         widget.body != null
@@ -272,9 +280,11 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                 onVerticalDragEnd: widget.backdropTapClosesPanel
                     ? (DragEndDetails dets) {
                         // only trigger a close if the drag is towards panel close position
-                        if ((widget.slideDirection == SlideDirection.UP ? 1 : -1) *
+                        if ((widget.slideDirection == SlideDirection.up ? 1 : -1) *
                                 dets.velocity.pixelsPerSecond.dy >
-                            0) _close();
+                            0) {
+                          _close();
+                        }
                       }
                     : null,
                 onTap: widget.backdropTapClosesPanel ? () => _close() : null,
@@ -321,8 +331,8 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                     children: <Widget>[
                       //open panel
                       Positioned(
-                          top: widget.slideDirection == SlideDirection.UP ? 0.0 : null,
-                          bottom: widget.slideDirection == SlideDirection.DOWN ? 0.0 : null,
+                          top: widget.slideDirection == SlideDirection.up ? 0.0 : null,
+                          bottom: widget.slideDirection == SlideDirection.down ? 0.0 : null,
                           width: MediaQuery.of(context).size.width -
                               (widget.margin != null ? widget.margin!.horizontal : 0) -
                               (widget.padding != null ? widget.padding!.horizontal : 0),
@@ -334,8 +344,8 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                       // header
                       widget.header != null
                           ? Positioned(
-                              top: widget.slideDirection == SlideDirection.UP ? 0.0 : null,
-                              bottom: widget.slideDirection == SlideDirection.DOWN ? 0.0 : null,
+                              top: widget.slideDirection == SlideDirection.up ? 0.0 : null,
+                              bottom: widget.slideDirection == SlideDirection.down ? 0.0 : null,
                               child: widget.header ?? const SizedBox(),
                             )
                           : Container(),
@@ -343,15 +353,15 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                       // footer
                       widget.footer != null
                           ? Positioned(
-                              top: widget.slideDirection == SlideDirection.UP ? null : 0.0,
-                              bottom: widget.slideDirection == SlideDirection.DOWN ? null : 0.0,
+                              top: widget.slideDirection == SlideDirection.up ? null : 0.0,
+                              bottom: widget.slideDirection == SlideDirection.down ? null : 0.0,
                               child: widget.footer ?? const SizedBox())
                           : Container(),
 
                       // collapsed panel
                       Positioned(
-                        top: widget.slideDirection == SlideDirection.UP ? 0.0 : null,
-                        bottom: widget.slideDirection == SlideDirection.DOWN ? 0.0 : null,
+                        top: widget.slideDirection == SlideDirection.up ? 0.0 : null,
+                        bottom: widget.slideDirection == SlideDirection.down ? 0.0 : null,
                         width: MediaQuery.of(context).size.width -
                             (widget.margin != null ? widget.margin!.horizontal : 0) -
                             (widget.padding != null ? widget.padding!.horizontal : 0),
@@ -383,7 +393,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
   }
 
   double _getParallax() {
-    if (widget.slideDirection == SlideDirection.UP) {
+    if (widget.slideDirection == SlideDirection.up) {
       return -_ac.value * (widget.maxHeight - widget.minHeight) * widget.parallaxOffset;
     } else {
       return _ac.value * (widget.maxHeight - widget.minHeight) * widget.parallaxOffset;
@@ -395,7 +405,9 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
   // this is because the listener is designed only for use with linking the scrolling of
   // panels and using it for panels that don't want to linked scrolling yields odd results
   Widget _gestureHandler({required Widget child}) {
-    if (!widget.isDraggable) return child;
+    if (!widget.isDraggable) {
+      return child;
+    }
 
     if (widget.panel != null) {
       return GestureDetector(
@@ -420,7 +432,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
   void _onGestureSlide(double dy) {
     // only slide the panel if scrolling is not enabled
     if (!_scrollingEnabled) {
-      if (widget.slideDirection == SlideDirection.UP) {
+      if (widget.slideDirection == SlideDirection.up) {
         _ac.value -= dy / (widget.maxHeight - widget.minHeight);
       } else {
         _ac.value += dy / (widget.maxHeight - widget.minHeight);
@@ -447,17 +459,23 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
     double kSnap = 8;
 
     //let the current animation finish before starting a new one
-    if (_ac.isAnimating) return;
+    if (_ac.isAnimating) {
+      return;
+    }
 
     // if scrolling is allowed and the panel is open, we don't want to close
     // the panel if they swipe up on the scrollable
-    if (_isPanelOpen && _scrollingEnabled) return;
+    if (_isPanelOpen && _scrollingEnabled) {
+      return;
+    }
 
     //check if the velocity is sufficient to constitute fling to end
     double visualVelocity = -v.pixelsPerSecond.dy / (widget.maxHeight - widget.minHeight);
 
     // reverse visual velocity to account for slide direction
-    if (widget.slideDirection == SlideDirection.DOWN) visualVelocity = -visualVelocity;
+    if (widget.slideDirection == SlideDirection.down) {
+      visualVelocity = -visualVelocity;
+    }
 
     // get minimum distances to figure out where the panel is at
     double d2Close = _ac.value;

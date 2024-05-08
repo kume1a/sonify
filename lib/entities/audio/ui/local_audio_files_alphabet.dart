@@ -33,7 +33,6 @@ class LocalAudioFilesAlphabet extends StatelessWidget {
 
 class _Content extends StatelessWidget {
   const _Content({
-    super.key,
     required this.audios,
     required this.nowPlayingAudio,
   });
