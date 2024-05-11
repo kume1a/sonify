@@ -88,4 +88,28 @@ void createDbTables(Batch batch) {
       );
     ''',
   );
+
+  batch.execute(
+    '''
+      CREATE TABLE IF NOT EXISTS ${PlaylistAudio_.tn} 
+      (
+        ${PlaylistAudio_.id} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        ${PlaylistAudio_.bCreatedAtMillis} INTEGER,
+        ${PlaylistAudio_.bPlaylistId} TEXT,
+        ${PlaylistAudio_.bAudioId} TEXT
+      );
+    ''',
+  );
+
+  batch.execute(
+    '''
+      CREATE TABLE IF NOT EXISTS ${UserPlaylist_.tn} 
+      (
+        ${UserPlaylist_.id} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        ${UserPlaylist_.bCreatedAtMillis} INTEGER,
+        ${UserPlaylist_.bPlaylistId} TEXT,
+        ${UserPlaylist_.bUserId} TEXT
+      );
+    ''',
+  );
 }

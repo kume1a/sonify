@@ -4,3 +4,4 @@ export 'downloaded_task/index.dart';
 export 'pending_change/index.dart';
 export 'playlist/index.dart';
 export 'user_audio/index.dart';
+export 'user_playlist/index.dart';

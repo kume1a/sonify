@@ -135,3 +135,41 @@ abstract class Playlist_ {
   static final joinedThumbnailUrl = joinPrefixColumn(thumbnailUrl);
   static final joinedSpotifyId = joinPrefixColumn(spotifyId);
 }
+
+abstract class PlaylistAudio_ {
+  static const String tn = 'playlist_audios';
+  static const String joinPrefix = '${tn}_entity_';
+
+  static String joinPrefixColumn(String column) => '$joinPrefix$column';
+
+  static const id = 'id';
+  static const bCreatedAtMillis = 'b_created_at_millis';
+  static const bPlaylistId = 'b_playlist_id';
+  static const bAudioId = 'b_audio_id';
+
+  // joined columns
+  static final joinedId = joinPrefixColumn(id);
+  static final joinedBCreatedAtMillis = joinPrefixColumn(bCreatedAtMillis);
+  static final joinedBPlaylistId = joinPrefixColumn(bPlaylistId);
+  static final joinedBAudioId = joinPrefixColumn(bAudioId);
+}
+
+abstract class UserPlaylist_ {
+  static const tn = 'user_playlists';
+  static const joinPrefix = '${tn}_entity_';
+
+  static String joinPrefixColumn(String column) => '$joinPrefix$column';
+
+  static const id = 'id';
+  static const bCreatedAtMillis = 'b_created_at_millis';
+  static const bUserId = 'b_user_id';
+  static const bPlaylistId = 'b_playlist_id';
+  static const isSpotifySavedPlaylist = 'is_spotify_saved_playlist';
+
+  // joined columns
+  static final joinedId = joinPrefixColumn(id);
+  static final joinedBCreatedAtMillis = joinPrefixColumn(bCreatedAtMillis);
+  static final joinedBUserId = joinPrefixColumn(bUserId);
+  static final joinedBPlaylistId = joinPrefixColumn(bPlaylistId);
+  static final joinedIsSpotifySavedPlaylist = joinPrefixColumn(isSpotifySavedPlaylist);
+}
