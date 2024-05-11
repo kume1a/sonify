@@ -33,7 +33,8 @@ class MyLibraryPage extends StatelessWidget {
 
 final _spacingAfterTiles = 20.h;
 final _spacingAfterHeader = 12.h;
-final _tilesAndHeaderHeght = MyLibraryTiles.tileHeight + _spacingAfterTiles + MyLibraryHeader.height;
+final _tilesAndHeaderHeght =
+    MyLibraryTiles.tileHeight + _spacingAfterTiles + MyLibraryHeader.height + _spacingAfterHeader;
 
 class _Content extends HookWidget {
   const _Content();
@@ -74,9 +75,7 @@ class _Content extends HookWidget {
                       child: TextField(
                         autocorrect: false,
                         onChanged: context.localAudioFilesCubit.onSearchQueryChanged,
-                        decoration: InputDecoration(
-                          hintText: l.search,
-                        ),
+                        decoration: InputDecoration(hintText: l.search),
                       ),
                     ),
                   ],
@@ -88,6 +87,7 @@ class _Content extends HookWidget {
                   children: [
                     CustomScrollView(
                       controller: scrollController,
+                      physics: const ClampingScrollPhysics(),
                       slivers: [
                         SliverPadding(
                           padding: horizontalPadding,
@@ -103,14 +103,28 @@ class _Content extends HookWidget {
                           ),
                         ),
                         SliverSizedBox(height: _spacingAfterHeader),
-                        LocalAudioFiles(isAlphabetListVisible: isAlphabetListVisible.value),
+                        LocalAudioFiles(
+                          itemPadding: EdgeInsets.only(
+                            left: 16.r,
+                            right: isAlphabetListVisible.value ? 26.r : 16.r,
+                          ),
+                        ),
                         SliverSizedBox(height: AudioListItem.height + 12.h),
                       ],
                     ),
                     AnimatedOpacity(
                       opacity: isAlphabetListVisible.value ? 1 : 0,
                       duration: const Duration(milliseconds: 150),
-                      child: const LocalAudioFilesAlphabet(),
+                      child: LocalAudioFilesAlphabet(
+                        onIndexChanged: (index) {
+                          if (!scrollController.hasClients ||
+                              scrollController.offset > scrollController.position.maxScrollExtent - 20) {
+                            return;
+                          }
+
+                          scrollController.jumpTo(_tilesAndHeaderHeght + index * AudioListItem.height);
+                        },
+                      ),
                     ),
                   ],
                 ),

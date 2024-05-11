@@ -26,6 +26,8 @@ extension StringX on String? {
   bool get notNullOrEmpty => this != null && this?.isNotEmpty == true;
 
   bool get isNullOrEmpty => this == null || this?.isEmpty == true;
+
+  bool get isEngLetter => this != null && RegExp(r'^[a-zA-Z]+$').hasMatch(this!);
 }
 
 double deg2rad(double deg) {

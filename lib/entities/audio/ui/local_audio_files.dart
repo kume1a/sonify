@@ -1,7 +1,6 @@
 import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/list_item/audio_list_item.dart';
@@ -11,10 +10,10 @@ import '../state/local_audio_files_state.dart';
 class LocalAudioFiles extends StatelessWidget {
   const LocalAudioFiles({
     super.key,
-    required this.isAlphabetListVisible,
+    this.itemPadding,
   });
 
-  final bool isAlphabetListVisible;
+  final EdgeInsets? itemPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class LocalAudioFiles extends StatelessWidget {
             itemCount: data.length,
             itemBuilder: (_, index) => _Item(
               audio: data[index],
-              isAlphabetListVisible: isAlphabetListVisible,
+              padding: itemPadding,
             ),
           ),
         );
@@ -39,11 +38,11 @@ class LocalAudioFiles extends StatelessWidget {
 class _Item extends StatelessWidget {
   const _Item({
     required this.audio,
-    required this.isAlphabetListVisible,
+    required this.padding,
   });
 
   final Audio audio;
-  final bool isAlphabetListVisible;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +58,7 @@ class _Item extends StatelessWidget {
           onTap: () => context.nowPlayingAudioCubit.onLocalAudioPressed(audio),
           audio: audio,
           isPlaying: isPlaying,
-          padding: EdgeInsets.only(left: 16.r, right: isAlphabetListVisible ? 26.r : 16.r),
+          padding: padding,
         );
       },
     );

@@ -1,8 +1,7 @@
-import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
 
 import '../util/equality.dart';
+import '../util/utils.dart';
 
 enum LetterAlignment { left, right }
 
@@ -94,11 +93,11 @@ class _AlphabetListState extends State<AlphabetList> {
     widget.keywords.sort((x, y) => x.toLowerCase().compareTo(y.toLowerCase()));
     _keywords = widget.keywords;
 
-    calculateFirstIndex();
+    calculateFirstIndices();
     setState(() {});
   }
 
-  void calculateFirstIndex() {
+  void calculateFirstIndices() {
     if (_keywords.isEmpty) {
       firstIndexPositions.clear();
       firstIndexPositions.addAll(
@@ -107,31 +106,24 @@ class _AlphabetListState extends State<AlphabetList> {
       return;
     }
 
-    String? lastLetter;
     for (var letter in _alphabet) {
-      final firstElement = _keywords.firstWhereOrNull((item) => item.toLowerCase().startsWith(letter));
+      final firstElementIndex =
+          _keywords.indexWhere((keyword) => keyword.isEngLetter && keyword.toLowerCase().startsWith(letter));
 
-      if (firstElement != null) {
-        int index = _keywords.indexOf(firstElement);
-        firstIndexPositions[letter] = index;
-        lastLetter = letter;
+      if (firstElementIndex != -1) {
+        firstIndexPositions[letter] = firstElementIndex;
       }
     }
 
-    for (var letter in _alphabet.reversed) {
-      if (firstIndexPositions.containsKey(letter)) {
-        lastLetter = letter;
-        continue;
-      }
-
-      firstIndexPositions[letter] = firstIndexPositions[lastLetter] ?? 0;
+    final nonEngLetterFirstIndex = _keywords.indexWhere((keyword) => !keyword.isEngLetter);
+    if (nonEngLetterFirstIndex != -1) {
+      firstIndexPositions['#'] = nonEngLetterFirstIndex;
     }
   }
 
   void onIndexChanged(int selectedIndex, double overlayPositionY) {
     final index = firstIndexPositions[_alphabet[selectedIndex].toLowerCase()];
     if (index == null) {
-      Logger.root.warning('Index is null');
       return;
     }
 

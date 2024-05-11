@@ -11,7 +11,10 @@ import '../state/local_audio_files_state.dart';
 class LocalAudioFilesAlphabet extends StatelessWidget {
   const LocalAudioFilesAlphabet({
     super.key,
+    required this.onIndexChanged,
   });
+
+  final ValueChanged<int> onIndexChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,7 @@ class LocalAudioFilesAlphabet extends StatelessWidget {
             success: (data) => _Content(
               audios: data,
               nowPlayingAudio: nowPlayingAudioState.nowPlayingAudio.getOrNull,
+              onIndexChanged: onIndexChanged,
             ),
           ),
         );
@@ -35,10 +39,12 @@ class _Content extends StatelessWidget {
   const _Content({
     required this.audios,
     required this.nowPlayingAudio,
+    required this.onIndexChanged,
   });
 
   final List<Audio> audios;
   final Audio? nowPlayingAudio;
+  final ValueChanged<int> onIndexChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +53,7 @@ class _Content extends StatelessWidget {
     return AlphabetList(
       keywords: audios.map((e) => e.title).toList(),
       backgroundColor: theme.colorScheme.primaryContainer,
-      onIndexChanged: (value) {},
+      onIndexChanged: onIndexChanged,
       padding: EdgeInsets.symmetric(vertical: 16.h),
       margin: EdgeInsets.only(top: 12.h, bottom: nowPlayingAudio != null ? 72.h : 12.h),
       textStyle: TextStyle(
