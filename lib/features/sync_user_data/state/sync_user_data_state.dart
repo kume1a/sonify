@@ -1,9 +1,11 @@
+import 'package:common_utilities/common_utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../app/navigation/page_navigator.dart';
+import '../../../entities/playlist/model/event_spotify_playlists_imported.dart';
 import '../api/sync_playlists.dart';
 import '../api/sync_user_audio.dart';
 import '../api/sync_user_audio_likes.dart';
@@ -44,6 +46,7 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
     this._pageNavigator,
     this._syncUserPendingChanges,
     this._syncPlaylists,
+    this._eventBus,
   ) : super(SyncUserDataState.initial()) {
     _init();
   }
@@ -53,9 +56,21 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
   final PageNavigator _pageNavigator;
   final SyncUserPendingChanges _syncUserPendingChanges;
   final SyncPlaylists _syncPlaylists;
+  final EventBus _eventBus;
+
+  final _subscriptions = SubscriptionComposite();
 
   Future<void> _init() async {
+    _subscriptions.add(_eventBus.on<EventSpotifyPlaylistsImported>().listen((_) => _startSync()));
+
     return _startSync();
+  }
+
+  @override
+  Future<void> close() async {
+    await _subscriptions.closeAll();
+
+    return super.close();
   }
 
   void onSeeDownloadsPressed() {

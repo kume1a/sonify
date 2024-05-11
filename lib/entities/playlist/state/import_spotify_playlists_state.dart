@@ -1,4 +1,5 @@
 import 'package:common_models/common_models.dart';
+import 'package:common_utilities/common_utilities.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -7,6 +8,7 @@ import 'package:logging/logging.dart';
 import 'package:sonify_client/sonify_client.dart';
 
 import '../../../features/spotifyauth/api/spotify_access_token_provider.dart';
+import '../model/event_spotify_playlists_imported.dart';
 
 part 'import_spotify_playlists_state.freezed.dart';
 
@@ -33,6 +35,7 @@ class ImportSpotifyPlaylistsCubit extends Cubit<ImportSpotifyPlaylistsState> {
     this._userSyncDatumRepository,
     this._playlistRepository,
     this._spotifyAccessTokenProvider,
+    this._eventBus,
   ) : super(ImportSpotifyPlaylistsState.initial()) {
     _init();
   }
@@ -40,6 +43,7 @@ class ImportSpotifyPlaylistsCubit extends Cubit<ImportSpotifyPlaylistsState> {
   final UserSyncDatumRemoteService _userSyncDatumRepository;
   final PlaylistRemoteService _playlistRepository;
   final SpotifyAccessTokenProvider _spotifyAccessTokenProvider;
+  final EventBus _eventBus;
 
   Future<void> _init() async {
     await _checkIfSpotifyUserPlaylistsImported();
@@ -69,6 +73,8 @@ class ImportSpotifyPlaylistsCubit extends Cubit<ImportSpotifyPlaylistsState> {
     final res = await _playlistRepository.importSpotifyUserPlaylists(spotifyAccessToken: spotifyAccessToken);
 
     emit(state.copyWith(importSpotifyPlaylistsState: ActionState.fromEither(res)));
+
+    res.ifRight((r) => _eventBus.fire(EventSpotifyPlaylistsImported()));
   }
 
   Future<void> _checkIfSpotifyUserPlaylistsImported() async {
