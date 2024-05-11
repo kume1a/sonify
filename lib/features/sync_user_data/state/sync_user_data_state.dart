@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../app/navigation/page_navigator.dart';
+import '../api/sync_playlists.dart';
 import '../api/sync_user_audio.dart';
 import '../api/sync_user_audio_likes.dart';
 import '../api/sync_user_pending_changes.dart';
@@ -42,6 +43,7 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
     this._syncUserAudioLikes,
     this._pageNavigator,
     this._syncUserPendingChanges,
+    this._syncPlaylists,
   ) : super(SyncUserDataState.initial()) {
     _init();
   }
@@ -50,6 +52,7 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
   final SyncUserAudioLikes _syncUserAudioLikes;
   final PageNavigator _pageNavigator;
   final SyncUserPendingChanges _syncUserPendingChanges;
+  final SyncPlaylists _syncPlaylists;
 
   Future<void> _init() async {
     return _startSync();
@@ -79,6 +82,11 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
 
     final syncUserAudioLikesRes = await _syncUserAudioLikes();
     if (syncUserAudioLikesRes.isErr) {
+      return _handleSyncFailure();
+    }
+
+    final syncPlaylistsRes = await _syncPlaylists();
+    if (syncPlaylistsRes.isErr) {
       return _handleSyncFailure();
     }
 

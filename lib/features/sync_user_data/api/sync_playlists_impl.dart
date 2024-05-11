@@ -1,31 +1,22 @@
 import 'package:common_models/common_models.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logging/logging.dart';
 
 import '../util/sync_entity_base.dart';
-import 'sync_user_playlists.dart';
+import 'sync_playlists.dart';
 
-@LazySingleton(as: SyncUserPlaylists)
-final class SyncUserPlaylistsImpl extends SyncEntityBase implements SyncUserPlaylists {
-  SyncUserPlaylistsImpl(
+@LazySingleton(as: SyncPlaylists)
+final class SyncPlaylistsImpl extends SyncEntityBase implements SyncPlaylists {
+  SyncPlaylistsImpl(
     this._playlistRemoteRepository,
     this._playlistLocalRepository,
-    this._authUserInfoProvider,
   );
 
   final PlaylistRemoteRepository _playlistRemoteRepository;
   final PlaylistLocalRepository _playlistLocalRepository;
-  final AuthUserInfoProvider _authUserInfoProvider;
 
   @override
   Future<EmptyResult> deleteLocalEntities(List<String> ids) async {
-    final authUserId = await _authUserInfoProvider.getId();
-    if (authUserId == null) {
-      Logger.root.warning('sync playlists, authUserId is null');
-      return EmptyResult.err();
-    }
-
     final res = await _playlistLocalRepository.deleteByIds(ids);
 
     return res.toEmptyResult();
