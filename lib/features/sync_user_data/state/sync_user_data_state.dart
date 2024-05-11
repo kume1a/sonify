@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import '../../../app/navigation/page_navigator.dart';
 import '../api/sync_user_audio.dart';
 import '../api/sync_user_audio_likes.dart';
+import '../api/sync_user_pending_changes.dart';
 
 part 'sync_user_data_state.freezed.dart';
 
@@ -40,6 +41,7 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
     this._syncUserAudio,
     this._syncUserAudioLikes,
     this._pageNavigator,
+    this._syncUserPendingChanges,
   ) : super(SyncUserDataState.initial()) {
     _init();
   }
@@ -47,6 +49,7 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
   final SyncUserAudio _syncUserAudio;
   final SyncUserAudioLikes _syncUserAudioLikes;
   final PageNavigator _pageNavigator;
+  final SyncUserPendingChanges _syncUserPendingChanges;
 
   Future<void> _init() async {
     return _startSync();
@@ -68,6 +71,11 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
     emit(state.copyWith(syncState: SyncAudiosState.loading));
 
     await Future.delayed(const Duration(seconds: 1));
+
+    final syncUserPendingChangesRes = await _syncUserPendingChanges();
+    if (syncUserPendingChangesRes.isErr) {
+      return _handleSyncFailure();
+    }
 
     final syncUserAudioLikesRes = await _syncUserAudioLikes();
     if (syncUserAudioLikesRes.isErr) {
