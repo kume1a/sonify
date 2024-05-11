@@ -29,7 +29,10 @@ class SqfliteUserPlaylistEntityDao implements UserPlaylistEntityDao {
   }
 
   @override
-  Future<int> deleteByBUserIdAndBPlaylistIds(String bUserId, List<String> bPlaylistIds) async {
+  Future<int> deleteByBUserIdAndBPlaylistIds({
+    required String bUserId,
+    required List<String> bPlaylistIds,
+  }) async {
     return _db.delete(
       UserPlaylist_.tn,
       where:

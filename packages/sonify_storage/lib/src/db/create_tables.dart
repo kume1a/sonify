@@ -108,7 +108,8 @@ void createDbTables(Batch batch) {
         ${UserPlaylist_.id} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         ${UserPlaylist_.bCreatedAtMillis} INTEGER,
         ${UserPlaylist_.bPlaylistId} TEXT,
-        ${UserPlaylist_.bUserId} TEXT
+        ${UserPlaylist_.bUserId} TEXT,
+        ${UserPlaylist_.isSpotifySavedPlaylist} INTEGER
       );
     ''',
   );

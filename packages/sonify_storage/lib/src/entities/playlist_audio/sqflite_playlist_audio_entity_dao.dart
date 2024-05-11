@@ -1,12 +1,10 @@
-import 'package:collection/collection.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../db/db_batch.dart';
-
 import '../../db/tables.dart';
 import 'playlist_audio_entity.dart';
+import 'playlist_audio_entity_dao.dart';
 import 'playlist_audio_entity_mapper.dart';
-import 'playlist_entity_dao.dart';
 
 class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
   SqflitePlaylistAudioEntityDao(
@@ -29,14 +27,14 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
   }
 
   @override
-  Future<void> deleteMany(List<BAudioIdAndBPlaylistId> ids) {
+  Future<void> deleteMany(List<PlaylistAudioEntity> entities) {
     final batch = _db.batch();
 
-    for (final id in ids) {
+    for (final entity in entities) {
       batch.delete(
         PlaylistAudio_.tn,
         where: '${PlaylistAudio_.bAudioId} = ? AND ${PlaylistAudio_.bPlaylistId} = ?',
-        whereArgs: [id.bAudioId, id.bPlaylistId],
+        whereArgs: [entity.bAudioId, entity.bPlaylistId],
       );
     }
 
@@ -44,27 +42,9 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
   }
 
   @override
-  Future<List<BAudioIdAndBPlaylistId>> getAllBIds() async {
-    final result = await _db.query(
-      PlaylistAudio_.tn,
-      columns: [
-        PlaylistAudio_.bAudioId,
-        PlaylistAudio_.bPlaylistId,
-      ],
-    );
+  Future<List<PlaylistAudioEntity>> getAll() async {
+    final result = await _db.query(PlaylistAudio_.tn);
 
-    return result
-        .map((m) {
-          final bAudioId = m[PlaylistAudio_.bAudioId] as String?;
-          final bPlaylistId = m[PlaylistAudio_.bPlaylistId] as String?;
-
-          if (bAudioId == null || bPlaylistId == null) {
-            return null;
-          }
-
-          return BAudioIdAndBPlaylistId(bAudioId: bAudioId, bPlaylistId: bPlaylistId);
-        })
-        .whereNotNull()
-        .toList();
+    return result.map(_playlistAudioEntityMapper.mapToEntity).toList();
   }
 }
