@@ -28,9 +28,11 @@ class PlaylistRemoteServiceImpl with SafeHttpRequestWrap implements PlaylistRemo
   }
 
   @override
-  Future<Either<NetworkCallError, List<PlaylistDto>>> getAuthUserPlaylists() {
+  Future<Either<NetworkCallError, List<PlaylistDto>>> getAuthUserPlaylists({
+    required List<String>? ids,
+  }) {
     return callCatchHandleNetworkCallError(
-      () => _apiClient.getAuthUserPlaylists(),
+      () => _apiClient.getAuthUserPlaylists(ids),
     );
   }
 
@@ -39,5 +41,10 @@ class PlaylistRemoteServiceImpl with SafeHttpRequestWrap implements PlaylistRemo
     required String playlistId,
   }) {
     return callCatchHandleNetworkCallError(() => _apiClient.getPlaylistById(playlistId));
+  }
+
+  @override
+  Future<Either<NetworkCallError, List<String>>> getAuthUserPlaylistIds() {
+    return callCatchHandleNetworkCallError(() => _apiClient.getAuthUserPlaylistIds());
   }
 }

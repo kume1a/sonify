@@ -301,6 +301,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  cross_file:
+    dependency: transitive
+    description:
+      name: cross_file
+      sha256: "55d7b444feb71301ef6b8838dbc1ae02e63dd48c8773f3810ff53bb1e2945b32"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.4+1"
   crypto:
     dependency: transitive
     description:
@@ -673,6 +681,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
+  group_button:
+    dependency: transitive
+    description:
+      name: group_button
+      sha256: "0610fcf28ed122bfb4b410fce161a390f7f2531d55d1d65c5375982001415940"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.3.4"
   gtk:
     dependency: transitive
     description:
@@ -1193,6 +1209,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
+  share_plus:
+    dependency: transitive
+    description:
+      name: share_plus
+      sha256: ef3489a969683c4f3d0239010cc8b7a2a46543a8d139e111c06c558875083544
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.0.0"
+  share_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: share_plus_platform_interface
+      sha256: "0f9e4418835d1b2c3ae78fdb918251959106cefdbc4dd43526e182f80e82f6d4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -1347,6 +1379,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.1"
+  storage_view:
+    dependency: "direct dev"
+    description:
+      name: storage_view
+      sha256: e0174c96687272d63c751cf84db6dad3a4b72eee56f68ef4e882b1f576d81325
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0-dev.4"
   stream_channel:
     dependency: transitive
     description:
@@ -1379,6 +1419,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0+1"
+  talker:
+    dependency: transitive
+    description:
+      name: talker
+      sha256: edd1ec2d1e941ac1569f27d820cd896e0dc9bc4e4160963e3c8c192079f08da0
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.0"
+  talker_flutter:
+    dependency: transitive
+    description:
+      name: talker_flutter
+      sha256: "8b10ea148e16410abc950ab596a9cb9b2ae4380640dec9a88dc80503f41902b8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.0"
+  talker_logger:
+    dependency: transitive
+    description:
+      name: talker_logger
+      sha256: "777c62bb8019ec26f5b99626fe0bd28e169bae724ffde8438a5e4ad28e2c20df"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.0"
   term_glyph:
     dependency: transitive
     description:

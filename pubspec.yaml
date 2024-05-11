@@ -105,6 +105,7 @@ dev_dependencies:
   flutter_gen: ^5.4.0
   flutter_native_splash: ^2.4.0
   flutter_launcher_icons: ^0.13.1
+  storage_view: ^0.1.0-dev.4
 
 flutter:
   uses-material-design: true

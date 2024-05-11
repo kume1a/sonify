@@ -38,6 +38,7 @@ class SqflitePendingChangeEntityDao implements PendingChangeEntityDao {
       PendingChange_.tn,
       where: '${PendingChange_.type} IN ${sqlListPlaceholders(types.length)}',
       whereArgs: types,
+      orderBy: '${PendingChange_.id} ASC',
     );
 
     return query.map(_pendingChangeEntityMapper.mapToEntity).toList();

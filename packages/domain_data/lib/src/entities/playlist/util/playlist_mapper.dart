@@ -1,5 +1,6 @@
 import 'package:common_utilities/common_utilities.dart';
 import 'package:sonify_client/sonify_client.dart';
+import 'package:sonify_storage/src/entities/playlist/playlist_entity.dart';
 
 import '../../../shared/constant.dart';
 import '../../audio/util/audio_mapper.dart';
@@ -21,6 +22,18 @@ class PlaylistMapper {
       thumbnailUrl: dto.thumbnailUrl,
       spotifyId: dto.spotifyId,
       audios: tryMapList(dto.audios, _audioMapper.dtoToModel),
+    );
+  }
+
+  PlaylistEntity modelToEntity(Playlist playlist) {
+    return PlaylistEntity(
+      id: null,
+      bId: playlist.id,
+      bCreatedAtMillis: playlist.createdAt?.millisecondsSinceEpoch,
+      name: playlist.name,
+      bThumbnailPath: playlist.thumbnailPath,
+      thumbnailUrl: playlist.thumbnailUrl,
+      spotifyId: playlist.spotifyId,
     );
   }
 }

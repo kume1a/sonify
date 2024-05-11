@@ -24,8 +24,10 @@ class PlaylistRemoteRepositoryImpl implements PlaylistRemoteRepository {
   }
 
   @override
-  Future<Either<NetworkCallError, List<Playlist>>> getAuthUserPlaylists() async {
-    final res = await _playlistRemoteService.getAuthUserPlaylists();
+  Future<Either<NetworkCallError, List<Playlist>>> getAuthUserPlaylists({
+    List<String>? ids,
+  }) async {
+    final res = await _playlistRemoteService.getAuthUserPlaylists(ids: ids);
 
     return res.map((r) => r.map(_playlistMapper.dtoToModel).toList());
   }
@@ -37,5 +39,10 @@ class PlaylistRemoteRepositoryImpl implements PlaylistRemoteRepository {
     final res = await _playlistRemoteService.getPlaylistById(playlistId: playlistId);
 
     return res.map(_playlistMapper.dtoToModel);
+  }
+
+  @override
+  Future<Either<NetworkCallError, List<String>>> getAuthUserPlaylistIds() {
+    return _playlistRemoteService.getAuthUserPlaylistIds();
   }
 }

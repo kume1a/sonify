@@ -77,6 +77,15 @@ abstract class DiDomainModelModule {
     return PlaylistRemoteRepositoryImpl(playlistRemoteService, playlistMapper);
   }
 
+  @lazySingleton
+  PlaylistLocalRepository playlistLocalRepository(
+    PlaylistEntityDao playlistEntityDao,
+    DbBatchProviderFactory dbBatchProviderFactory,
+    PlaylistMapper playlistMapper,
+  ) {
+    return PlaylistLocalRepositoryImpl(playlistEntityDao, dbBatchProviderFactory, playlistMapper);
+  }
+
   // server time ----------------------------------------------------------------
   @lazySingleton
   ServerTimeMapper serverTimeMapper() {

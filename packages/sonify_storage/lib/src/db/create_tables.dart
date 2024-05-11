@@ -73,4 +73,19 @@ void createDbTables(Batch batch) {
       );
     ''',
   );
+
+  batch.execute(
+    '''
+      CREATE TABLE IF NOT EXISTS ${Playlist_.tn} 
+      (
+        ${Playlist_.id} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        ${Playlist_.bId} TEXT,
+        ${Playlist_.bCreatedAtMillis} INTEGER,
+        ${Playlist_.name} TEXT,
+        ${Playlist_.bThumbnailPath} TEXT,
+        ${Playlist_.thumbnailUrl} TEXT,
+        ${Playlist_.spotifyId} TEXT
+      );
+    ''',
+  );
 }

@@ -111,3 +111,27 @@ abstract class PendingChange_ {
   static final joinedType = joinPrefixColumn(type);
   static final joinedPayloadJSON = joinPrefixColumn(payloadJSON);
 }
+
+abstract class Playlist_ {
+  static const tn = 'playlists';
+  static const joinPrefix = '${tn}_entity_';
+
+  static String joinPrefixColumn(String column) => '$joinPrefix$column';
+
+  static const id = 'id';
+  static const bId = 'b_id';
+  static const bCreatedAtMillis = 'b_created_at_millis';
+  static const name = 'name';
+  static const bThumbnailPath = 'b_thumbnail_path';
+  static const thumbnailUrl = 'thumbnail_url';
+  static const spotifyId = 'spotify_id';
+
+  // joined columns
+  static final joinedId = joinPrefixColumn(id);
+  static final joinedBId = joinPrefixColumn(bId);
+  static final joinedBCreatedAtMillis = joinPrefixColumn(bCreatedAtMillis);
+  static final joinedName = joinPrefixColumn(name);
+  static final joinedBThumbnailPath = joinPrefixColumn(bThumbnailPath);
+  static final joinedThumbnailUrl = joinPrefixColumn(thumbnailUrl);
+  static final joinedSpotifyId = joinPrefixColumn(spotifyId);
+}
