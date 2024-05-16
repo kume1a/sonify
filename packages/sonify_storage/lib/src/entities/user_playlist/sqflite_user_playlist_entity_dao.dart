@@ -36,7 +36,7 @@ class SqfliteUserPlaylistEntityDao implements UserPlaylistEntityDao {
     return _db.delete(
       UserPlaylist_.tn,
       where:
-          '${UserPlaylist_.bUserId} = ? AND ${UserPlaylist_.bPlaylistId} IN ${sqlListPlaceholders(bPlaylistIds.length)}',
+          '${UserPlaylist_.userId} = ? AND ${UserPlaylist_.playlistId} IN ${sqlListPlaceholders(bPlaylistIds.length)}',
       whereArgs: [bUserId, ...bPlaylistIds],
     );
   }
@@ -45,11 +45,11 @@ class SqfliteUserPlaylistEntityDao implements UserPlaylistEntityDao {
   Future<List<String>> getAllBPlaylistIdsByBUserId(String bUserId) async {
     final res = await _db.query(
       UserPlaylist_.tn,
-      columns: [UserPlaylist_.bPlaylistId],
-      where: '${UserPlaylist_.bUserId} = ?',
+      columns: [UserPlaylist_.playlistId],
+      where: '${UserPlaylist_.userId} = ?',
       whereArgs: [bUserId],
     );
 
-    return res.map((m) => m[UserPlaylist_.bPlaylistId] as String?).whereNotNull().toList();
+    return res.map((m) => m[UserPlaylist_.playlistId] as String?).whereNotNull().toList();
   }
 }

@@ -3,7 +3,7 @@ import '../../../sonify_storage.dart';
 class DownloadedTaskEntity {
   DownloadedTaskEntity({
     required this.id,
-    required this.bUserId,
+    required this.userId,
     required this.taskId,
     required this.savePath,
     required this.fileType,
@@ -12,7 +12,7 @@ class DownloadedTaskEntity {
   });
 
   final int? id;
-  final String? bUserId;
+  final String? userId;
   final String? taskId;
   final String? savePath;
   final String? fileType;

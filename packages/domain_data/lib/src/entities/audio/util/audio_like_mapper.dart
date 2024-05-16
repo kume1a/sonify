@@ -7,8 +7,8 @@ class AudioLikeMapper {
   AudioLike entityToModel(AudioLikeEntity entity) {
     return AudioLike(
       localId: entity.id,
-      audioId: entity.bAudioId,
-      userId: entity.bUserId,
+      audioId: entity.audioId,
+      userId: entity.userId,
     );
   }
 
@@ -23,8 +23,8 @@ class AudioLikeMapper {
   AudioLikeEntity modelToEntity(AudioLike m) {
     return AudioLikeEntity(
       id: m.localId,
-      bAudioId: m.audioId,
-      bUserId: m.userId,
+      audioId: m.audioId,
+      userId: m.userId,
     );
   }
 }

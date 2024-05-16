@@ -64,7 +64,7 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
 
   @override
   Future<Result<int>> deleteUserAudioJoinsByAudioIds(List<String> ids) {
-    return wrapWithResult(() => _userAudioEntityDao.deleteByBAudioIds(ids));
+    return wrapWithResult(() => _userAudioEntityDao.deleteByAudioIds(ids));
   }
 
   @override
@@ -84,9 +84,9 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
     required String audioId,
   }) async {
     return wrapWithEmptyResult(
-      () => _audioLikeEntityDao.deleteByBUserIdAndBAudioId(
-        bAudioId: audioId,
-        bUserId: userId,
+      () => _audioLikeEntityDao.deleteByUserIdAndAudioId(
+        audioId: audioId,
+        userId: userId,
       ),
     );
   }
@@ -97,7 +97,7 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
     required String audioId,
   }) {
     return wrapWithResult(
-      () => _audioLikeEntityDao.existsByBUserIdAndBAudioId(
+      () => _audioLikeEntityDao.existsByUserIdAndAudioId(
         userId: userId,
         audioId: audioId,
       ),
@@ -109,7 +109,7 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
     required String userId,
   }) {
     return wrapWithResult(() async {
-      final res = await _audioLikeEntityDao.getAllByBUserId(userId);
+      final res = await _audioLikeEntityDao.getAllByUserId(userId);
 
       return res.map(_audioLikeMapper.entityToModel).toList();
     });
@@ -153,9 +153,9 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
     required List<String> audioIds,
   }) {
     return wrapWithResult(
-      () => _audioLikeEntityDao.deleteByBUserIdAndBAudioIds(
+      () => _audioLikeEntityDao.deleteByUserIdAndAudioIds(
         userId: userId,
-        bAudioIds: audioIds,
+        audioIds: audioIds,
       ),
     );
   }

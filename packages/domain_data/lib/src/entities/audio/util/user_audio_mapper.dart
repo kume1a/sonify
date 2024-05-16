@@ -27,9 +27,9 @@ class UserAudioMapper {
   UserAudio entityToModel(UserAudioEntity e) {
     return UserAudio(
       localId: e.id,
-      createdAt: tryMapDateMillis(e.bCreatedAtMillis),
-      userId: e.bUserId ?? kInvalidId,
-      audioId: e.bAudioId ?? kInvalidId,
+      createdAt: tryMapDateMillis(e.createdAtMillis),
+      userId: e.userId ?? kInvalidId,
+      audioId: e.audioId ?? kInvalidId,
       localAudioId: e.audioId,
       audio: tryMap(e.audio, _audioMapper.entityToModel),
     );
@@ -38,9 +38,9 @@ class UserAudioMapper {
   UserAudioEntity modelToEntity(UserAudio m) {
     return UserAudioEntity(
       id: m.localId,
-      bCreatedAtMillis: m.createdAt?.millisecondsSinceEpoch,
-      bUserId: m.userId,
-      bAudioId: m.audioId,
+      createdAtMillis: m.createdAt?.millisecondsSinceEpoch,
+      userId: m.userId,
+      audioId: m.audioId,
       audioId: m.localAudioId,
       audio: tryMap(m.audio, _audioMapper.modelToEntity),
     );

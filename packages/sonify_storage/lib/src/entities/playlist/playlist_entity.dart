@@ -1,19 +1,17 @@
 class PlaylistEntity {
   PlaylistEntity({
     required this.id,
-    required this.bId,
-    required this.bCreatedAtMillis,
+    required this.createdAtMillis,
     required this.name,
-    required this.bThumbnailPath,
+    required this.thumbnailPath,
     required this.thumbnailUrl,
     required this.spotifyId,
   });
 
-  final int? id;
-  final String? bId;
-  final int? bCreatedAtMillis;
+  final String? id;
+  final int? createdAtMillis;
   final String? name;
-  final String? bThumbnailPath;
+  final String? thumbnailPath;
   final String? thumbnailUrl;
   final String? spotifyId;
 }

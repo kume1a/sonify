@@ -18,7 +18,10 @@ class SqflitePlaylistEntityDao implements PlaylistEntityDao {
   final PlaylistEntityMapper _playlistEntityMapper;
 
   @override
-  void batchCreate(PlaylistEntity playlist, {required DbBatchProvider batchProvider}) {
+  void batchCreate(
+    PlaylistEntity playlist, {
+    required DbBatchProvider batchProvider,
+  }) {
     final entityMap = _playlistEntityMapper.entityToMap(playlist);
 
     batchProvider.get.insert(
@@ -29,21 +32,21 @@ class SqflitePlaylistEntityDao implements PlaylistEntityDao {
   }
 
   @override
-  Future<int> deleteByBIds(List<String> bIds) {
+  Future<int> deleteByIds(List<String> ids) {
     return _db.delete(
       Playlist_.tn,
-      where: '${Playlist_.bId} IN ${sqlListPlaceholders(bIds.length)}',
-      whereArgs: bIds,
+      where: '${Playlist_.id} IN ${sqlListPlaceholders(ids.length)}',
+      whereArgs: ids,
     );
   }
 
   @override
-  Future<List<String>> getAllBIds() async {
+  Future<List<String>> getAllIds() async {
     final res = await _db.query(
       Playlist_.tn,
-      columns: [Playlist_.bId],
+      columns: [Playlist_.id],
     );
 
-    return res.map((m) => m[Playlist_.bId] as String?).whereNotNull().toList();
+    return res.map((m) => m[Playlist_.id] as String?).whereNotNull().toList();
   }
 }

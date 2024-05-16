@@ -32,7 +32,7 @@ class DownloadedTaskMapper {
   }) {
     return DownloadedTaskEntity(
       id: m.localId,
-      bUserId: userId,
+      userId: userId,
       taskId: m.id,
       savePath: m.savePath,
       fileType: m.fileType.name,

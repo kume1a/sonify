@@ -5,7 +5,7 @@ abstract interface class UserAudioEntityDao {
 
   Future<List<UserAudioEntity>> getAllByUserId(String userId);
 
-  Future<int> deleteByBAudioIds(List<String> ids);
+  Future<int> deleteByAudioIds(List<String> ids);
 
   Future<List<String>> getAllBAudioIdsByUserId(String userId);
 }

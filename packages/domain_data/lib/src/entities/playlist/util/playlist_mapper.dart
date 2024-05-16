@@ -29,9 +29,9 @@ class PlaylistMapper {
     return PlaylistEntity(
       id: null,
       bId: playlist.id,
-      bCreatedAtMillis: playlist.createdAt?.millisecondsSinceEpoch,
+      createdAtMillis: playlist.createdAt?.millisecondsSinceEpoch,
       name: playlist.name,
-      bThumbnailPath: playlist.thumbnailPath,
+      thumbnailPath: playlist.thumbnailPath,
       thumbnailUrl: playlist.thumbnailUrl,
       spotifyId: playlist.spotifyId,
     );

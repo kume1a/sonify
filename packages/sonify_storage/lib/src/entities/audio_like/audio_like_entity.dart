@@ -3,23 +3,23 @@ import '../../shared/wrapped.dart';
 class AudioLikeEntity {
   AudioLikeEntity({
     required this.id,
-    required this.bAudioId,
-    required this.bUserId,
+    required this.audioId,
+    required this.userId,
   });
 
-  final int? id;
-  final String? bAudioId;
-  final String? bUserId;
+  final String? id;
+  final String? audioId;
+  final String? userId;
 
   AudioLikeEntity copyWith({
-    Wrapped<int?>? id,
-    Wrapped<String?>? bAudioId,
-    Wrapped<String?>? bUserId,
+    Wrapped<String?>? id,
+    Wrapped<String?>? audioId,
+    Wrapped<String?>? userId,
   }) {
     return AudioLikeEntity(
       id: id?.value ?? this.id,
-      bAudioId: bAudioId?.value ?? this.bAudioId,
-      bUserId: bUserId?.value ?? this.bUserId,
+      audioId: audioId?.value ?? this.audioId,
+      userId: userId?.value ?? this.userId,
     );
   }
 }

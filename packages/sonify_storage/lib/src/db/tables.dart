@@ -7,33 +7,31 @@ abstract class Audio_ {
   static String joinPrefixColumn(String column) => '$joinPrefix$column';
 
   static const id = 'id';
-  static const bId = 'b_id';
-  static const bCreatedAtMillis = 'b_created_at_millis';
+  static const createdAtMillis = 'created_at_millis';
   static const title = 'title';
   static const durationMs = 'duration_ms';
-  static const bPath = 'b_path';
+  static const path = 'path';
   static const localPath = 'local_path';
   static const author = 'author';
   static const sizeBytes = 'size_bytes';
   static const youtubeVideoId = 'youtube_video_id';
   static const spotifyId = 'spotify_id';
-  static const bThumbnailPath = 'b_thumbnail_path';
+  static const thumbnailPath = 'thumbnail_path';
   static const thumbnailUrl = 'thumbnail_url';
   static const localThumbnailPath = 'local_thumbnail_path';
 
   // joined columns
   static final joinedId = joinPrefixColumn(id);
-  static final joinedBId = joinPrefixColumn(bId);
-  static final joinedBCreatedAtMillis = joinPrefixColumn(bCreatedAtMillis);
+  static final joinedCreatedAtMillis = joinPrefixColumn(createdAtMillis);
   static final joinedTitle = joinPrefixColumn(title);
   static final joinedDurationMs = joinPrefixColumn(durationMs);
-  static final joinedBPath = joinPrefixColumn(bPath);
+  static final joinedPath = joinPrefixColumn(path);
   static final joinedLocalPath = joinPrefixColumn(localPath);
   static final joinedAuthor = joinPrefixColumn(author);
   static final joinedSizeBytes = joinPrefixColumn(sizeBytes);
   static final joinedYoutubeVideoId = joinPrefixColumn(youtubeVideoId);
   static final joinedSpotifyId = joinPrefixColumn(spotifyId);
-  static final joinedBThumbnailPath = joinPrefixColumn(bThumbnailPath);
+  static final joinedThumbnailPath = joinPrefixColumn(thumbnailPath);
   static final joinedThumbnailUrl = joinPrefixColumn(thumbnailUrl);
   static final joinedLocalThumbnailPath = joinPrefixColumn(localThumbnailPath);
 }
@@ -45,13 +43,13 @@ abstract class AudioLike_ {
   static String joinPrefixColumn(String column) => '$joinPrefix$column';
 
   static const id = 'id';
-  static const bAudioId = 'b_audio_id';
-  static const bUserId = 'b_user_id';
+  static const audioId = 'audio_id';
+  static const userId = 'user_id';
 
   // joined columns
   static final joinedId = joinPrefixColumn(id);
-  static final joinedBAudioId = joinPrefixColumn(bAudioId);
-  static final joinedBUserId = joinPrefixColumn(bUserId);
+  static final joinedAudioId = joinPrefixColumn(audioId);
+  static final joinedUserId = joinPrefixColumn(userId);
 }
 
 abstract class DownloadedTask_ {
@@ -61,7 +59,7 @@ abstract class DownloadedTask_ {
   static String joinPrefixColumn(String column) => '$joinPrefix$column';
 
   static const id = 'id';
-  static const bUserId = 'b_user_id';
+  static const userId = 'user_id';
   static const taskId = 'task_id';
   static const savePath = 'save_path';
   static const fileType = 'file_type';
@@ -69,7 +67,7 @@ abstract class DownloadedTask_ {
 
   // joined columns
   static final joinedId = joinPrefixColumn(id);
-  static final joinedBUserId = joinPrefixColumn(bUserId);
+  static final joinedUserId = joinPrefixColumn(userId);
   static final joinedTaskId = joinPrefixColumn(taskId);
   static final joinedSavePath = joinPrefixColumn(savePath);
   static final joinedFileType = joinPrefixColumn(fileType);
@@ -83,16 +81,14 @@ abstract class UserAudio_ {
   static String joinPrefixColumn(String column) => '$joinPrefix$column';
 
   static const id = 'id';
-  static const bCreatedAtMillis = 'b_created_at_millis';
-  static const bUserId = 'b_user_id';
-  static const bAudioId = 'b_audio_id';
+  static const createdAtMillis = 'created_at_millis';
+  static const userId = 'user_id';
   static const audioId = 'audio_id';
 
   // joined columns
   static final joinedId = joinPrefixColumn(id);
-  static final joinedBCreatedAtMillis = joinPrefixColumn(bCreatedAtMillis);
-  static final joinedBUserId = joinPrefixColumn(bUserId);
-  static final joinedBAudioId = joinPrefixColumn(bAudioId);
+  static final joinedCreatedAtMillis = joinPrefixColumn(createdAtMillis);
+  static final joinedUserId = joinPrefixColumn(userId);
   static final joinedAudioId = joinPrefixColumn(audioId);
 }
 
@@ -119,19 +115,17 @@ abstract class Playlist_ {
   static String joinPrefixColumn(String column) => '$joinPrefix$column';
 
   static const id = 'id';
-  static const bId = 'b_id';
-  static const bCreatedAtMillis = 'b_created_at_millis';
+  static const createdAtMillis = 'created_at_millis';
   static const name = 'name';
-  static const bThumbnailPath = 'b_thumbnail_path';
+  static const thumbnailPath = 'thumbnail_path';
   static const thumbnailUrl = 'thumbnail_url';
   static const spotifyId = 'spotify_id';
 
   // joined columns
   static final joinedId = joinPrefixColumn(id);
-  static final joinedBId = joinPrefixColumn(bId);
-  static final joinedBCreatedAtMillis = joinPrefixColumn(bCreatedAtMillis);
+  static final joinedCreatedAtMillis = joinPrefixColumn(createdAtMillis);
   static final joinedName = joinPrefixColumn(name);
-  static final joinedBThumbnailPath = joinPrefixColumn(bThumbnailPath);
+  static final joinedThumbnailPath = joinPrefixColumn(thumbnailPath);
   static final joinedThumbnailUrl = joinPrefixColumn(thumbnailUrl);
   static final joinedSpotifyId = joinPrefixColumn(spotifyId);
 }
@@ -143,15 +137,15 @@ abstract class PlaylistAudio_ {
   static String joinPrefixColumn(String column) => '$joinPrefix$column';
 
   static const id = 'id';
-  static const bCreatedAtMillis = 'b_created_at_millis';
-  static const bPlaylistId = 'b_playlist_id';
-  static const bAudioId = 'b_audio_id';
+  static const createdAtMillis = 'created_at_millis';
+  static const playlistId = 'playlist_id';
+  static const audioId = 'audio_id';
 
   // joined columns
   static final joinedId = joinPrefixColumn(id);
-  static final joinedBCreatedAtMillis = joinPrefixColumn(bCreatedAtMillis);
-  static final joinedBPlaylistId = joinPrefixColumn(bPlaylistId);
-  static final joinedBAudioId = joinPrefixColumn(bAudioId);
+  static final joinedCreatedAtMillis = joinPrefixColumn(createdAtMillis);
+  static final joinedPlaylistId = joinPrefixColumn(playlistId);
+  static final joinedAudioId = joinPrefixColumn(audioId);
 }
 
 abstract class UserPlaylist_ {
@@ -161,15 +155,15 @@ abstract class UserPlaylist_ {
   static String joinPrefixColumn(String column) => '$joinPrefix$column';
 
   static const id = 'id';
-  static const bCreatedAtMillis = 'b_created_at_millis';
-  static const bUserId = 'b_user_id';
-  static const bPlaylistId = 'b_playlist_id';
+  static const createdAtMillis = 'created_at_millis';
+  static const userId = 'user_id';
+  static const playlistId = 'playlist_id';
   static const isSpotifySavedPlaylist = 'is_spotify_saved_playlist';
 
   // joined columns
   static final joinedId = joinPrefixColumn(id);
-  static final joinedBCreatedAtMillis = joinPrefixColumn(bCreatedAtMillis);
-  static final joinedBUserId = joinPrefixColumn(bUserId);
-  static final joinedBPlaylistId = joinPrefixColumn(bPlaylistId);
+  static final joinedCreatedAtMillis = joinPrefixColumn(createdAtMillis);
+  static final joinedUserId = joinPrefixColumn(userId);
+  static final joinedPlaylistId = joinPrefixColumn(playlistId);
   static final joinedIsSpotifySavedPlaylist = joinPrefixColumn(isSpotifySavedPlaylist);
 }

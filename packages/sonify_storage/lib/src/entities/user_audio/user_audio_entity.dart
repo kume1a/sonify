@@ -4,33 +4,29 @@ import '../audio/audio_entity.dart';
 class UserAudioEntity {
   UserAudioEntity({
     required this.id,
-    required this.bCreatedAtMillis,
-    required this.bUserId,
-    required this.bAudioId,
+    required this.createdAtMillis,
+    required this.userId,
     required this.audioId,
     required this.audio,
   });
 
-  final int? id;
-  final int? bCreatedAtMillis;
-  final String? bUserId;
-  final String? bAudioId;
-  final int? audioId;
+  final String? id;
+  final int? createdAtMillis;
+  final String? userId;
+  final String? audioId;
   final AudioEntity? audio;
 
   UserAudioEntity copyWith({
-    Wrapped<int?>? id,
-    Wrapped<int?>? bCreatedAtMillis,
-    Wrapped<String?>? bUserId,
-    Wrapped<String?>? bAudioId,
-    Wrapped<int?>? audioId,
+    Wrapped<String?>? id,
+    Wrapped<int?>? createdAtMillis,
+    Wrapped<String?>? userId,
+    Wrapped<String?>? audioId,
     Wrapped<AudioEntity?>? audio,
   }) {
     return UserAudioEntity(
       id: id?.value ?? this.id,
-      bCreatedAtMillis: bCreatedAtMillis?.value ?? this.bCreatedAtMillis,
-      bUserId: bUserId?.value ?? this.bUserId,
-      bAudioId: bAudioId?.value ?? this.bAudioId,
+      createdAtMillis: createdAtMillis?.value ?? this.createdAtMillis,
+      userId: userId?.value ?? this.userId,
       audioId: audioId?.value ?? this.audioId,
       audio: audio?.value ?? this.audio,
     );

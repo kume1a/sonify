@@ -33,8 +33,8 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
     for (final entity in entities) {
       batch.delete(
         PlaylistAudio_.tn,
-        where: '${PlaylistAudio_.bAudioId} = ? AND ${PlaylistAudio_.bPlaylistId} = ?',
-        whereArgs: [entity.bAudioId, entity.bPlaylistId],
+        where: '${PlaylistAudio_.audioId} = ? AND ${PlaylistAudio_.playlistId} = ?',
+        whereArgs: [entity.audioId, entity.playlistId],
       );
     }
 

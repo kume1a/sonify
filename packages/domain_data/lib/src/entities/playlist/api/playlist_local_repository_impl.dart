@@ -35,11 +35,11 @@ class PlaylistLocalRepositoryImpl with ResultWrap implements PlaylistLocalReposi
 
   @override
   Future<Result<int>> deleteByIds(List<String> ids) {
-    return wrapWithResult(() => _playlistEntityDao.deleteByBIds(ids));
+    return wrapWithResult(() => _playlistEntityDao.deleteByIds(ids));
   }
 
   @override
   Future<Result<List<String>>> getAllIds() {
-    return wrapWithResult(() => _playlistEntityDao.getAllBIds());
+    return wrapWithResult(() => _playlistEntityDao.getAllIds());
   }
 }

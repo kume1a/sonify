@@ -18,18 +18,18 @@ class PlaylistAudioMapper {
   PlaylistAudio entityToModel(PlaylistAudioEntity entity) {
     return PlaylistAudio(
       localId: entity.id,
-      createdAt: tryMapDateMillis(entity.bCreatedAtMillis),
-      audioId: entity.bAudioId ?? kInvalidId,
-      playlistId: entity.bPlaylistId ?? kInvalidId,
+      createdAt: tryMapDateMillis(entity.createdAtMillis),
+      audioId: entity.audioId ?? kInvalidId,
+      playlistId: entity.playlistId ?? kInvalidId,
     );
   }
 
   PlaylistAudioEntity modelToEntity(PlaylistAudio model) {
     return PlaylistAudioEntity(
       id: model.localId,
-      bCreatedAtMillis: model.createdAt?.millisecondsSinceEpoch,
-      bAudioId: model.audioId,
-      bPlaylistId: model.playlistId,
+      createdAtMillis: model.createdAt?.millisecondsSinceEpoch,
+      audioId: model.audioId,
+      playlistId: model.playlistId,
     );
   }
 }

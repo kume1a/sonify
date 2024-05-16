@@ -32,26 +32,26 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
   }
 
   @override
-  Future<int> deleteByBUserIdAndBAudioId({
-    required String bUserId,
-    required String bAudioId,
+  Future<int> deleteByUserIdAndAudioId({
+    required String userId,
+    required String audioId,
   }) {
     return _db.delete(
       AudioLike_.tn,
-      where: '${AudioLike_.bUserId} = ? AND ${AudioLike_.bAudioId} = ?',
-      whereArgs: [bUserId, bAudioId],
+      where: '${AudioLike_.userId} = ? AND ${AudioLike_.audioId} = ?',
+      whereArgs: [userId, audioId],
     );
   }
 
   @override
-  Future<bool> existsByBUserIdAndBAudioId({
+  Future<bool> existsByUserIdAndAudioId({
     required String userId,
     required String audioId,
   }) async {
     final query = await _db.query(
       AudioLike_.tn,
       columns: ['COUNT(*)'],
-      where: '${AudioLike_.bUserId} = ? AND ${AudioLike_.bAudioId} = ?',
+      where: '${AudioLike_.userId} = ? AND ${AudioLike_.audioId} = ?',
       whereArgs: [userId, audioId],
     );
 
@@ -61,10 +61,10 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
   }
 
   @override
-  Future<List<AudioLikeEntity>> getAllByBUserId(String userId) async {
+  Future<List<AudioLikeEntity>> getAllByUserId(String userId) async {
     final query = await _db.query(
       AudioLike_.tn,
-      where: '${AudioLike_.bUserId} = ?',
+      where: '${AudioLike_.userId} = ?',
       whereArgs: [userId],
     );
 
@@ -78,7 +78,7 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
   }) async {
     final query = await _db.query(
       AudioLike_.tn,
-      where: '${AudioLike_.bUserId} = ? AND ${AudioLike_.bAudioId} = ?',
+      where: '${AudioLike_.userId} = ? AND ${AudioLike_.audioId} = ?',
       whereArgs: [userId, audioId],
     );
 
@@ -86,17 +86,17 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
   }
 
   @override
-  Future<int> deleteByBUserIdAndBAudioIds({
+  Future<int> deleteByUserIdAndAudioIds({
     required String userId,
-    required List<String> bAudioIds,
+    required List<String> audioIds,
   }) {
     return _db.delete(
       AudioLike_.tn,
       where: '''
-        ${AudioLike_.bUserId} = ? 
-        AND ${AudioLike_.bAudioId} IN ${sqlListPlaceholders(bAudioIds.length)}
+        ${AudioLike_.userId} = ? 
+        AND ${AudioLike_.audioId} IN ${sqlListPlaceholders(audioIds.length)}
       ''',
-      whereArgs: [userId, ...bAudioIds],
+      whereArgs: [userId, ...audioIds],
     );
   }
 }

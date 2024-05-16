@@ -1,3 +1,5 @@
+// add pending change entity version for migrations
+
 class PendingChangeEntity {
   PendingChangeEntity({
     required this.id,

@@ -4,30 +4,30 @@ import 'audio_like_entity.dart';
 class AudioLikeEntityMapper {
   AudioLikeEntity mapToEntity(Map<String, dynamic> map) {
     return AudioLikeEntity(
-      id: map[AudioLike_.id] as int?,
-      bAudioId: map[AudioLike_.bAudioId] as String?,
-      bUserId: map[AudioLike_.bUserId] as String?,
+      id: map[AudioLike_.id] as String?,
+      audioId: map[AudioLike_.audioId] as String?,
+      userId: map[AudioLike_.userId] as String?,
     );
   }
 
   AudioLikeEntity? joinedMapToEntity(Map<String, dynamic> map) {
-    final id = map[AudioLike_.joinedId] as int?;
+    final id = map[AudioLike_.joinedId] as String?;
     if (id == null) {
       return null;
     }
 
     return AudioLikeEntity(
       id: id,
-      bAudioId: map[AudioLike_.joinedBAudioId] as String?,
-      bUserId: map[AudioLike_.joinedBUserId] as String?,
+      audioId: map[AudioLike_.joinedAudioId] as String?,
+      userId: map[AudioLike_.joinedUserId] as String?,
     );
   }
 
   Map<String, dynamic> entityToMap(AudioLikeEntity entity) {
     return {
       AudioLike_.id: entity.id,
-      AudioLike_.bUserId: entity.bUserId,
-      AudioLike_.bAudioId: entity.bAudioId,
+      AudioLike_.userId: entity.userId,
+      AudioLike_.audioId: entity.audioId,
     };
   }
 }

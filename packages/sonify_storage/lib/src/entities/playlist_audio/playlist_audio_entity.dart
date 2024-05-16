@@ -1,13 +1,13 @@
 class PlaylistAudioEntity {
   PlaylistAudioEntity({
     required this.id,
-    required this.bCreatedAtMillis,
-    required this.bPlaylistId,
-    required this.bAudioId,
+    required this.createdAtMillis,
+    required this.playlistId,
+    required this.audioId,
   });
 
   final int? id;
-  final int? bCreatedAtMillis;
-  final String? bPlaylistId;
-  final String? bAudioId;
+  final int? createdAtMillis;
+  final String? playlistId;
+  final String? audioId;
 }

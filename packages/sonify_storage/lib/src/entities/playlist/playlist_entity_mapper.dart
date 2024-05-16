@@ -4,28 +4,26 @@ import 'playlist_entity.dart';
 class PlaylistEntityMapper {
   PlaylistEntity mapToEntity(Map<String, dynamic> m) {
     return PlaylistEntity(
-      id: m[Playlist_.id] as int?,
-      bId: m[Playlist_.bId] as String?,
-      bCreatedAtMillis: m[Playlist_.bCreatedAtMillis] as int?,
+      id: m[Playlist_.id] as String?,
+      createdAtMillis: m[Playlist_.createdAtMillis] as int?,
       name: m[Playlist_.name] as String?,
       spotifyId: m[Playlist_.spotifyId] as String?,
-      bThumbnailPath: m[Playlist_.bThumbnailPath] as String?,
+      thumbnailPath: m[Playlist_.thumbnailPath] as String?,
       thumbnailUrl: m[Playlist_.thumbnailUrl] as String?,
     );
   }
 
   PlaylistEntity? joinedMapToEntity(Map<String, dynamic> m) {
-    final id = m[Playlist_.joinedId] as int?;
+    final id = m[Playlist_.joinedId] as String?;
     if (id == null) {
       return null;
     }
 
     return PlaylistEntity(
       id: id,
-      bId: m[Playlist_.joinedBId] as String?,
-      bCreatedAtMillis: m[Playlist_.joinedBCreatedAtMillis] as int?,
+      createdAtMillis: m[Playlist_.joinedCreatedAtMillis] as int?,
       spotifyId: m[Playlist_.joinedSpotifyId] as String?,
-      bThumbnailPath: m[Playlist_.joinedBThumbnailPath] as String?,
+      thumbnailPath: m[Playlist_.joinedThumbnailPath] as String?,
       thumbnailUrl: m[Playlist_.joinedThumbnailUrl] as String?,
       name: m[Playlist_.joinedName] as String?,
     );
@@ -34,10 +32,9 @@ class PlaylistEntityMapper {
   Map<String, dynamic> entityToMap(PlaylistEntity e) {
     return {
       Playlist_.id: e.id,
-      Playlist_.bId: e.bId,
-      Playlist_.bCreatedAtMillis: e.bCreatedAtMillis,
+      Playlist_.createdAtMillis: e.createdAtMillis,
       Playlist_.spotifyId: e.spotifyId,
-      Playlist_.bThumbnailPath: e.bThumbnailPath,
+      Playlist_.thumbnailPath: e.thumbnailPath,
       Playlist_.thumbnailUrl: e.thumbnailUrl,
       Playlist_.name: e.name,
     };
