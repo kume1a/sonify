@@ -1,3 +1,5 @@
+import 'package:uuid/uuid.dart';
+
 /// FNV-1a 64bit hash algorithm optimized for Dart Strings
 int fastHash(String string) {
   var hash = 0xcbf29ce484222325;
@@ -12,4 +14,8 @@ int fastHash(String string) {
   }
 
   return hash;
+}
+
+String newDBId() {
+  return const Uuid().v4();
 }

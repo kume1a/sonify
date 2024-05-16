@@ -4,6 +4,9 @@ import 'package:sqflite/sqflite.dart';
 import '../../db/db_batch.dart';
 import '../../db/sqlite_helpers.dart';
 import '../../db/tables.dart';
+import '../../shared/constant.dart';
+import '../../shared/util.dart';
+import '../../shared/wrapped.dart';
 import 'playlist_entity.dart';
 import 'playlist_entity_dao.dart';
 import 'playlist_entity_mapper.dart';
@@ -18,17 +21,23 @@ class SqflitePlaylistEntityDao implements PlaylistEntityDao {
   final PlaylistEntityMapper _playlistEntityMapper;
 
   @override
-  void batchCreate(
-    PlaylistEntity playlist, {
-    required DbBatchProvider batchProvider,
-  }) {
-    final entityMap = _playlistEntityMapper.entityToMap(playlist);
-
-    batchProvider.get.insert(
-      Playlist_.tn,
-      entityMap,
-      conflictAlgorithm: ConflictAlgorithm.replace,
+  Future<String> insert(
+    PlaylistEntity entity, {
+    DbBatchProvider? batchProvider,
+  }) async {
+    final insertEntity = entity.copyWith(
+      id: Wrapped(entity.id ?? newDBId()),
     );
+
+    final entityMap = _playlistEntityMapper.entityToMap(insertEntity);
+
+    if (batchProvider != null) {
+      batchProvider.get.insert(Playlist_.tn, entityMap);
+    } else {
+      await _db.insert(Playlist_.tn, entityMap);
+    }
+
+    return insertEntity.id ?? kInvalidId;
   }
 
   @override

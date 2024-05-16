@@ -2,6 +2,9 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../db/sqlite_helpers.dart';
 import '../../db/tables.dart';
+import '../../shared/constant.dart';
+import '../../shared/util.dart';
+import '../../shared/wrapped.dart';
 import 'user_audio_dao.dart';
 import 'user_audio_entity.dart';
 import 'user_audio_entity_mapper.dart';
@@ -16,11 +19,16 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
   final UserAudioEntityMapper _userAudioEntityMapper;
 
   @override
-  Future<int> insert(UserAudioEntity entity) {
-    return _db.insert(
-      UserAudio_.tn,
-      _userAudioEntityMapper.entityToMap(entity),
+  Future<String> insert(UserAudioEntity entity) async {
+    final insertEntity = entity.copyWith(
+      id: Wrapped(entity.id ?? newDBId()),
     );
+
+    final entityMap = _userAudioEntityMapper.entityToMap(insertEntity);
+
+    await _db.insert(UserAudio_.tn, entityMap);
+
+    return insertEntity.id ?? kInvalidId;
   }
 
   @override

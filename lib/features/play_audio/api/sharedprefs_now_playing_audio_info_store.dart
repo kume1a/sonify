@@ -10,7 +10,6 @@ class SharedprefsNowPlayingAudioInfoStore implements NowPlayingAudioInfoStore {
   final SharedPreferences _sharedPreferences;
 
   static const _keyAudioId = 'now_playing_audio_info_audio_id';
-  static const _keyLocalAudioId = 'now_playing_audio_info_local_audio_id';
   static const _keyPlaylistId = 'now_playing_audio_info_playlist_id';
   static const _keyPositionMillis = 'now_playing_audio_info_position_millis';
   static const _isSet = 'now_playing_audio_info_is_set';
@@ -23,8 +22,6 @@ class SharedprefsNowPlayingAudioInfoStore implements NowPlayingAudioInfoStore {
       _sharedPreferences.setBool(_isSet, true),
       if (nowPlayingAudioInfo.audioId != null)
         _sharedPreferences.setString(_keyAudioId, nowPlayingAudioInfo.audioId!),
-      if (nowPlayingAudioInfo.localAudioId != null)
-        _sharedPreferences.setInt(_keyLocalAudioId, nowPlayingAudioInfo.localAudioId!),
       if (nowPlayingAudioInfo.playlistId != null)
         _sharedPreferences.setString(_keyPlaylistId, nowPlayingAudioInfo.playlistId!),
       _sharedPreferences.setInt(_keyPositionMillis, nowPlayingAudioInfo.position.inMilliseconds),
@@ -39,13 +36,11 @@ class SharedprefsNowPlayingAudioInfoStore implements NowPlayingAudioInfoStore {
     }
 
     final audioId = _sharedPreferences.getString(_keyAudioId);
-    final localAudioId = _sharedPreferences.getInt(_keyLocalAudioId);
     final playlistId = _sharedPreferences.getString(_keyPlaylistId);
     final positionMillis = _sharedPreferences.getInt(_keyPositionMillis);
 
     return Future.value(NowPlayingAudioInfo(
       audioId: audioId,
-      localAudioId: localAudioId,
       playlistId: playlistId,
       position: Duration(milliseconds: positionMillis ?? 0),
     ));
@@ -56,7 +51,6 @@ class SharedprefsNowPlayingAudioInfoStore implements NowPlayingAudioInfoStore {
     return Future.wait([
       _sharedPreferences.setBool(_isSet, false),
       _sharedPreferences.remove(_keyAudioId),
-      _sharedPreferences.remove(_keyLocalAudioId),
       _sharedPreferences.remove(_keyPlaylistId),
       _sharedPreferences.remove(_keyPositionMillis),
     ]);

@@ -22,7 +22,7 @@ class PlaylistAudioLocalRepositoryImpl with ResultWrap implements PlaylistAudioL
       final batchProvider = _dbBatchProviderFactory.newBatchProvider();
 
       for (final playlistAudio in playlistAudios) {
-        _playlistAudioEntityDao.batchCreate(
+        _playlistAudioEntityDao.insert(
           _playlistAudioMapper.modelToEntity(playlistAudio),
           batchProvider: batchProvider,
         );

@@ -51,13 +51,13 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
       final audioEntityId = await _audioEntityDao.insert(audioEntity);
       final userAudioEntityId = await _userAudioEntityDao.insert(
         userAudioEntity.copyWith(
-          audioId: Wrapped(audioEntityId),
+          audioId: Wrapped(audioEntity.id),
         ),
       );
 
       return userAudio.copyWith(
-        localId: userAudioEntityId,
-        audio: audio.copyWith(localId: audioEntityId),
+        id: userAudioEntityId,
+        audio: audio.copyWith(id: audioEntityId),
       );
     });
   }

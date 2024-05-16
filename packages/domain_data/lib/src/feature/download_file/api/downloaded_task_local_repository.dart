@@ -4,7 +4,7 @@ import '../../../entities/audio/model/user_audio.dart';
 import '../model/downloaded_task.dart';
 
 abstract interface class DownloadedTaskLocalRepository {
-  Future<Result<int>> save(
+  Future<Result<String>> save(
     DownloadedTask downloadedTask, {
     UserAudio? payloadUserAudio,
   });

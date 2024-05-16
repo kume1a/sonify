@@ -18,7 +18,6 @@ class DownloadedTaskMapper {
     DownloadTask downloadTask,
   ) {
     return DownloadedTask(
-      localId: null,
       id: downloadTask.id,
       savePath: downloadTask.savePath,
       fileType: downloadTask.fileType,
@@ -31,20 +30,18 @@ class DownloadedTaskMapper {
     String? userId,
   }) {
     return DownloadedTaskEntity(
-      id: m.localId,
+      id: m.id,
       userId: userId,
-      taskId: m.id,
       savePath: m.savePath,
       fileType: m.fileType.name,
-      payloadUserAudioId: m.payload.userAudio?.localId,
+      payloadUserAudioId: m.payload.userAudio?.id,
       payloadUserAudio: tryMap(m.payload.userAudio, _userAudioMapper.modelToEntity),
     );
   }
 
   DownloadedTask entityToModel(DownloadedTaskEntity e) {
     return DownloadedTask(
-      id: e.taskId ?? kInvalidId,
-      localId: e.id,
+      id: e.id ?? kInvalidId,
       savePath: e.savePath ?? '',
       fileType: FileType.values.byName(e.fileType ?? ''),
       payload: DownloadTaskPayload(

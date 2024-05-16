@@ -8,7 +8,6 @@ part 'downloaded_task.freezed.dart';
 @freezed
 class DownloadedTask with _$DownloadedTask {
   const factory DownloadedTask({
-    required int? localId,
     required String id,
     required String savePath,
     required FileType fileType,

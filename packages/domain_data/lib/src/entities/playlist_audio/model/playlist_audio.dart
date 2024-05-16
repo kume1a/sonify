@@ -5,7 +5,7 @@ part 'playlist_audio.freezed.dart';
 @freezed
 class PlaylistAudio with _$PlaylistAudio {
   const factory PlaylistAudio({
-    required int? localId,
+    required String? id,
     required DateTime? createdAt,
     required String audioId,
     required String playlistId,

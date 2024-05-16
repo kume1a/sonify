@@ -8,7 +8,6 @@ part 'audio.freezed.dart';
 class Audio with _$Audio {
   const factory Audio({
     required String? id,
-    required int? localId,
     required DateTime? createdAt,
     required String title,
     required int durationMs,
@@ -25,10 +24,6 @@ class Audio with _$Audio {
   }) = _Audio;
 
   const Audio._();
-
-  bool get isLocal => localId != null;
-
-  bool get isRemote => !isLocal;
 
   bool get isLiked => audioLike != null;
 }

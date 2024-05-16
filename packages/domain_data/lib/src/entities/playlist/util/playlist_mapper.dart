@@ -1,6 +1,6 @@
 import 'package:common_utilities/common_utilities.dart';
 import 'package:sonify_client/sonify_client.dart';
-import 'package:sonify_storage/src/entities/playlist/playlist_entity.dart';
+import 'package:sonify_storage/sonify_storage.dart';
 
 import '../../../shared/constant.dart';
 import '../../audio/util/audio_mapper.dart';
@@ -27,8 +27,7 @@ class PlaylistMapper {
 
   PlaylistEntity modelToEntity(Playlist playlist) {
     return PlaylistEntity(
-      id: null,
-      bId: playlist.id,
+      id: playlist.id,
       createdAtMillis: playlist.createdAt?.millisecondsSinceEpoch,
       name: playlist.name,
       thumbnailPath: playlist.thumbnailPath,

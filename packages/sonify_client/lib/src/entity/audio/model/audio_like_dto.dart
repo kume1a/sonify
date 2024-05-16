@@ -7,6 +7,7 @@ part 'audio_like_dto.freezed.dart';
 @freezed
 class AudioLikeDto with _$AudioLikeDto {
   const factory AudioLikeDto({
+    String? id,
     String? userId,
     String? audioId,
   }) = _AudioLikeDto;

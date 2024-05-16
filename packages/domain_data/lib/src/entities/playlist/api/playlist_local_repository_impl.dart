@@ -23,7 +23,7 @@ class PlaylistLocalRepositoryImpl with ResultWrap implements PlaylistLocalReposi
       final batchProvider = _dbBatchProviderFactory.newBatchProvider();
 
       for (final playlist in playlists) {
-        _playlistEntityDao.batchCreate(
+        _playlistEntityDao.insert(
           _playlistMapper.modelToEntity(playlist),
           batchProvider: batchProvider,
         );

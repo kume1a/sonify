@@ -6,7 +6,7 @@ import '../model/audio_like.dart';
 class AudioLikeMapper {
   AudioLike entityToModel(AudioLikeEntity entity) {
     return AudioLike(
-      localId: entity.id,
+      id: entity.id,
       audioId: entity.audioId,
       userId: entity.userId,
     );
@@ -14,7 +14,7 @@ class AudioLikeMapper {
 
   AudioLike dtoToModel(AudioLikeDto dto) {
     return AudioLike(
-      localId: null,
+      id: dto.id,
       audioId: dto.audioId,
       userId: dto.userId,
     );
@@ -22,7 +22,7 @@ class AudioLikeMapper {
 
   AudioLikeEntity modelToEntity(AudioLike m) {
     return AudioLikeEntity(
-      id: m.localId,
+      id: m.id,
       audioId: m.audioId,
       userId: m.userId,
     );

@@ -8,7 +8,7 @@ import '../model/user_playlist.dart';
 class UserPlaylistMapper {
   UserPlaylist dtoToModel(UserPlaylistDto dto) {
     return UserPlaylist(
-      localId: null,
+      id: dto.id,
       createdAt: tryMapDate(dto.createdAt),
       userId: dto.userId ?? kInvalidId,
       playlistId: dto.playlistId ?? kInvalidId,
@@ -18,20 +18,20 @@ class UserPlaylistMapper {
 
   UserPlaylist entityToModel(UserPlaylistEntity entity) {
     return UserPlaylist(
-      localId: entity.id,
-      createdAt: tryMapDateMillis(entity.bCreatedAtMillis),
-      userId: entity.bUserId ?? kInvalidId,
-      playlistId: entity.bPlaylistId ?? kInvalidId,
+      id: entity.id,
+      createdAt: tryMapDateMillis(entity.createdAtMillis),
+      userId: entity.userId ?? kInvalidId,
+      playlistId: entity.playlistId ?? kInvalidId,
       isSpotifySavedPlaylist: entity.isSpotifySavedPlaylist == 1,
     );
   }
 
   UserPlaylistEntity modelToEntity(UserPlaylist model) {
     return UserPlaylistEntity(
-      id: model.localId,
-      bCreatedAtMillis: model.createdAt?.millisecondsSinceEpoch,
-      bUserId: model.userId,
-      bPlaylistId: model.playlistId,
+      id: model.id,
+      createdAtMillis: model.createdAt?.millisecondsSinceEpoch,
+      userId: model.userId,
+      playlistId: model.playlistId,
       isSpotifySavedPlaylist: model.isSpotifySavedPlaylist ? 1 : 0,
     );
   }

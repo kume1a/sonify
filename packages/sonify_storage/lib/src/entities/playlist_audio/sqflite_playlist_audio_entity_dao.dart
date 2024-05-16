@@ -2,6 +2,9 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../db/db_batch.dart';
 import '../../db/tables.dart';
+import '../../shared/constant.dart';
+import '../../shared/util.dart';
+import '../../shared/wrapped.dart';
 import 'playlist_audio_entity.dart';
 import 'playlist_audio_entity_dao.dart';
 import 'playlist_audio_entity_mapper.dart';
@@ -16,14 +19,23 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
   final PlaylistAudioEntityMapper _playlistAudioEntityMapper;
 
   @override
-  void batchCreate(
+  Future<String> insert(
     PlaylistAudioEntity entity, {
-    required DbBatchProvider batchProvider,
-  }) {
-    return batchProvider.get.insert(
-      PlaylistAudio_.tn,
-      _playlistAudioEntityMapper.entityToMap(entity),
+    DbBatchProvider? batchProvider,
+  }) async {
+    final insertEntity = entity.copyWith(
+      id: Wrapped(entity.id ?? newDBId()),
     );
+
+    final entityMap = _playlistAudioEntityMapper.entityToMap(insertEntity);
+
+    if (batchProvider != null) {
+      batchProvider.get.insert(PlaylistAudio_.tn, entityMap);
+    } else {
+      await _db.insert(PlaylistAudio_.tn, entityMap);
+    }
+
+    return insertEntity.id ?? kInvalidId;
   }
 
   @override

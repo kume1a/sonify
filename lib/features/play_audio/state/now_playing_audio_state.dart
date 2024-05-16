@@ -270,7 +270,6 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       NowPlayingAudioInfo(
         playlistId: state.nowPlayingPlaylist?.id,
         audioId: payload.audio.id,
-        localAudioId: payload.audio.localId,
         position: Duration.zero,
       ),
     );
@@ -301,7 +300,6 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       NowPlayingAudioInfo(
         playlistId: nowPlayingAudio.playlistId,
         audioId: nowPlayingAudio.audioId,
-        localAudioId: nowPlayingAudio.localAudioId,
         position: position,
       ),
     );

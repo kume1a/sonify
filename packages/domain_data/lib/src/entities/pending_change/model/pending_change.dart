@@ -7,7 +7,7 @@ part 'pending_change.freezed.dart';
 @freezed
 class PendingChange with _$PendingChange {
   const factory PendingChange({
-    required int? localId,
+    required String? id,
     required PendingChangeType type,
     required PendingChangePayload payload,
   }) = _PendingChange;

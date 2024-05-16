@@ -16,7 +16,6 @@ class AudioMapper {
   Audio dtoToModel(AudioDto dto) {
     return Audio(
       id: dto.id ?? kInvalidId,
-      localId: null,
       createdAt: tryMapDate(dto.createdAt),
       title: dto.title ?? '',
       durationMs: dto.durationMs ?? 0,
@@ -35,17 +34,16 @@ class AudioMapper {
 
   Audio entityToModel(AudioEntity e) {
     return Audio(
-      id: e.bId,
-      localId: e.id,
+      id: e.id,
       title: e.title ?? '',
       author: e.author ?? '',
       durationMs: e.durationMs ?? 0,
       sizeBytes: e.sizeBytes ?? 0,
-      thumbnailPath: e.bThumbnailPath,
+      thumbnailPath: e.thumbnailPath,
       youtubeVideoId: e.youtubeVideoId,
       path: e.path ?? '',
       localPath: e.localPath,
-      createdAt: tryMapDateMillis(e.bCreatedAtMillis),
+      createdAt: tryMapDateMillis(e.createdAtMillis),
       spotifyId: e.spotifyId,
       thumbnailUrl: e.thumbnailUrl,
       localThumbnailPath: e.localThumbnailPath,
@@ -55,9 +53,8 @@ class AudioMapper {
 
   AudioEntity modelToEntity(Audio m) {
     return AudioEntity(
-      id: m.localId,
-      bId: m.id,
-      bCreatedAtMillis: m.createdAt?.millisecondsSinceEpoch,
+      id: m.id,
+      createdAtMillis: m.createdAt?.millisecondsSinceEpoch,
       title: m.title,
       durationMs: m.durationMs,
       path: m.path,
@@ -66,7 +63,7 @@ class AudioMapper {
       sizeBytes: m.sizeBytes,
       youtubeVideoId: m.youtubeVideoId,
       spotifyId: m.spotifyId,
-      bThumbnailPath: m.thumbnailPath,
+      thumbnailPath: m.thumbnailPath,
       thumbnailUrl: m.thumbnailUrl,
       localThumbnailPath: m.localThumbnailPath,
       audioLike: tryMap(m.audioLike, _audioLikeMapper.modelToEntity),

@@ -8,7 +8,7 @@ import '../model/playlist_audio.dart';
 class PlaylistAudioMapper {
   PlaylistAudio dtoToModel(PlaylistAudioDto dto) {
     return PlaylistAudio(
-      localId: null,
+      id: dto.id,
       createdAt: tryMapDate(dto.createdAt),
       audioId: dto.audioId ?? kInvalidId,
       playlistId: dto.playlistId ?? kInvalidId,
@@ -17,7 +17,7 @@ class PlaylistAudioMapper {
 
   PlaylistAudio entityToModel(PlaylistAudioEntity entity) {
     return PlaylistAudio(
-      localId: entity.id,
+      id: entity.id,
       createdAt: tryMapDateMillis(entity.createdAtMillis),
       audioId: entity.audioId ?? kInvalidId,
       playlistId: entity.playlistId ?? kInvalidId,
@@ -26,7 +26,7 @@ class PlaylistAudioMapper {
 
   PlaylistAudioEntity modelToEntity(PlaylistAudio model) {
     return PlaylistAudioEntity(
-      id: model.localId,
+      id: model.id,
       createdAtMillis: model.createdAt?.millisecondsSinceEpoch,
       audioId: model.audioId,
       playlistId: model.playlistId,

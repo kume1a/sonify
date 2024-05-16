@@ -6,7 +6,6 @@ import 'package:retrofit/retrofit.dart';
 
 import '../entity/audio/model/audio_ids_body.dart';
 import '../entity/audio/model/audio_like_dto.dart';
-import '../entity/audio/model/download_youtube_audio_body.dart';
 import '../entity/audio/model/like_audio_body.dart';
 import '../entity/audio/model/unlike_audio_body.dart';
 import '../entity/audio/model/user_audio_dto.dart';

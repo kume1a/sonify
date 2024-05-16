@@ -24,7 +24,7 @@ class DownloadedTaskLocalRepositoryImpl with ResultWrap implements DownloadedTas
   final AuthUserInfoProvider _authUserInfoProvider;
 
   @override
-  Future<Result<int>> save(DownloadedTask downloadedTask, {UserAudio? payloadUserAudio}) async {
+  Future<Result<String>> save(DownloadedTask downloadedTask, {UserAudio? payloadUserAudio}) async {
     final authUserId = await _authUserInfoProvider.getId();
     if (authUserId == null) {
       Logger.root.info('save downloaded task failed, authUserId is null');

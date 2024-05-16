@@ -27,8 +27,8 @@ class SyncUserPendingChangesImpl implements SyncUserPendingChanges {
     }
 
     for (final pendingChange in pendingChanges.dataOrThrow) {
-      if (pendingChange.localId == null) {
-        Logger.root.warning('Local id is null, cannot sync audio like: $pendingChange');
+      if (pendingChange.id == null) {
+        Logger.root.warning('id is null, cannot sync audio like: $pendingChange');
         return EmptyResult.err();
       }
 
@@ -57,7 +57,7 @@ class SyncUserPendingChangesImpl implements SyncUserPendingChanges {
         return EmptyResult.err();
       }
 
-      await _pendingChangeLocalRepository.deleteByLocalId(pendingChange.localId!);
+      await _pendingChangeLocalRepository.deleteById(pendingChange.id!);
     }
 
     return EmptyResult.success();

@@ -3,15 +3,15 @@ import '../../db/db_batch.dart';
 import 'user_playlist_entity.dart';
 
 abstract interface class UserPlaylistEntityDao {
-  void batchCreate(
+  Future<String> insert(
     UserPlaylistEntity entity, {
-    required DbBatchProvider batchProvider,
+    DbBatchProvider? batchProvider,
   });
 
-  Future<void> deleteByBUserIdAndBPlaylistIds({
-    required String bUserId,
-    required List<String> bPlaylistIds,
+  Future<void> deleteByUserIdAndPlaylistIds({
+    required String userId,
+    required List<String> playlistIds,
   });
 
-  Future<List<String>> getAllBPlaylistIdsByBUserId(String bUserId);
+  Future<List<String>> getAllPlaylistIdsByUserId(String bUserId);
 }

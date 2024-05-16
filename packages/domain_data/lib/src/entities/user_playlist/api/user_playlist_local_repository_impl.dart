@@ -24,7 +24,7 @@ class UserPlaylistLocalRepositoryImpl with ResultWrap implements UserPlaylistLoc
       final batchProvider = _dbBatchProviderFactory.newBatchProvider();
 
       for (final userPlaylist in userPlaylists) {
-        _userPlaylistEntityDao.batchCreate(
+        _userPlaylistEntityDao.insert(
           _userPlaylistMapper.modelToEntity(userPlaylist),
           batchProvider: batchProvider,
         );
@@ -39,14 +39,14 @@ class UserPlaylistLocalRepositoryImpl with ResultWrap implements UserPlaylistLoc
     required String userId,
     required List<String> playlistIds,
   }) {
-    return _userPlaylistEntityDao.deleteByBUserIdAndBPlaylistIds(
-      bUserId: userId,
-      bPlaylistIds: playlistIds,
+    return _userPlaylistEntityDao.deleteByUserIdAndPlaylistIds(
+      userId: userId,
+      playlistIds: playlistIds,
     );
   }
 
   @override
   Future<List<String>> getAllPlaylistIdsByUserId(String userId) {
-    return _userPlaylistEntityDao.getAllBPlaylistIdsByBUserId(userId);
+    return _userPlaylistEntityDao.getAllPlaylistIdsByUserId(userId);
   }
 }

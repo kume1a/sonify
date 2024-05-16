@@ -1,6 +1,9 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../db/tables.dart';
+import '../../shared/constant.dart';
+import '../../shared/util.dart';
+import '../../shared/wrapped.dart';
 import '../user_audio/user_audio_entity.dart';
 import 'downloaded_task_entity.dart';
 import 'downloaded_task_entity_dao.dart';
@@ -16,14 +19,19 @@ class SqfliteDownloadedTaskEntityDao implements DownloadedTaskEntityDao {
   final DownloadedTaskEntityMapper _downloadedTaskEntityMapper;
 
   @override
-  Future<int> insert(
+  Future<String> insert(
     DownloadedTaskEntity entity, {
     UserAudioEntity? payloadUserAudioEntity,
-  }) {
-    return _db.insert(
-      DownloadedTask_.tn,
-      _downloadedTaskEntityMapper.entityToMap(entity),
+  }) async {
+    final insertEntity = entity.copyWith(
+      id: Wrapped(entity.id ?? newDBId()),
     );
+
+    final entityMap = _downloadedTaskEntityMapper.entityToMap(insertEntity);
+
+    await _db.insert(DownloadedTask_.tn, entityMap);
+
+    return insertEntity.id ?? kInvalidId;
   }
 
   @override

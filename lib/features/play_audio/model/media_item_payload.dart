@@ -14,13 +14,13 @@ class MediaItemPayload with _$MediaItemPayload {
   const MediaItemPayload._();
 
   factory MediaItemPayload.fromExtras(Map<String, dynamic> extras) {
-    final audioLikeLocalId = extras['audio.audioLike.localId'] as int?;
+    final audioLikeId = extras['audio.audioLike.id'] as String?;
     final audioLikeAudioId = extras['audio.audioLike.audioId'] as String?;
     final audioLikeUserId = extras['audio.audioLike.userId'] as String?;
 
-    final audioLike = audioLikeAudioId != null && audioLikeUserId != null
+    final audioLike = audioLikeId != null && audioLikeAudioId != null && audioLikeUserId != null
         ? AudioLike(
-            localId: audioLikeLocalId,
+            id: audioLikeId,
             audioId: audioLikeAudioId,
             userId: audioLikeUserId,
           )
@@ -29,7 +29,6 @@ class MediaItemPayload with _$MediaItemPayload {
     return MediaItemPayload(
       audio: Audio(
         id: extras['audio.id'],
-        localId: extras['audio.localId'],
         createdAt: tryMapDateMillis(extras['audio.createdAtMillis']),
         title: extras['audio.title'],
         durationMs: extras['audio.durationMs'],
@@ -51,7 +50,6 @@ class MediaItemPayload with _$MediaItemPayload {
   Map<String, dynamic> toExtras() {
     return {
       'audio.id': audio.id,
-      'audio.localId': audio.localId,
       'audio.createdAtMillis': audio.createdAt?.millisecondsSinceEpoch,
       'audio.title': audio.title,
       'audio.durationMs': audio.durationMs,
@@ -67,7 +65,7 @@ class MediaItemPayload with _$MediaItemPayload {
       'audio.isLiked': audio.isLiked,
       'audio.audioLike.audioId': audio.audioLike?.audioId,
       'audio.audioLike.userId': audio.audioLike?.userId,
-      'audio.audioLike.localId': audio.audioLike?.localId,
+      'audio.audioLike.id': audio.audioLike?.id,
       'playlistId': playlistId,
     };
   }

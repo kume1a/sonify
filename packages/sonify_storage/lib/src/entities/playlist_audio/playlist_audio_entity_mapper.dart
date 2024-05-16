@@ -4,7 +4,7 @@ import 'playlist_audio_entity.dart';
 class PlaylistAudioEntityMapper {
   PlaylistAudioEntity mapToEntity(Map<String, dynamic> m) {
     return PlaylistAudioEntity(
-      id: m[PlaylistAudio_.id] as int?,
+      id: m[PlaylistAudio_.id] as String?,
       createdAtMillis: m[PlaylistAudio_.createdAtMillis] as int?,
       audioId: m[PlaylistAudio_.audioId] as String?,
       playlistId: m[PlaylistAudio_.playlistId] as String?,
@@ -12,7 +12,7 @@ class PlaylistAudioEntityMapper {
   }
 
   PlaylistAudioEntity? joinedMapToEntity(Map<String, dynamic> m) {
-    final id = m[PlaylistAudio_.joinedId] as int?;
+    final id = m[PlaylistAudio_.joinedId] as String?;
     if (id == null) {
       return null;
     }

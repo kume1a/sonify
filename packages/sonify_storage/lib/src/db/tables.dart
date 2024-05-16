@@ -60,7 +60,6 @@ abstract class DownloadedTask_ {
 
   static const id = 'id';
   static const userId = 'user_id';
-  static const taskId = 'task_id';
   static const savePath = 'save_path';
   static const fileType = 'file_type';
   static const payloadUserAudioId = 'payload_user_audio_id';
@@ -68,7 +67,6 @@ abstract class DownloadedTask_ {
   // joined columns
   static final joinedId = joinPrefixColumn(id);
   static final joinedUserId = joinPrefixColumn(userId);
-  static final joinedTaskId = joinPrefixColumn(taskId);
   static final joinedSavePath = joinPrefixColumn(savePath);
   static final joinedFileType = joinPrefixColumn(fileType);
   static final joinedPayloadUserAudioId = joinPrefixColumn(payloadUserAudioId);

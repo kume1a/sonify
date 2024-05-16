@@ -5,7 +5,7 @@ part 'audio_like.freezed.dart';
 @freezed
 class AudioLike with _$AudioLike {
   const factory AudioLike({
-    required int? localId,
+    required String? id,
     required String? audioId,
     required String? userId,
   }) = _AudioLike;

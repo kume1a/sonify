@@ -77,7 +77,7 @@ class LikeOrUnlikeAudio {
       );
     } else {
       final audioLike = AudioLike(
-        localId: null,
+        id: null,
         audioId: nowPlayingAudioId,
         userId: authUserId,
       );
@@ -124,11 +124,11 @@ class LikeOrUnlikeAudio {
 
     await res.ifLeft((_) {
       final pendingChange = PendingChange(
-        localId: null,
+        id: null,
         type: PendingChangeType.createLike,
         payload: PendingChangePayload.createLike(
           AudioLike(
-            localId: null,
+            id: null,
             audioId: audioId,
             userId: userId,
           ),
@@ -147,11 +147,11 @@ class LikeOrUnlikeAudio {
 
     await res.ifLeft((_) {
       final pendingChange = PendingChange(
-        localId: null,
+        id: null,
         type: PendingChangeType.deleteLike,
         payload: PendingChangePayload.deleteLike(
           AudioLike(
-            localId: null,
+            id: null,
             audioId: audioId,
             userId: userId,
           ),

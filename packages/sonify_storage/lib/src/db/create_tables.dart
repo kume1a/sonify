@@ -41,7 +41,6 @@ void createDbTables(Batch batch) {
       (
         ${DownloadedTask_.id} TEXT PRIMARY KEY NOT NULL,
         ${DownloadedTask_.userId} TEXT,
-        ${DownloadedTask_.taskId} TEXT,
         ${DownloadedTask_.savePath} TEXT,
         ${DownloadedTask_.fileType} TEXT,
         ${DownloadedTask_.payloadUserAudioId} INTEGER

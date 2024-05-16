@@ -7,11 +7,10 @@ part 'user_audio.freezed.dart';
 @freezed
 class UserAudio with _$UserAudio {
   const factory UserAudio({
-    required int? localId,
+    required String? id,
     required DateTime? createdAt,
     required String userId,
     required String? audioId,
-    required int? localAudioId,
     required Audio? audio,
   }) = _UserAudio;
 }

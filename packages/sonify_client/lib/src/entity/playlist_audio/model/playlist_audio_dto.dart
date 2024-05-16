@@ -7,6 +7,7 @@ part 'playlist_audio_dto.freezed.dart';
 @freezed
 class PlaylistAudioDto with _$PlaylistAudioDto {
   const factory PlaylistAudioDto({
+    String? id,
     String? createdAt,
     String? playlistId,
     String? audioId,

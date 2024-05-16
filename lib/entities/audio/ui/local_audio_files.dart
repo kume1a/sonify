@@ -51,8 +51,7 @@ class _Item extends StatelessWidget {
       builder: (_, nowPlayingAudioState) {
         final nowPlayingAudio = nowPlayingAudioState.nowPlayingAudio.getOrNull;
 
-        final isPlaying = (nowPlayingAudio?.id != null && nowPlayingAudio?.id == audio.id) ||
-            (nowPlayingAudio?.localId != null && nowPlayingAudio?.localId == audio.localId);
+        final isPlaying = nowPlayingAudio?.id != null && nowPlayingAudio?.id == audio.id;
 
         return AudioListItem(
           onTap: () => context.nowPlayingAudioCubit.onLocalAudioPressed(audio),

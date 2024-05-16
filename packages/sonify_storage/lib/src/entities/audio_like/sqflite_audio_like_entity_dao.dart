@@ -3,6 +3,9 @@ import 'package:sqflite/sqflite.dart';
 import '../../db/db_batch.dart';
 import '../../db/sqlite_helpers.dart';
 import '../../db/tables.dart';
+import '../../shared/constant.dart';
+import '../../shared/util.dart';
+import '../../shared/wrapped.dart';
 import 'audio_like_entity.dart';
 import 'audio_like_entity_dao.dart';
 import 'audio_like_entity_mapper.dart';
@@ -17,18 +20,23 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
   final AudioLikeEntityMapper _audioLikeEntityMapper;
 
   @override
-  Future<void> insert(
+  Future<String> insert(
     AudioLikeEntity entity, [
     DbBatchProvider? batchProvider,
-  ]) {
-    final entityMap = _audioLikeEntityMapper.entityToMap(entity);
+  ]) async {
+    final insertEntity = entity.copyWith(
+      id: Wrapped(entity.id ?? newDBId()),
+    );
+
+    final entityMap = _audioLikeEntityMapper.entityToMap(insertEntity);
 
     if (batchProvider != null) {
       batchProvider.get.insert(AudioLike_.tn, entityMap);
-      return Future.value();
+    } else {
+      await _db.insert(AudioLike_.tn, entityMap);
     }
 
-    return _db.insert(AudioLike_.tn, entityMap);
+    return insertEntity.id ?? kInvalidId;
   }
 
   @override

@@ -13,7 +13,7 @@ class PendingChangeMapper {
 
   PendingChange entityToModel(PendingChangeEntity e) {
     return PendingChange(
-      localId: e.id ?? kInvalidLocalId,
+      id: e.id ?? kInvalidId,
       type: PendingChangeType.values.byName(e.type ?? ''),
       payload: _payloadFromJSON(e),
     );
@@ -21,7 +21,7 @@ class PendingChangeMapper {
 
   PendingChangeEntity modelToEntity(PendingChange m) {
     return PendingChangeEntity(
-      id: m.localId,
+      id: m.id,
       type: m.type.name,
       payloadJSON: _payloadToJSON(m.payload),
     );
@@ -31,6 +31,7 @@ class PendingChangeMapper {
     final Map<String, dynamic> payloadJSON = jsonDecode(e.payloadJSON ?? '{}');
 
     final type = PendingChangeType.values.byName(e.type ?? '');
+
     return switch (type) {
       PendingChangeType.createLike => PendingChangePayload.createLike(_audioLikeJSONToModel(payloadJSON)),
       PendingChangeType.deleteLike => PendingChangePayload.deleteLike(_audioLikeJSONToModel(payloadJSON)),
@@ -48,7 +49,7 @@ class PendingChangeMapper {
 
   AudioLike _audioLikeJSONToModel(Map<String, dynamic> json) {
     return AudioLike(
-      localId: json[_audioLikeLocalId] as int?,
+      id: json[_audioLikeLocalId] as String?,
       audioId: json[_audioLikeAudioId] as String?,
       userId: json[_audioLikeUserId] as String?,
     );
@@ -56,7 +57,7 @@ class PendingChangeMapper {
 
   Map<String, dynamic> _audioLikeToJSON(AudioLike model) {
     return {
-      _audioLikeLocalId: model.localId,
+      _audioLikeLocalId: model.id,
       _audioLikeAudioId: model.audioId,
       _audioLikeUserId: model.userId,
     };

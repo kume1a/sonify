@@ -3,9 +3,9 @@ import '../../db/db_batch.dart';
 import 'playlist_audio_entity.dart';
 
 abstract interface class PlaylistAudioEntityDao {
-  void batchCreate(
+  Future<String> insert(
     PlaylistAudioEntity entity, {
-    required DbBatchProvider batchProvider,
+    DbBatchProvider? batchProvider,
   });
 
   Future<void> deleteMany(List<PlaylistAudioEntity> entities);

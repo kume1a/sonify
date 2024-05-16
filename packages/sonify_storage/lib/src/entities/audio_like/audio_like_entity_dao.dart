@@ -2,7 +2,7 @@ import '../../db/db_batch.dart';
 import 'audio_like_entity.dart';
 
 abstract interface class AudioLikeEntityDao {
-  Future<void> insert(
+  Future<String> insert(
     AudioLikeEntity entity, [
     DbBatchProvider? batchProvider,
   ]);

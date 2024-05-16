@@ -1,3 +1,5 @@
+import '../../shared/wrapped.dart';
+
 class PlaylistEntity {
   PlaylistEntity({
     required this.id,
@@ -14,4 +16,22 @@ class PlaylistEntity {
   final String? thumbnailPath;
   final String? thumbnailUrl;
   final String? spotifyId;
+
+  PlaylistEntity copyWith({
+    Wrapped<String?>? id,
+    Wrapped<int?>? createdAtMillis,
+    Wrapped<String?>? name,
+    Wrapped<String?>? thumbnailPath,
+    Wrapped<String?>? thumbnailUrl,
+    Wrapped<String?>? spotifyId,
+  }) {
+    return PlaylistEntity(
+      id: id?.value ?? this.id,
+      createdAtMillis: createdAtMillis?.value ?? this.createdAtMillis,
+      name: name?.value ?? this.name,
+      thumbnailPath: thumbnailPath?.value ?? this.thumbnailPath,
+      thumbnailUrl: thumbnailUrl?.value ?? this.thumbnailUrl,
+      spotifyId: spotifyId?.value ?? this.spotifyId,
+    );
+  }
 }

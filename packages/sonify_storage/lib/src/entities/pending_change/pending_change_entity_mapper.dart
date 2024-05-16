@@ -4,7 +4,7 @@ import 'pending_change_entity.dart';
 class PendingChangeEntityMapper {
   PendingChangeEntity mapToEntity(Map<String, dynamic> m) {
     return PendingChangeEntity(
-      id: m[PendingChange_.id] as int?,
+      id: m[PendingChange_.id] as String?,
       type: m[PendingChange_.type],
       payloadJSON: m[PendingChange_.payloadJSON],
     );

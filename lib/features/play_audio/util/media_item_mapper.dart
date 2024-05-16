@@ -13,7 +13,7 @@ class MediaItemMapper {
     String? playlistId,
   }) {
     return MediaItem(
-      id: audio.id ?? audio.localId?.toString() ?? kInvalidId,
+      id: audio.id ?? kInvalidId,
       title: audio.title,
       artist: audio.author,
       duration: Duration(milliseconds: audio.durationMs),

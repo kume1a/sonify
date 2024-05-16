@@ -22,7 +22,7 @@ class PendingChangeLocalRepositoryImpl with ResultWrap implements PendingChangeL
   }
 
   @override
-  Future<EmptyResult> deleteByLocalId(int id) {
+  Future<EmptyResult> deleteById(String id) {
     return wrapWithEmptyResult(() => _pendingChangeEntityDao.deleteById(id));
   }
 
