@@ -19,8 +19,14 @@ jobs:
       - run: pod repo update
         working-directory: ios
 
-      - run: flutter build ios --release --no-codesign
-
+      - run: |
+        dart run build_runner build
+        cd packages/sonify_client
+        dart run build_runner build
+        cd ../domain_data
+        dart run build_runner build
+        cd ../..
+        flutter build ios --release --no-codesign
       - run: mkdir Payload
         working-directory: build/ios/iphoneos
 
