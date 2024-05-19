@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:marquee/marquee.dart';
+
+import 'marquee.dart';
 
 /// Marquee text along Axis.horizontal for the purpose of the demo.
 class OptionalMarquee extends StatelessWidget {
