@@ -1,4 +1,4 @@
-name: iOS-ipa-build
+name: iOS ipa build
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-ios:
-    name: 🎉 iOS Build
+    name: iOS Build
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
@@ -24,17 +24,18 @@ jobs:
         run: dart run build_runner build
 
       - name: build runner in packages/sonify_client
-        working-directory: packages/sonify_client
+        working-directory: ./packages/sonify_client
         run: dart run build_runner build
 
       = name: build runner in packages/domain_data
-        working-directory: packages/domain_data
+        working-directory: ./packages/domain_data
         run: dart run build_runner build
 
       - name: Build
         run: flutter build ios --release --no-codesign
 
-      - run: mkdir Payload
+      - name: Create Payload folder
+        run: mkdir Payload
         working-directory: build/ios/iphoneos
 
       - run: mv Runner.app/ Payload
