@@ -27,7 +27,7 @@ jobs:
         working-directory: ./packages/sonify_client
         run: dart run build_runner build
 
-      = name: build runner in packages/domain_data
+      - name: build runner in packages/domain_data
         working-directory: ./packages/domain_data
         run: dart run build_runner build
 
