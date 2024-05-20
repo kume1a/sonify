@@ -279,6 +279,11 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     final isPlaying = playbackState.playing;
     final processingState = playbackState.processingState;
 
+    if (playbackState.errorCode != null || playbackState.errorMessage != null) {
+      Logger.root.warning(
+          'NowPlayingAudioCubit._onPlaybackStateChanged: error, playbackState.errorCode=${playbackState.errorCode}, playbackState.errorMessage=${playbackState.errorMessage}');
+    }
+
     if (processingState == AudioProcessingState.loading ||
         processingState == AudioProcessingState.buffering) {
       emit(state.copyWith(playButtonState: PlaybackButtonState.loading));

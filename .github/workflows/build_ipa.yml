@@ -4,6 +4,7 @@ on:
   push:
     branches: ['main']
 
+# TODO extract version from pubspect.yaml and use it for tag
 jobs:
   build-ios:
     name: iOS Build

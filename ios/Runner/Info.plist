@@ -81,5 +81,11 @@
 		<false/>
     <!-- End of system UI -->
 
+    <key>NSAppTransportSecurity</key>
+    <dict>
+      <key>NSAllowsArbitraryLoads</key>
+      <true/>
+    </dict>
+    
 	</dict>
 </plist>

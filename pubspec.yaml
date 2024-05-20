@@ -92,6 +92,7 @@ dependencies:
     git:
       url: https://github.com/kume1a/flutter_common.git
       path: packages/common_models
+  path: ^1.9.0
 
 dev_dependencies:
   flutter_test:

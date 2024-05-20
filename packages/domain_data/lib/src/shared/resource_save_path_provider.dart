@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:path/path.dart';
 
 import 'package:path_provider/path_provider.dart';
 
@@ -17,7 +18,7 @@ abstract class ResourceSavePathProvider {
   static Future<String> _ensureApplicationDocumentsDir(String path) async {
     final applicationDocumentsDir = await getApplicationDocumentsDirectory();
 
-    final dir = Directory('${applicationDocumentsDir.path}$path');
+    final dir = Directory(join(applicationDocumentsDir.path, path));
 
     await dir.create(recursive: true);
 
