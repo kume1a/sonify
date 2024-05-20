@@ -50,9 +50,13 @@ class _IntegralCurve extends Curve {
   /// curve.
   @override
   double transform(double t) {
-    if (t < 0) return 0.0;
+    if (t < 0) {
+      return 0.0;
+    }
     for (final key in _values.keys) {
-      if (key > t) return _values[key]!;
+      if (key > t) {
+        return _values[key]!;
+      }
     }
     return 1.0;
   }
@@ -99,7 +103,7 @@ class Marquee extends StatefulWidget {
     super.key,
     required this.text,
     this.style,
-    this.textScaleFactor,
+    this.textScaler,
     this.textDirection = TextDirection.ltr,
     this.scrollAxis = Axis.horizontal,
     this.crossAxisAlignment = CrossAxisAlignment.center,
@@ -193,7 +197,7 @@ class Marquee extends StatefulWidget {
   /// See also:
   ///
   /// * [text] to provide the text itself.
-  final double? textScaleFactor;
+  final TextScaler? textScaler;
 
   /// The text direction of the text to be displayed.
   ///
@@ -614,28 +618,40 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   /// Causes the controller to scroll one round.
   Future<void> _makeRoundTrip() async {
     // Reset the controller, then accelerate, move linearly and decelerate.
-    if (!_controller.hasClients) return;
+    if (!_controller.hasClients) {
+      return;
+    }
     _controller.jumpTo(_startPosition);
-    if (!_running) return;
+    if (!_running) {
+      return;
+    }
 
     await _accelerate();
-    if (!_running) return;
+    if (!_running) {
+      return;
+    }
 
     await _moveLinearly();
-    if (!_running) return;
+    if (!_running) {
+      return;
+    }
 
     await _decelerate();
 
     _roundCounter++;
 
-    if (!_running || !mounted) return;
+    if (!_running || !mounted) {
+      return;
+    }
 
     if (widget.pauseAfterRound > Duration.zero) {
       setState(() => _isOnPause = true);
 
       await Future.delayed(widget.pauseAfterRound);
 
-      if (!mounted || isDone) return;
+      if (!mounted || isDone) {
+        return;
+      }
       setState(() => _isOnPause = false);
     }
   }
@@ -668,7 +684,9 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     Duration? duration,
     Curve curve,
   ) async {
-    if (!_controller.hasClients) return;
+    if (!_controller.hasClients) {
+      return;
+    }
     if (duration! > Duration.zero) {
       await _controller.animateTo(target!, duration: duration, curve: curve);
     } else {
@@ -724,7 +742,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (_, i) {
         final text = i.isEven
-            ? Text(widget.text, style: widget.style, textScaleFactor: widget.textScaleFactor)
+            ? Text(widget.text, style: widget.style, textScaler: widget.textScaler)
             : _buildBlankSpace();
         return alignment == null ? text : Align(alignment: alignment, child: text);
       },
