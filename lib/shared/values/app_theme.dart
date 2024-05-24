@@ -70,20 +70,20 @@ abstract final class AppTheme {
     ),
     textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.resolveWith(
-          (states) => states.contains(MaterialState.disabled) ? Palette.secondaryLight : Palette.secondary,
+        backgroundColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.disabled) ? Palette.secondaryLight : Palette.secondary,
         ),
-        shape: MaterialStateProperty.all(_defaultButtonShape),
-        foregroundColor: MaterialStateProperty.all(Colors.white),
-        overlayColor: MaterialStateProperty.all(Palette.secondaryDark),
-        padding: MaterialStateProperty.all(_defaultButtonPadding),
+        shape: WidgetStateProperty.all(_defaultButtonShape),
+        foregroundColor: WidgetStateProperty.all(Colors.white),
+        overlayColor: WidgetStateProperty.all(Palette.secondaryDark),
+        padding: WidgetStateProperty.all(_defaultButtonPadding),
         splashFactory: NoSplash.splashFactory,
         visualDensity: VisualDensity.compact,
       ),
     ),
     radioTheme: RadioThemeData(
-      fillColor: MaterialStateProperty.resolveWith(
-        (states) => states.contains(MaterialState.selected) ? Palette.secondary : Palette.elSecondary,
+      fillColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.selected) ? Palette.secondary : Palette.elSecondary,
       ),
       visualDensity: VisualDensity.compact,
     ),
