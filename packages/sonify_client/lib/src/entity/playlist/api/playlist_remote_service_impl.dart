@@ -32,7 +32,11 @@ class PlaylistRemoteServiceImpl with SafeHttpRequestWrap implements PlaylistRemo
     required List<String>? ids,
   }) {
     return callCatchHandleNetworkCallError(
-      () => _apiClient.getAuthUserPlaylists(ids),
+      () async {
+        final res = await _apiClient.getAuthUserPlaylists(ids);
+
+        return res ?? [];
+      },
     );
   }
 
@@ -45,6 +49,10 @@ class PlaylistRemoteServiceImpl with SafeHttpRequestWrap implements PlaylistRemo
 
   @override
   Future<Either<NetworkCallError, List<String>>> getAuthUserPlaylistIds() {
-    return callCatchHandleNetworkCallError(() => _apiClient.getAuthUserPlaylistIds());
+    return callCatchHandleNetworkCallError(() async {
+      final res = await _apiClient.getAuthUserPlaylistIds();
+
+      return res ?? [];
+    });
   }
 }

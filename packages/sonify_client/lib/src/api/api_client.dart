@@ -43,10 +43,10 @@ abstract class ApiClient {
 
   // audio -----------------------------
   @GET('/v1/audio/myAudioIds')
-  Future<List<String>> getAuthUserAudioIds();
+  Future<List<String>?> getAuthUserAudioIds();
 
   @GET('/v1/audio/myUserAudiosByIds')
-  Future<List<UserAudioDto>> getAuthUserUserAudiosByIds(
+  Future<List<UserAudioDto>?> getAuthUserUserAudiosByIds(
     @Body() AudioIdsBody body, // using body for big payload
   );
 
@@ -57,7 +57,7 @@ abstract class ApiClient {
   Future<void> unlikeAudio(@Body() UnlikeAudioBody body);
 
   @GET('/v1/audio/myLikes')
-  Future<List<AudioLikeDto>> getAuthUserAudioLikes(@Body() GetAudioLikesBody body);
+  Future<List<AudioLikeDto>?> getAuthUserAudioLikes(@Body() GetAudioLikesBody body);
 
   // auth ------------------------------
   @POST('/v1/auth/googleSignIn')
@@ -92,17 +92,17 @@ abstract class ApiClient {
   @POST('/v1/usersync/markUserAudioLastUpdatedAtAsNow')
   Future<void> markAuthUserAudioLastUpdatedAtAsNow();
 
-  // playlist ---------------------------
-  @GET('/v1/playlists/myPlaylists')
-  Future<List<PlaylistDto>> getAuthUserPlaylists(
+  @GET('/v1/userplaylist/myPlaylists')
+  Future<List<PlaylistDto>?> getAuthUserPlaylists(
     @Query('ids') List<String>? ids,
   );
 
+  @GET('/v1/userplaylist/myPlaylistIds')
+  Future<List<String>?> getAuthUserPlaylistIds();
+
+  // playlist ---------------------------
   @GET('/v1/playlists/{playlistId}')
   Future<PlaylistDto> getPlaylistById(
     @Path('playlistId') String playlistId,
   );
-
-  @GET('/v1/playlists/myPlaylistIds')
-  Future<List<String>> getAuthUserPlaylistIds();
 }

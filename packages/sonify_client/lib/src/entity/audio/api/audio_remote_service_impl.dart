@@ -86,15 +86,21 @@ class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteServ
 
   @override
   Future<Either<NetworkCallError, List<String>>> getAuthUserAudioIds() {
-    return callCatchHandleNetworkCallError(() => _apiClient.getAuthUserAudioIds());
+    return callCatchHandleNetworkCallError(() async {
+      final res = await _apiClient.getAuthUserAudioIds();
+
+      return res ?? [];
+    });
   }
 
   @override
   Future<Either<NetworkCallError, List<UserAudioDto>>> getAuthUserAudiosByAudioIds(List<String> audioIds) {
-    return callCatchHandleNetworkCallError(() {
+    return callCatchHandleNetworkCallError(() async {
       final body = AudioIdsBody(audioIds: audioIds);
 
-      return _apiClient.getAuthUserUserAudiosByIds(body);
+      final res = await _apiClient.getAuthUserUserAudiosByIds(body);
+
+      return res ?? [];
     });
   }
 
@@ -124,10 +130,12 @@ class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteServ
   Future<Either<NetworkCallError, List<AudioLikeDto>>> getAuthUserAudioLikes({
     List<String>? ids,
   }) async {
-    return callCatchHandleNetworkCallError(() {
+    return callCatchHandleNetworkCallError(() async {
       final body = GetAudioLikesBody(ids: ids);
 
-      return _apiClient.getAuthUserAudioLikes(body);
+      final res = await _apiClient.getAuthUserAudioLikes(body);
+
+      return res ?? [];
     });
   }
 }
