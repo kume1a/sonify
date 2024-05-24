@@ -27,9 +27,7 @@ abstract interface class AudioRemoteService {
     required String audioId,
   });
 
-  Future<Either<NetworkCallError, List<AudioLikeDto>>> getAuthUserAudioLikes();
-
-  Future<Either<NetworkCallError, List<AudioLikeDto>>> getAuthUserAudioLikesByAudioIds({
-    required List<String> audioIds,
+  Future<Either<NetworkCallError, List<AudioLikeDto>>> getAuthUserAudioLikes({
+    List<String>? ids,
   });
 }

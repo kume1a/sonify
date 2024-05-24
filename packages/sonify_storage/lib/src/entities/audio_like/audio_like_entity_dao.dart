@@ -24,8 +24,5 @@ abstract interface class AudioLikeEntityDao {
     required String audioId,
   });
 
-  Future<int> deleteByUserIdAndAudioIds({
-    required String userId,
-    required List<String> audioIds,
-  });
+  Future<int> deleteByIds(List<String> ids);
 }

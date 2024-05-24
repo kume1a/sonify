@@ -33,7 +33,6 @@ final class SyncUserAudioImpl extends SyncEntityBase implements SyncUserAudio {
   Future<EmptyResult> downloadEntities(List<String> ids) async {
     final toDownloadUserAudiosRes = await _audioRemoteRepository.getAuthUserAudiosByAudioIds(ids);
     if (toDownloadUserAudiosRes.isLeft) {
-      Logger.root.fine('Failed to download audios: ${toDownloadUserAudiosRes.leftOrNull}');
       return EmptyResult.err();
     }
 

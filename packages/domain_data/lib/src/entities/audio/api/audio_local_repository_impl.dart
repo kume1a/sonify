@@ -148,15 +148,9 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
   }
 
   @override
-  Future<Result<int>> deleteAudioLikesByUserIdAndAudioIds({
-    required String userId,
-    required List<String> audioIds,
-  }) {
+  Future<Result<int>> deleteAudioLikesByIds(List<String> ids) {
     return wrapWithResult(
-      () => _audioLikeEntityDao.deleteByUserIdAndAudioIds(
-        userId: userId,
-        audioIds: audioIds,
-      ),
+      () => _audioLikeEntityDao.deleteByIds(ids),
     );
   }
 }

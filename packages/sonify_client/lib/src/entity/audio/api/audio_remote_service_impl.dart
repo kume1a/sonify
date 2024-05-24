@@ -10,6 +10,7 @@ import '../model/audio_ids_body.dart';
 import '../model/audio_like_dto.dart';
 import '../model/download_youtube_audio_body.dart';
 import '../model/download_youtube_audio_error.dart';
+import '../model/get_audio_likes_body.dart';
 import '../model/like_audio_body.dart';
 import '../model/unlike_audio_body.dart';
 import '../model/upload_user_local_music_error.dart';
@@ -120,18 +121,13 @@ class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteServ
   }
 
   @override
-  Future<Either<NetworkCallError, List<AudioLikeDto>>> getAuthUserAudioLikes() async {
-    return callCatchHandleNetworkCallError(() => _apiClient.getAuthUserAudioLikes());
-  }
-
-  @override
-  Future<Either<NetworkCallError, List<AudioLikeDto>>> getAuthUserAudioLikesByAudioIds({
-    required List<String> audioIds,
-  }) {
+  Future<Either<NetworkCallError, List<AudioLikeDto>>> getAuthUserAudioLikes({
+    List<String>? ids,
+  }) async {
     return callCatchHandleNetworkCallError(() {
-      final body = AudioIdsBody(audioIds: audioIds);
+      final body = GetAudioLikesBody(ids: ids);
 
-      return _apiClient.getAuthUserAudioLikesByAudioIds(body);
+      return _apiClient.getAuthUserAudioLikes(body);
     });
   }
 }

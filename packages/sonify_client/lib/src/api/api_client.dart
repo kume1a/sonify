@@ -6,6 +6,7 @@ import 'package:retrofit/retrofit.dart';
 
 import '../entity/audio/model/audio_ids_body.dart';
 import '../entity/audio/model/audio_like_dto.dart';
+import '../entity/audio/model/get_audio_likes_body.dart';
 import '../entity/audio/model/like_audio_body.dart';
 import '../entity/audio/model/unlike_audio_body.dart';
 import '../entity/audio/model/user_audio_dto.dart';
@@ -56,10 +57,7 @@ abstract class ApiClient {
   Future<void> unlikeAudio(@Body() UnlikeAudioBody body);
 
   @GET('/v1/audio/myLikes')
-  Future<List<AudioLikeDto>> getAuthUserAudioLikes();
-
-  @GET('/v1/audio/myLikesByIds')
-  Future<List<AudioLikeDto>> getAuthUserAudioLikesByAudioIds(@Body() AudioIdsBody body);
+  Future<List<AudioLikeDto>> getAuthUserAudioLikes(@Body() GetAudioLikesBody body);
 
   // auth ------------------------------
   @POST('/v1/auth/googleSignIn')

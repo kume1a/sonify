@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 
 import '../../../app/navigation/page_navigator.dart';
 import '../../../entities/playlist/model/event_spotify_playlists_imported.dart';
@@ -92,23 +93,30 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
 
     final syncUserPendingChangesRes = await _syncUserPendingChanges();
     if (syncUserPendingChangesRes.isErr) {
+      Logger.root.info('Failed to sync user pending changes, stopping sync process');
       return _handleSyncFailure();
     }
 
     final syncUserAudioLikesRes = await _syncUserAudioLikes();
     if (syncUserAudioLikesRes.isErr) {
+      Logger.root.info('Failed to sync user audio likes, stopping sync process');
       return _handleSyncFailure();
     }
 
     final syncPlaylistsRes = await _syncPlaylists();
     if (syncPlaylistsRes.isErr) {
+      Logger.root.info('Failed to sync playlists, stopping sync process');
       return _handleSyncFailure();
     }
 
     final syncUserAudioRes = await _syncUserAudio();
 
     await syncUserAudioRes.foldAsync(
-      () => _handleSyncFailure(),
+      () {
+        Logger.root.info('Failed to sync user audio, stopping sync process');
+
+        return _handleSyncFailure();
+      },
       (r) async {
         if (r.toDownloadCount > 0) {
           emit(state.copyWith(

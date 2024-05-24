@@ -35,8 +35,5 @@ abstract interface class AudioLocalRepository {
 
   Future<EmptyResult> bulkWriteAudioLikes(List<AudioLike> audioLikes);
 
-  Future<Result<int>> deleteAudioLikesByUserIdAndAudioIds({
-    required String userId,
-    required List<String> audioIds,
-  });
+  Future<Result<int>> deleteAudioLikesByIds(List<String> ids);
 }

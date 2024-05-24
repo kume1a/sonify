@@ -94,17 +94,11 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
   }
 
   @override
-  Future<int> deleteByUserIdAndAudioIds({
-    required String userId,
-    required List<String> audioIds,
-  }) {
+  Future<int> deleteByIds(List<String> ids) {
     return _db.delete(
       AudioLike_.tn,
-      where: '''
-        ${AudioLike_.userId} = ? 
-        AND ${AudioLike_.audioId} IN ${sqlListPlaceholders(audioIds.length)}
-      ''',
-      whereArgs: [userId, ...audioIds],
+      where: '${AudioLike_.id} IN ${sqlListPlaceholders(ids.length)}',
+      whereArgs: ids,
     );
   }
 }

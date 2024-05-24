@@ -27,17 +27,14 @@ final class SyncUserAudioLikesImpl extends SyncEntityBase implements SyncUserAud
       return EmptyResult.err();
     }
 
-    final res = await _audioLocalRepository.deleteAudioLikesByUserIdAndAudioIds(
-      userId: authUserId,
-      audioIds: ids,
-    );
+    final res = await _audioLocalRepository.deleteAudioLikesByIds(ids);
 
     return res.toEmptyResult();
   }
 
   @override
   Future<EmptyResult> downloadEntities(List<String> ids) async {
-    final audioLikes = await _audioRemoteRepository.getAuthUserAudioLikesByAudioIds(audioIds: ids);
+    final audioLikes = await _audioRemoteRepository.getAuthUserAudioLikes(ids: ids);
     if (audioLikes.isLeft) {
       return EmptyResult.err();
     }
@@ -55,13 +52,13 @@ final class SyncUserAudioLikesImpl extends SyncEntityBase implements SyncUserAud
 
     final localUserAudioLikesRes = await _audioLocalRepository.getAllAudioLikesByUserId(userId: authUserId);
 
-    return localUserAudioLikesRes.dataOrNull?.map((e) => e.audioId).whereNotNull().toList();
+    return localUserAudioLikesRes.dataOrNull?.map((e) => e.id).whereNotNull().toList();
   }
 
   @override
   Future<List<String>?> getRemoteEntityIds() async {
     final audioLikes = await _audioRemoteRepository.getAuthUserAudioLikes();
 
-    return audioLikes.rightOrNull?.map((e) => e.audioId).whereNotNull().toList();
+    return audioLikes.rightOrNull?.map((e) => e.id).whereNotNull().toList();
   }
 }
