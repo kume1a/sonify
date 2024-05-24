@@ -67,8 +67,8 @@ abstract class ApiClient {
   Future<TokenPayloadDto> emailSignIn(@Body() EmailSignInBody body);
 
   // user ------------------------------
-  @PATCH('/v1/users')
-  Future<UserDto> updateUser(@Body() UpdateUserBody body);
+  @PATCH('/v1/users/update')
+  Future<UserDto> updateAuthUser(@Body() UpdateUserBody body);
 
   @GET('/v1/users/authUser')
   Future<UserDto> getAuthUser();

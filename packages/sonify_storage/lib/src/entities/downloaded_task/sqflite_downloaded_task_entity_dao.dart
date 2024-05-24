@@ -43,7 +43,7 @@ class SqfliteDownloadedTaskEntityDao implements DownloadedTaskEntityDao {
         ${UserAudio_.tn}.${UserAudio_.id} AS ${UserAudio_.joinedId},
         ${UserAudio_.tn}.${UserAudio_.createdAtMillis} AS ${UserAudio_.joinedCreatedAtMillis},
         ${UserAudio_.tn}.${UserAudio_.userId} AS ${UserAudio_.joinedUserId},
-        ${UserAudio_.tn}.${UserAudio_.audioId} AS ${UserAudio_.joinPrefix} ,
+        ${UserAudio_.tn}.${UserAudio_.audioId} AS ${UserAudio_.joinedAudioId},
         ${Audio_.tn}.${Audio_.id} AS ${Audio_.joinedId},
         ${Audio_.tn}.${Audio_.createdAtMillis} AS ${Audio_.joinedCreatedAtMillis},
         ${Audio_.tn}.${Audio_.title} AS ${Audio_.joinedTitle},

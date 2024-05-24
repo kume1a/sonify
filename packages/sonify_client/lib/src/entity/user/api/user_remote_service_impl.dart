@@ -22,7 +22,7 @@ class UserRemoteServiceImpl with SafeHttpRequestWrap implements UserRemoteServic
         name: name,
       );
 
-      return _apiClient.updateUser(body);
+      return _apiClient.updateAuthUser(body);
     });
   }
 
