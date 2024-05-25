@@ -63,10 +63,12 @@ abstract class DiSonifyClientModule {
   YoutubeRemoteService youtubeRemoteService(
     ApiClient apiClient,
     YoutubeExplode youtubeExplode,
+    @Named(InjectionToken.authenticatedDio) Dio dio,
   ) {
     return YoutubeRemoteServiceImpl(
       apiClient,
       youtubeExplode,
+      dio,
     );
   }
 
@@ -86,9 +88,8 @@ abstract class DiSonifyClientModule {
   AudioRemoteService audioRepository(
     ApiClient apiClient,
     MultipartApiClient multipartApiClient,
-    @Named(InjectionToken.authenticatedDio) Dio dio,
   ) {
-    return AudioRemoteServiceImpl(apiClient, multipartApiClient, dio);
+    return AudioRemoteServiceImpl(apiClient, multipartApiClient);
   }
 
   // audio like ----------------------------------------------------------------

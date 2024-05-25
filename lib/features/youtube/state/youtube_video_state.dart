@@ -38,14 +38,12 @@ extension YoutubeVideoCubitX on BuildContext {
 @injectable
 class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
   YoutubeVideoCubit(
-    this._youtubeRepository,
+    this._youtubeRemoteRepository,
     this._eventBus,
-    this._audioRemoteRepository,
   ) : super(YoutubeVideoState.initial());
 
-  final YoutubeRemoteService _youtubeRepository;
+  final YoutubeRemoteRepository _youtubeRemoteRepository;
   final EventBus _eventBus;
-  final AudioRemoteRepository _audioRemoteRepository;
 
   void init(String videoId) {
     Logger.root.info('Loading Youtube video, videoId = $videoId');
@@ -59,14 +57,15 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
       highQualityMuxedStreamInfo: SimpleDataState.loading(),
     ));
 
-    final video = await _youtubeRepository.getVideo(videoId);
-    final highestBitrateVideo = await _youtubeRepository.getHighestQualityMuxedStreamInfo(videoId);
+    final video = await _youtubeRemoteRepository.getVideo(videoId: videoId);
+    final highestBitrateVideo =
+        await _youtubeRemoteRepository.getHighestQualityMuxedStreamInfo(videoId: videoId);
 
     emit(state.copyWith(
-      videoUri: highestBitrateVideo.rightOrNull?.url,
-      video: SimpleDataState.fromEither(video),
-      highQualityMuxedStreamInfo: SimpleDataState.fromEither(highestBitrateVideo),
-      isDownloadAvailable: video.isRight,
+      videoUri: highestBitrateVideo.dataOrNull?.url,
+      video: SimpleDataState.fromResult(video),
+      highQualityMuxedStreamInfo: SimpleDataState.fromResult(highestBitrateVideo),
+      isDownloadAvailable: video.isSuccess,
     ));
   }
 
@@ -78,7 +77,7 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
 
     emit(state.copyWith(downloadAudioState: ActionState.executing()));
 
-    _audioRemoteRepository.downloadYoutubeAudio(videoId: video.id.value).awaitFold(
+    _youtubeRemoteRepository.downloadYoutubeAudio(videoId: video.id.value).awaitFold(
       (l) async {
         emit(state.copyWith(downloadAudioState: ActionState.failed(l)));
         await _resetDownloadAudioState();

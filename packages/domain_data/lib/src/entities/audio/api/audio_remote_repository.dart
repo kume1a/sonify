@@ -6,10 +6,6 @@ import 'package:sonify_client/sonify_client.dart';
 import '../model/index.dart';
 
 abstract interface class AudioRemoteRepository {
-  Future<Either<DownloadYoutubeAudioError, UserAudio>> downloadYoutubeAudio({
-    required String videoId,
-  });
-
   Future<Either<UploadUserLocalMusicError, UserAudio>> uploadUserLocalMusic({
     required String localId,
     required String title,

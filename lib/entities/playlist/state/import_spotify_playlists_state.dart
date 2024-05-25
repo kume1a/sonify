@@ -1,11 +1,11 @@
 import 'package:common_models/common_models.dart';
 import 'package:common_utilities/common_utilities.dart';
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
-import 'package:sonify_client/sonify_client.dart';
 
 import '../../../features/spotifyauth/api/spotify_access_token_provider.dart';
 import '../model/event_spotify_playlists_imported.dart';
@@ -40,8 +40,8 @@ class ImportSpotifyPlaylistsCubit extends Cubit<ImportSpotifyPlaylistsState> {
     _init();
   }
 
-  final UserSyncDatumRemoteService _userSyncDatumRepository;
-  final PlaylistRemoteService _playlistRepository;
+  final UserSyncDatumRemoteRepository _userSyncDatumRepository;
+  final PlaylistRemoteRepository _playlistRepository;
   final SpotifyAccessTokenProvider _spotifyAccessTokenProvider;
   final EventBus _eventBus;
 

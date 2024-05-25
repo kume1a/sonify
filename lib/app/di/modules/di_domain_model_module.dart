@@ -211,10 +211,12 @@ abstract class DiDomainModelModule {
   YoutubeRemoteRepository youtubeRemoteRepository(
     YoutubeRemoteService youtubeRemoteService,
     YoutubeSearchSuggestionsMapper youtubeSearchSuggestionsMapper,
+    UserAudioMapper userAudioMapper,
   ) {
     return YoutubeRemoteRepositoryImpl(
       youtubeRemoteService,
       youtubeSearchSuggestionsMapper,
+      userAudioMapper,
     );
   }
 

@@ -17,15 +17,6 @@ class AudioRemoteRepositoryImpl implements AudioRemoteRepository {
   final UserAudioMapper _userAudioMapper;
 
   @override
-  Future<Either<DownloadYoutubeAudioError, UserAudio>> downloadYoutubeAudio({
-    required String videoId,
-  }) async {
-    final res = await _audioRemoteService.downloadYoutubeAudio(videoId: videoId);
-
-    return res.map(_userAudioMapper.dtoToModel);
-  }
-
-  @override
   Future<Either<UploadUserLocalMusicError, UserAudio>> uploadUserLocalMusic({
     required String localId,
     required String title,

@@ -200,6 +200,7 @@ class DownloadsCubit extends Cubit<DownloadsState> {
     }
 
     final downloadedTasksRes = await _downloadedTaskLocalRepository.getAllByUserId(authUserId);
+
     downloadedTasksRes.ifSuccess((data) => emit(state.copyWith(downloaded: data)));
   }
 }

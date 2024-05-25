@@ -5,6 +5,8 @@ import 'package:common_network_components/common_network_components.dart';
 import 'package:sonify_client/sonify_client.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
+import '../../audio/model/user_audio.dart';
+import '../../audio/util/user_audio_mapper.dart';
 import '../model/youtube_search_suggestions.dart';
 import '../util/youtube_search_suggestions_mapper.dart';
 import 'youtube_remote_repository.dart';
@@ -13,10 +15,21 @@ class YoutubeRemoteRepositoryImpl with SafeHttpRequestWrap implements YoutubeRem
   YoutubeRemoteRepositoryImpl(
     this._youtubeRemoteService,
     this._youtubeSearchSuggestionsMapper,
+    this._userAudioMapper,
   );
 
   final YoutubeRemoteService _youtubeRemoteService;
   final YoutubeSearchSuggestionsMapper _youtubeSearchSuggestionsMapper;
+  final UserAudioMapper _userAudioMapper;
+
+  @override
+  Future<Either<DownloadYoutubeAudioError, UserAudio>> downloadYoutubeAudio({
+    required String videoId,
+  }) async {
+    final res = await _youtubeRemoteService.downloadYoutubeAudio(videoId: videoId);
+
+    return res.map(_userAudioMapper.dtoToModel);
+  }
 
   @override
   Future<Either<NetworkCallError, String>> getYoutubeMusicUrl({
@@ -37,28 +50,28 @@ class YoutubeRemoteRepositoryImpl with SafeHttpRequestWrap implements YoutubeRem
   }
 
   @override
-  Future<Either<NetworkCallError, List<Video>>> search({
+  Future<Result<List<Video>>> search({
     required String query,
   }) async {
     return _youtubeRemoteService.search(query);
   }
 
   @override
-  Future<Either<NetworkCallError, Video>> getVideo({
+  Future<Result<Video>> getVideo({
     required String videoId,
   }) async {
     return _youtubeRemoteService.getVideo(videoId);
   }
 
   @override
-  Future<Either<NetworkCallError, UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams({
+  Future<Result<UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams({
     required String videoId,
   }) async {
     return _youtubeRemoteService.getAudioOnlyStreams(videoId);
   }
 
   @override
-  Future<Either<NetworkCallError, MuxedStreamInfo>> getHighestQualityMuxedStreamInfo({
+  Future<Result<MuxedStreamInfo>> getHighestQualityMuxedStreamInfo({
     required String videoId,
   }) async {
     return _youtubeRemoteService.getHighestQualityMuxedStreamInfo(videoId);
