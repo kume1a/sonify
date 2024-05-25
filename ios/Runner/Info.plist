@@ -87,5 +87,18 @@
       <true/>
     </dict>
     
+    <!-- Deep links -->
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>app</string>
+        </array>
+        <key>CFBundleURLName</key>
+        <string>sonify</string>
+      </dict>
+    </array>
+    <!-- End of deep links -->
 	</dict>
 </plist>
