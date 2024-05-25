@@ -11,6 +11,7 @@ import 'package:logging/logging.dart';
 
 import 'app/app.dart';
 import 'app/configuration/configure_audio_components.dart';
+import 'app/configuration/configure_secure_storage.dart';
 import 'app/configuration/global_http_overrides.dart';
 import 'app/configuration/init_cached_stores.dart';
 import 'app/di/register_dependencies.dart';
@@ -39,6 +40,7 @@ Future<void> main() async {
   VVOConfig.password.minLength = 6;
 
   getIt<SystemUiManager>().lockPortraitOrientation();
+  await getIt<ConfigureSecureStorage>().call();
 
   runApp(const App());
 }
