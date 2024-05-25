@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../db/db_batch.dart';
+import '../../db/sqlite_helpers.dart';
 import '../../db/tables.dart';
 import '../../shared/constant.dart';
 import '../../shared/util.dart';
@@ -39,18 +40,12 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
   }
 
   @override
-  Future<void> deleteMany(List<PlaylistAudioEntity> entities) {
-    final batch = _db.batch();
-
-    for (final entity in entities) {
-      batch.delete(
-        PlaylistAudio_.tn,
-        where: '${PlaylistAudio_.audioId} = ? AND ${PlaylistAudio_.playlistId} = ?',
-        whereArgs: [entity.audioId, entity.playlistId],
-      );
-    }
-
-    return batch.commit(noResult: true);
+  Future<void> deleteByIds(List<String> ids) {
+    return _db.delete(
+      PlaylistAudio_.tn,
+      where: '${PlaylistAudio_.id} IN ${sqlListPlaceholders(ids.length)}',
+      whereArgs: ids,
+    );
   }
 
   @override

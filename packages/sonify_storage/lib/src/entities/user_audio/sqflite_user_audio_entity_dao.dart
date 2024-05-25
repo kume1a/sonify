@@ -74,7 +74,7 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
   }
 
   @override
-  Future<List<String>> getAllBAudioIdsByUserId(String userId) async {
+  Future<List<String>> getAllAudioIdsByUserId(String userId) async {
     final query = await _db.query(
       UserAudio_.tn,
       columns: [UserAudio_.audioId],

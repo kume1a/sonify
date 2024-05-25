@@ -8,7 +8,7 @@ abstract interface class PlaylistAudioEntityDao {
     DbBatchProvider? batchProvider,
   });
 
-  Future<void> deleteMany(List<PlaylistAudioEntity> entities);
+  Future<void> deleteByIds(List<String> ids);
 
   Future<List<PlaylistAudioEntity>> getAll();
 }

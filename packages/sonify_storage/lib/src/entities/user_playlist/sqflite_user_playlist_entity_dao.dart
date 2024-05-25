@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../db/db_batch.dart';
@@ -41,27 +40,22 @@ class SqfliteUserPlaylistEntityDao implements UserPlaylistEntityDao {
   }
 
   @override
-  Future<int> deleteByUserIdAndPlaylistIds({
-    required String userId,
-    required List<String> playlistIds,
-  }) async {
+  Future<int> deleteByIds(List<String> ids) async {
     return _db.delete(
       UserPlaylist_.tn,
-      where:
-          '${UserPlaylist_.userId} = ? AND ${UserPlaylist_.playlistId} IN ${sqlListPlaceholders(playlistIds.length)}',
-      whereArgs: [userId, ...playlistIds],
+      where: '${PlaylistAudio_.id} IN ${sqlListPlaceholders(ids.length)}',
+      whereArgs: ids,
     );
   }
 
   @override
-  Future<List<String>> getAllPlaylistIdsByUserId(String bUserId) async {
+  Future<List<UserPlaylistEntity>> getAllByUserId(String userId) async {
     final res = await _db.query(
       UserPlaylist_.tn,
-      columns: [UserPlaylist_.playlistId],
       where: '${UserPlaylist_.userId} = ?',
-      whereArgs: [bUserId],
+      whereArgs: [userId],
     );
 
-    return res.map((m) => m[UserPlaylist_.playlistId] as String?).whereNotNull().toList();
+    return res.map(_userPlaylistEntityMapper.mapToEntity).toList();
   }
 }

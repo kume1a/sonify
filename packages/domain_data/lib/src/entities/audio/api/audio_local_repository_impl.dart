@@ -60,6 +60,6 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
 
   @override
   Future<Result<List<String>>> getAllIdsByUserId(String userId) {
-    return wrapWithResult(() => _userAudioEntityDao.getAllBAudioIdsByUserId(userId));
+    return wrapWithResult(() => _userAudioEntityDao.getAllAudioIdsByUserId(userId));
   }
 }

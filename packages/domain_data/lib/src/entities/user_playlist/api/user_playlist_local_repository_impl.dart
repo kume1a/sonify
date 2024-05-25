@@ -35,18 +35,14 @@ class UserPlaylistLocalRepositoryImpl with ResultWrap implements UserPlaylistLoc
   }
 
   @override
-  Future<void> deleteByUserIdAndPlaylistIds({
-    required String userId,
-    required List<String> playlistIds,
-  }) {
-    return _userPlaylistEntityDao.deleteByUserIdAndPlaylistIds(
-      userId: userId,
-      playlistIds: playlistIds,
-    );
+  Future<void> deleteByIds(List<String> ids) {
+    return _userPlaylistEntityDao.deleteByIds(ids);
   }
 
   @override
-  Future<List<String>> getAllPlaylistIdsByUserId(String userId) {
-    return _userPlaylistEntityDao.getAllPlaylistIdsByUserId(userId);
+  Future<List<UserPlaylist>> getAllByUserId(String userId) async {
+    final res = await _userPlaylistEntityDao.getAllByUserId(userId);
+
+    return res.map(_userPlaylistMapper.entityToModel).toList();
   }
 }
