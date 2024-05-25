@@ -85,38 +85,44 @@ class _ImportSpotifyPlaylistsFlow extends StatelessWidget {
       builder: (_, state) {
         return state.importSpotifyPlaylistsState.when(
           idle: () => Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(l.importSpotifyPlaylists),
-                const SizedBox(height: 10),
-                TextButton(
-                  onPressed: context.importSpotifyPlaylistsCubit.onImportSpotifyPlaylists,
-                  child: Text(l.import),
-                ),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.only(top: 32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(l.importSpotifyPlaylists),
+                  const SizedBox(height: 10),
+                  TextButton(
+                    onPressed: context.importSpotifyPlaylistsCubit.onImportSpotifyPlaylists,
+                    child: Text(l.import),
+                  ),
+                ],
+              ),
             ),
           ),
           executing: () => Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(l.importingSpotifyPlaylists),
-                const SizedBox(height: 4),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    l.importingSpotifyPlaylistsSub,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: theme.appThemeExtension?.elSecondary,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(l.importingSpotifyPlaylists),
+                  const SizedBox(height: 4),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      l.importingSpotifyPlaylistsSub,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: theme.appThemeExtension?.elSecondary,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                const CircularProgressIndicator(),
-              ],
+                  const SizedBox(height: 16),
+                  const CircularProgressIndicator(),
+                ],
+              ),
             ),
           ),
           failed: (_) => Center(

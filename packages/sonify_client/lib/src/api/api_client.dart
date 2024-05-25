@@ -79,11 +79,6 @@ abstract class ApiClient {
   @POST('/v1/spotify/refreshToken')
   Future<SpotifyRefreshTokenPayloadDto> refreshSpotifyToken(@Body() RefreshSpotifyTokenBody body);
 
-  @POST('/v1/spotify/importUserPlaylists')
-  Future<void> importSpotifyUserPlaylists(
-    @Query('spotifyAccessToken') String spotifyAccessToken,
-  );
-
   // user sync --------------------------
   @GET('/v1/usersync/myUserSyncDatum')
   Future<UserSyncDatumDto> getAuthUserSyncDatum();
