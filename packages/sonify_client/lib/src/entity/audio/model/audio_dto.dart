@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'audio_like_dto.dart';
+import '../../audiolike/model/audio_like_dto.dart';
 
 part 'audio_dto.g.dart';
 

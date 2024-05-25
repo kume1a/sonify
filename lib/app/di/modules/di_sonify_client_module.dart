@@ -91,6 +91,12 @@ abstract class DiSonifyClientModule {
     return AudioRemoteServiceImpl(apiClient, multipartApiClient, dio);
   }
 
+  // audio like ----------------------------------------------------------------
+  @lazySingleton
+  AudioLikeRemoteService audioLikeRemoteService(ApiClient apiClient) {
+    return AudioLikeRemoteServiceImpl(apiClient);
+  }
+
   // user ----------------------------------------------------------------
   @lazySingleton
   UserRemoteService userRemoteService(ApiClient apiClient) {

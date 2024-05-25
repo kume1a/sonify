@@ -48,6 +48,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     this._enqueuePlaylist,
     this._authUserInfoProvider,
     this._likeOrUnlikeAudio,
+    this._audioLikeLocalRepository,
   ) : super(NowPlayingAudioState.initial()) {
     _init();
   }
@@ -59,6 +60,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   final EnqueuePlaylist _enqueuePlaylist;
   final AuthUserInfoProvider _authUserInfoProvider;
   final LikeOrUnlikeAudio _likeOrUnlikeAudio;
+  final AudioLikeLocalRepository _audioLikeLocalRepository;
 
   final _subscriptions = SubscriptionComposite();
 
@@ -254,7 +256,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
-    final nowPlayingAudioLike = await _audioLocalRepository.getAudioLikeByUserAndAudioId(
+    final nowPlayingAudioLike = await _audioLikeLocalRepository.getByUserAndAudioId(
       userId: authUserId,
       audioId: payload.audio.id ?? kInvalidId,
     );

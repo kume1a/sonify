@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:sonify_storage/sonify_storage.dart';
 
 import '../../../shared/constant.dart';
-import '../../audio/model/audio_like.dart';
+import '../../audiolike/model/audio_like.dart';
 import '../model/pending_change.dart';
 
 class PendingChangeMapper {

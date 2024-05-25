@@ -5,11 +5,10 @@ import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../entity/audio/model/audio_ids_body.dart';
-import '../entity/audio/model/audio_like_dto.dart';
-import '../entity/audio/model/get_audio_likes_body.dart';
-import '../entity/audio/model/like_audio_body.dart';
-import '../entity/audio/model/unlike_audio_body.dart';
 import '../entity/audio/model/user_audio_dto.dart';
+import '../entity/audiolike/model/audio_like_dto.dart';
+import '../entity/audiolike/model/get_audio_likes_body.dart';
+import '../entity/audiolike/model/like_unlike_audio_body.dart';
 import '../entity/playlist/model/playlist_dto.dart';
 import '../entity/server_time/model/server_time_dto.dart';
 import '../entity/user/model/update_user_body.dart';
@@ -50,13 +49,13 @@ abstract class ApiClient {
     @Body() AudioIdsBody body, // using body for big payload
   );
 
-  @POST('/v1/audio/like')
-  Future<AudioLikeDto> likeAudio(@Body() LikeAudioBody body);
+  @POST('/v1/audiolike/like')
+  Future<AudioLikeDto> likeAudio(@Body() LikeUnlikeAudioBody body);
 
-  @POST('/v1/audio/unlike')
-  Future<void> unlikeAudio(@Body() UnlikeAudioBody body);
+  @POST('/v1/audiolike/unlike')
+  Future<void> unlikeAudio(@Body() LikeUnlikeAudioBody body);
 
-  @GET('/v1/audio/myLikes')
+  @GET('/v1/audiolike/myLikes')
   Future<List<AudioLikeDto>?> getAuthUserAudioLikes(@Body() GetAudioLikesBody body);
 
   // auth ------------------------------

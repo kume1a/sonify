@@ -7,12 +7,8 @@ import '../../../api/multipart_api_client.dart';
 import '../../../shared/api_exception_message_code.dart';
 import '../../../shared/dto/error_response_dto.dart';
 import '../model/audio_ids_body.dart';
-import '../model/audio_like_dto.dart';
 import '../model/download_youtube_audio_body.dart';
 import '../model/download_youtube_audio_error.dart';
-import '../model/get_audio_likes_body.dart';
-import '../model/like_audio_body.dart';
-import '../model/unlike_audio_body.dart';
 import '../model/upload_user_local_music_error.dart';
 import '../model/upload_user_local_music_params.dart';
 import '../model/user_audio_dto.dart';
@@ -99,41 +95,6 @@ class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteServ
       final body = AudioIdsBody(audioIds: audioIds);
 
       final res = await _apiClient.getAuthUserUserAudiosByIds(body);
-
-      return res ?? [];
-    });
-  }
-
-  @override
-  Future<Either<NetworkCallError, AudioLikeDto>> likeAudio({
-    required String audioId,
-  }) {
-    return callCatchHandleNetworkCallError(() {
-      final body = LikeAudioBody(audioId: audioId);
-
-      return _apiClient.likeAudio(body);
-    });
-  }
-
-  @override
-  Future<Either<NetworkCallError, Unit>> unlikeAudio({required String audioId}) {
-    return callCatchHandleNetworkCallError(() async {
-      final body = UnlikeAudioBody(audioId: audioId);
-
-      await _apiClient.unlikeAudio(body);
-
-      return unit;
-    });
-  }
-
-  @override
-  Future<Either<NetworkCallError, List<AudioLikeDto>>> getAuthUserAudioLikes({
-    List<String>? ids,
-  }) async {
-    return callCatchHandleNetworkCallError(() async {
-      final body = GetAudioLikesBody(ids: ids);
-
-      final res = await _apiClient.getAuthUserAudioLikes(body);
 
       return res ?? [];
     });

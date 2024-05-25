@@ -34,19 +34,13 @@ abstract class DiDomainModelModule {
     UserAudioEntityDao userAudioEntityDao,
     AudioMapper audioMapper,
     UserAudioMapper userAudioMapper,
-    AudioLikeEntityDao audioLikeEntityDao,
     AudioEntityDao audioEntityDao,
-    AudioLikeMapper audioLikeMapper,
-    DbBatchProviderFactory dbBatchProviderFactory,
   ) {
     return AudioLocalRepositoryImpl(
       userAudioEntityDao,
       audioMapper,
       userAudioMapper,
-      audioLikeEntityDao,
       audioEntityDao,
-      audioLikeMapper,
-      dbBatchProviderFactory,
     );
   }
 
@@ -54,11 +48,33 @@ abstract class DiDomainModelModule {
   AudioRemoteRepository audioRemoteRepository(
     AudioRemoteService audioRemoteService,
     UserAudioMapper userAudioMapper,
-    AudioLikeMapper audioLikeMapper,
   ) {
     return AudioRemoteRepositoryImpl(
       audioRemoteService,
       userAudioMapper,
+    );
+  }
+
+  // audio like ----------------------------------------------------------------
+  @lazySingleton
+  AudioLikeLocalRepository audioLikeLocalRepository(
+    AudioLikeEntityDao audioLikeEntityDao,
+    AudioLikeMapper audioLikeMapper,
+    DbBatchProviderFactory dbBatchProviderFactory,
+  ) {
+    return AudioLikeLocalRepositoryImpl(
+      audioLikeEntityDao,
+      audioLikeMapper,
+      dbBatchProviderFactory,
+    );
+  }
+
+  AudioLikeRemoteRepository audioLikeRemoteRepository(
+    AudioLikeRemoteService audioLikeRemoteService,
+    AudioLikeMapper audioLikeMapper,
+  ) {
+    return AudioLikeRemoteRepositoryImpl(
+      audioLikeRemoteService,
       audioLikeMapper,
     );
   }
@@ -83,7 +99,11 @@ abstract class DiDomainModelModule {
     DbBatchProviderFactory dbBatchProviderFactory,
     PlaylistMapper playlistMapper,
   ) {
-    return PlaylistLocalRepositoryImpl(playlistEntityDao, dbBatchProviderFactory, playlistMapper);
+    return PlaylistLocalRepositoryImpl(
+      playlistEntityDao,
+      dbBatchProviderFactory,
+      playlistMapper,
+    );
   }
 
   // server time ----------------------------------------------------------------
@@ -97,7 +117,10 @@ abstract class DiDomainModelModule {
     ServerTimeRemoteService serverTimeRemoteService,
     ServerTimeMapper serverTimeMapper,
   ) {
-    return ServerTimeRemoteRepositoryImpl(serverTimeRemoteService, serverTimeMapper);
+    return ServerTimeRemoteRepositoryImpl(
+      serverTimeRemoteService,
+      serverTimeMapper,
+    );
   }
 
   // auth ----------------------------------------------------------------

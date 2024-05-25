@@ -22,14 +22,14 @@ class LikeOrUnlikeAudioResult {
 class LikeOrUnlikeAudio {
   LikeOrUnlikeAudio(
     this._authUserInfoProvider,
-    this._audioRemoteRepository,
-    this._audioLocalRepository,
+    this._audioLikeRemoteRepository,
+    this._audioLikeLocalRepository,
     this._pendingChangeLocalRepository,
   );
 
   final AuthUserInfoProvider _authUserInfoProvider;
-  final AudioRemoteRepository _audioRemoteRepository;
-  final AudioLocalRepository _audioLocalRepository;
+  final AudioLikeRemoteRepository _audioLikeRemoteRepository;
+  final AudioLikeLocalRepository _audioLikeLocalRepository;
   final PendingChangeLocalRepository _pendingChangeLocalRepository;
 
   Future<LikeOrUnlikeAudioResult?> call({
@@ -49,7 +49,7 @@ class LikeOrUnlikeAudio {
       return null;
     }
 
-    final alreadyLikedRes = await _audioLocalRepository.existsByUserAndAudioId(
+    final alreadyLikedRes = await _audioLikeLocalRepository.existsByUserAndAudioId(
       userId: authUserId,
       audioId: nowPlayingAudioId,
     );
@@ -60,7 +60,7 @@ class LikeOrUnlikeAudio {
     }
 
     if (alreadyLikedRes.dataOrThrow) {
-      final unlikeRes = await _audioLocalRepository.deleteAudioLikeByAudioAndUserId(
+      final unlikeRes = await _audioLikeLocalRepository.deleteByAudioAndUserId(
           userId: authUserId, audioId: nowPlayingAudioId);
 
       return unlikeRes.ifSuccess(
@@ -82,7 +82,7 @@ class LikeOrUnlikeAudio {
         userId: authUserId,
       );
 
-      final likeRes = await _audioLocalRepository.createAudioLike(audioLike);
+      final likeRes = await _audioLikeLocalRepository.create(audioLike);
 
       return likeRes.ifSuccess(
         (r) {
@@ -120,7 +120,7 @@ class LikeOrUnlikeAudio {
     required String audioId,
     required String userId,
   }) async {
-    final res = await _audioRemoteRepository.likeAudio(audioId: audioId);
+    final res = await _audioLikeRemoteRepository.likeAudio(audioId: audioId);
 
     await res.ifLeft((_) {
       final pendingChange = PendingChange(
@@ -143,7 +143,7 @@ class LikeOrUnlikeAudio {
     required String audioId,
     required String userId,
   }) async {
-    final res = await _audioRemoteRepository.unlikeAudio(audioId: audioId);
+    final res = await _audioLikeRemoteRepository.unlikeAudio(audioId: audioId);
 
     await res.ifLeft((_) {
       final pendingChange = PendingChange(

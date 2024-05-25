@@ -3,8 +3,8 @@ import 'package:sonify_client/sonify_client.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
 import '../../../shared/constant.dart';
+import '../../audiolike/util/audio_like_mapper.dart';
 import '../model/audio.dart';
-import 'audio_like_mapper.dart';
 
 class AudioMapper {
   AudioMapper(

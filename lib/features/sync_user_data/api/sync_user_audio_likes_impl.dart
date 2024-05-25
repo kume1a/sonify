@@ -10,13 +10,13 @@ import 'sync_user_audio_likes.dart';
 @LazySingleton(as: SyncUserAudioLikes)
 final class SyncUserAudioLikesImpl extends SyncEntityBase implements SyncUserAudioLikes {
   SyncUserAudioLikesImpl(
-    this._audioLocalRepository,
-    this._audioRemoteRepository,
+    this._audioLikeLocalRepository,
+    this._audioLikeRemoteRepository,
     this._authUserInfoProvider,
   );
 
-  final AudioLocalRepository _audioLocalRepository;
-  final AudioRemoteRepository _audioRemoteRepository;
+  final AudioLikeLocalRepository _audioLikeLocalRepository;
+  final AudioLikeRemoteRepository _audioLikeRemoteRepository;
   final AuthUserInfoProvider _authUserInfoProvider;
 
   @override
@@ -27,19 +27,19 @@ final class SyncUserAudioLikesImpl extends SyncEntityBase implements SyncUserAud
       return EmptyResult.err();
     }
 
-    final res = await _audioLocalRepository.deleteAudioLikesByIds(ids);
+    final res = await _audioLikeLocalRepository.deleteByIds(ids);
 
     return res.toEmptyResult();
   }
 
   @override
   Future<EmptyResult> downloadEntities(List<String> ids) async {
-    final audioLikes = await _audioRemoteRepository.getAuthUserAudioLikes(ids: ids);
+    final audioLikes = await _audioLikeRemoteRepository.getAuthUserAudioLikes(ids: ids);
     if (audioLikes.isLeft) {
       return EmptyResult.err();
     }
 
-    return _audioLocalRepository.bulkWriteAudioLikes(audioLikes.rightOrThrow);
+    return _audioLikeLocalRepository.bulkCreate(audioLikes.rightOrThrow);
   }
 
   @override
@@ -50,14 +50,14 @@ final class SyncUserAudioLikesImpl extends SyncEntityBase implements SyncUserAud
       return null;
     }
 
-    final localUserAudioLikesRes = await _audioLocalRepository.getAllAudioLikesByUserId(userId: authUserId);
+    final localUserAudioLikesRes = await _audioLikeLocalRepository.getAllByUserId(userId: authUserId);
 
     return localUserAudioLikesRes.dataOrNull?.map((e) => e.id).whereNotNull().toList();
   }
 
   @override
   Future<List<String>?> getRemoteEntityIds() async {
-    final audioLikes = await _audioRemoteRepository.getAuthUserAudioLikes();
+    final audioLikes = await _audioLikeRemoteRepository.getAuthUserAudioLikes();
 
     return audioLikes.rightOrNull?.map((e) => e.id).whereNotNull().toList();
   }

@@ -9,11 +9,11 @@ import 'sync_user_pending_changes.dart';
 class SyncUserPendingChangesImpl implements SyncUserPendingChanges {
   SyncUserPendingChangesImpl(
     this._pendingChangeLocalRepository,
-    this._audioRemoteRepository,
+    this._audioLikeRemoteRepository,
   );
 
   final PendingChangeLocalRepository _pendingChangeLocalRepository;
-  final AudioRemoteRepository _audioRemoteRepository;
+  final AudioLikeRemoteRepository _audioLikeRemoteRepository;
 
   @override
   Future<EmptyResult> call() async {
@@ -40,7 +40,7 @@ class SyncUserPendingChangesImpl implements SyncUserPendingChanges {
             return Future.value();
           }
 
-          return _audioRemoteRepository.likeAudio(audioId: audioLike.audioId!);
+          return _audioLikeRemoteRepository.likeAudio(audioId: audioLike.audioId!);
         },
         deleteLike: (audioLike) {
           if (audioLike.audioId == null) {
@@ -48,7 +48,7 @@ class SyncUserPendingChangesImpl implements SyncUserPendingChanges {
             return Future.value();
           }
 
-          return _audioRemoteRepository.unlikeAudio(audioId: audioLike.audioId!);
+          return _audioLikeRemoteRepository.unlikeAudio(audioId: audioLike.audioId!);
         },
       );
 
