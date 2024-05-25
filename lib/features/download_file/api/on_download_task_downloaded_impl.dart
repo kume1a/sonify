@@ -43,8 +43,11 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
     _eventBus.fire(EventUserAudio.downloaded(insertedAudio.dataOrThrow));
 
     final downloadedTaskRes = await _downloadedTaskLocalRepository.save(
-      downloadTask,
-      payloadUserAudio: insertedAudio.dataOrThrow,
+      downloadTask.copyWith(
+        payload: downloadTask.payload.copyWith(
+          userAudio: insertedAudio.dataOrThrow,
+        ),
+      ),
     );
     if (downloadedTaskRes.isErr) {
       Logger.root.warning('Failed to save downloadedTask, $downloadTask');

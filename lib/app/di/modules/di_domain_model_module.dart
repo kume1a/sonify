@@ -233,13 +233,11 @@ abstract class DiDomainModelModule {
   DownloadedTaskLocalRepository downloadedTaskLocalRepository(
     DownloadedTaskEntityDao downloadedTaskEntityDao,
     DownloadedTaskMapper downloadedTaskMapper,
-    UserAudioMapper userAudioMapper,
     AuthUserInfoProvider authUserInfoProvider,
   ) {
     return DownloadedTaskLocalRepositoryImpl(
       downloadedTaskEntityDao,
       downloadedTaskMapper,
-      userAudioMapper,
       authUserInfoProvider,
     );
   }
