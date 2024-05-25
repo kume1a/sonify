@@ -34,7 +34,7 @@ class AuthRemoteServiceImpl with SafeHttpRequestWrap implements AuthRemoteServic
     required String password,
   }) {
     return callCatch(
-      call: () {
+      () {
         final body = EmailSignInBody(email: email, password: password);
 
         return _apiClient.emailSignIn(body);

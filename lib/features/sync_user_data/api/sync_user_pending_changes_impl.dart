@@ -52,7 +52,15 @@ class SyncUserPendingChangesImpl implements SyncUserPendingChanges {
         },
       );
 
-      if (res == null || res.isLeft) {
+      final isResponseNetworkOrInternalServerError = res?.ifLeft(
+        (l) => l.maybeWhen(
+          orElse: () => false,
+          internalServer: () => true,
+          network: () => true,
+        ),
+      );
+
+      if (res == null || isResponseNetworkOrInternalServerError == true) {
         Logger.root.warning('Failed to sync audio like: ${pendingChange.payload.audioLike}');
         return EmptyResult.err();
       }

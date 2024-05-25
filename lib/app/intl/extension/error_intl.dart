@@ -8,6 +8,7 @@ extension NetworkCallErrorIntl on NetworkCallError {
     return when(
       unknown: () => l.unknownError,
       network: () => l.noInternetConnection,
+      internalServer: () => l.internalServerError,
     );
   }
 }

@@ -27,6 +27,7 @@
   "audioPermissionPermanentlyDenied": "Permission to audio has been denied, please allow from settings",
   "enterYourName": "Enter your name",
   "unknownError": "Unknown error",
+  "internalServerError": "Internal server error",
   "noInternetConnection": "No internet connection",
   "signInWithGoogleError": "Error signing in with google",
   "fieldIsRequired": "Field is required",

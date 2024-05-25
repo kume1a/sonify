@@ -32,7 +32,7 @@ class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteServ
     const timeout = Duration(minutes: 1);
 
     return callCatch(
-      call: () async {
+      () async {
         final result = await _dio.fetch<Map<String, dynamic>>(
           Options(
             method: 'POST',
@@ -66,7 +66,7 @@ class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteServ
     UploadUserLocalMusicParams params,
   ) {
     return callCatch(
-      call: () => _multipartApiClient.importUserLocalMusic(params),
+      () => _multipartApiClient.importUserLocalMusic(params),
       networkError: const UploadUserLocalMusicError.network(),
       unknownError: const UploadUserLocalMusicError.unknown(),
       onResponseError: (response) {
