@@ -1,8 +1,12 @@
+import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logging/logging.dart';
 
+import '../../../app/di/register_dependencies.dart';
 import '../../../app/intl/app_localizations.dart';
 import '../../../features/auth/state/sign_out_state.dart';
+import '../../../features/spotifyauth/api/spotify_access_token_provider.dart';
 import '../../../features/sync_user_data/state/sync_user_data_state.dart';
 import '../../../shared/util/color.dart';
 import '../../../shared/values/app_theme_extension.dart';
@@ -65,6 +69,30 @@ class SyncAudioFiles extends StatelessWidget {
       iconAssetName: Assets.svgSync,
       label: l.syncAudios,
       onPressed: context.syncUserAudioCubit.onSyncAudioFilesPressed,
+    );
+  }
+}
+
+class SyncSpotifyPlaylistsFiles extends StatelessWidget {
+  const SyncSpotifyPlaylistsFiles({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
+    return _ProfileTile(
+      iconAssetName: Assets.svgSync,
+      label: l.syncSpotifyPlaylists,
+      onPressed: () async {
+        final spotifyAccessToken = await getIt<SpotifyAccessTokenProvider>().get();
+        if (spotifyAccessToken == null) {
+          Logger.root.warning('Spotify access token is null, cannot import playlists');
+          return;
+        }
+
+        await getIt<PlaylistRemoteRepository>()
+            .importSpotifyUserPlaylists(spotifyAccessToken: spotifyAccessToken);
+      },
     );
   }
 }
