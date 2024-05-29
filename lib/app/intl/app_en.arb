@@ -142,6 +142,7 @@
   "syncFailed": "Sync failed",
   "nothingToSync": "Nothing to sync",
   "syncAudios": "Sync audios",
+  "syncSpotifyPlaylists": "Sync spotify playlists",
   "reimportSpotifyPlaylists": "Reimport Spotify Playlists",
   "retry": "Retry",
   "failedToImportSpotifyPlaylists": "Failed to import Spotify Playlists",
