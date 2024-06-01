@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../app/intl/app_localizations.dart';
+import '../../../shared/ui/animation/pulsing_fade.dart';
 import '../../../shared/ui/list_header.dart';
+import '../../../shared/ui/small_circular_progress_indicator.dart';
 import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../state/spotify_playlist_list_state.dart';
@@ -15,34 +17,59 @@ class SpotifyPlaylistsList extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
 
-    return BlocBuilder<SpotifyPlaylistListCubit, SpotifyPlaylistListState>(
-      builder: (_, state) {
-        return state.maybeWhen(
-          orElse: () => const SizedBox.shrink(),
-          loading: () => const Center(child: CircularProgressIndicator()),
-          success: (playlists) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListHeader(
-                  text: l.playlists,
-                  onViewAllPressed:
-                      playlists.length > 3 ? context.spotifyPlaylistListCubit.onViewAllPressed : null,
-                ),
-                SizedBox(
-                  height: 190,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListHeader(text: l.playlists),
+        SizedBox(
+          height: 190,
+          child: BlocBuilder<SpotifyPlaylistListCubit, SpotifyPlaylistListState>(
+            builder: (_, state) {
+              return state.maybeWhen(
+                orElse: () => const SizedBox.shrink(),
+                loading: () => PulsingFade(
                   child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    itemBuilder: (_, __) => const _PlaylistItemBlank(),
+                    itemCount: 3,
+                  ),
+                ),
+                success: (playlists) {
+                  return ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     scrollDirection: Axis.horizontal,
                     itemCount: playlists.length,
                     itemBuilder: (_, index) => _PlaylistItem(playlist: playlists[index]),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
+                  );
+                },
+              );
+            },
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class _PlaylistItemBlank extends StatelessWidget {
+  const _PlaylistItemBlank({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        width: 125,
+        height: 125,
+        decoration: BoxDecoration(
+          color: theme.colorScheme.secondaryContainer,
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
     );
   }
 }
@@ -57,9 +84,10 @@ class _PlaylistItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isImported = playlist.audioImportStatus != ProcessStatus.completed;
 
     return InkWell(
-      onTap: () => context.spotifyPlaylistListCubit.onPlaylistPressed(playlist),
+      onTap: isImported ? () => context.spotifyPlaylistListCubit.onPlaylistPressed(playlist) : null,
       borderRadius: BorderRadius.circular(8),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -67,10 +95,32 @@ class _PlaylistItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Thumbnail(
-              thumbnailUrl: playlist.thumbnailUrl,
-              thumbnailPath: playlist.thumbnailPath,
-              size: const Size.square(125),
+            Stack(
+              children: [
+                Thumbnail(
+                  thumbnailUrl: playlist.thumbnailUrl,
+                  thumbnailPath: playlist.thumbnailPath,
+                  size: const Size.square(125),
+                ),
+                if (isImported)
+                  Positioned.fill(
+                    child: Container(
+                      color: Colors.black45,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SmallCircularProgressIndicator(),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${playlist.audioCount}/${playlist.totalAudioCount}',
+                            style: const TextStyle(fontSize: 12),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(height: 4),
             Text(

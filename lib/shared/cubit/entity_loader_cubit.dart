@@ -38,10 +38,14 @@ abstract base class EntityLoaderCubit<T> extends Cubit<SimpleDataState<T>> {
   Future<void> onRefresh() => loadEntityAndEmit();
 
   @protected
-  Future<void> loadEntityAndEmit() async {
+  Future<void> loadEntityAndEmit({
+    bool emitLoading = true,
+  }) async {
     final T? previousData = state.getOrNull;
 
-    emit(SimpleDataState<T>.loading());
+    if (emitLoading) {
+      emit(SimpleDataState<T>.loading());
+    }
 
     final T? optionalEntity = await loadEntity();
 

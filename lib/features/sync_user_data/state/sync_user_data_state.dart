@@ -78,7 +78,7 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
     _pageNavigator.toDownloads();
   }
 
-  Future<void> onSyncAudioFilesPressed() async {
+  Future<void> onSyncDataPressed() async {
     if (state.syncState != SyncAudiosState.idle) {
       return;
     }

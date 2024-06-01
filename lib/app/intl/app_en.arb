@@ -141,10 +141,11 @@
   "seeDownloads": "See downloads",
   "syncFailed": "Sync failed",
   "nothingToSync": "Nothing to sync",
-  "syncAudios": "Sync audios",
+  "syncData": "Sync data",
   "syncSpotifyPlaylists": "Sync spotify playlists",
   "reimportSpotifyPlaylists": "Reimport Spotify Playlists",
   "retry": "Retry",
   "failedToImportSpotifyPlaylists": "Failed to import Spotify Playlists",
-  "authorizeSpotifyCaption": "To import Spotify playlists,please authorize with Spotify."
+  "authorizeSpotifyCaption": "To import Spotify playlists,please authorize with Spotify.",
+  "importingMusic": "Importing music"
 }

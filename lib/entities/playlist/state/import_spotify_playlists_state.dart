@@ -55,8 +55,8 @@ class ImportSpotifyPlaylistsCubit extends Cubit<ImportSpotifyPlaylistsState> {
 
   Future<void> onImportSpotifyPlaylists() async {
     final isSpotifyPlaylistsImported = state.isSpotifyPlaylistsImported.getOrNull;
-    if (isSpotifyPlaylistsImported == null || isSpotifyPlaylistsImported) {
-      Logger.root.warning('Spotify playlists import status not loaded or already imported');
+    if (isSpotifyPlaylistsImported == null) {
+      Logger.root.warning('Spotify playlists import status not loaded');
       return;
     }
 
