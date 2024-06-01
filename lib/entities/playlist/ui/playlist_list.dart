@@ -53,7 +53,7 @@ class PlaylistsList extends StatelessWidget {
 }
 
 class _PlaylistItemBlank extends StatelessWidget {
-  const _PlaylistItemBlank({super.key});
+  const _PlaylistItemBlank();
 
   @override
   Widget build(BuildContext context) {

@@ -20,8 +20,10 @@ abstract final class AppTheme {
       onSecondary: Palette.onSecondary,
       primaryContainer: Palette.primaryContainer,
       secondaryContainer: Palette.secondaryContainer,
+      surface: Palette.surface,
+      onSurface: Palette.onSurface,
     ),
-    scaffoldBackgroundColor: Palette.background,
+    scaffoldBackgroundColor: Palette.surface,
     dividerColor: Palette.elSecondary,
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: Palette.elPrimary,
@@ -30,7 +32,7 @@ abstract final class AppTheme {
       backgroundColor: Palette.primaryContainer,
     ),
     bottomSheetTheme: const BottomSheetThemeData(
-      backgroundColor: Palette.background,
+      backgroundColor: Palette.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),

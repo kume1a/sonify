@@ -396,7 +396,7 @@ class _SkipToPreviousButton extends StatelessWidget {
             height: size,
             Assets.svgSkipBack,
             colorFilter: svgColor(
-              isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onBackground,
+              isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onSurface,
             ),
           ),
         );
@@ -429,7 +429,7 @@ class _SkipToNextButton extends StatelessWidget {
             width: size,
             height: size,
             colorFilter: svgColor(
-              isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onBackground,
+              isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onSurface,
             ),
           ),
         );

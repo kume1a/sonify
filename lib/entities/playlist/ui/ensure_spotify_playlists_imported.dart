@@ -115,7 +115,6 @@ class _ImportSpotifyPlaylistsFlow extends StatelessWidget {
 
 class _ImportSpotifyPlaylistsFailed extends StatelessWidget {
   const _ImportSpotifyPlaylistsFailed({
-    super.key,
     required this.onRefresh,
   });
 

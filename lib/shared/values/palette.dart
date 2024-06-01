@@ -5,7 +5,8 @@ class Palette {
   static const Color error = Color(0xFFFB3836);
   static const Color success = Color(0xFF60DA8C);
 
-  static const background = Color(0xFF060606);
+  static const surface = Color(0xFF060606);
+  static const onSurface = Color(0xFFFFFFFF);
   static const primary = Color(0xFF140531);
   static const secondary = Color(0xFF7001FB);
   static const onSecondary = Colors.white;
