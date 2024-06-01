@@ -119,6 +119,12 @@ abstract class DiSonifyClientModule {
     return PlaylistRemoteServiceImpl(apiClient, dio);
   }
 
+  // user playlist ----------------------------------------------------------------
+  @lazySingleton
+  UserPlaylistRemoteService userPlaylistRemoteService(ApiClient apiClient) {
+    return UserPlaylistRemoteServiceImpl(apiClient);
+  }
+
   // user sync datum ----------------------------------------------------------------
   @lazySingleton
   UserSyncDatumRemoteService userSyncDatumRemoteService(ApiClient apiClient) {

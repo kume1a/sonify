@@ -36,7 +36,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
       return null;
     }
 
-    final res = await _playlistRemoteRepository.getPlaylistById(
+    final res = await _playlistRemoteRepository.getById(
       playlistId: _playlistId!,
     );
 

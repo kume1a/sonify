@@ -40,7 +40,7 @@ class PlaylistsList extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     scrollDirection: Axis.horizontal,
                     itemCount: playlists.length,
-                    itemBuilder: (_, index) => _PlaylistItem(playlist: playlists[index]),
+                    itemBuilder: (_, index) => _PlaylistItem(userPlaylist: playlists[index]),
                   );
                 },
               );
@@ -76,20 +76,26 @@ class _PlaylistItemBlank extends StatelessWidget {
 
 class _PlaylistItem extends StatelessWidget {
   const _PlaylistItem({
-    required this.playlist,
+    required this.userPlaylist,
   });
 
-  final Playlist playlist;
+  final UserPlaylist userPlaylist;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l = AppLocalizations.of(context);
 
+    final playlist = userPlaylist.playlist;
+    if (playlist == null) {
+      return const SizedBox.shrink();
+    }
+
     final isImportCompleted = playlist.audioImportStatus == ProcessStatus.completed;
 
     return InkWell(
-      onTap: isImportCompleted ? () => context.spotifyPlaylistListCubit.onPlaylistPressed(playlist) : null,
+      onTap:
+          isImportCompleted ? () => context.spotifyPlaylistListCubit.onPlaylistPressed(userPlaylist) : null,
       borderRadius: BorderRadius.circular(8),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8),

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:common_models/common_models.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
@@ -8,11 +9,11 @@ import 'sync_playlists.dart';
 @LazySingleton(as: SyncPlaylists)
 final class SyncPlaylistsImpl extends SyncEntityBase implements SyncPlaylists {
   SyncPlaylistsImpl(
-    this._playlistRemoteRepository,
+    this._userPlaylistRemoteRepository,
     this._playlistLocalRepository,
   );
 
-  final PlaylistRemoteRepository _playlistRemoteRepository;
+  final UserPlaylistRemoteRepository _userPlaylistRemoteRepository;
   final PlaylistLocalRepository _playlistLocalRepository;
 
   @override
@@ -24,12 +25,17 @@ final class SyncPlaylistsImpl extends SyncEntityBase implements SyncPlaylists {
 
   @override
   Future<EmptyResult> downloadEntities(List<String> ids) async {
-    final playlists = await _playlistRemoteRepository.getAuthUserPlaylists(ids: ids);
-    if (playlists.isLeft) {
+    final authUserPlaylists = await _userPlaylistRemoteRepository.getAllFullByAuthUser(
+      playlistIds: ids,
+    );
+
+    if (authUserPlaylists.isLeft) {
       return EmptyResult.err();
     }
 
-    return _playlistLocalRepository.bulkWrite(playlists.rightOrThrow);
+    final playlists = authUserPlaylists.rightOrThrow.map((e) => e.playlist).whereNotNull().toList();
+
+    return _playlistLocalRepository.bulkWrite(playlists);
   }
 
   @override
@@ -41,7 +47,7 @@ final class SyncPlaylistsImpl extends SyncEntityBase implements SyncPlaylists {
 
   @override
   Future<List<String>?> getRemoteEntityIds() async {
-    final playlistIds = await _playlistRemoteRepository.getAuthUserPlaylistIds();
+    final playlistIds = await _userPlaylistRemoteRepository.getAllPlaylistIdsByAuthUser();
 
     return playlistIds.rightOrNull;
   }

@@ -13,6 +13,7 @@ import '../entity/playlist/model/playlist_dto.dart';
 import '../entity/server_time/model/server_time_dto.dart';
 import '../entity/user/model/update_user_body.dart';
 import '../entity/user/model/user_dto.dart';
+import '../entity/user_playlist/model/user_playlist_dto.dart';
 import '../entity/usersync/model/user_sync_datum_dto.dart';
 import '../entity/youtube/model/youtube_search_suggestions_dto.dart';
 import '../feature/auth/model/email_sign_in_body.dart';
@@ -86,17 +87,26 @@ abstract class ApiClient {
   @POST('/v1/usersync/markUserAudioLastUpdatedAtAsNow')
   Future<void> markAuthUserAudioLastUpdatedAtAsNow();
 
-  @GET('/v1/userplaylist/myPlaylists')
-  Future<List<PlaylistDto>?> getAuthUserPlaylists(
-    @Query('ids') List<String>? ids,
-  );
-
-  @GET('/v1/userplaylist/myPlaylistIds')
-  Future<List<String>?> getAuthUserPlaylistIds();
-
   // playlist ---------------------------
   @GET('/v1/playlists/{playlistId}')
   Future<PlaylistDto> getPlaylistById(
     @Path('playlistId') String playlistId,
   );
+
+  // user playlist
+  @GET('/v1/userplaylist/myUserPlaylists/full')
+  Future<List<UserPlaylistDto>?> getUserPlaylistsFullByAuthUser(
+    @Query('playlistIds') List<String>? playlistIds,
+  );
+
+  @GET('/v1/userplaylist/myUserPlaylists')
+  Future<List<UserPlaylistDto>?> getUserPlaylistsByAuthUser(
+    @Query('ids') List<String>? ids,
+  );
+
+  @GET('/v1/userplaylist/myPlaylistIds')
+  Future<List<String>?> getPlaylistIdsByAuthUser();
+
+  @GET('/v1/userplaylist/myUserPlaylistIds')
+  Future<List<String>?> getUserPlaylistIdsByAuthUser();
 }

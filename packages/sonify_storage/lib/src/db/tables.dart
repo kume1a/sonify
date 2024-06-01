@@ -118,6 +118,9 @@ abstract class Playlist_ {
   static const thumbnailPath = 'thumbnail_path';
   static const thumbnailUrl = 'thumbnail_url';
   static const spotifyId = 'spotify_id';
+  static const audioImportStatus = 'audio_import_status';
+  static const audioCount = 'audio_count';
+  static const totalAudioCount = 'total_audio_count';
 
   // joined columns
   static final joinedId = joinPrefixColumn(id);
@@ -126,6 +129,9 @@ abstract class Playlist_ {
   static final joinedThumbnailPath = joinPrefixColumn(thumbnailPath);
   static final joinedThumbnailUrl = joinPrefixColumn(thumbnailUrl);
   static final joinedSpotifyId = joinPrefixColumn(spotifyId);
+  static final joinedAudioImportStatus = joinPrefixColumn(audioImportStatus);
+  static final joinedAudioCount = joinPrefixColumn(audioCount);
+  static final joinedTotalAudioCount = joinPrefixColumn(totalAudioCount);
 }
 
 abstract class PlaylistAudio_ {

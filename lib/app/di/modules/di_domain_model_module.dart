@@ -114,6 +114,36 @@ abstract class DiDomainModelModule {
     );
   }
 
+  // user playlist ----------------------------------------------------------------
+  @lazySingleton
+  UserPlaylistMapper userPlaylistMapper(PlaylistMapper playlistMapper) {
+    return UserPlaylistMapper(playlistMapper);
+  }
+
+  @lazySingleton
+  UserPlaylistLocalRepository userPlaylistLocalRepository(
+    UserPlaylistEntityDao userPlaylistEntityDao,
+    UserPlaylistMapper userPlaylistMapper,
+    DbBatchProviderFactory dbBatchProviderFactory,
+  ) {
+    return UserPlaylistLocalRepositoryImpl(
+      userPlaylistEntityDao,
+      userPlaylistMapper,
+      dbBatchProviderFactory,
+    );
+  }
+
+  @lazySingleton
+  UserPlaylistRemoteRepository userPlaylistRemoteRepository(
+    UserPlaylistRemoteService userPlaylistRemoteService,
+    UserPlaylistMapper userPlaylistMapper,
+  ) {
+    return UserPlaylistRemoteRepositoryImpl(
+      userPlaylistRemoteService,
+      userPlaylistMapper,
+    );
+  }
+
   // server time ----------------------------------------------------------------
   @lazySingleton
   ServerTimeMapper serverTimeMapper() {

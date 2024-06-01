@@ -58,4 +58,16 @@ class SqfliteUserPlaylistEntityDao implements UserPlaylistEntityDao {
 
     return res.map(_userPlaylistEntityMapper.mapToEntity).toList();
   }
+
+  @override
+  Future<List<String>> getAllIdsByUserId(String userId) {
+    final res = _db.query(
+      UserPlaylist_.tn,
+      columns: [UserPlaylist_.id],
+      where: '${UserPlaylist_.userId} = ?',
+      whereArgs: [userId],
+    );
+
+    return res.then((value) => value.map((e) => e[UserPlaylist_.id] as String).toList());
+  }
 }

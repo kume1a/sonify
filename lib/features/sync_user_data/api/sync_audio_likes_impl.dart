@@ -5,11 +5,11 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../util/sync_entity_base.dart';
-import 'sync_user_audio_likes.dart';
+import 'sync_audio_likes.dart';
 
-@LazySingleton(as: SyncUserAudioLikes)
-final class SyncUserAudioLikesImpl extends SyncEntityBase implements SyncUserAudioLikes {
-  SyncUserAudioLikesImpl(
+@LazySingleton(as: SyncAudioLikes)
+final class SyncAudioLikesImpl extends SyncEntityBase implements SyncAudioLikes {
+  SyncAudioLikesImpl(
     this._audioLikeLocalRepository,
     this._audioLikeRemoteRepository,
     this._authUserInfoProvider,

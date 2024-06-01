@@ -7,13 +7,7 @@ abstract interface class PlaylistRemoteService {
     required String spotifyAccessToken,
   });
 
-  Future<Either<NetworkCallError, List<PlaylistDto>>> getAuthUserPlaylists({
-    required List<String>? ids,
-  });
-
   Future<Either<NetworkCallError, PlaylistDto>> getPlaylistById({
     required String playlistId,
   });
-
-  Future<Either<NetworkCallError, List<String>>> getAuthUserPlaylistIds();
 }

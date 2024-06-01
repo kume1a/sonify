@@ -80,7 +80,10 @@ void createDbTables(Batch batch) {
         ${Playlist_.name} TEXT,
         ${Playlist_.thumbnailPath} TEXT,
         ${Playlist_.thumbnailUrl} TEXT,
-        ${Playlist_.spotifyId} TEXT
+        ${Playlist_.spotifyId} TEXT,
+        ${Playlist_.audioImportStatus} TEXT,
+        ${Playlist_.audioCount} INTEGER,
+        ${Playlist_.totalAudioCount} INTEGER
       );
     ''',
   );

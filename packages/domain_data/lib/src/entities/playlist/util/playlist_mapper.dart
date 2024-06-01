@@ -39,6 +39,24 @@ class PlaylistMapper {
       thumbnailPath: playlist.thumbnailPath,
       thumbnailUrl: playlist.thumbnailUrl,
       spotifyId: playlist.spotifyId,
+      audioCount: playlist.audioCount,
+      totalAudioCount: playlist.totalAudioCount,
+      audioImportStatus: _processStateMapper.enumToSchema(playlist.audioImportStatus),
+    );
+  }
+
+  Playlist entityToModel(PlaylistEntity e) {
+    return Playlist(
+      id: e.id ?? kInvalidId,
+      createdAt: tryMapDateMillis(e.createdAtMillis),
+      name: e.name ?? '',
+      thumbnailPath: e.thumbnailPath,
+      thumbnailUrl: e.thumbnailUrl,
+      spotifyId: e.spotifyId,
+      audioImportStatus: _processStateMapper.schemaToEnum(e.audioImportStatus),
+      audioCount: e.audioCount ?? 0,
+      totalAudioCount: e.totalAudioCount ?? 0,
+      audios: [],
     );
   }
 }
