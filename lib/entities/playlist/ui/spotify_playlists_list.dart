@@ -86,11 +86,10 @@ class _PlaylistItem extends StatelessWidget {
     final theme = Theme.of(context);
     final l = AppLocalizations.of(context);
 
-    final isImported = playlist.audioImportStatus == ProcessStatus.completed;
-    final importFailed = playlist.audioImportStatus == ProcessStatus.failed;
+    final isImportCompleted = playlist.audioImportStatus == ProcessStatus.completed;
 
     return InkWell(
-      onTap: isImported ? () => context.spotifyPlaylistListCubit.onPlaylistPressed(playlist) : null,
+      onTap: isImportCompleted ? () => context.spotifyPlaylistListCubit.onPlaylistPressed(playlist) : null,
       borderRadius: BorderRadius.circular(8),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -105,11 +104,15 @@ class _PlaylistItem extends StatelessWidget {
                   thumbnailPath: playlist.thumbnailPath,
                   size: const Size.square(125),
                 ),
-                if (!isImported || importFailed)
+                if (playlist.audioImportStatus != null &&
+                    playlist.audioImportStatus != ProcessStatus.completed)
                   Positioned.fill(
                     child: Container(
                       color: Colors.black45,
                       child: switch (playlist.audioImportStatus) {
+                        ProcessStatus.pending => const Center(
+                            child: SmallCircularProgressIndicator(),
+                          ),
                         ProcessStatus.processing => Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
