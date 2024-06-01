@@ -15,6 +15,9 @@ class PlaylistDto with _$PlaylistDto {
     String? thumbnailPath,
     String? thumbnailUrl,
     String? spotifyId,
+    String? audioImportStatus,
+    int? audioCount,
+    int? totalAudioCount,
     List<AudioDto>? audios,
   }) = _PlaylistDto;
 

@@ -5,13 +5,16 @@ import 'package:sonify_storage/sonify_storage.dart';
 import '../../../shared/constant.dart';
 import '../../audio/util/audio_mapper.dart';
 import '../model/playlist.dart';
+import 'process_status_mapper.dart';
 
 class PlaylistMapper {
   PlaylistMapper(
     this._audioMapper,
+    this._processStateMapper,
   );
 
   final AudioMapper _audioMapper;
+  final ProcessStatusMapper _processStateMapper;
 
   Playlist dtoToModel(PlaylistDto dto) {
     return Playlist(
@@ -21,6 +24,9 @@ class PlaylistMapper {
       thumbnailPath: dto.thumbnailPath,
       thumbnailUrl: dto.thumbnailUrl,
       spotifyId: dto.spotifyId,
+      audioImportStatus: _processStateMapper.schemaToEnum(dto.audioImportStatus),
+      audioCount: dto.audioCount ?? 0,
+      totalAudioCount: dto.totalAudioCount ?? 0,
       audios: tryMapList(dto.audios, _audioMapper.dtoToModel),
     );
   }

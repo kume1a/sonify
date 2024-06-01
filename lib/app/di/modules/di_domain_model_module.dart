@@ -81,8 +81,16 @@ abstract class DiDomainModelModule {
 
   // playlist ----------------------------------------------------------------
   @lazySingleton
-  PlaylistMapper playlistMapper(AudioMapper audioMapper) {
-    return PlaylistMapper(audioMapper);
+  ProcessStatusMapper processStatusMapper() {
+    return ProcessStatusMapper();
+  }
+
+  @lazySingleton
+  PlaylistMapper playlistMapper(
+    AudioMapper audioMapper,
+    ProcessStatusMapper processStatusMapper,
+  ) {
+    return PlaylistMapper(audioMapper, processStatusMapper);
   }
 
   @lazySingleton
