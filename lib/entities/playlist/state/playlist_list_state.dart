@@ -12,15 +12,15 @@ import '../../../pages/playlist_page.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../model/event_spotify_playlists_imported.dart';
 
-typedef SpotifyPlaylistListState = SimpleDataState<List<Playlist>>;
+typedef PlaylistListState = SimpleDataState<List<Playlist>>;
 
-extension SpotifyPlaylistListCubitX on BuildContext {
-  SpotifyPlaylistListCubit get spotifyPlaylistListCubit => read<SpotifyPlaylistListCubit>();
+extension PlaylistListCubitX on BuildContext {
+  PlaylistListCubit get spotifyPlaylistListCubit => read<PlaylistListCubit>();
 }
 
 @injectable
-final class SpotifyPlaylistListCubit extends EntityLoaderCubit<List<Playlist>> {
-  SpotifyPlaylistListCubit(
+final class PlaylistListCubit extends EntityLoaderCubit<List<Playlist>> {
+  PlaylistListCubit(
     this._playlistRemoteRepository,
     this._pageNavigator,
     this._eventBus,

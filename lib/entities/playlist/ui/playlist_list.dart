@@ -8,10 +8,10 @@ import '../../../shared/ui/list_header.dart';
 import '../../../shared/ui/small_circular_progress_indicator.dart';
 import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/values/app_theme_extension.dart';
-import '../state/spotify_playlist_list_state.dart';
+import '../state/playlist_list_state.dart';
 
-class SpotifyPlaylistsList extends StatelessWidget {
-  const SpotifyPlaylistsList({super.key});
+class PlaylistsList extends StatelessWidget {
+  const PlaylistsList({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class SpotifyPlaylistsList extends StatelessWidget {
         ListHeader(text: l.playlists),
         SizedBox(
           height: 190,
-          child: BlocBuilder<SpotifyPlaylistListCubit, SpotifyPlaylistListState>(
+          child: BlocBuilder<PlaylistListCubit, PlaylistListState>(
             builder: (_, state) {
               return state.maybeWhen(
                 orElse: () => const SizedBox.shrink(),
