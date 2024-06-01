@@ -84,7 +84,10 @@ class _PlaylistItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isImported = playlist.audioImportStatus != ProcessStatus.completed;
+    final l = AppLocalizations.of(context);
+
+    final isImported = playlist.audioImportStatus == ProcessStatus.completed;
+    final importFailed = playlist.audioImportStatus == ProcessStatus.failed;
 
     return InkWell(
       onTap: isImported ? () => context.spotifyPlaylistListCubit.onPlaylistPressed(playlist) : null,
@@ -102,22 +105,34 @@ class _PlaylistItem extends StatelessWidget {
                   thumbnailPath: playlist.thumbnailPath,
                   size: const Size.square(125),
                 ),
-                if (isImported)
+                if (!isImported || importFailed)
                   Positioned.fill(
                     child: Container(
                       color: Colors.black45,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SmallCircularProgressIndicator(),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${playlist.audioCount}/${playlist.totalAudioCount}',
-                            style: const TextStyle(fontSize: 12),
-                            textAlign: TextAlign.center,
+                      child: switch (playlist.audioImportStatus) {
+                        ProcessStatus.processing => Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SmallCircularProgressIndicator(),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${playlist.audioCount}/${playlist.totalAudioCount}',
+                                style: const TextStyle(fontSize: 12),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ProcessStatus.failed => Center(
+                            child: Text(
+                              l.importFailed,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                        _ => const SizedBox.shrink(),
+                      },
                     ),
                   ),
               ],

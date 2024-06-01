@@ -147,5 +147,5 @@
   "retry": "Retry",
   "failedToImportSpotifyPlaylists": "Failed to import Spotify Playlists",
   "authorizeSpotifyCaption": "To import Spotify playlists,please authorize with Spotify.",
-  "importingMusic": "Importing music"
+  "importFailed": "Import failed"
 }
