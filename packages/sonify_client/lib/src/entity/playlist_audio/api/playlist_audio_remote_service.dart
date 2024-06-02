@@ -7,5 +7,5 @@ abstract interface class PlaylistAudioRemoteService {
     required List<String> ids,
   });
 
-  Future<Either<NetworkCallError, List<String>>> getAllIdsByAuthUserPlaylists();
+  Future<Either<NetworkCallError, List<String>>> getAllIdsByAuthUser();
 }

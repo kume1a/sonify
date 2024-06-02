@@ -51,7 +51,7 @@ final class SyncPlaylistAudiosImpl extends SyncEntityBase implements SyncPlaylis
 
   @override
   Future<List<String>?> getRemoteEntityIds() async {
-    final playlistIds = await _playlistAudioRemoteRepository.getAllIdsByAuthUserPlaylists();
+    final playlistIds = await _playlistAudioRemoteRepository.getAllIdsByAuthUser();
 
     return playlistIds.rightOrNull;
   }

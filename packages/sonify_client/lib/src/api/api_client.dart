@@ -117,6 +117,6 @@ abstract class ApiClient {
     @Query('ids') List<String> ids,
   );
 
-  @GET('/v1/playlistaudio/myPlaylistAudioIdsByAuthUserPlaylists')
-  Future<List<String>?> getAllPlaylistAudioIdsByAuthUserPlaylists();
+  @GET('/v1/playlistaudio/myPlaylistAudioIdsByAuthUser')
+  Future<List<String>?> getPlaylistAudioIdsByAuthUser();
 }

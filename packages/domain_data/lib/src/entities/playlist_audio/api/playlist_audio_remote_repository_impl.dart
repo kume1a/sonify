@@ -24,7 +24,7 @@ class PlaylistAudioRemoteRepositoryImpl implements PlaylistAudioRemoteRepository
   }
 
   @override
-  Future<Either<NetworkCallError, List<String>>> getAllIdsByAuthUserPlaylists() {
-    return _playlistAudioRemoteService.getAllIdsByAuthUserPlaylists();
+  Future<Either<NetworkCallError, List<String>>> getAllIdsByAuthUser() {
+    return _playlistAudioRemoteService.getAllIdsByAuthUser();
   }
 }
