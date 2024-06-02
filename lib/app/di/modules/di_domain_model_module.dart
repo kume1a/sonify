@@ -114,6 +114,36 @@ abstract class DiDomainModelModule {
     );
   }
 
+  // playlist audio ----------------------------------------------------------------
+  @lazySingleton
+  PlaylistAudioMapper playlistAudioMapper() {
+    return PlaylistAudioMapper();
+  }
+
+  @lazySingleton
+  PlaylistAudioRemoteRepository playlistAudioRemoteRepository(
+    PlaylistAudioRemoteService playlistAudioRemoteService,
+    PlaylistAudioMapper playlistAudioMapper,
+  ) {
+    return PlaylistAudioRemoteRepositoryImpl(
+      playlistAudioRemoteService,
+      playlistAudioMapper,
+    );
+  }
+
+  @lazySingleton
+  PlaylistAudioLocalRepository playlistAudioLocalRepository(
+    PlaylistAudioEntityDao playlistAudioEntityDao,
+    PlaylistAudioMapper playlistAudioMapper,
+    DbBatchProviderFactory dbBatchProviderFactory,
+  ) {
+    return PlaylistAudioLocalRepositoryImpl(
+      playlistAudioEntityDao,
+      playlistAudioMapper,
+      dbBatchProviderFactory,
+    );
+  }
+
   // user playlist ----------------------------------------------------------------
   @lazySingleton
   UserPlaylistMapper userPlaylistMapper(PlaylistMapper playlistMapper) {
@@ -303,6 +333,18 @@ abstract class DiDomainModelModule {
     return PendingChangeLocalRepositoryImpl(
       pendingChangeEntityDao,
       pendingChangeMapper,
+    );
+  }
+
+  // usecase
+  @lazySingleton
+  GetAuthUserLocalPlaylistIds getAuthUserLocalPlaylistIds(
+    AuthUserInfoProvider authUserInfoProvider,
+    UserPlaylistLocalRepository userPlaylistLocalRepository,
+  ) {
+    return GetAuthUserLocalPlaylistIds(
+      authUserInfoProvider,
+      userPlaylistLocalRepository,
     );
   }
 }

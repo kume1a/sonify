@@ -112,4 +112,18 @@ abstract class DiSonifyStorageModule {
   ) {
     return SqfliteUserPlaylistEntityDao(db, userPlaylistEntityMapper);
   }
+
+  // playlist audio ------------------------------------------------------------
+  @lazySingleton
+  PlaylistAudioEntityMapper playlistAudioEntityMapper() {
+    return PlaylistAudioEntityMapper();
+  }
+
+  @lazySingleton
+  PlaylistAudioEntityDao playlistAudioEntityDao(
+    Database db,
+    PlaylistAudioEntityMapper playlistAudioEntityMapper,
+  ) {
+    return SqflitePlaylistAudioEntityDao(db, playlistAudioEntityMapper);
+  }
 }

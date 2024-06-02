@@ -58,8 +58,6 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
 
     final remotePlaylistsRes = await _userPlaylistRemoteRepository.getAllFullByAuthUser();
 
-    Logger.root.info('Remote playlists: $remotePlaylistsRes');
-
     if (remotePlaylistsRes.isRight) {
       final remotePlaylists = remotePlaylistsRes.rightOrThrow;
 
