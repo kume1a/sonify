@@ -239,6 +239,13 @@ abstract class DiDomainModelModule {
     return UserSyncDatumRemoteRepositoryImpl(userSyncDatumRemoteService, userSyncDatumMapper);
   }
 
+  @lazySingleton
+  UserSyncDatumLocalRepository userSyncDatumLocalRepository(
+    SharedPreferences sharedPreferences,
+  ) {
+    return UserSyncDatumLocalRepositoryImpl(sharedPreferences);
+  }
+
   // youtube ----------------------------------------------------------------
   @lazySingleton
   YoutubeSearchSuggestionsMapper youtubeSearchSuggestionsMapper() {

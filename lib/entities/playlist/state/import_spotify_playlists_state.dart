@@ -35,6 +35,7 @@ class ImportSpotifyPlaylistsCubit extends Cubit<ImportSpotifyPlaylistsState> {
     this._userSyncDatumRepository,
     this._playlistRepository,
     this._spotifyAccessTokenProvider,
+    this._userSyncDatumLocalRepository,
     this._eventBus,
   ) : super(ImportSpotifyPlaylistsState.initial()) {
     _init();
@@ -43,10 +44,11 @@ class ImportSpotifyPlaylistsCubit extends Cubit<ImportSpotifyPlaylistsState> {
   final UserSyncDatumRemoteRepository _userSyncDatumRepository;
   final PlaylistRemoteRepository _playlistRepository;
   final SpotifyAccessTokenProvider _spotifyAccessTokenProvider;
+  final UserSyncDatumLocalRepository _userSyncDatumLocalRepository;
   final EventBus _eventBus;
 
-  Future<void> _init() async {
-    await _checkIfSpotifyUserPlaylistsImported();
+  Future<void> _init() {
+    return _checkIfSpotifyUserPlaylistsImported();
   }
 
   Future<void> onRefreshSpotifyPlaylistImportStatus() {
@@ -80,11 +82,30 @@ class ImportSpotifyPlaylistsCubit extends Cubit<ImportSpotifyPlaylistsState> {
   Future<void> _checkIfSpotifyUserPlaylistsImported() async {
     emit(state.copyWith(isSpotifyPlaylistsImported: SimpleDataState.loading()));
 
-    await _userSyncDatumRepository.getAuthUserSyncDatum().awaitFold(
-          (l) => emit(state.copyWith(isSpotifyPlaylistsImported: SimpleDataState.failure())),
-          (r) => emit(state.copyWith(
-            isSpotifyPlaylistsImported: SimpleDataState.success(r.spotifyLastSyncedAt != null),
-          )),
-        );
+    final remoteUserSyncDatumRes = await _userSyncDatumRepository.getAuthUserSyncDatum();
+
+    if (remoteUserSyncDatumRes.isRight) {
+      final isSpotifyPlaylistsImported = remoteUserSyncDatumRes.rightOrThrow.spotifyLastSyncedAt != null;
+
+      emit(state.copyWith(isSpotifyPlaylistsImported: SimpleDataState.success(isSpotifyPlaylistsImported)));
+
+      await _userSyncDatumLocalRepository.writeAuthUserSyncDatum(remoteUserSyncDatumRes.rightOrThrow);
+
+      return;
+    }
+
+    await _userSyncDatumLocalRepository.getAuthUserSyncDatum().awaitFold(
+      () => emit(state.copyWith(isSpotifyPlaylistsImported: SimpleDataState.failure())),
+      (r) {
+        if (r == null) {
+          emit(state.copyWith(isSpotifyPlaylistsImported: SimpleDataState.failure()));
+          return;
+        }
+
+        final isSpotifyPlaylistsImported = r.spotifyLastSyncedAt != null;
+
+        emit(state.copyWith(isSpotifyPlaylistsImported: SimpleDataState.success(isSpotifyPlaylistsImported)));
+      },
+    );
   }
 }

@@ -11,17 +11,20 @@ class AfterSignOutImpl implements AfterSignOut {
     this._pageNavigator,
     this._spotifyCredsStore,
     this._authUserInfoProvider,
+    this._userSyncDatumLocalRepository,
   );
 
   final PageNavigator _pageNavigator;
   final SpotifyCredsStore _spotifyCredsStore;
   final AuthUserInfoProvider _authUserInfoProvider;
+  final UserSyncDatumLocalRepository _userSyncDatumLocalRepository;
 
   @override
   Future<void> call() async {
     await Future.wait([
       _spotifyCredsStore.clear(),
       _authUserInfoProvider.clear(),
+      _userSyncDatumLocalRepository.clear(),
     ]);
 
     _pageNavigator.toAuth();

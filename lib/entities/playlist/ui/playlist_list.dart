@@ -116,8 +116,8 @@ class _PlaylistItem extends StatelessWidget {
                     child: Container(
                       color: Colors.black45,
                       child: switch (playlist.audioImportStatus) {
-                        ProcessStatus.pending => const Center(
-                            child: SmallCircularProgressIndicator(),
+                        ProcessStatus.pending => Center(
+                            child: Text(l.pending, style: const TextStyle(fontSize: 12)),
                           ),
                         ProcessStatus.processing => Column(
                             mainAxisAlignment: MainAxisAlignment.center,
