@@ -10,6 +10,7 @@ import '../entity/audiolike/model/audio_like_dto.dart';
 import '../entity/audiolike/model/get_audio_likes_body.dart';
 import '../entity/audiolike/model/like_unlike_audio_body.dart';
 import '../entity/playlist/model/playlist_dto.dart';
+import '../entity/playlist_audio/model/playlist_audio_dto.dart';
 import '../entity/server_time/model/server_time_dto.dart';
 import '../entity/user/model/update_user_body.dart';
 import '../entity/user/model/user_dto.dart';
@@ -109,4 +110,13 @@ abstract class ApiClient {
 
   @GET('/v1/userplaylist/myUserPlaylistIds')
   Future<List<String>?> getUserPlaylistIdsByAuthUser();
+
+  // playlist audio ---------------------
+  @GET('/v1/playlistaudio/myPlaylistAudioIds')
+  Future<List<PlaylistAudioDto>?> getAllPlaylistAudios(
+    @Query('ids') List<String> ids,
+  );
+
+  @GET('/v1/playlistaudio/myPlaylistAudioIdsByAuthUserPlaylists')
+  Future<List<String>?> getAllPlaylistAudioIdsByAuthUserPlaylists();
 }

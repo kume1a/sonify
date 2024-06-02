@@ -33,8 +33,8 @@ class PlaylistAudioLocalRepositoryImpl with ResultWrap implements PlaylistAudioL
   }
 
   @override
-  Future<EmptyResult> deleteByIds(List<String> ids) {
-    return wrapWithEmptyResult(() => _playlistAudioEntityDao.deleteByIds(ids));
+  Future<Result<int>> deleteByIds(List<String> ids) {
+    return wrapWithResult(() => _playlistAudioEntityDao.deleteByIds(ids));
   }
 
   @override
@@ -44,5 +44,10 @@ class PlaylistAudioLocalRepositoryImpl with ResultWrap implements PlaylistAudioL
 
       return res.map(_playlistAudioMapper.entityToModel).toList();
     });
+  }
+
+  @override
+  Future<Result<List<String>>> getAllByPlaylistIds(List<String> playlistIds) {
+    return wrapWithResult(() => _playlistAudioEntityDao.getAllIdsByPlaylistIds(playlistIds));
   }
 }

@@ -32,4 +32,8 @@ class PlaylistAudioMapper {
       playlistId: model.playlistId,
     );
   }
+
+  List<PlaylistAudio> dtoListToModel(List<PlaylistAudioDto> e) {
+    return e.map(dtoToModel).toList();
+  }
 }

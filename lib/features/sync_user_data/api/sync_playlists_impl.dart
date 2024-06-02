@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:common_models/common_models.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 
 import '../util/sync_entity_base.dart';
 import 'sync_playlists.dart';
@@ -11,10 +12,12 @@ final class SyncPlaylistsImpl extends SyncEntityBase implements SyncPlaylists {
   SyncPlaylistsImpl(
     this._userPlaylistRemoteRepository,
     this._playlistLocalRepository,
+    this._getAuthUserLocalPlaylistIds,
   );
 
   final UserPlaylistRemoteRepository _userPlaylistRemoteRepository;
   final PlaylistLocalRepository _playlistLocalRepository;
+  final GetAuthUserLocalPlaylistIds _getAuthUserLocalPlaylistIds;
 
   @override
   Future<EmptyResult> deleteLocalEntities(List<String> ids) async {
@@ -40,9 +43,13 @@ final class SyncPlaylistsImpl extends SyncEntityBase implements SyncPlaylists {
 
   @override
   Future<List<String>?> getLocalEntityIds() async {
-    final res = await _playlistLocalRepository.getAllIds();
+    final authUserPlaylistIds = await _getAuthUserLocalPlaylistIds();
+    if (authUserPlaylistIds.isErr) {
+      Logger.root.info('playlistIds is null, cannot get local entity ids');
+      return null;
+    }
 
-    return res.dataOrNull;
+    return authUserPlaylistIds.dataOrThrow;
   }
 
   @override

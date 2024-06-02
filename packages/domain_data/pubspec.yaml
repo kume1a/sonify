@@ -12,6 +12,7 @@ dependencies:
   uuid: ^4.3.3
   flutter_dotenv: ^5.1.0
   shared_preferences: ^2.2.2
+  collection: ^1.18.0
 
   sonify_storage:
     path: ../sonify_storage

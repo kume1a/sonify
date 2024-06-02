@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../db/db_batch.dart';
@@ -47,16 +46,6 @@ class SqflitePlaylistEntityDao implements PlaylistEntityDao {
       where: '${Playlist_.id} IN ${sqlListPlaceholders(ids.length)}',
       whereArgs: ids,
     );
-  }
-
-  @override
-  Future<List<String>> getAllIds() async {
-    final res = await _db.query(
-      Playlist_.tn,
-      columns: [Playlist_.id],
-    );
-
-    return res.map((m) => m[Playlist_.id] as String?).whereNotNull().toList();
   }
 
   @override

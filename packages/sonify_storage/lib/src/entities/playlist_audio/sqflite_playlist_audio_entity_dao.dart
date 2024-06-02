@@ -40,7 +40,7 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
   }
 
   @override
-  Future<void> deleteByIds(List<String> ids) {
+  Future<int> deleteByIds(List<String> ids) {
     return _db.delete(
       PlaylistAudio_.tn,
       where: '${PlaylistAudio_.id} IN ${sqlListPlaceholders(ids.length)}',
@@ -53,5 +53,17 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
     final result = await _db.query(PlaylistAudio_.tn);
 
     return result.map(_playlistAudioEntityMapper.mapToEntity).toList();
+  }
+
+  @override
+  Future<List<String>> getAllIdsByPlaylistIds(List<String> playlistIds) async {
+    final result = await _db.query(
+      PlaylistAudio_.tn,
+      columns: [PlaylistAudio_.id],
+      where: '${PlaylistAudio_.playlistId} IN ${sqlListPlaceholders(playlistIds.length)}',
+      whereArgs: playlistIds,
+    );
+
+    return result.map((e) => e[PlaylistAudio_.id] as String).toList();
   }
 }
