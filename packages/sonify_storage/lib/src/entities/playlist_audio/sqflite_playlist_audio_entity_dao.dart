@@ -77,10 +77,6 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
 
   @override
   Future<List<PlaylistAudioEntity>> getAllWithAudio(String playlistId) async {
-    final all = await _db.query(PlaylistAudio_.tn);
-
-    log('all: $all');
-
     final res = await _db.rawQuery(
       '''
         SELECT 
