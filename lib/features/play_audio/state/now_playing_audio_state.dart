@@ -228,7 +228,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return localAudios;
     }
 
-    final playlist = await _playlistRemoteRepository.getById(playlistId: playlistId);
+    final playlist = await _playlistRemoteRepository.getById(playlistId);
 
     emit(state.copyWith(nowPlayingPlaylist: playlist.rightOrNull, nowPlayingAudios: null));
 

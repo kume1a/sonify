@@ -17,9 +17,11 @@ extension PlaylistCubitX on BuildContext {
 final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   PlaylistCubit(
     this._playlistRemoteRepository,
+    this._playlistLocalRepository,
   );
 
   final PlaylistRemoteRepository _playlistRemoteRepository;
+  final PlaylistLocalRepository _playlistLocalRepository;
 
   String? _playlistId;
 
@@ -36,10 +38,14 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
       return null;
     }
 
-    final res = await _playlistRemoteRepository.getById(
-      playlistId: _playlistId!,
-    );
+    final res = await _playlistRemoteRepository.getById(_playlistId!);
 
-    return res.rightOrNull;
+    if (res.isRight) {
+      return res.rightOrNull;
+    }
+
+    final localRes = await _playlistLocalRepository.getById(_playlistId!);
+
+    return localRes.dataOrNull;
   }
 }

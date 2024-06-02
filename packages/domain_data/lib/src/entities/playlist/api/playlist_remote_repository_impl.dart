@@ -24,10 +24,8 @@ class PlaylistRemoteRepositoryImpl implements PlaylistRemoteRepository {
   }
 
   @override
-  Future<Either<NetworkCallError, Playlist>> getById({
-    required String playlistId,
-  }) async {
-    final res = await _playlistRemoteService.getPlaylistById(playlistId: playlistId);
+  Future<Either<NetworkCallError, Playlist>> getById(String id) async {
+    final res = await _playlistRemoteService.getPlaylistById(playlistId: id);
 
     return res.map(_playlistMapper.dtoToModel);
   }

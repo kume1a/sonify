@@ -1,4 +1,5 @@
 import 'package:common_models/common_models.dart';
+import 'package:common_utilities/common_utilities.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
 import '../model/playlist.dart';
@@ -41,5 +42,14 @@ class PlaylistLocalRepositoryImpl with ResultWrap implements PlaylistLocalReposi
   @override
   Future<Result<List<String>>> getAllIds() {
     return wrapWithResult(() => _playlistEntityDao.getAllIds());
+  }
+
+  @override
+  Future<Result<Playlist?>> getById(String id) {
+    return wrapWithResult(() async {
+      final res = await _playlistEntityDao.getById(id);
+
+      return tryMap(res, _playlistMapper.entityToModel);
+    });
   }
 }
