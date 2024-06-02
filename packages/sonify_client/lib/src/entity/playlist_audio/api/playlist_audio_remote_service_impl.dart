@@ -14,11 +14,11 @@ class PlaylistAudioRemoteServiceImpl with SafeHttpRequestWrap implements Playlis
   final ApiClient _apiClient;
 
   @override
-  Future<Either<NetworkCallError, List<PlaylistAudioDto>>> getAll({
+  Future<Either<NetworkCallError, List<PlaylistAudioDto>>> getAllByAuthUser({
     required List<String> ids,
   }) {
     return callCatchHandleNetworkCallError(() async {
-      final res = await _apiClient.getAllPlaylistAudios(ids);
+      final res = await _apiClient.getPlaylistAudiosByAuthUser(ids);
 
       return res ?? [];
     });

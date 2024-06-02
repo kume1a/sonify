@@ -112,8 +112,8 @@ abstract class ApiClient {
   Future<List<String>?> getUserPlaylistIdsByAuthUser();
 
   // playlist audio ---------------------
-  @GET('/v1/playlistaudio/myPlaylistAudioIds')
-  Future<List<PlaylistAudioDto>?> getAllPlaylistAudios(
+  @GET('/v1/playlistaudio/myPlaylistAudios')
+  Future<List<PlaylistAudioDto>?> getPlaylistAudiosByAuthUser(
     @Query('ids') List<String> ids,
   );
 
