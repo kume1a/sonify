@@ -7,7 +7,6 @@ import 'package:retrofit/retrofit.dart';
 import '../entity/audio/model/audio_ids_body.dart';
 import '../entity/audio/model/user_audio_dto.dart';
 import '../entity/audiolike/model/audio_like_dto.dart';
-import '../entity/audiolike/model/get_audio_likes_body.dart';
 import '../entity/audiolike/model/like_unlike_audio_body.dart';
 import '../entity/playlist/model/playlist_dto.dart';
 import '../entity/playlist_audio/model/playlist_audio_dto.dart';
@@ -24,6 +23,8 @@ import '../feature/spotifyauth/model/authorize_spotify_body.dart';
 import '../feature/spotifyauth/model/refresh_spotify_token_body.dart';
 import '../feature/spotifyauth/model/spotify_refresh_token_payload_dto.dart';
 import '../feature/spotifyauth/model/spotify_token_payload_dto.dart';
+import '../shared/dto/optional_ids_body.dart';
+import '../shared/dto/required_ids_body.dart';
 import '../shared/dto/url_dto.dart';
 
 part 'api_client.g.dart';
@@ -58,7 +59,7 @@ abstract class ApiClient {
   Future<void> unlikeAudio(@Body() LikeUnlikeAudioBody body);
 
   @GET('/v1/audiolike/myLikes')
-  Future<List<AudioLikeDto>?> getAuthUserAudioLikes(@Body() GetAudioLikesBody body);
+  Future<List<AudioLikeDto>?> getAuthUserAudioLikes(@Body() OptionalIdsBody body);
 
   // auth ------------------------------
   @POST('/v1/auth/googleSignIn')
@@ -102,7 +103,7 @@ abstract class ApiClient {
 
   @GET('/v1/userplaylist/myUserPlaylists')
   Future<List<UserPlaylistDto>?> getUserPlaylistsByAuthUser(
-    @Query('ids') List<String>? ids,
+    @Body() OptionalIdsBody body,
   );
 
   @GET('/v1/userplaylist/myPlaylistIds')
@@ -114,9 +115,9 @@ abstract class ApiClient {
   // playlist audio ---------------------
   @GET('/v1/playlistaudio/myPlaylistAudios')
   Future<List<PlaylistAudioDto>?> getPlaylistAudiosByAuthUser(
-    @Query('ids') List<String> ids,
+    @Body() RequiredIdsBody body,
   );
 
-  @GET('/v1/playlistaudio/myPlaylistAudioIdsByAuthUser')
+  @GET('/v1/playlistaudio/myPlaylistAudioIds')
   Future<List<String>?> getPlaylistAudioIdsByAuthUser();
 }

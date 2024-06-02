@@ -30,6 +30,7 @@ class PlaylistAudioMapper {
       createdAtMillis: model.createdAt?.millisecondsSinceEpoch,
       audioId: model.audioId,
       playlistId: model.playlistId,
+      audio: null,
     );
   }
 

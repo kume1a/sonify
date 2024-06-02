@@ -12,11 +12,13 @@ class PlaylistLocalRepositoryImpl with ResultWrap implements PlaylistLocalReposi
     this._playlistEntityDao,
     this._dbBatchProviderFactory,
     this._playlistMapper,
+    this._playlistAudioEntityDao,
   );
 
   final PlaylistEntityDao _playlistEntityDao;
   final DbBatchProviderFactory _dbBatchProviderFactory;
   final PlaylistMapper _playlistMapper;
+  final PlaylistAudioEntityDao _playlistAudioEntityDao;
 
   @override
   Future<EmptyResult> bulkWrite(List<Playlist> playlists) {
@@ -44,7 +46,9 @@ class PlaylistLocalRepositoryImpl with ResultWrap implements PlaylistLocalReposi
     return wrapWithResult(() async {
       final res = await _playlistEntityDao.getById(id);
 
-      return tryMap(res, _playlistMapper.entityToModel);
+      final playlistAudios = await _playlistAudioEntityDao.getAllWithAudio(id);
+
+      return tryMap(res, (e) => _playlistMapper.entityToModel(e, audioEntities: playlistAudios));
     });
   }
 }

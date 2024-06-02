@@ -10,7 +10,13 @@ abstract interface class PlaylistAudioEntityDao {
 
   Future<int> deleteByIds(List<String> ids);
 
-  Future<List<PlaylistAudioEntity>> getAll();
+  Future<List<PlaylistAudioEntity>> getAll({
+    String? playlistId,
+  });
 
-  Future<List<String>> getAllIdsByPlaylistIds(List<String> playlistIds);
+  Future<List<String>> getAllIdsByPlaylistIds(
+    List<String> playlistIds,
+  );
+
+  Future<List<PlaylistAudioEntity>> getAllWithAudio(String playlistId);
 }

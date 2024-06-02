@@ -2,6 +2,7 @@ import 'package:common_models/common_models.dart';
 import 'package:common_network_components/common_network_components.dart';
 
 import '../../../api/api_client.dart';
+import '../../../shared/dto/optional_ids_body.dart';
 import '../model/user_playlist_dto.dart';
 import 'user_playlist_remote_service.dart';
 
@@ -17,7 +18,9 @@ class UserPlaylistRemoteServiceImpl with SafeHttpRequestWrap implements UserPlay
     required List<String>? ids,
   }) {
     return callCatchHandleNetworkCallError(() async {
-      final res = await _apiClient.getUserPlaylistsByAuthUser(ids);
+      final body = OptionalIdsBody(ids: ids);
+
+      final res = await _apiClient.getUserPlaylistsByAuthUser(body);
 
       return res ?? [];
     });

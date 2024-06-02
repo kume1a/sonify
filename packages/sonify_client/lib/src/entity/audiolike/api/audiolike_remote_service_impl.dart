@@ -2,8 +2,8 @@ import 'package:common_models/common_models.dart';
 import 'package:common_network_components/common_network_components.dart';
 
 import '../../../api/api_client.dart';
+import '../../../shared/dto/optional_ids_body.dart';
 import '../model/audio_like_dto.dart';
-import '../model/get_audio_likes_body.dart';
 import '../model/like_unlike_audio_body.dart';
 import 'audiolike_remote_service.dart';
 
@@ -41,7 +41,7 @@ class AudioLikeRemoteServiceImpl with SafeHttpRequestWrap implements AudioLikeRe
     List<String>? ids,
   }) async {
     return callCatchHandleNetworkCallError(() async {
-      final body = GetAudioLikesBody(ids: ids);
+      final body = OptionalIdsBody(ids: ids);
 
       final res = await _apiClient.getAuthUserAudioLikes(body);
 

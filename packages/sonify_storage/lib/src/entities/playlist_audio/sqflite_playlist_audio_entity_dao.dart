@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:sqflite/sqflite.dart';
 
 import '../../db/db_batch.dart';
@@ -49,8 +51,14 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
   }
 
   @override
-  Future<List<PlaylistAudioEntity>> getAll() async {
-    final result = await _db.query(PlaylistAudio_.tn);
+  Future<List<PlaylistAudioEntity>> getAll({
+    String? playlistId,
+  }) async {
+    final result = await _db.query(
+      PlaylistAudio_.tn,
+      where: playlistId != null ? '${PlaylistAudio_.playlistId} = ?' : null,
+      whereArgs: playlistId != null ? [playlistId] : null,
+    );
 
     return result.map(_playlistAudioEntityMapper.mapToEntity).toList();
   }
@@ -65,5 +73,43 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
     );
 
     return result.map((e) => e[PlaylistAudio_.id] as String).toList();
+  }
+
+  @override
+  Future<List<PlaylistAudioEntity>> getAllWithAudio(String playlistId) async {
+    final all = await _db.query(PlaylistAudio_.tn);
+
+    log('all: $all');
+
+    final res = await _db.rawQuery(
+      '''
+        SELECT 
+          ${PlaylistAudio_.tn}.${PlaylistAudio_.id},
+          ${PlaylistAudio_.tn}.${PlaylistAudio_.createdAtMillis},
+          ${PlaylistAudio_.tn}.${PlaylistAudio_.playlistId},
+          ${PlaylistAudio_.tn}.${PlaylistAudio_.audioId},
+
+          ${Audio_.tn}.${Audio_.id} AS ${Audio_.joinedId},
+          ${Audio_.tn}.${Audio_.createdAtMillis} AS ${Audio_.joinedCreatedAtMillis},
+          ${Audio_.tn}.${Audio_.title} AS ${Audio_.joinedTitle},
+          ${Audio_.tn}.${Audio_.durationMs} AS ${Audio_.joinedDurationMs},
+          ${Audio_.tn}.${Audio_.path} AS ${Audio_.joinedPath},
+          ${Audio_.tn}.${Audio_.localPath} AS ${Audio_.joinedLocalPath},
+          ${Audio_.tn}.${Audio_.author} AS ${Audio_.joinedAuthor},
+          ${Audio_.tn}.${Audio_.sizeBytes} AS ${Audio_.joinedSizeBytes},
+          ${Audio_.tn}.${Audio_.youtubeVideoId} AS ${Audio_.joinedYoutubeVideoId},
+          ${Audio_.tn}.${Audio_.spotifyId} AS ${Audio_.joinedSpotifyId},
+          ${Audio_.tn}.${Audio_.thumbnailPath} AS ${Audio_.joinedThumbnailPath},
+          ${Audio_.tn}.${Audio_.thumbnailUrl} AS ${Audio_.joinedThumbnailUrl},
+          ${Audio_.tn}.${Audio_.localThumbnailPath} AS ${Audio_.joinedLocalThumbnailPath}
+        FROM ${PlaylistAudio_.tn}
+        LEFT JOIN ${Audio_.tn} ON ${PlaylistAudio_.tn}.${PlaylistAudio_.audioId} = ${Audio_.tn}.${Audio_.id}
+        WHERE ${PlaylistAudio_.tn}.${PlaylistAudio_.playlistId} = ?
+        ORDER BY ${PlaylistAudio_.tn}.${PlaylistAudio_.createdAtMillis} DESC;
+      ''',
+      [playlistId],
+    );
+
+    return res.map(_playlistAudioEntityMapper.mapToEntity).toList();
   }
 }

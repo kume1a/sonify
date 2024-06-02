@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:common_utilities/common_utilities.dart';
 import 'package:sonify_client/sonify_client.dart';
 import 'package:sonify_storage/sonify_storage.dart';
@@ -45,7 +46,15 @@ class PlaylistMapper {
     );
   }
 
-  Playlist entityToModel(PlaylistEntity e) {
+  Playlist entityToModel(
+    PlaylistEntity e, {
+    List<PlaylistAudioEntity>? audioEntities,
+  }) {
+    final audios = audioEntities
+        ?.map((e) => e.audio != null ? _audioMapper.entityToModel(e.audio!) : null)
+        .whereNotNull()
+        .toList();
+
     return Playlist(
       id: e.id ?? kInvalidId,
       createdAt: tryMapDateMillis(e.createdAtMillis),
@@ -56,7 +65,7 @@ class PlaylistMapper {
       audioImportStatus: _processStateMapper.schemaToEnum(e.audioImportStatus),
       audioCount: e.audioCount ?? 0,
       totalAudioCount: e.totalAudioCount ?? 0,
-      audios: [],
+      audios: audios,
     );
   }
 }
