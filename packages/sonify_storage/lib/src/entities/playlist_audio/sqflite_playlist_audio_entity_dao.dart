@@ -76,7 +76,9 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
   }
 
   @override
-  Future<List<PlaylistAudioEntity>> getAllWithAudio(String playlistId) async {
+  Future<List<PlaylistAudioEntity>> getAllWithAudio({
+    required String playlistId,
+  }) async {
     final res = await _db.rawQuery(
       '''
         SELECT 
@@ -106,6 +108,7 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
       [playlistId],
     );
 
+    log('query: $res');
     return res.map(_playlistAudioEntityMapper.mapToEntity).toList();
   }
 }

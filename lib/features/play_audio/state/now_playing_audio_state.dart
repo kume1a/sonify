@@ -55,7 +55,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
 
   final AudioHandler _audioHandler;
   final PlaylistRemoteRepository _playlistRemoteRepository;
-  final AudioLocalRepository _audioLocalRepository;
+  final UserAudioLocalRepository _audioLocalRepository;
   final NowPlayingAudioInfoStore _nowPlayingAudioInfoStore;
   final EnqueuePlaylist _enqueuePlaylist;
   final AuthUserInfoProvider _authUserInfoProvider;

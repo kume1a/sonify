@@ -18,13 +18,13 @@ final class SyncUserAudioImpl extends SyncEntityBase implements SyncUserAudio {
   );
 
   final AudioRemoteRepository _audioRemoteRepository;
-  final AudioLocalRepository _audioLocalRepository;
+  final UserAudioLocalRepository _audioLocalRepository;
   final AuthUserInfoProvider _authUserInfoProvider;
   final EventBus _eventBus;
 
   @override
   Future<EmptyResult> deleteLocalEntities(List<String> ids) async {
-    final res = await _audioLocalRepository.deleteUserAudioJoinsByAudioIds(ids);
+    final res = await _audioLocalRepository.deleteByAudioIds(ids);
 
     return res.toEmptyResult();
   }

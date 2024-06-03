@@ -25,26 +25,6 @@ abstract class DiDomainModelModule {
   }
 
   @lazySingleton
-  UserAudioMapper userAudioMapper(AudioMapper audioMapper) {
-    return UserAudioMapper(audioMapper);
-  }
-
-  @lazySingleton
-  AudioLocalRepository audioLocalRepository(
-    UserAudioEntityDao userAudioEntityDao,
-    AudioMapper audioMapper,
-    UserAudioMapper userAudioMapper,
-    AudioEntityDao audioEntityDao,
-  ) {
-    return AudioLocalRepositoryImpl(
-      userAudioEntityDao,
-      audioMapper,
-      userAudioMapper,
-      audioEntityDao,
-    );
-  }
-
-  @lazySingleton
   AudioRemoteRepository audioRemoteRepository(
     AudioRemoteService audioRemoteService,
     UserAudioMapper userAudioMapper,
@@ -52,6 +32,17 @@ abstract class DiDomainModelModule {
     return AudioRemoteRepositoryImpl(
       audioRemoteService,
       userAudioMapper,
+    );
+  }
+
+  @lazySingleton
+  AudioLocalRepository audioLocalRepository(
+    AudioMapper audioMapper,
+    AudioEntityDao audioEntityDao,
+  ) {
+    return AudioLocalRepositoryImpl(
+      audioMapper,
+      audioEntityDao,
     );
   }
 
@@ -173,6 +164,23 @@ abstract class DiDomainModelModule {
     return UserPlaylistRemoteRepositoryImpl(
       userPlaylistRemoteService,
       userPlaylistMapper,
+    );
+  }
+
+  // user audio --
+  @lazySingleton
+  UserAudioMapper userAudioMapper(AudioMapper audioMapper) {
+    return UserAudioMapper(audioMapper);
+  }
+
+  @lazySingleton
+  UserAudioLocalRepository userAudioLocalRepository(
+    UserAudioEntityDao userAudioEntityDao,
+    UserAudioMapper userAudioMapper,
+  ) {
+    return UserAudioLocalRepositoryImpl(
+      userAudioEntityDao,
+      userAudioMapper,
     );
   }
 
@@ -338,7 +346,7 @@ abstract class DiDomainModelModule {
     );
   }
 
-  // usecase
+  // usecase ------------------------------------------------------------
   @lazySingleton
   GetAuthUserLocalPlaylistIds getAuthUserLocalPlaylistIds(
     AuthUserInfoProvider authUserInfoProvider,
@@ -347,6 +355,17 @@ abstract class DiDomainModelModule {
     return GetAuthUserLocalPlaylistIds(
       authUserInfoProvider,
       userPlaylistLocalRepository,
+    );
+  }
+
+  @lazySingleton
+  SaveUserAudioWithAudio saveUserAudioWithAudio(
+    UserAudioLocalRepository userAudioLocalRepository,
+    AudioLocalRepository audioLocalRepository,
+  ) {
+    return SaveUserAudioWithAudio(
+      userAudioLocalRepository,
+      audioLocalRepository,
     );
   }
 }

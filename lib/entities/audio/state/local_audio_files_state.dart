@@ -28,7 +28,7 @@ final class LocalAudioFilesCubit extends EntityLoaderCubit<List<Audio>> {
     loadEntityAndEmit();
   }
 
-  final AudioLocalRepository _audioLocalRepository;
+  final UserAudioLocalRepository _audioLocalRepository;
   final AuthUserInfoProvider _authUserInfoProvider;
   final EventBus _eventBus;
 

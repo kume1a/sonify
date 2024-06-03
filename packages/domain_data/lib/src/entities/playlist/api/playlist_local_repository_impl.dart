@@ -46,7 +46,7 @@ class PlaylistLocalRepositoryImpl with ResultWrap implements PlaylistLocalReposi
     return wrapWithResult(() async {
       final res = await _playlistEntityDao.getById(id);
 
-      final playlistAudios = await _playlistAudioEntityDao.getAllWithAudio(id);
+      final playlistAudios = await _playlistAudioEntityDao.getAllWithAudio(playlistId: id);
 
       return tryMap(res, (e) => _playlistMapper.entityToModel(e, audioEntities: playlistAudios));
     });

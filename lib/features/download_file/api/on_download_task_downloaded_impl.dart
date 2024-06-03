@@ -9,13 +9,13 @@ import 'on_download_task_downloaded.dart';
 @LazySingleton(as: OnDownloadTaskDownloaded)
 class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
   OnDownloadTaskDownloadedImpl(
-    this._audioLocalRepository,
     this._downloadedTaskLocalRepository,
+    this._saveUserAudioWithAudio,
     this._eventBus,
   );
 
-  final AudioLocalRepository _audioLocalRepository;
   final DownloadedTaskLocalRepository _downloadedTaskLocalRepository;
+  final SaveUserAudioWithAudio _saveUserAudioWithAudio;
   final EventBus _eventBus;
 
   @override
@@ -29,12 +29,15 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
   Future<void> _handleAudioMp3Downloaded(DownloadedTask downloadTask) async {
     final userAudio = downloadTask.payload.userAudio;
 
-    if (userAudio == null) {
-      Logger.root.warning('UserAudio is null, $downloadTask');
+    if (userAudio == null || userAudio.audio == null) {
+      Logger.root.warning('UserAudio or UserAudio.audio is null, $downloadTask');
       return;
     }
 
-    final insertedAudio = await _audioLocalRepository.save(userAudio);
+    final insertedAudio = await _saveUserAudioWithAudio.save(
+      userAudio,
+      userAudio.audio!,
+    );
     if (insertedAudio.isErr) {
       Logger.root.warning('Failed to save userAudio, $userAudio');
       return;

@@ -18,5 +18,7 @@ abstract interface class PlaylistAudioEntityDao {
     List<String> playlistIds,
   );
 
-  Future<List<PlaylistAudioEntity>> getAllWithAudio(String playlistId);
+  Future<List<PlaylistAudioEntity>> getAllWithAudio({
+    required String playlistId,
+  });
 }
