@@ -7,7 +7,7 @@ part 'audio.freezed.dart';
 @freezed
 class Audio with _$Audio {
   const factory Audio({
-    required String id,
+    required String? id,
     required DateTime? createdAt,
     required String title,
     required int durationMs,
