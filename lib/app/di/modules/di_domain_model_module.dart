@@ -109,8 +109,8 @@ abstract class DiDomainModelModule {
 
   // playlist audio ----------------------------------------------------------------
   @lazySingleton
-  PlaylistAudioMapper playlistAudioMapper() {
-    return PlaylistAudioMapper();
+  PlaylistAudioMapper playlistAudioMapper(AudioMapper audioMapper) {
+    return PlaylistAudioMapper(audioMapper);
   }
 
   @lazySingleton
@@ -365,6 +365,17 @@ abstract class DiDomainModelModule {
   ) {
     return SaveUserAudioWithAudio(
       userAudioLocalRepository,
+      audioLocalRepository,
+    );
+  }
+
+  @lazySingleton
+  SavePlaylistAudioWithAudio savePlaylistAudioWithAudio(
+    PlaylistAudioLocalRepository playlistAudioLocalRepository,
+    AudioLocalRepository audioLocalRepository,
+  ) {
+    return SavePlaylistAudioWithAudio(
+      playlistAudioLocalRepository,
       audioLocalRepository,
     );
   }

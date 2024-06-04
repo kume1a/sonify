@@ -12,11 +12,13 @@ final class SyncPlaylistAudiosImpl extends SyncEntityBase implements SyncPlaylis
     this._playlistAudioRemoteRepository,
     this._playlistAudioLocalRepository,
     this._getAuthUserLocalPlaylistIds,
+    this._savePlaylistAudioWithAudio,
   );
 
   final PlaylistAudioRemoteRepository _playlistAudioRemoteRepository;
   final PlaylistAudioLocalRepository _playlistAudioLocalRepository;
   final GetAuthUserLocalPlaylistIds _getAuthUserLocalPlaylistIds;
+  final SavePlaylistAudioWithAudio _savePlaylistAudioWithAudio;
 
   @override
   Future<EmptyResult> deleteLocalEntities(List<String> ids) async {
@@ -27,13 +29,23 @@ final class SyncPlaylistAudiosImpl extends SyncEntityBase implements SyncPlaylis
 
   @override
   Future<EmptyResult> downloadEntities(List<String> ids) async {
-    final playlistAudios = await _playlistAudioRemoteRepository.getAll(ids: ids);
+    final playlistAudios = await _playlistAudioRemoteRepository.getAllByAuthUser(ids: ids);
 
     if (playlistAudios.isLeft) {
       return EmptyResult.err();
     }
 
-    return _playlistAudioLocalRepository.batchCreate(playlistAudios.rightOrThrow);
+    for (final playlistAudio in playlistAudios.rightOrThrow) {
+      final res = await _savePlaylistAudioWithAudio.save(playlistAudio);
+
+      if (res.isErr) {
+        // TODO batch??
+        Logger.root.info('failed to save playlistAudio with audio');
+        return EmptyResult.err();
+      }
+    }
+
+    return EmptyResult.success();
   }
 
   @override

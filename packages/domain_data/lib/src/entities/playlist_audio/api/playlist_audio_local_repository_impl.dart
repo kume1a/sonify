@@ -17,6 +17,18 @@ class PlaylistAudioLocalRepositoryImpl with ResultWrap implements PlaylistAudioL
   final DbBatchProviderFactory _dbBatchProviderFactory;
 
   @override
+  Future<Result<PlaylistAudio>> create(PlaylistAudio playlistAudios) {
+    return wrapWithResult(
+      () async {
+        final insertedId =
+            await _playlistAudioEntityDao.insert(_playlistAudioMapper.modelToEntity(playlistAudios));
+
+        return playlistAudios.copyWith(id: insertedId);
+      },
+    );
+  }
+
+  @override
   Future<EmptyResult> batchCreate(List<PlaylistAudio> playlistAudios) {
     return wrapWithEmptyResult(() async {
       final batchProvider = _dbBatchProviderFactory.newBatchProvider();

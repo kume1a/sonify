@@ -15,7 +15,7 @@ class PlaylistAudioRemoteRepositoryImpl implements PlaylistAudioRemoteRepository
   final PlaylistAudioMapper _playlistAudioMapper;
 
   @override
-  Future<Either<NetworkCallError, List<PlaylistAudio>>> getAll({
+  Future<Either<NetworkCallError, List<PlaylistAudio>>> getAllByAuthUser({
     required List<String> ids,
   }) async {
     final res = await _playlistAudioRemoteService.getAllByAuthUser(ids: ids);
