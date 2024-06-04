@@ -108,7 +108,6 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
       [playlistId],
     );
 
-    log('query: $res');
     return res.map(_playlistAudioEntityMapper.mapToEntity).toList();
   }
 }

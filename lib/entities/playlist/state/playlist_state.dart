@@ -38,8 +38,6 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
       return null;
     }
 
-    Logger.root.info('local playlist entity: ${await _playlistLocalRepository.getById(_playlistId!)}');
-
     final res = await _playlistRemoteRepository.getById(_playlistId!);
 
     if (res.isRight) {
