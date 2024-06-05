@@ -107,6 +107,17 @@ abstract class DiDomainModelModule {
     );
   }
 
+  @lazySingleton
+  PlaylistCachedRepository playlistCachedRepository(
+    PlaylistRemoteRepository playlistRemoteRepository,
+    PlaylistLocalRepository playlistLocalRepository,
+  ) {
+    return PlaylistCachedRepositoryImpl(
+      playlistRemoteRepository,
+      playlistLocalRepository,
+    );
+  }
+
   // playlist audio ----------------------------------------------------------------
   @lazySingleton
   PlaylistAudioMapper playlistAudioMapper(AudioMapper audioMapper) {

@@ -42,25 +42,25 @@ extension NowPlayingAudioCubitX on BuildContext {
 class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   NowPlayingAudioCubit(
     this._audioHandler,
-    this._playlistRemoteRepository,
     this._audioLocalRepository,
     this._nowPlayingAudioInfoStore,
     this._enqueuePlaylist,
     this._authUserInfoProvider,
     this._likeOrUnlikeAudio,
     this._audioLikeLocalRepository,
+    this._playlistCachedRepository,
   ) : super(NowPlayingAudioState.initial()) {
     _init();
   }
 
   final AudioHandler _audioHandler;
-  final PlaylistRemoteRepository _playlistRemoteRepository;
   final UserAudioLocalRepository _audioLocalRepository;
   final NowPlayingAudioInfoStore _nowPlayingAudioInfoStore;
   final EnqueuePlaylist _enqueuePlaylist;
   final AuthUserInfoProvider _authUserInfoProvider;
   final LikeOrUnlikeAudio _likeOrUnlikeAudio;
   final AudioLikeLocalRepository _audioLikeLocalRepository;
+  final PlaylistCachedRepository _playlistCachedRepository;
 
   final _subscriptions = SubscriptionComposite();
 
@@ -186,7 +186,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     required String? playlistId,
   }) async {
     final nowPlayingAudios = await _loadNowPlayingPlaylist(playlistId: playlistId);
-    if (nowPlayingAudios == null || nowPlayingAudios.isEmpty == true) {
+    if (nowPlayingAudios == null || nowPlayingAudios.isEmpty) {
       Logger.root.warning('PlaylistCubit._ensurePlaylistEnqueued: playlist.audios empty');
       return false;
     }
@@ -228,11 +228,11 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return localAudios;
     }
 
-    final playlist = await _playlistRemoteRepository.getById(playlistId);
+    final playlist = await _playlistCachedRepository.getById(playlistId);
 
-    emit(state.copyWith(nowPlayingPlaylist: playlist.rightOrNull, nowPlayingAudios: null));
+    emit(state.copyWith(nowPlayingPlaylist: playlist.dataOrNull, nowPlayingAudios: null));
 
-    return playlist.rightOrNull?.audios;
+    return playlist.dataOrNull?.audios;
   }
 
   Future<void> _onMediaItemChanged(MediaItem? mediaItem) async {
