@@ -1,6 +1,7 @@
 import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../../../shared/ui/animation/pulsing_fade.dart';
@@ -8,6 +9,7 @@ import '../../../shared/ui/list_header.dart';
 import '../../../shared/ui/small_circular_progress_indicator.dart';
 import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/values/app_theme_extension.dart';
+import '../../../shared/values/assets.dart';
 import '../state/playlist_list_state.dart';
 
 class PlaylistsList extends StatelessWidget {
@@ -147,10 +149,21 @@ class _PlaylistItem extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 4),
-            Text(
-              playlist.name,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    playlist.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                if (userPlaylist.isSpotifySavedPlaylist)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4),
+                    child: SvgPicture.asset(Assets.svgSpotify, width: 15, height: 15),
+                  ),
+              ],
             ),
             Text(
               'TODO artist names',
