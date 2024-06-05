@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:global_navigator/global_navigator.dart';
+import 'package:toastification/toastification.dart';
 
 import '../features/download_file/state/downloads_state.dart';
 import '../features/play_audio/state/audio_player_controls_state.dart';
@@ -38,6 +39,14 @@ class App extends StatelessWidget {
             navigatorKey: navigatorKey,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
+            builder: (_, child) {
+              return ToastificationConfigProvider(
+                config: const ToastificationConfig(
+                  alignment: Alignment.bottomCenter,
+                ),
+                child: child!,
+              );
+            },
           ),
         );
       },

@@ -24,11 +24,13 @@ dependencies:
   cached_network_image: ^3.3.1
   flutter_screenutil: ^5.9.0
   fading_edge_scrollview: ^4.1.1
+  toastification: ^2.0.0
 
   # Network
   youtube_explode_dart: ^2.1.0
   http: ^1.2.1
   dio: ^5.4.1
+  connectivity_plus: ^6.0.3
 
   # Data
   json_serializable: ^6.7.1
