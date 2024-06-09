@@ -15,6 +15,7 @@ class AudioListItem extends StatelessWidget {
     required this.audio,
     required this.isPlaying,
     this.padding,
+    this.end,
   });
 
   static final height = 46.h;
@@ -23,6 +24,7 @@ class AudioListItem extends StatelessWidget {
   final Audio audio;
   final bool isPlaying;
   final EdgeInsets? padding;
+  final Widget? end;
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +90,7 @@ class AudioListItem extends StatelessWidget {
                         colorFilter: svgColor(theme.colorScheme.secondary),
                       ),
                     ),
+                  if (end != null) end!,
                 ],
               ),
             ),

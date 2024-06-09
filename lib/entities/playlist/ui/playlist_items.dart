@@ -66,6 +66,7 @@ class _Item extends StatelessWidget {
           ),
           audio: audio,
           isPlaying: isPlaying,
+          end: const Icon(Icons.access_alarm),
         );
       },
     );
