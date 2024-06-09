@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
+import '../../db/sqlite_helpers.dart';
 import '../../db/tables.dart';
 import '../../shared/constant.dart';
 import '../../shared/util.dart';
@@ -28,5 +29,16 @@ class SqliteAudioEntityDao implements AudioEntityDao {
     await _db.insert(Audio_.tn, entityMap);
 
     return insertEntity.id ?? kInvalidId;
+  }
+
+  @override
+  Future<List<AudioEntity>> getByIds(List<String> ids) async {
+    final query = await _db.query(
+      Audio_.tn,
+      where: '${Audio_.id} IN ${sqlListPlaceholders(ids.length)}',
+      whereArgs: ids,
+    );
+
+    return query.map((e) => _audioEntityMapper.mapToEntity(e)).toList();
   }
 }

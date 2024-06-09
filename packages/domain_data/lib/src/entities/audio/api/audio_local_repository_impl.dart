@@ -24,4 +24,13 @@ class AudioLocalRepositoryImpl with ResultWrap implements AudioLocalRepository {
       return audio.copyWith(id: audioEntityId);
     });
   }
+
+  @override
+  Future<Result<List<Audio>>> getByIds(List<String> audioIds) {
+    return wrapWithResult(() async {
+      final entities = await _audioEntityDao.getByIds(audioIds);
+
+      return entities.map((e) => _audioMapper.entityToModel(e)).toList();
+    });
+  }
 }

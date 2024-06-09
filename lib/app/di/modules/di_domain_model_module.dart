@@ -111,10 +111,12 @@ abstract class DiDomainModelModule {
   PlaylistCachedRepository playlistCachedRepository(
     PlaylistRemoteRepository playlistRemoteRepository,
     PlaylistLocalRepository playlistLocalRepository,
+    AudioLocalRepository audioLocalRepository,
   ) {
     return PlaylistCachedRepositoryImpl(
       playlistRemoteRepository,
       playlistLocalRepository,
+      audioLocalRepository,
     );
   }
 
