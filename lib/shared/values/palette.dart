@@ -18,6 +18,7 @@ class Palette {
 
   static const elPrimary = Color(0xFFFFFFFF);
   static const elSecondary = Color(0xFF81818D);
+  static const elTertiary = Color(0xFF4d4d54);
 
   static const myLibraryTileLikedBg = Color(0xFF640C3B);
   static const myLibraryTilePlaylistsBg = Color(0xFF264E17);

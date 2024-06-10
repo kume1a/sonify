@@ -7,6 +7,7 @@ extension ThemeDataX on ThemeData {
 class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
   AppThemeExtension({
     required this.elSecondary,
+    required this.elTertiary,
     required this.myLibraryTileLikedBg,
     required this.myLibraryTilePlaylistsBg,
     required this.myLibraryArtistsBg,
@@ -14,6 +15,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
   });
 
   final Color elSecondary;
+  final Color elTertiary;
   final Color myLibraryTileLikedBg;
   final Color myLibraryTilePlaylistsBg;
   final Color myLibraryArtistsBg;
@@ -22,6 +24,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
   @override
   ThemeExtension<AppThemeExtension> copyWith({
     Color? elSecondary,
+    Color? elTertiary,
     Color? myLibraryTileLikedBg,
     Color? myLibraryTilePlaylistsBg,
     Color? myLibraryArtistsBg,
@@ -29,6 +32,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
   }) {
     return AppThemeExtension(
       elSecondary: elSecondary ?? this.elSecondary,
+      elTertiary: elTertiary ?? this.elTertiary,
       myLibraryTileLikedBg: myLibraryTileLikedBg ?? this.myLibraryTileLikedBg,
       myLibraryTilePlaylistsBg: myLibraryTilePlaylistsBg ?? this.myLibraryTilePlaylistsBg,
       myLibraryArtistsBg: myLibraryArtistsBg ?? this.myLibraryArtistsBg,
@@ -44,6 +48,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
 
     return AppThemeExtension(
       elSecondary: Color.lerp(elSecondary, other.elSecondary, t) ?? elSecondary,
+      elTertiary: Color.lerp(elTertiary, other.elTertiary, t) ?? elTertiary,
       myLibraryTileLikedBg:
           Color.lerp(myLibraryTileLikedBg, other.myLibraryTileLikedBg, t) ?? myLibraryTileLikedBg,
       myLibraryTilePlaylistsBg:

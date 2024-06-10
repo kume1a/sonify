@@ -44,7 +44,7 @@ class AudioListItem extends StatelessWidget {
     );
 
     return InkWell(
-      onTap: onTap,
+      onTap: isDisabled ? null : onTap,
       child: Container(
         height: height,
         padding: padding ?? EdgeInsets.symmetric(horizontal: 16.r),
@@ -77,7 +77,11 @@ class AudioListItem extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 13.sp,
-                            color: isPlaying ? theme.colorScheme.secondary : null,
+                            color: isPlaying
+                                ? theme.colorScheme.secondary
+                                : isDisabled
+                                    ? theme.appThemeExtension?.elSecondary
+                                    : null,
                           ),
                         ),
                         Text(
@@ -86,7 +90,9 @@ class AudioListItem extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 11.sp,
-                            color: theme.appThemeExtension?.elSecondary,
+                            color: isDisabled
+                                ? theme.appThemeExtension?.elTertiary
+                                : theme.appThemeExtension?.elSecondary,
                           ),
                         ),
                       ],

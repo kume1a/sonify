@@ -149,18 +149,18 @@ packages:
     dependency: "direct dev"
     description:
       name: build_runner
-      sha256: "1414d6d733a85d8ad2f1dfcb3ea7945759e35a123cb99ccfac75d0758f75edfa"
+      sha256: "644dc98a0f179b872f612d3eb627924b578897c629788e858157fa5e704ca0c7"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.10"
+    version: "2.4.11"
   build_runner_core:
     dependency: transitive
     description:
       name: build_runner_core
-      sha256: "4ae8ffe5ac758da294ecf1802f2aff01558d8b1b00616aa7538ea9a8a5d50799"
+      sha256: e3c79f69a64bdfcd8a776a3c28db4eb6e3fb5356d013ae5eb2e52007706d5dbe
       url: "https://pub.dev"
     source: hosted
-    version: "7.3.0"
+    version: "7.3.1"
   built_collection:
     dependency: transitive
     description:
@@ -262,7 +262,7 @@ packages:
     description:
       path: "packages/common_models"
       ref: HEAD
-      resolved-ref: "36e8ed2f60a2e0d72c0e0a934ef1b3a7a0417743"
+      resolved-ref: dcca8c25e7aefa0599269369a0ebee7f44cd4d91
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.4"
@@ -271,7 +271,7 @@ packages:
     description:
       path: "packages/common_network_components"
       ref: HEAD
-      resolved-ref: "36e8ed2f60a2e0d72c0e0a934ef1b3a7a0417743"
+      resolved-ref: dcca8c25e7aefa0599269369a0ebee7f44cd4d91
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.7"
@@ -280,7 +280,7 @@ packages:
     description:
       path: "packages/common_utilities"
       ref: HEAD
-      resolved-ref: "36e8ed2f60a2e0d72c0e0a934ef1b3a7a0417743"
+      resolved-ref: dcca8c25e7aefa0599269369a0ebee7f44cd4d91
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.1"
@@ -289,7 +289,7 @@ packages:
     description:
       path: "packages/common_widgets"
       ref: HEAD
-      resolved-ref: "36e8ed2f60a2e0d72c0e0a934ef1b3a7a0417743"
+      resolved-ref: dcca8c25e7aefa0599269369a0ebee7f44cd4d91
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.6"
@@ -518,14 +518,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.0"
-  flutter_plugin_android_lifecycle:
-    dependency: transitive
-    description:
-      name: flutter_plugin_android_lifecycle
-      sha256: c6b0b4c05c458e1c01ad9bcc14041dd7b1f6783d487be4386f793f47a8a4d03e
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.20"
   flutter_screenutil:
     dependency: "direct main"
     description:
@@ -1157,10 +1149,10 @@ packages:
     dependency: transitive
     description:
       name: permission_handler_apple
-      sha256: e9ad66020b89ff1b63908f247c2c6f931c6e62699b756ef8b3c4569350cd8662
+      sha256: e6f6d73b12438ef13e648c4ae56bd106ec60d17e90a59c4545db6781229082a0
       url: "https://pub.dev"
     source: hosted
-    version: "9.4.4"
+    version: "9.4.5"
   permission_handler_html:
     dependency: transitive
     description:
@@ -1197,10 +1189,10 @@ packages:
     dependency: transitive
     description:
       name: platform
-      sha256: "12220bb4b65720483f8fa9450b4332347737cf8213dd2840d8b2c823e47243ec"
+      sha256: "9b71283fc13df574056616011fb138fd3b793ea47cc509c189a6c3fa5f8a1a65"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.4"
+    version: "3.1.5"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -1479,26 +1471,26 @@ packages:
     dependency: transitive
     description:
       name: talker
-      sha256: f876081a34027464e3f1ac785c7e470a5fca2515f4c8c277fb6f78a63e5cda1e
+      sha256: cbe978382c3c70e1cdfbe21851d1e396fd40aaa59bdfab1ba4a94482f54d9420
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.3"
+    version: "4.2.4"
   talker_flutter:
     dependency: transitive
     description:
       name: talker_flutter
-      sha256: "45dab03948d8a611b97d396a782497d567f8fa5694466a2d306f84cfffca6910"
+      sha256: a8463780ef8e878177f17da6f2f039c53d6b8d649a7afc5670fb193674509c4e
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.3"
+    version: "4.2.4"
   talker_logger:
     dependency: transitive
     description:
       name: talker_logger
-      sha256: "8728b67e97a2cd484ed217ec9dca1e05063aa6c9464a1c095e77540f944b1c8a"
+      sha256: be5a50074e6a7fb76d188b65c7aaf7b73955d665fc8459b0634d4fc30f3239f1
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.3"
+    version: "4.2.4"
   term_glyph:
     dependency: transitive
     description:
@@ -1575,10 +1567,10 @@ packages:
     dependency: "direct main"
     description:
       name: url_launcher
-      sha256: "6ce1e04375be4eed30548f10a315826fd933c1e493206eab82eed01f438c8d2e"
+      sha256: "21b704ce5fa560ea9f3b525b43601c678728ba46725bab9b01187b4831377ed3"
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.6"
+    version: "6.3.0"
   url_launcher_android:
     dependency: transitive
     description:
@@ -1687,10 +1679,10 @@ packages:
     dependency: transitive
     description:
       name: video_player_android
-      sha256: "4f77780499ebbdb3a8387f3de7a9d07a7665cfb3a3741177c44a52353fe41d64"
+      sha256: "9529001630e42988f755772972d5014d30121610700e8e502278a245939f8fc8"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.16"
+    version: "2.5.0"
   video_player_avfoundation:
     dependency: transitive
     description:
