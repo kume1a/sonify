@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/intl/app_localizations.dart';
-
-typedef StringResolver = String Function(AppLocalizations context);
+import '../typedefs.dart';
 
 class StatusDialog extends StatelessWidget {
   const StatusDialog({
@@ -12,8 +11,8 @@ class StatusDialog extends StatelessWidget {
     this.onPressed,
   });
 
-  final StringResolver content;
-  final StringResolver buttonLabel;
+  final LocalizedStringResolver content;
+  final LocalizedStringResolver buttonLabel;
   final VoidCallback? onPressed;
 
   @override

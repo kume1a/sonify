@@ -29,24 +29,22 @@ class App extends StatelessWidget {
             BlocProvider(create: (_) => getIt<AudioPlayerControlsCubit>()),
             BlocProvider(create: (_) => getIt<NowPlayingAudioCubit>()),
           ],
-          child: MaterialApp(
-            title: 'Sonify',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.darkTheme,
-            initialRoute: Routes.root,
-            navigatorObservers: [GNObserver()],
-            onGenerateRoute: routeFactory,
-            navigatorKey: navigatorKey,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            builder: (_, child) {
-              return ToastificationConfigProvider(
-                config: const ToastificationConfig(
-                  alignment: Alignment.bottomCenter,
-                ),
-                child: child!,
-              );
-            },
+          child: ToastificationWrapper(
+            config: const ToastificationConfig(
+              animationDuration: Duration(milliseconds: 400),
+              alignment: Alignment.bottomCenter,
+            ),
+            child: MaterialApp(
+              title: 'Sonify',
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.darkTheme,
+              initialRoute: Routes.root,
+              navigatorObservers: [GNObserver()],
+              onGenerateRoute: routeFactory,
+              navigatorKey: navigatorKey,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+            ),
           ),
         );
       },

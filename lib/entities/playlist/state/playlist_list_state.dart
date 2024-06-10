@@ -72,8 +72,6 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
 
     final localPlaylists = await _userPlaylistLocalRepository.getAllByUserId(userId);
 
-    Logger.root.info('Local playlists: $localPlaylists');
-
     localPlaylists.fold(
       () => emit(SimpleDataState.failure()),
       (r) {

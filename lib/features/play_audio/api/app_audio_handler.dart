@@ -9,7 +9,24 @@ import '../model/media_item_payload.dart';
 
 class AppAudioHandler extends BaseAudioHandler {
   AppAudioHandler() {
-    _player.playbackEventStream.map(_transformEvent).pipe(playbackState);
+    _player.playbackEventStream.listen(
+      (event) {
+        final state = _transformEvent(event);
+
+        playbackState.add(state);
+      },
+      onError: (Object error) {
+        Logger.root.warning('Playback error: $error');
+
+        _player.stop();
+
+        playbackState.add(playbackState.value.copyWith(
+          processingState: AudioProcessingState.error,
+          errorCode: -1,
+          errorMessage: error.toString(),
+        ));
+      },
+    );
 
     _listenForDurationChanges();
     _listenForCurrentSongIndexChanges();

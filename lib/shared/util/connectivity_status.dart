@@ -13,9 +13,9 @@ class ConnectivityStatus {
 
   final Connectivity _connectivity;
 
-  StreamController connectionChangeController = StreamController.broadcast();
+  StreamController<bool> connectionChangeController = StreamController.broadcast();
 
-  Stream get connectionChange => connectionChangeController.stream;
+  Stream<bool> get connectionChange => connectionChangeController.stream;
   bool hasConnection = false;
 
   Future<void> init() async {

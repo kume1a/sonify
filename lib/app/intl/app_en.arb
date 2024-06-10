@@ -148,5 +148,6 @@
   "failedToImportSpotifyPlaylists": "Failed to import Spotify Playlists",
   "authorizeSpotifyCaption": "To import Spotify playlists,please authorize with Spotify.",
   "importFailed": "Import failed",
-  "pending": "Pending"
+  "pending": "Pending",
+  "errorPlayingAudio": "Error playing audio"
 }

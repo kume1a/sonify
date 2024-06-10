@@ -8,6 +8,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
+import '../../../shared/ui/toast_notifier.dart';
+import '../../../shared/util/connectivity_status.dart';
 import '../../../shared/util/utils.dart';
 import '../../../shared/values/constant.dart';
 import '../api/now_playing_audio_info_store.dart';
@@ -26,11 +28,13 @@ class NowPlayingAudioState with _$NowPlayingAudioState {
     Playlist? nowPlayingPlaylist,
     List<Audio>? nowPlayingAudios,
     required PlaybackButtonState playButtonState,
+    required SimpleDataState<bool> canPlayRemoteAudio,
   }) = _NowPlayingAudioState;
 
   factory NowPlayingAudioState.initial() => NowPlayingAudioState(
         nowPlayingAudio: SimpleDataState.idle(),
         playButtonState: PlaybackButtonState.idle,
+        canPlayRemoteAudio: SimpleDataState.idle(),
       );
 }
 
@@ -49,6 +53,8 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     this._likeOrUnlikeAudio,
     this._audioLikeLocalRepository,
     this._playlistCachedRepository,
+    this._connectivityStatus,
+    this._toastNotifier,
   ) : super(NowPlayingAudioState.initial()) {
     _init();
   }
@@ -61,13 +67,21 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   final LikeOrUnlikeAudio _likeOrUnlikeAudio;
   final AudioLikeLocalRepository _audioLikeLocalRepository;
   final PlaylistCachedRepository _playlistCachedRepository;
+  final ConnectivityStatus _connectivityStatus;
+  final ToastNotifier _toastNotifier;
 
   final _subscriptions = SubscriptionComposite();
 
   Future<void> _init() async {
-    _subscriptions.add(_audioHandler.mediaItem.listen(_onMediaItemChanged));
-    _subscriptions.add(_audioHandler.playbackState.listen(_onPlaybackStateChanged));
-    _subscriptions.add(AudioService.position.listen(_onPositionChanged));
+    final hasConnection = await _connectivityStatus.checkConnection();
+    emit(state.copyWith(canPlayRemoteAudio: SimpleDataState.success(hasConnection)));
+
+    _subscriptions.addAll([
+      _audioHandler.mediaItem.listen(_onMediaItemChanged),
+      _audioHandler.playbackState.listen(_onPlaybackStateChanged),
+      _connectivityStatus.connectionChange.listen(_onConnectivityChanged),
+      AudioService.position.listen(_onPositionChanged),
+    ]);
   }
 
   @override
@@ -235,6 +249,10 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     return playlist.dataOrNull?.audios;
   }
 
+  void _onConnectivityChanged(bool hasConnection) {
+    emit(state.copyWith(canPlayRemoteAudio: SimpleDataState.success(hasConnection)));
+  }
+
   Future<void> _onMediaItemChanged(MediaItem? mediaItem) async {
     if (mediaItem?.extras == null) {
       Logger.root.warning('NowPlayingAudioCubit._onMediaItemChanged: mediaItem.extras is null');
@@ -277,13 +295,17 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     );
   }
 
-  void _onPlaybackStateChanged(PlaybackState playbackState) {
+  Future<void> _onPlaybackStateChanged(PlaybackState playbackState) async {
     final isPlaying = playbackState.playing;
     final processingState = playbackState.processingState;
 
     if (playbackState.errorCode != null || playbackState.errorMessage != null) {
       Logger.root.warning(
           'NowPlayingAudioCubit._onPlaybackStateChanged: error, playbackState.errorCode=${playbackState.errorCode}, playbackState.errorMessage=${playbackState.errorMessage}');
+
+      _toastNotifier.warning(
+        description: (l) => l.errorPlayingAudio,
+      );
     }
 
     if (processingState == AudioProcessingState.loading ||

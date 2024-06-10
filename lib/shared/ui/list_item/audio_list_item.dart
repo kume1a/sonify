@@ -14,6 +14,7 @@ class AudioListItem extends StatelessWidget {
     required this.onTap,
     required this.audio,
     required this.isPlaying,
+    this.isDisabled = false,
     this.padding,
     this.end,
   });
@@ -23,6 +24,7 @@ class AudioListItem extends StatelessWidget {
   final VoidCallback onTap;
   final Audio audio;
   final bool isPlaying;
+  final bool isDisabled;
   final EdgeInsets? padding;
   final Widget? end;
 
@@ -32,6 +34,14 @@ class AudioListItem extends StatelessWidget {
 
     final hasThumbnail =
         audio.thumbnailPath != null || audio.thumbnailUrl != null || audio.localThumbnailPath != null;
+
+    final thumbnail = Thumbnail(
+      thumbnailPath: audio.thumbnailPath,
+      thumbnailUrl: audio.thumbnailUrl,
+      localThumbnailPath: audio.localThumbnailPath,
+      borderRadius: BorderRadius.circular(8.r),
+      size: Size.square(36.r),
+    );
 
     return InkWell(
       onTap: onTap,
@@ -43,13 +53,15 @@ class AudioListItem extends StatelessWidget {
             if (hasThumbnail)
               Padding(
                 padding: EdgeInsets.only(right: 10.w),
-                child: Thumbnail(
-                  thumbnailPath: audio.thumbnailPath,
-                  thumbnailUrl: audio.thumbnailUrl,
-                  localThumbnailPath: audio.localThumbnailPath,
-                  borderRadius: BorderRadius.circular(8.r),
-                  size: Size.square(36.r),
-                ),
+                child: isDisabled
+                    ? ColorFiltered(
+                        colorFilter: const ColorFilter.mode(
+                          Colors.black38,
+                          BlendMode.srcOver,
+                        ),
+                        child: thumbnail,
+                      )
+                    : thumbnail,
               ),
             Expanded(
               child: Row(
