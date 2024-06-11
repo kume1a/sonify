@@ -12,10 +12,7 @@ import '../state/playlist_state.dart';
 class PlaylistItems extends StatelessWidget {
   const PlaylistItems({
     super.key,
-    required this.playlistId,
   });
-
-  final String playlistId;
 
   @override
   Widget build(BuildContext context) {
@@ -25,17 +22,14 @@ class PlaylistItems extends StatelessWidget {
           orElse: () => const SliverToBoxAdapter(),
           loading: () => const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator())),
           success: (data) => SliverList.builder(
-            itemCount: data.audios?.length ?? 0,
+            itemCount: data.playlistAudios?.length ?? 0,
             itemBuilder: (_, index) {
-              final audio = data.audios?.elementAt(index);
-              if (audio == null) {
+              final playlistAudio = data.playlistAudios?.elementAt(index);
+              if (playlistAudio == null || playlistAudio.audio == null) {
                 return const SizedBox.shrink();
               }
 
-              return _Item(
-                audio: audio,
-                playlistId: playlistId,
-              );
+              return _Item(playlistAudio: playlistAudio);
             },
           ),
         );
@@ -46,12 +40,10 @@ class PlaylistItems extends StatelessWidget {
 
 class _Item extends StatelessWidget {
   const _Item({
-    required this.audio,
-    required this.playlistId,
+    required this.playlistAudio,
   });
 
-  final Audio audio;
-  final String playlistId;
+  final PlaylistAudio playlistAudio;
 
   @override
   Widget build(BuildContext context) {
@@ -62,23 +54,20 @@ class _Item extends StatelessWidget {
       builder: (_, state) {
         final nowPlayingAudio = state.nowPlayingAudio.getOrNull;
 
-        final isPlaying = nowPlayingAudio?.id != null && nowPlayingAudio?.id == audio.id;
+        final isPlaying = nowPlayingAudio?.id != null && nowPlayingAudio?.id == playlistAudio.audioId;
         final canPlayRemoteAudio = state.canPlayRemoteAudio.dataOrElse(() => false);
-        final isDisabled = !canPlayRemoteAudio && audio.localPath == null;
+        final isDisabled = !canPlayRemoteAudio && playlistAudio.audio?.localPath == null;
 
         return AudioListItem(
-          onTap: () => context.nowPlayingAudioCubit.onPlaylistAudioPressed(
-            audio: audio,
-            playlistId: playlistId,
-          ),
-          audio: audio,
+          onTap: () => context.nowPlayingAudioCubit.onPlaylistAudioPressed(playlistAudio),
+          audio: playlistAudio.audio!,
           isPlaying: isPlaying,
           isDisabled: isDisabled,
           padding: EdgeInsets.only(left: 16.r),
           end: IconButton(
             icon: SvgPicture.asset(Assets.svgMenuVertical),
             splashRadius: 24,
-            onPressed: () => context.playlistCubit.onPlaylistAudioMenuPressed(audio),
+            onPressed: () => context.playlistCubit.onPlaylistAudioMenuPressed(playlistAudio),
           ),
         );
       },

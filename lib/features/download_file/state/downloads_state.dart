@@ -87,6 +87,7 @@ class DownloadsCubit extends Cubit<DownloadsState> {
   Future<void> _onDownloadsEvent(DownloadsEvent event) async {
     final downloadTask = await event.when(
       enqueueUserAudio: _downloadTaskMapper.userAudioToDownloadTask,
+      enqueuePlaylistAudio: _downloadTaskMapper.playlistAudioToDownloadTask,
     );
 
     if (downloadTask == null) {

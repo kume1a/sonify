@@ -3,7 +3,7 @@ import 'package:common_models/common_models.dart';
 import 'package:logging/logging.dart';
 
 import '../../audio/api/audio_local_repository.dart';
-import '../../audio/model/audio.dart';
+import '../../playlist_audio/model/playlist_audio.dart';
 import '../model/playlist.dart';
 import 'playlist_cached_repository.dart';
 import 'playlist_local_repository.dart';
@@ -33,7 +33,7 @@ class PlaylistCachedRepositoryImpl implements PlaylistCachedRepository {
 
       return remoteResult
           .toResult()
-          .map((playlist) => playlist.copyWith(audios: remoteAudiosWithLocalPaths.dataOrThrow));
+          .map((playlist) => playlist.copyWith(playlistAudios: remoteAudiosWithLocalPaths.dataOrThrow));
     }
 
     final localRes = await _playlistLocalRepository.getById(id);
@@ -45,12 +45,12 @@ class PlaylistCachedRepositoryImpl implements PlaylistCachedRepository {
     return Result.err();
   }
 
-  Future<Result<List<Audio>>> _mergeRemotePlaylistWithLocalAudios(
+  Future<Result<List<PlaylistAudio>>> _mergeRemotePlaylistWithLocalAudios(
     Playlist playlist,
   ) async {
-    final remoteAudios = playlist.audios ?? [];
+    final remotePlaylistAudios = playlist.playlistAudios ?? [];
 
-    final audioIds = remoteAudios.map((e) => e.id).whereNotNull().toList();
+    final audioIds = remotePlaylistAudios.map((e) => e.audioId).whereNotNull().toList();
 
     final cachedAudios = await _audioLocalRepository.getByIds(audioIds);
 
@@ -59,19 +59,20 @@ class PlaylistCachedRepositoryImpl implements PlaylistCachedRepository {
       return Result.err();
     }
 
-    final remoteAudiosWithLocalPaths =
-        remoteAudios.where((e) => e.localPath != null || e.localThumbnailPath != null).map((remoteAudio) {
-      final cachedAudio =
-          cachedAudios.dataOrThrow.firstWhereOrNull((cachedAudio) => cachedAudio.id == remoteAudio.id);
+    final remoteAudiosWithLocalPaths = remotePlaylistAudios.map((remotePlaylistAudio) {
+      final cachedAudio = cachedAudios.dataOrThrow
+          .firstWhereOrNull((cachedAudio) => cachedAudio.id == remotePlaylistAudio.audioId);
 
-      if (cachedAudio != null) {
-        return remoteAudio.copyWith(
-          localPath: cachedAudio.localPath,
-          localThumbnailPath: cachedAudio.localThumbnailPath,
-        );
+      if (cachedAudio == null) {
+        return remotePlaylistAudio;
       }
 
-      return remoteAudio;
+      return remotePlaylistAudio.copyWith(
+        audio: remotePlaylistAudio.audio?.copyWith(
+          localPath: cachedAudio.localPath,
+          localThumbnailPath: cachedAudio.localThumbnailPath,
+        ),
+      );
     }).toList();
 
     return Result.success(remoteAudiosWithLocalPaths);

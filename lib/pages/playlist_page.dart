@@ -63,9 +63,7 @@ class _Content extends StatelessWidget {
               ),
             ),
             const SliverSizedBox(height: 42),
-            PlaylistItems(
-              playlistId: args.playlistId,
-            ),
+            const PlaylistItems(),
           ],
         ),
       ),

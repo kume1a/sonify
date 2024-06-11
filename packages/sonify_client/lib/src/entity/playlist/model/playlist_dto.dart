@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../audio/model/audio_dto.dart';
+import '../../playlist_audio/model/playlist_audio_dto.dart';
 
 part 'playlist_dto.g.dart';
 
@@ -18,7 +18,7 @@ class PlaylistDto with _$PlaylistDto {
     String? audioImportStatus,
     int? audioCount,
     int? totalAudioCount,
-    List<AudioDto>? audios,
+    List<PlaylistAudioDto>? audios,
   }) = _PlaylistDto;
 
   factory PlaylistDto.fromJson(Map<String, dynamic> json) => _$PlaylistDtoFromJson(json);

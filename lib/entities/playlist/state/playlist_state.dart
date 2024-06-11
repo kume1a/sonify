@@ -1,10 +1,12 @@
 import 'package:common_models/common_models.dart';
+import 'package:common_utilities/common_utilities.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
+import '../../../features/download_file/model/downloads_event.dart';
 import '../../../shared/bottom_sheet/bottom_sheet_manager.dart';
 import '../../../shared/bottom_sheet/select_option/select_option.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
@@ -22,11 +24,13 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     this._playlistRemoteRepository,
     this._playlistLocalRepository,
     this._bottomSheetManager,
+    this._eventBus,
   );
 
   final PlaylistRemoteRepository _playlistRemoteRepository;
   final PlaylistLocalRepository _playlistLocalRepository;
   final BottomSheetManager _bottomSheetManager;
+  final EventBus _eventBus;
 
   String? _playlistId;
 
@@ -54,9 +58,9 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     return localRes.dataOrNull;
   }
 
-  Future<void> onPlaylistAudioMenuPressed(Audio audio) async {
+  Future<void> onPlaylistAudioMenuPressed(PlaylistAudio playlistAudio) async {
     final selectedOption = await _bottomSheetManager.openOptionSelector<int>(
-      header: (_) => audio.title,
+      header: (l) => playlistAudio.audio?.title ?? l.audio,
       options: [
         SelectOption(value: 0, label: (l) => l.download, iconAssetName: Assets.svgDownload),
       ],
@@ -68,7 +72,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
 
     switch (selectedOption) {
       case 0:
-        Logger.root.info('Download audio: ${audio.id}');
+        _eventBus.fire(DownloadsEvent.enqueuePlaylistAudio(playlistAudio));
         break;
     }
   }

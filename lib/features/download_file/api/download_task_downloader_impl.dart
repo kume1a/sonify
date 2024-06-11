@@ -73,6 +73,12 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
             localThumbnailPath: thumbnailSavePath,
           ),
         ),
+        playlistAudio: downloadTask.payload.playlistAudio?.copyWith(
+          audio: downloadTask.payload.playlistAudio?.audio?.copyWith(
+            localPath: downloadTask.savePath,
+            localThumbnailPath: thumbnailSavePath,
+          ),
+        ),
       ),
     );
 
@@ -82,7 +88,7 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
   Uri? _resolveImageUri(DownloadTask downloadTask) {
     switch (downloadTask.fileType) {
       case FileType.audioMp3:
-        final audio = downloadTask.payload.userAudio?.audio;
+        final audio = downloadTask.payload.userAudio?.audio ?? downloadTask.payload.playlistAudio?.audio;
 
         if (audio?.thumbnailPath != null) {
           return Uri.tryParse(assembleRemoteMediaUrl(audio!.thumbnailPath!));

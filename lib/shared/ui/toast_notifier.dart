@@ -12,6 +12,35 @@ final class ToastNotifier {
     LocalizedStringResolver? title,
     required LocalizedStringResolver description,
   }) {
+    return _notify(title: title, description: description, type: ToastificationType.warning);
+  }
+
+  void error({
+    LocalizedStringResolver? title,
+    required LocalizedStringResolver description,
+  }) {
+    return _notify(title: title, description: description, type: ToastificationType.error);
+  }
+
+  void success({
+    LocalizedStringResolver? title,
+    required LocalizedStringResolver description,
+  }) {
+    return _notify(title: title, description: description, type: ToastificationType.success);
+  }
+
+  void info({
+    LocalizedStringResolver? title,
+    required LocalizedStringResolver description,
+  }) {
+    return _notify(title: title, description: description, type: ToastificationType.info);
+  }
+
+  void _notify({
+    LocalizedStringResolver? title,
+    required LocalizedStringResolver description,
+    required ToastificationType type,
+  }) {
     final l = getStaticLocalizations();
     final theme = getStaticTheme();
 
@@ -26,7 +55,7 @@ final class ToastNotifier {
     toastification.show(
       title: title != null ? Text(title(l), style: textStyle) : null,
       description: Text(description(l), style: textStyle),
-      type: ToastificationType.warning,
+      type: type,
       style: ToastificationStyle.flatColored,
       closeButtonShowType: CloseButtonShowType.none,
       backgroundColor: theme.colorScheme.surface,

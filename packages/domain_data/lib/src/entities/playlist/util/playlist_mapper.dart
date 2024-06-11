@@ -4,17 +4,17 @@ import 'package:sonify_client/sonify_client.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
 import '../../../shared/constant.dart';
-import '../../audio/util/audio_mapper.dart';
+import '../../playlist_audio/util/playlist_audio_mapper.dart';
 import '../model/playlist.dart';
 import 'process_status_mapper.dart';
 
 class PlaylistMapper {
   PlaylistMapper(
-    this._audioMapper,
+    this._playlistAudioMapper,
     this._processStateMapper,
   );
 
-  final AudioMapper _audioMapper;
+  final PlaylistAudioMapper _playlistAudioMapper;
   final ProcessStatusMapper _processStateMapper;
 
   Playlist dtoToModel(PlaylistDto dto) {
@@ -28,7 +28,7 @@ class PlaylistMapper {
       audioImportStatus: _processStateMapper.schemaToEnum(dto.audioImportStatus),
       audioCount: dto.audioCount ?? 0,
       totalAudioCount: dto.totalAudioCount ?? 0,
-      audios: tryMapList(dto.audios, _audioMapper.dtoToModel),
+      playlistAudios: tryMapList(dto.audios, _playlistAudioMapper.dtoToModel),
     );
   }
 
@@ -48,10 +48,10 @@ class PlaylistMapper {
 
   Playlist entityToModel(
     PlaylistEntity e, {
-    List<PlaylistAudioEntity>? audioEntities,
+    List<PlaylistAudioEntity>? playlistAudioEntities,
   }) {
-    final audios = audioEntities
-        ?.map((e) => e.audio != null ? _audioMapper.entityToModel(e.audio!) : null)
+    final playlistAudios = playlistAudioEntities
+        ?.map((e) => e.audio != null ? _playlistAudioMapper.entityToModel(e) : null)
         .whereNotNull()
         .toList();
 
@@ -65,7 +65,7 @@ class PlaylistMapper {
       audioImportStatus: _processStateMapper.schemaToEnum(e.audioImportStatus),
       audioCount: e.audioCount ?? 0,
       totalAudioCount: e.totalAudioCount ?? 0,
-      audios: audios,
+      playlistAudios: playlistAudios,
     );
   }
 }

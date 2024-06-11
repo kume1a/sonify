@@ -1,6 +1,7 @@
 import 'package:common_utilities/common_utilities.dart';
 
 import '../../../entities/audio/model/user_audio.dart';
+import '../../../entities/playlist_audio/model/playlist_audio.dart';
 import '../../../shared/assemble_resource_url.dart';
 import '../../../shared/resource_save_path_provider.dart';
 import '../../../shared/uuid_factory.dart';
@@ -24,16 +25,34 @@ class DownloadTaskMapper {
 
     final savePath = await _getSavePath(fileType);
 
-    return DownloadTask(
+    return DownloadTask.initial(
       id: _uuidFactory.generate(),
       savePath: savePath,
       uri: uri,
-      progress: 0,
-      speedInKbs: 0,
-      state: DownloadTaskState.idle,
       fileType: fileType,
       payload: DownloadTaskPayload(
         userAudio: userAudio,
+      ),
+    );
+  }
+
+  Future<DownloadTask?> playlistAudioToDownloadTask(PlaylistAudio playlistAudio) async {
+    final uri = tryMap(playlistAudio.audio?.path, (path) => Uri.tryParse(assembleRemoteMediaUrl(path)));
+    if (uri == null) {
+      return null;
+    }
+
+    const fileType = FileType.audioMp3;
+
+    final savePath = await _getSavePath(fileType);
+
+    return DownloadTask.initial(
+      id: _uuidFactory.generate(),
+      savePath: savePath,
+      uri: uri,
+      fileType: fileType,
+      payload: DownloadTaskPayload(
+        playlistAudio: playlistAudio,
       ),
     );
   }
