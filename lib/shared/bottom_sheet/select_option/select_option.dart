@@ -1,11 +1,13 @@
+import '../../typedefs.dart';
+
 class SelectOption<T> {
   SelectOption({
     required this.value,
     required this.label,
-    required this.iconAssetName,
+    this.iconAssetName,
   });
 
   final T value;
-  final String label;
-  final String iconAssetName;
+  final LocalizedStringResolver label;
+  final String? iconAssetName;
 }

@@ -78,7 +78,7 @@ class _Item extends StatelessWidget {
           end: IconButton(
             icon: SvgPicture.asset(Assets.svgMenuVertical),
             splashRadius: 24,
-            onPressed: () {},
+            onPressed: () => context.playlistCubit.onPlaylistAudioMenuPressed(audio),
           ),
         );
       },
