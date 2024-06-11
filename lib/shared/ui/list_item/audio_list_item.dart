@@ -51,17 +51,10 @@ class AudioListItem extends StatelessWidget {
         child: Row(
           children: [
             if (hasThumbnail)
-              Padding(
+              Container(
                 padding: EdgeInsets.only(right: 10.w),
-                child: isDisabled
-                    ? ColorFiltered(
-                        colorFilter: const ColorFilter.mode(
-                          Colors.black38,
-                          BlendMode.srcOver,
-                        ),
-                        child: thumbnail,
-                      )
-                    : thumbnail,
+                foregroundDecoration: BoxDecoration(color: isDisabled ? Colors.black38 : null),
+                child: thumbnail,
               ),
             Expanded(
               child: Row(
