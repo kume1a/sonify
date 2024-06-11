@@ -21,14 +21,12 @@ extension PlaylistCubitX on BuildContext {
 @injectable
 final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   PlaylistCubit(
-    this._playlistRemoteRepository,
-    this._playlistLocalRepository,
+    this._playlistCachedRepository,
     this._bottomSheetManager,
     this._eventBus,
   );
 
-  final PlaylistRemoteRepository _playlistRemoteRepository;
-  final PlaylistLocalRepository _playlistLocalRepository;
+  final PlaylistCachedRepository _playlistCachedRepository;
   final BottomSheetManager _bottomSheetManager;
   final EventBus _eventBus;
 
@@ -47,15 +45,9 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
       return null;
     }
 
-    final res = await _playlistRemoteRepository.getById(_playlistId!);
+    final res = await _playlistCachedRepository.getById(_playlistId!);
 
-    if (res.isRight) {
-      return res.rightOrNull;
-    }
-
-    final localRes = await _playlistLocalRepository.getById(_playlistId!);
-
-    return localRes.dataOrNull;
+    return res.dataOrNull;
   }
 
   Future<void> onPlaylistAudioMenuPressed(PlaylistAudio playlistAudio) async {
