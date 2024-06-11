@@ -3,16 +3,12 @@ import 'package:common_widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../../../features/play_audio/model/playback_button_state.dart';
 import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/animation/pulsing_fade.dart';
 import '../../../shared/ui/round_play_button.dart';
-import '../../../shared/util/color.dart';
-import '../../../shared/values/app_theme_extension.dart';
-import '../../../shared/values/assets.dart';
 import '../state/playlist_state.dart';
 
 class PlaylistAppBar implements SliverPersistentHeaderDelegate {
@@ -91,9 +87,6 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const _PlaylistViewCount(),
-                const SizedBox(height: 12),
-                const _OptionButtons(),
               ],
             ),
           ),
@@ -212,73 +205,6 @@ class _PlaylistTitle extends StatelessWidget {
           orElse: () => const SizedBox.shrink(),
         );
       },
-    );
-  }
-}
-
-class _PlaylistViewCount extends StatelessWidget {
-  const _PlaylistViewCount();
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final l = AppLocalizations.of(context);
-
-    return BlocBuilder<PlaylistCubit, PlaylistState>(
-      builder: (_, state) {
-        return Row(
-          children: [
-            SvgPicture.asset(
-              Assets.svgMusicNote,
-              width: 16,
-              height: 16,
-              colorFilter: svgColor(theme.appThemeExtension?.elSecondary),
-            ),
-            const SizedBox(width: 5),
-            Text(
-              'TODO ${l.playedNTimes(10000)}',
-              style: TextStyle(
-                fontSize: 12,
-                color: theme.appThemeExtension?.elSecondary,
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _OptionButtons extends StatelessWidget {
-  const _OptionButtons();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Row(
-      children: [
-        SvgPicture.asset(
-          Assets.svgHeart,
-          width: 20,
-          height: 20,
-          colorFilter: svgColor(theme.appThemeExtension?.elSecondary),
-        ),
-        const SizedBox(width: 12),
-        SvgPicture.asset(
-          Assets.svgDownload,
-          width: 20,
-          height: 20,
-          colorFilter: svgColor(theme.appThemeExtension?.elSecondary),
-        ),
-        const SizedBox(width: 12),
-        SvgPicture.asset(
-          Assets.svgMenuVertical,
-          width: 20,
-          height: 20,
-          colorFilter: svgColor(theme.appThemeExtension?.elSecondary),
-        ),
-      ],
     );
   }
 }
