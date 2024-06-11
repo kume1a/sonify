@@ -18,7 +18,7 @@ class PlaylistDto with _$PlaylistDto {
     String? audioImportStatus,
     int? audioCount,
     int? totalAudioCount,
-    List<PlaylistAudioDto>? audios,
+    List<PlaylistAudioDto>? playlistAudios,
   }) = _PlaylistDto;
 
   factory PlaylistDto.fromJson(Map<String, dynamic> json) => _$PlaylistDtoFromJson(json);

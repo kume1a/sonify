@@ -28,7 +28,7 @@ class PlaylistMapper {
       audioImportStatus: _processStateMapper.schemaToEnum(dto.audioImportStatus),
       audioCount: dto.audioCount ?? 0,
       totalAudioCount: dto.totalAudioCount ?? 0,
-      playlistAudios: tryMapList(dto.audios, _playlistAudioMapper.dtoToModel),
+      playlistAudios: tryMapList(dto.playlistAudios, _playlistAudioMapper.dtoToModel),
     );
   }
 
