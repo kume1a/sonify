@@ -5,7 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
-@lazySingleton
+@injectable
 class ConnectivityStatus {
   ConnectivityStatus(
     this._connectivity,
@@ -18,13 +18,18 @@ class ConnectivityStatus {
   Stream<bool> get connectionChange => connectionChangeController.stream;
   bool hasConnection = false;
 
-  Future<void> init() async {
-    _connectivity.onConnectivityChanged.listen((_) => checkConnection());
-    await checkConnection();
+  StreamSubscription? _sub;
+
+  void init() {
+    _sub = _connectivity.onConnectivityChanged.listen((_) {
+      Logger.root.info('Connectivity changed, $_');
+      checkConnection();
+    });
   }
 
-  void dispose() {
-    connectionChangeController.close();
+  Future<void> dispose() async {
+    await _sub?.cancel();
+    await connectionChangeController.close();
   }
 
   Future<bool> checkConnection() async {
@@ -33,7 +38,7 @@ class ConnectivityStatus {
     try {
       final result = await InternetAddress.lookup('example.com');
 
-      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+      hasConnection = result.isNotEmpty && result[0].rawAddress.isNotEmpty;
     } on SocketException catch (_) {
       hasConnection = false;
     } catch (e) {

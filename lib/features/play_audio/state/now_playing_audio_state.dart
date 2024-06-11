@@ -74,6 +74,8 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   final _subscriptions = SubscriptionComposite();
 
   Future<void> _init() async {
+    _connectivityStatus.init();
+
     final hasConnection = await _connectivityStatus.checkConnection();
     emit(state.copyWith(canPlayRemoteAudio: SimpleDataState.success(hasConnection)));
 
@@ -88,6 +90,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   @override
   Future<void> close() async {
     await _subscriptions.closeAll();
+    await _connectivityStatus.dispose();
 
     return super.close();
   }
