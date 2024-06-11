@@ -21,10 +21,7 @@ class ConnectivityStatus {
   StreamSubscription? _sub;
 
   void init() {
-    _sub = _connectivity.onConnectivityChanged.listen((_) {
-      Logger.root.info('Connectivity changed, $_');
-      checkConnection();
-    });
+    _sub = _connectivity.onConnectivityChanged.listen((_) => checkConnection());
   }
 
   Future<void> dispose() async {

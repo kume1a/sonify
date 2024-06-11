@@ -6,6 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/list_item/audio_list_item.dart';
+import '../../../shared/util/color.dart';
+import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
 import '../state/playlist_state.dart';
 
@@ -47,6 +49,8 @@ class _Item extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
       buildWhen: (previous, current) =>
           previous.nowPlayingAudio != current.nowPlayingAudio ||
@@ -65,9 +69,14 @@ class _Item extends StatelessWidget {
           isDisabled: isDisabled,
           padding: EdgeInsets.only(left: 16.r),
           end: IconButton(
-            icon: SvgPicture.asset(Assets.svgMenuVertical),
+            icon: SvgPicture.asset(
+              Assets.svgMenuVertical,
+              colorFilter:
+                  svgColor(isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onSurface),
+            ),
             splashRadius: 24,
-            onPressed: () => context.playlistCubit.onPlaylistAudioMenuPressed(playlistAudio),
+            onPressed:
+                isDisabled ? null : () => context.playlistCubit.onPlaylistAudioMenuPressed(playlistAudio),
           ),
         );
       },
