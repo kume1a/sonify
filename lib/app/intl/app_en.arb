@@ -149,5 +149,7 @@
   "authorizeSpotifyCaption": "To import Spotify playlists,please authorize with Spotify.",
   "importFailed": "Import failed",
   "pending": "Pending",
-  "errorPlayingAudio": "Error playing audio"
+  "errorPlayingAudio": "Error playing audio",
+  "downloadStarted": "Download started",
+  "alreadyDownloaded": "Already downloaded"
 }

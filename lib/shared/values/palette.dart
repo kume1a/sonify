@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Palette {
-  // common
-  static const Color error = Color(0xFFFB3836);
-  static const Color success = Color(0xFF60DA8C);
+  static const error = Color(0xFFFB3836);
+  static const success = Color(0xFF60DA8C);
 
   static const surface = Color(0xFF060606);
   static const onSurface = Color(0xFFFFFFFF);
@@ -15,6 +14,7 @@ class Palette {
 
   static const primaryContainer = Color(0xFF140531);
   static const secondaryContainer = Color(0xFF332849);
+  static const bgPopup = Color(0xFF101010);
 
   static const elPrimary = Color(0xFFFFFFFF);
   static const elSecondary = Color(0xFF81818D);

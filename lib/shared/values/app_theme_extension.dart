@@ -12,6 +12,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
     required this.myLibraryTilePlaylistsBg,
     required this.myLibraryArtistsBg,
     required this.success,
+    required this.bgPopup,
   });
 
   final Color elSecondary;
@@ -20,6 +21,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
   final Color myLibraryTilePlaylistsBg;
   final Color myLibraryArtistsBg;
   final Color success;
+  final Color bgPopup;
 
   @override
   ThemeExtension<AppThemeExtension> copyWith({
@@ -29,6 +31,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
     Color? myLibraryTilePlaylistsBg,
     Color? myLibraryArtistsBg,
     Color? success,
+    Color? bgPopup,
   }) {
     return AppThemeExtension(
       elSecondary: elSecondary ?? this.elSecondary,
@@ -37,6 +40,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
       myLibraryTilePlaylistsBg: myLibraryTilePlaylistsBg ?? this.myLibraryTilePlaylistsBg,
       myLibraryArtistsBg: myLibraryArtistsBg ?? this.myLibraryArtistsBg,
       success: success ?? this.success,
+      bgPopup: bgPopup ?? this.bgPopup,
     );
   }
 
@@ -55,6 +59,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
           Color.lerp(myLibraryTilePlaylistsBg, other.myLibraryTilePlaylistsBg, t) ?? myLibraryTilePlaylistsBg,
       myLibraryArtistsBg: Color.lerp(myLibraryArtistsBg, other.myLibraryArtistsBg, t) ?? myLibraryArtistsBg,
       success: Color.lerp(success, other.success, t) ?? success,
+      bgPopup: Color.lerp(bgPopup, other.bgPopup, t) ?? bgPopup,
     );
   }
 }

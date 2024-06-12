@@ -10,6 +10,7 @@ import '../../../features/download_file/model/downloads_event.dart';
 import '../../../shared/bottom_sheet/bottom_sheet_manager.dart';
 import '../../../shared/bottom_sheet/select_option/select_option.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
+import '../../../shared/ui/toast_notifier.dart';
 import '../../../shared/values/assets.dart';
 import '../model/event_playlist_audio.dart';
 
@@ -25,11 +26,13 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     this._playlistCachedRepository,
     this._bottomSheetManager,
     this._eventBus,
+    this._toastNotifier,
   );
 
   final PlaylistCachedRepository _playlistCachedRepository;
   final BottomSheetManager _bottomSheetManager;
   final EventBus _eventBus;
+  final ToastNotifier _toastNotifier;
 
   String? _playlistId;
 
@@ -63,10 +66,17 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   }
 
   Future<void> onPlaylistAudioMenuPressed(PlaylistAudio playlistAudio) async {
+    final isDownloaded = playlistAudio.audio?.localPath != null;
+
     final selectedOption = await _bottomSheetManager.openOptionSelector<int>(
       header: (l) => playlistAudio.audio?.title ?? l.audio,
       options: [
-        SelectOption(value: 0, label: (l) => l.download, iconAssetName: Assets.svgDownload),
+        SelectOption(
+          value: 0,
+          label: (l) => isDownloaded ? l.alreadyDownloaded : l.download,
+          iconAssetName: Assets.svgDownload,
+          isActive: !isDownloaded,
+        ),
       ],
     );
 
@@ -77,6 +87,8 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     switch (selectedOption) {
       case 0:
         _eventBus.fire(DownloadsEvent.enqueuePlaylistAudio(playlistAudio));
+
+        _toastNotifier.info(description: (l) => l.downloadStarted);
         break;
     }
   }

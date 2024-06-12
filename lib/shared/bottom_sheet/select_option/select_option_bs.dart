@@ -23,6 +23,7 @@ class SelectOptionSelectorBS<T extends Object?> extends StatelessWidget {
     final l = AppLocalizations.of(context);
 
     return Material(
+      color: theme.appThemeExtension?.bgPopup,
       child: SafeArea(
         top: false,
         minimum: const EdgeInsets.only(bottom: 16),
@@ -57,7 +58,7 @@ class SelectOptionSelectorBS<T extends Object?> extends StatelessWidget {
                     final SelectOption<T> option = options[index];
 
                     return InkWell(
-                      onTap: () => Navigator.of(context).maybePop(option.value),
+                      onTap: option.isActive ? () => Navigator.of(context).maybePop(option.value) : null,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                         child: Row(
@@ -69,7 +70,11 @@ class SelectOptionSelectorBS<T extends Object?> extends StatelessWidget {
                                   option.iconAssetName!,
                                   width: 16,
                                   height: 16,
-                                  colorFilter: svgColor(theme.appThemeExtension?.elSecondary),
+                                  colorFilter: svgColor(
+                                    option.isActive
+                                        ? theme.appThemeExtension?.elSecondary
+                                        : theme.appThemeExtension?.elTertiary,
+                                  ),
                                 ),
                               ),
                             Expanded(
@@ -77,7 +82,10 @@ class SelectOptionSelectorBS<T extends Object?> extends StatelessWidget {
                                 option.label(l),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 13),
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: !option.isActive ? theme.appThemeExtension?.elSecondary : null,
+                                ),
                               ),
                             ),
                           ],

@@ -97,6 +97,7 @@ abstract final class AppTheme {
         myLibraryTilePlaylistsBg: Palette.myLibraryTilePlaylistsBg,
         myLibraryArtistsBg: Palette.myLibraryArtistsBg,
         success: Palette.success,
+        bgPopup: Palette.bgPopup,
       ),
     ],
   );
