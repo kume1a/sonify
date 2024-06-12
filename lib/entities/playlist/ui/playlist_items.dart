@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logging/logging.dart';
 
 import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/list_item/audio_list_item.dart';
@@ -62,12 +63,15 @@ class _Item extends StatelessWidget {
         final canPlayRemoteAudio = state.canPlayRemoteAudio.dataOrElse(() => false);
         final isDisabled = !canPlayRemoteAudio && playlistAudio.audio?.localPath == null;
 
+        Logger.root.info(playlistAudio.audio?.localThumbnailPath);
+
         return AudioListItem(
           onTap: () => context.nowPlayingAudioCubit.onPlaylistAudioPressed(playlistAudio),
           audio: playlistAudio.audio!,
           isPlaying: isPlaying,
           isDisabled: isDisabled,
           padding: EdgeInsets.only(left: 16.r),
+          showDownloadedIndicator: true,
           end: IconButton(
             icon: SvgPicture.asset(
               Assets.svgMenuVertical,

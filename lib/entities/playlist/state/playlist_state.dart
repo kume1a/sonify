@@ -11,6 +11,7 @@ import '../../../shared/bottom_sheet/bottom_sheet_manager.dart';
 import '../../../shared/bottom_sheet/select_option/select_option.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../../../shared/values/assets.dart';
+import '../model/event_playlist_audio.dart';
 
 typedef PlaylistState = SimpleDataState<Playlist>;
 
@@ -32,10 +33,21 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
 
   String? _playlistId;
 
+  final _subscriptions = SubscriptionComposite();
+
   void init(String playlistId) {
     _playlistId = playlistId;
 
+    _subscriptions.add(_eventBus.on<EventPlaylistAudio>().listen(_onPlaylistAudioEvent));
+
     loadEntityAndEmit();
+  }
+
+  @override
+  Future<void> close() async {
+    await _subscriptions.closeAll();
+
+    return super.close();
   }
 
   @override
@@ -67,5 +79,27 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
         _eventBus.fire(DownloadsEvent.enqueuePlaylistAudio(playlistAudio));
         break;
     }
+  }
+
+  void _onPlaylistAudioEvent(EventPlaylistAudio event) {
+    event.when(
+      downloaded: (playlistAudio) async {
+        final newState = await state.map((playlist) {
+          final containsPlaylistAudio =
+              playlist.playlistAudios?.any((e) => e.id == playlistAudio.id) ?? false;
+
+          if (!containsPlaylistAudio) {
+            return playlist;
+          }
+
+          return playlist.copyWith(
+            playlistAudios:
+                playlist.playlistAudios?.replace((e) => e.id == playlistAudio.id, (_) => playlistAudio),
+          );
+        });
+
+        emit(newState);
+      },
+    );
   }
 }

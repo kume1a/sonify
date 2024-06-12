@@ -15,6 +15,7 @@ class AudioListItem extends StatelessWidget {
     required this.audio,
     required this.isPlaying,
     this.isDisabled = false,
+    this.showDownloadedIndicator = false,
     this.padding,
     this.end,
   });
@@ -27,6 +28,7 @@ class AudioListItem extends StatelessWidget {
   final bool isDisabled;
   final EdgeInsets? padding;
   final Widget? end;
+  final bool showDownloadedIndicator;
 
   @override
   Widget build(BuildContext context) {
@@ -77,16 +79,32 @@ class AudioListItem extends StatelessWidget {
                                     : null,
                           ),
                         ),
-                        Text(
-                          audio.author,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 11.sp,
-                            color: isDisabled
-                                ? theme.appThemeExtension?.elTertiary
-                                : theme.appThemeExtension?.elSecondary,
-                          ),
+                        Row(
+                          children: [
+                            if (showDownloadedIndicator && audio.localPath != null)
+                              Padding(
+                                padding: EdgeInsets.only(right: 4.w),
+                                child: SvgPicture.asset(
+                                  Assets.svgDownload,
+                                  width: 12,
+                                  height: 12,
+                                  colorFilter: svgColor(theme.appThemeExtension?.success),
+                                ),
+                              ),
+                            Expanded(
+                              child: Text(
+                                audio.author,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  color: isDisabled
+                                      ? theme.appThemeExtension?.elTertiary
+                                      : theme.appThemeExtension?.elSecondary,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
