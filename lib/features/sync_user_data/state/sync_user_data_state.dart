@@ -20,7 +20,7 @@ enum SyncAudiosState {
   idle,
   loading,
   loaded,
-  nothingToSync,
+  syncCompleted,
   error,
 }
 
@@ -148,7 +148,7 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
             queuedDownloadsCount: 0,
           ));
         } else {
-          emit(state.copyWith(syncState: SyncAudiosState.nothingToSync));
+          emit(state.copyWith(syncState: SyncAudiosState.syncCompleted));
 
           await Future.delayed(const Duration(seconds: 1, milliseconds: 500));
 

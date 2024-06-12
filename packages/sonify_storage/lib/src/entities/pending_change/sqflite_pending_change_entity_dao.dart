@@ -26,7 +26,11 @@ class SqflitePendingChangeEntityDao implements PendingChangeEntityDao {
 
     final entityMap = _pendingChangeEntityMapper.entityToMap(insertEntity);
 
-    await _db.insert(PendingChange_.tn, entityMap);
+    await _db.insert(
+      PendingChange_.tn,
+      entityMap,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
 
     return insertEntity.id ?? kInvalidId;
   }

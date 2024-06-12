@@ -26,7 +26,11 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
 
     final entityMap = _userAudioEntityMapper.entityToMap(insertEntity);
 
-    await _db.insert(UserAudio_.tn, entityMap);
+    await _db.insert(
+      UserAudio_.tn,
+      entityMap,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
 
     return insertEntity.id ?? kInvalidId;
   }

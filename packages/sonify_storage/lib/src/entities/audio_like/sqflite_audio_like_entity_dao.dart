@@ -31,9 +31,17 @@ class SqfliteAudioLikeEntityDao implements AudioLikeEntityDao {
     final entityMap = _audioLikeEntityMapper.entityToMap(insertEntity);
 
     if (batchProvider != null) {
-      batchProvider.get.insert(AudioLike_.tn, entityMap);
+      batchProvider.get.insert(
+        AudioLike_.tn,
+        entityMap,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
     } else {
-      await _db.insert(AudioLike_.tn, entityMap);
+      await _db.insert(
+        AudioLike_.tn,
+        entityMap,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
     }
 
     return insertEntity.id ?? kInvalidId;

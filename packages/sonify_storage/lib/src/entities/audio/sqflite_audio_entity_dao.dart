@@ -26,7 +26,11 @@ class SqliteAudioEntityDao implements AudioEntityDao {
 
     final entityMap = _audioEntityMapper.entityToMap(insertEntity);
 
-    await _db.insert(Audio_.tn, entityMap);
+    await _db.insert(
+      Audio_.tn,
+      entityMap,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
 
     return insertEntity.id ?? kInvalidId;
   }

@@ -31,9 +31,17 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
     final entityMap = _playlistAudioEntityMapper.entityToMap(insertEntity);
 
     if (batchProvider != null) {
-      batchProvider.get.insert(PlaylistAudio_.tn, entityMap);
+      batchProvider.get.insert(
+        PlaylistAudio_.tn,
+        entityMap,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
     } else {
-      await _db.insert(PlaylistAudio_.tn, entityMap);
+      await _db.insert(
+        PlaylistAudio_.tn,
+        entityMap,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
     }
 
     return insertEntity.id ?? kInvalidId;

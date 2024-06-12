@@ -1,3 +1,4 @@
+import 'package:common_models/common_models.dart';
 import 'package:common_utilities/common_utilities.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
@@ -34,13 +35,21 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
     if (payload.userAudio != null && payload.userAudio?.audio != null) {
       final newUserAudio = await _handleUserAudioDownloaded(downloadTask.payload.userAudio!);
 
-      payload = payload.copyWith(userAudio: newUserAudio);
+      if (newUserAudio.isErr) {
+        return;
+      }
+
+      payload = payload.copyWith(userAudio: newUserAudio.dataOrThrow);
     }
 
     if (payload.playlistAudio != null && payload.playlistAudio?.audio != null) {
       final newPlaylistAudio = await _handlePlaylistAudioDownloaded(payload.playlistAudio!);
 
-      payload = payload.copyWith(playlistAudio: newPlaylistAudio);
+      if (newPlaylistAudio.isErr) {
+        return;
+      }
+
+      payload = payload.copyWith(playlistAudio: newPlaylistAudio.dataOrThrow);
     }
 
     final downloadedTaskRes = await _downloadedTaskLocalRepository.save(
@@ -54,27 +63,27 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
     Logger.root.info('download task downloaded, $downloadTask');
   }
 
-  Future<UserAudio?> _handleUserAudioDownloaded(UserAudio userAudio) async {
+  Future<Result<UserAudio>> _handleUserAudioDownloaded(UserAudio userAudio) async {
     final insertedAudio = await _saveUserAudioWithAudio.save(userAudio);
     if (insertedAudio.isErr) {
       Logger.root.warning('Failed to save userAudio, $userAudio');
-      return null;
+      return Result.err();
     }
 
     _eventBus.fire(EventUserAudio.downloaded(insertedAudio.dataOrThrow));
 
-    return insertedAudio.dataOrNull;
+    return insertedAudio;
   }
 
-  Future<PlaylistAudio?> _handlePlaylistAudioDownloaded(PlaylistAudio playlistAudio) async {
+  Future<Result<PlaylistAudio>> _handlePlaylistAudioDownloaded(PlaylistAudio playlistAudio) async {
     final insertedAudio = await _savePlaylistAudioWithAudio.save(playlistAudio);
     if (insertedAudio.isErr) {
       Logger.root.warning('Failed to save playlistAudio, $playlistAudio');
-      return null;
+      return Result.err();
     }
 
     _eventBus.fire(EventPlaylistAudio.downloaded(insertedAudio.dataOrThrow));
 
-    return insertedAudio.dataOrNull;
+    return insertedAudio;
   }
 }
