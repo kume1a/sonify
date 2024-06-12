@@ -2,6 +2,7 @@ import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
+import '../../../shared/util/utils.dart';
 import 'download_task_downloader.dart';
 import 'downloader.dart';
 import 'resolve_file_size.dart';
@@ -51,7 +52,11 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
     String? thumbnailSavePath;
     if (imageUri != null) {
       final imageSaveDirectory = await ResourceSavePathProvider.getAudioMp3ImagesSavePath();
-      final imageName = imageUri.pathSegments.lastOrNull ?? '${_uuidFactory.generate()}.webp';
+
+      var imageName = imageUri.pathSegments.lastOrNull ?? '${_uuidFactory.generate()}.jpg';
+      if (!imageName.contains('.')) {
+        imageName = '$imageName.jpg';
+      }
 
       thumbnailSavePath = '$imageSaveDirectory/$imageName';
 
@@ -90,12 +95,16 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
       case FileType.audioMp3:
         final audio = downloadTask.payload.userAudio?.audio ?? downloadTask.payload.playlistAudio?.audio;
 
-        if (audio?.thumbnailPath != null) {
-          return Uri.tryParse(assembleRemoteMediaUrl(audio!.thumbnailPath!));
+        if (audio == null) {
+          return null;
         }
 
-        if (audio?.thumbnailUrl != null) {
-          return Uri.tryParse(audio!.thumbnailUrl!);
+        if (audio.thumbnailPath.notNullOrEmpty) {
+          return Uri.tryParse(assembleRemoteMediaUrl(audio.thumbnailPath!));
+        }
+
+        if (audio.thumbnailUrl.notNullOrEmpty) {
+          return Uri.tryParse(audio.thumbnailUrl!);
         }
 
         return null;
