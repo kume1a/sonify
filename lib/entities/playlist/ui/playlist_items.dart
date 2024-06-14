@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:logging/logging.dart';
 
 import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/list_item/audio_list_item.dart';
@@ -24,17 +23,26 @@ class PlaylistItems extends StatelessWidget {
         return state.maybeWhen(
           orElse: () => const SliverToBoxAdapter(),
           loading: () => const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator())),
-          success: (data) => SliverList.builder(
-            itemCount: data.playlistAudios?.length ?? 0,
-            itemBuilder: (_, index) {
-              final playlistAudio = data.playlistAudios?.elementAt(index);
-              if (playlistAudio == null || playlistAudio.audio == null) {
-                return const SizedBox.shrink();
-              }
+          success: (data) {
+            final len = data.playlistAudios?.length ?? 0;
 
-              return _Item(playlistAudio: playlistAudio);
-            },
-          ),
+            return SliverList.builder(
+              itemCount: len + 1,
+              itemBuilder: (_, index) {
+                // bottom padding
+                if (index == len) {
+                  return SizedBox(height: AudioListItem.height + 12.h);
+                }
+
+                final playlistAudio = data.playlistAudios?.elementAt(index);
+                if (playlistAudio == null || playlistAudio.audio == null) {
+                  return const SizedBox.shrink();
+                }
+
+                return _Item(playlistAudio: playlistAudio);
+              },
+            );
+          },
         );
       },
     );
@@ -62,8 +70,6 @@ class _Item extends StatelessWidget {
         final isPlaying = nowPlayingAudio?.id != null && nowPlayingAudio?.id == playlistAudio.audioId;
         final canPlayRemoteAudio = state.canPlayRemoteAudio.dataOrElse(() => false);
         final isDisabled = !canPlayRemoteAudio && playlistAudio.audio?.localPath == null;
-
-        Logger.root.info(playlistAudio.audio?.localThumbnailPath);
 
         return AudioListItem(
           onTap: () => context.nowPlayingAudioCubit.onPlaylistAudioPressed(playlistAudio),

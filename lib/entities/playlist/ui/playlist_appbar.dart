@@ -119,14 +119,13 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
           bottom: -20,
           child: BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
             buildWhen: (previous, current) =>
-                previous.nowPlayingPlaylist != current.nowPlayingPlaylist ||
-                previous.playButtonState != current.playButtonState,
+                previous.playlist != current.playlist || previous.playButtonState != current.playButtonState,
             builder: (_, state) {
               return RoundPlayButton(
                 size: 52,
                 iconSize: 26,
-                isPlaying: state.nowPlayingPlaylist?.id == playlistId &&
-                    state.playButtonState == PlaybackButtonState.playing,
+                isPlaying:
+                    state.playlist?.id == playlistId && state.playButtonState == PlaybackButtonState.playing,
                 onPressed: () => context.nowPlayingAudioCubit.onPlayPlaylistPressed(playlistId: playlistId),
               );
             },

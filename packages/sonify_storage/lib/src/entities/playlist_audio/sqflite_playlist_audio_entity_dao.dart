@@ -109,7 +109,7 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
         FROM ${PlaylistAudio_.tn}
         LEFT JOIN ${Audio_.tn} ON ${PlaylistAudio_.tn}.${PlaylistAudio_.audioId} = ${Audio_.tn}.${Audio_.id}
         WHERE ${PlaylistAudio_.tn}.${PlaylistAudio_.playlistId} = ?
-        ORDER BY ${PlaylistAudio_.tn}.${PlaylistAudio_.createdAtMillis} DESC;
+        ORDER BY ${Audio_.tn}.${Audio_.title} ASC;
       ''',
       [playlistId],
     );

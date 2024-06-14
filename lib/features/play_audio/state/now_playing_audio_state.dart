@@ -9,6 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
+import '../../../entities/audio/util/audio_extension.dart';
 import '../../../shared/ui/toast_notifier.dart';
 import '../../../shared/util/connectivity_status.dart';
 import '../../../shared/util/utils.dart';
@@ -17,6 +18,7 @@ import '../api/now_playing_audio_info_store.dart';
 import '../model/media_item_payload.dart';
 import '../model/playback_button_state.dart';
 import '../util/enqueue_playlist.dart';
+import '../util/filter_playable_audios.dart';
 import '../util/like_or_unlike_audio.dart';
 
 part 'now_playing_audio_state.freezed.dart';
@@ -24,10 +26,10 @@ part 'now_playing_audio_state.freezed.dart';
 @freezed
 class NowPlayingAudioState with _$NowPlayingAudioState {
   const factory NowPlayingAudioState({
-    String? playlistId,
     required SimpleDataState<Audio> nowPlayingAudio,
-    Playlist? nowPlayingPlaylist,
-    List<Audio>? nowPlayingAudios,
+    Playlist? playlist,
+    List<Audio>? audios,
+    required List<Audio> nowPlaying,
     required PlaybackButtonState playButtonState,
     required SimpleDataState<bool> canPlayRemoteAudio,
   }) = _NowPlayingAudioState;
@@ -36,6 +38,7 @@ class NowPlayingAudioState with _$NowPlayingAudioState {
         nowPlayingAudio: SimpleDataState.idle(),
         playButtonState: PlaybackButtonState.idle,
         canPlayRemoteAudio: SimpleDataState.idle(),
+        nowPlaying: [],
       );
 }
 
@@ -56,6 +59,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     this._playlistCachedRepository,
     this._connectivityStatus,
     this._toastNotifier,
+    this._filterPlayableAudios,
   ) : super(NowPlayingAudioState.initial()) {
     _init();
   }
@@ -70,6 +74,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   final PlaylistCachedRepository _playlistCachedRepository;
   final ConnectivityStatus _connectivityStatus;
   final ToastNotifier _toastNotifier;
+  final FilterPlayableAudios _filterPlayableAudios;
 
   final _subscriptions = SubscriptionComposite();
 
@@ -111,12 +116,12 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
-    if (state.nowPlayingAudios == null) {
+    if (state.audios == null) {
       Logger.root.warning('NowPlayingAudioCubit.onPlaylistAudioPressed: nowPlayingAudios is null');
       return;
     }
 
-    final audioIndex = state.nowPlayingAudios?.indexWhere((e) => e.id == audio.id) ?? -1;
+    final audioIndex = state.audios?.indexWhere((e) => e.id == audio.id) ?? -1;
     if (audioIndex == -1) {
       Logger.root.warning('PlaylistCubit.onAudioPressed: audioIndex is -1');
       return;
@@ -137,13 +142,13 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
-    if (state.nowPlayingPlaylist == null) {
+    if (state.playlist == null) {
       Logger.root.warning('NowPlayingAudioCubit.onPlaylistAudioPressed: nowPlayingPlaylist is null');
       return;
     }
 
-    final audioIndex = state.nowPlayingPlaylist!.playlistAudios?.indexWhere((e) => e.id == playlistAudio.id);
-    if (audioIndex == null || audioIndex == -1) {
+    final audioIndex = state.nowPlaying.indexWhere((e) => e.id == playlistAudio.audioId);
+    if (audioIndex == -1) {
       Logger.root.warning('PlaylistCubit.onAudioPressed: audioIndex is -1');
       return;
     }
@@ -185,13 +190,13 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
-    final updatedNowPlayingAudios = state.nowPlayingAudios?.replace(
+    final updatedNowPlayingAudios = state.audios?.replace(
       (e) => e.id == updatedAudio.id,
       (_) => updatedAudio,
     );
 
-    final updatedNowPlayingPlaylist = state.nowPlayingPlaylist?.copyWith(
-      playlistAudios: state.nowPlayingPlaylist?.playlistAudios?.replace(
+    final updatedNowPlayingPlaylist = state.playlist?.copyWith(
+      playlistAudios: state.playlist?.playlistAudios?.replace(
         (e) => e.audioId == updatedAudio.id,
         (old) => old.copyWith(audio: updatedAudio),
       ),
@@ -199,15 +204,60 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
 
     emit(state.copyWith(
       nowPlayingAudio: SimpleDataState.success(updatedAudio),
-      nowPlayingAudios: updatedNowPlayingAudios,
-      nowPlayingPlaylist: updatedNowPlayingPlaylist,
+      audios: updatedNowPlayingAudios,
+      playlist: updatedNowPlayingPlaylist,
     ));
+  }
+
+  Future<void> _reloadNowPlayingAudios() async {
+    final beforePlayingAudioInfo = await _nowPlayingAudioInfoStore.getNowPlayingAudioInfo();
+
+    if (beforePlayingAudioInfo != null) {
+      await _audioHandler.pause();
+    }
+
+    await _ensurePlaylistEnqueued(
+      playlistId: state.playlist?.id,
+      forceReload: true,
+    );
+
+    if (beforePlayingAudioInfo == null || state.nowPlaying.isEmpty) {
+      return;
+    }
+
+    final canPlayRemoteAudio = state.canPlayRemoteAudio.getOrNull;
+    if (canPlayRemoteAudio == null) {
+      return;
+    }
+
+    final beforePlayingAudio =
+        state.nowPlaying.firstWhereOrNull((e) => e.id == beforePlayingAudioInfo.audioId);
+    if (beforePlayingAudio == null) {
+      Logger.root.warning('NowPlayingAudioCubit._reloadNowPlayingAudios: beforePlayingAudio is null');
+      return;
+    }
+
+    if (canPlayRemoteAudio || beforePlayingAudio.localPath != null) {
+      final audioIndex = state.nowPlaying.indexWhere((e) => e.id == beforePlayingAudioInfo.audioId);
+      if (audioIndex == -1) {
+        Logger.root.warning('NowPlayingAudioCubit._reloadNowPlayingAudios: audioIndex is -1');
+        return;
+      }
+
+      await _audioHandler.skipToQueueItem(audioIndex);
+      await _audioHandler.seek(beforePlayingAudioInfo.position);
+      _audioHandler.play();
+    }
   }
 
   Future<bool> _ensurePlaylistEnqueued({
     required String? playlistId,
+    bool forceReload = false,
   }) async {
-    final nowPlayingAudios = await _loadNowPlayingPlaylist(playlistId: playlistId);
+    final nowPlayingAudios = await _loadNowPlayingAudios(
+      playlistId: playlistId,
+      forceReload: forceReload,
+    );
     if (nowPlayingAudios == null || nowPlayingAudios.isEmpty) {
       Logger.root.warning('PlaylistCubit._ensurePlaylistEnqueued: playlist.audios empty');
       return false;
@@ -215,18 +265,21 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
 
     final beforePlayingAudioInfo = await _nowPlayingAudioInfoStore.getNowPlayingAudioInfo();
 
-    if (beforePlayingAudioInfo == null || beforePlayingAudioInfo.playlistId != playlistId) {
+    if (forceReload || beforePlayingAudioInfo == null || beforePlayingAudioInfo.playlistId != playlistId) {
       await _enqueuePlaylist(audios: nowPlayingAudios, playlistId: playlistId);
     }
+
+    emit(state.copyWith(nowPlaying: nowPlayingAudios));
 
     return true;
   }
 
-  Future<List<Audio>?> _loadNowPlayingPlaylist({
+  Future<List<Audio>?> _loadNowPlayingAudios({
     required String? playlistId,
+    required bool forceReload,
   }) async {
-    if (state.nowPlayingPlaylist != null && state.nowPlayingPlaylist!.id == playlistId) {
-      return state.nowPlayingPlaylist?.playlistAudios?.map((e) => e.audio).whereNotNull().toList();
+    if (!forceReload && state.playlist != null && state.playlist!.id == playlistId) {
+      return _filterPlayableAudios.playlistAudios(state.playlist);
     }
 
     final authUserId = await _authUserInfoProvider.getId();
@@ -242,23 +295,28 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
         return null;
       }
 
-      final localAudios =
-          localUserAudios.dataOrThrow.map((e) => e.audio).where((e) => e != null).cast<Audio>().toList();
+      final localAudios = await _filterPlayableAudios.userAudios(localUserAudios.dataOrNull);
 
-      emit(state.copyWith(nowPlayingAudios: localAudios, nowPlayingPlaylist: null));
+      emit(state.copyWith(audios: localAudios, playlist: null));
 
       return localAudios;
     }
 
     final playlist = await _playlistCachedRepository.getById(playlistId);
 
-    emit(state.copyWith(nowPlayingPlaylist: playlist.dataOrNull, nowPlayingAudios: null));
+    emit(state.copyWith(playlist: playlist.dataOrNull, audios: null));
 
-    return playlist.dataOrNull?.playlistAudios?.map((e) => e.audio).whereNotNull().toList();
+    return _filterPlayableAudios.playlistAudios(playlist.dataOrNull);
   }
 
-  void _onConnectivityChanged(bool hasConnection) {
+  Future<void> _onConnectivityChanged(bool hasConnection) async {
+    final beforeConnectionStatus = state.canPlayRemoteAudio.getOrNull;
+
     emit(state.copyWith(canPlayRemoteAudio: SimpleDataState.success(hasConnection)));
+
+    if (beforeConnectionStatus != hasConnection) {
+      await _reloadNowPlayingAudios();
+    }
   }
 
   Future<void> _onMediaItemChanged(MediaItem? mediaItem) async {
@@ -290,13 +348,14 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     final nowPlayingAudio = payload.audio.copyWith(audioLike: nowPlayingAudioLike.dataOrNull);
 
     emit(state.copyWith(
-      playlistId: payload.playlistId,
       nowPlayingAudio: SimpleDataState.success(nowPlayingAudio),
     ));
 
+    Logger.root.finer('Playing audio uri ${nowPlayingAudio.audioUri}');
+
     await _nowPlayingAudioInfoStore.setNowPlayingAudioInfo(
       NowPlayingAudioInfo(
-        playlistId: state.nowPlayingPlaylist?.id,
+        playlistId: state.playlist?.id,
         audioId: payload.audio.id,
         position: Duration.zero,
       ),
