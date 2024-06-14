@@ -86,6 +86,12 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
 
     switch (selectedOption) {
       case 0:
+        if (playlistAudio.audio == null || playlistAudio.audio?.localPath != null) {
+          Logger.root
+              .warning('PlaylistCubit.onPlaylistAudioMenuPressed: audio is null or already downloaded');
+          return;
+        }
+
         _eventBus.fire(DownloadsEvent.enqueuePlaylistAudio(playlistAudio));
 
         _toastNotifier.info(description: (l) => l.downloadStarted);
@@ -112,6 +118,42 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
 
         emit(newState);
       },
+    );
+  }
+
+  void onDownloadPlaylistPressed() {
+    final playlist = state.getOrNull;
+
+    if (playlist == null) {
+      Logger.root.warning('PlaylistCubit.onDownloadPlaylistPressed: playlist is null');
+      return;
+    }
+
+    final playlistAudios = playlist.playlistAudios;
+
+    if (playlistAudios == null || playlistAudios.isEmpty) {
+      Logger.root.warning('PlaylistCubit.onDownloadPlaylistPressed: playlistAudios is null or empty');
+      return;
+    }
+
+    final playlistAudiosToDownload = playlistAudios.where((e) => e.audio?.localPath == null).toList();
+
+    if (playlistAudiosToDownload.isEmpty) {
+      _toastNotifier.info(description: (l) => l.allAudiosAlreadyDownloaded);
+      return;
+    }
+
+    for (final playlistAudio in playlistAudiosToDownload) {
+      if (playlistAudio.audio == null) {
+        Logger.root.warning('PlaylistCubit.onDownloadPlaylistPressed: audio is null');
+        continue;
+      }
+
+      _eventBus.fire(DownloadsEvent.enqueuePlaylistAudio(playlistAudio));
+    }
+
+    _toastNotifier.info(
+      description: (l) => l.startedDownloadingNAudios(playlistAudiosToDownload.length),
     );
   }
 }

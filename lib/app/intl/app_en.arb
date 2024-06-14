@@ -151,5 +151,14 @@
   "pending": "Pending",
   "errorPlayingAudio": "Error playing audio",
   "downloadStarted": "Download started",
-  "alreadyDownloaded": "Already downloaded"
+  "alreadyDownloaded": "Already downloaded",
+  "allAudiosAlreadyDownloaded": "All audios already downloaded",
+  "startedDownloadingNAudios": "Started downloading {n} audios",
+  "@startedDownloadingNAudios": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -3,12 +3,14 @@ import 'package:common_widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../../../features/play_audio/model/playback_button_state.dart';
 import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/animation/pulsing_fade.dart';
 import '../../../shared/ui/round_play_button.dart';
+import '../../../shared/values/assets.dart';
 import '../state/playlist_state.dart';
 
 class PlaylistAppBar implements SliverPersistentHeaderDelegate {
@@ -101,17 +103,37 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
         ),
         Positioned(
           left: 2,
+          right: 32,
           top: mediaQueryData.padding.top + 4,
           child: Row(
             children: [
               BackButton(color: iconColor),
-              Opacity(
-                opacity: colorProgress,
-                child: const _PlaylistTitle(
-                  style: TextStyle(fontSize: 14),
+              Expanded(
+                child: Opacity(
+                  opacity: colorProgress,
+                  child: const _PlaylistTitle(
+                    style: TextStyle(fontSize: 14),
+                  ),
                 ),
               ),
             ],
+          ),
+        ),
+        Positioned(
+          top: 12,
+          right: 12,
+          child: Opacity(
+            opacity: 1 - colorProgress,
+            child: IconButton(
+              onPressed: colorProgress < .2 ? context.playlistCubit.onDownloadPlaylistPressed : null,
+              constraints: const BoxConstraints.tightFor(width: 32, height: 32),
+              icon: SvgPicture.asset(
+                Assets.svgDownload,
+              ),
+              style: IconButton.styleFrom(
+                backgroundColor: theme.colorScheme.secondary,
+              ),
+            ),
           ),
         ),
         Positioned(
