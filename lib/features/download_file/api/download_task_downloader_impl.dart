@@ -60,7 +60,7 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
 
       thumbnailSavePath = '$imageSaveDirectory/$imageName';
 
-      await _downloader.download(
+      final didDownloadThumbnail = await _downloader.download(
         uri: imageUri,
         savePath: thumbnailSavePath,
         onReceiveProgress: (count, total, speed) {
@@ -68,22 +68,20 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
           onReceiveProgress?.call(downloadedSize, totalDownloadSize, speed);
         },
       );
+
+      if (!didDownloadThumbnail) {
+        thumbnailSavePath = null;
+      }
     }
 
-    final newDownloadTask = downloadTask.copyWith(
-      payload: downloadTask.payload.copyWith(
-        userAudio: downloadTask.payload.userAudio?.copyWith(
-          audio: downloadTask.payload.userAudio?.audio?.copyWith(
-            localPath: downloadTask.savePath,
-            localThumbnailPath: thumbnailSavePath,
-          ),
-        ),
-        playlistAudio: downloadTask.payload.playlistAudio?.copyWith(
-          audio: downloadTask.payload.playlistAudio?.audio?.copyWith(
-            localPath: downloadTask.savePath,
-            localThumbnailPath: thumbnailSavePath,
-          ),
-        ),
+    final newDownloadTask = downloadTask.copyWith.payload(
+      userAudio: downloadTask.payload.userAudio?.copyWith.audio?.call(
+        localPath: downloadTask.savePath,
+        localThumbnailPath: thumbnailSavePath,
+      ),
+      playlistAudio: downloadTask.payload.playlistAudio?.copyWith.audio?.call(
+        localPath: downloadTask.savePath,
+        localThumbnailPath: thumbnailSavePath,
       ),
     );
 

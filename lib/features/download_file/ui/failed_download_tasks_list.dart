@@ -2,28 +2,26 @@ import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../app/intl/app_localizations.dart';
 import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/util/equality.dart';
-import '../../../shared/util/formatting.dart';
 import '../state/downloads_state.dart';
 
-class DownloadingTasksList extends StatelessWidget {
-  const DownloadingTasksList({super.key});
+class FailedDownloadTasksList extends StatelessWidget {
+  const FailedDownloadTasksList({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DownloadsCubit, DownloadsState>(
-      buildWhen: (previous, current) => notDeepEquals(previous.downloading, current.downloading),
+      buildWhen: (previous, current) => notDeepEquals(previous.failed, current.failed),
       builder: (_, state) {
-        if (state.downloading.isEmpty) {
+        if (state.failed.isEmpty) {
           return const SliverToBoxAdapter();
         }
 
         return SliverList.builder(
-          itemCount: state.downloading.length,
-          itemBuilder: (_, index) => _QueueItem(
-            task: state.downloading[index],
+          itemCount: state.failed.length,
+          itemBuilder: (_, index) => _Item(
+            task: state.failed[index],
           ),
         );
       },
@@ -31,8 +29,8 @@ class DownloadingTasksList extends StatelessWidget {
   }
 }
 
-class _QueueItem extends StatelessWidget {
-  const _QueueItem({
+class _Item extends StatelessWidget {
+  const _Item({
     required this.task,
   });
 
@@ -40,11 +38,6 @@ class _QueueItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-
-    final formattedProgress = '${task.progress.toStringAsFixed(1)}%';
-    final formattedSpeed = formatBitrate(task.speedInBytesPerSecond, l);
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
@@ -55,10 +48,10 @@ class _QueueItem extends StatelessWidget {
               padding: const EdgeInsets.only(right: 10),
               child: Thumbnail(
                 size: const Size.square(36),
-                borderRadius: BorderRadius.circular(8),
                 localThumbnailPath: task.payload.audioLocalThumbnailPath,
                 thumbnailPath: task.payload.audioThumbnailPath,
                 thumbnailUrl: task.payload.audioThumbnailUrl,
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
           Expanded(
@@ -66,11 +59,17 @@ class _QueueItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(task.payload.audioTitle ?? ''),
-                Text(formattedProgress),
+                const Text(
+                  'Failed',
+                  style: TextStyle(color: Colors.red),
+                ),
               ],
             ),
           ),
-          Text(formattedSpeed),
+          IconButton(
+            onPressed: () => context.downloadsCubit.retryFailedDownloadTask(task),
+            icon: const Icon(Icons.refresh),
+          ),
         ],
       ),
     );
