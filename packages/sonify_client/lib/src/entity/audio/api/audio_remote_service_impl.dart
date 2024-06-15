@@ -4,11 +4,11 @@ import 'package:common_network_components/common_network_components.dart';
 import '../../../api/api_client.dart';
 import '../../../api/multipart_api_client.dart';
 import '../../../shared/api_exception_message_code.dart';
+import '../../../shared/dto/audio_ids_body.dart';
 import '../../../shared/dto/error_response_dto.dart';
-import '../model/audio_ids_body.dart';
+import '../../user_audio/model/user_audio_dto.dart';
 import '../model/upload_user_local_music_error.dart';
 import '../model/upload_user_local_music_params.dart';
-import '../model/user_audio_dto.dart';
 import 'audio_remote_service.dart';
 
 class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteService {

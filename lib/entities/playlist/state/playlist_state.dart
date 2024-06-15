@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
+import '../../../app/intl/extension/error_intl.dart';
 import '../../../features/download_file/model/downloads_event.dart';
 import '../../../shared/bottom_sheet/bottom_sheet_manager.dart';
 import '../../../shared/bottom_sheet/select_option/select_option.dart';
@@ -24,15 +25,21 @@ extension PlaylistCubitX on BuildContext {
 final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   PlaylistCubit(
     this._playlistCachedRepository,
+    this._userAudioLocalRepository,
+    this._userAudioRemoteRepository,
     this._bottomSheetManager,
     this._eventBus,
     this._toastNotifier,
+    this._authUserInfoProvider,
   );
 
+  final UserAudioLocalRepository _userAudioLocalRepository;
   final PlaylistCachedRepository _playlistCachedRepository;
+  final UserAudioRemoteRepository _userAudioRemoteRepository;
   final BottomSheetManager _bottomSheetManager;
   final EventBus _eventBus;
   final ToastNotifier _toastNotifier;
+  final AuthUserInfoProvider _authUserInfoProvider;
 
   String? _playlistId;
 
@@ -65,17 +72,16 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     return res.dataOrNull;
   }
 
-  Future<void> onPlaylistAudioMenuPressed(PlaylistAudio playlistAudio) async {
-    final isDownloaded = playlistAudio.audio?.localPath != null;
+  Future<void> onPlaylistMenuPressed() async {
+    final playlist = state.getOrNull;
 
     final selectedOption = await _bottomSheetManager.openOptionSelector<int>(
-      header: (l) => playlistAudio.audio?.title ?? l.audio,
+      header: (l) => playlist?.name ?? l.playlist,
       options: [
         SelectOption(
-          value: 0,
-          label: (l) => isDownloaded ? l.alreadyDownloaded : l.download,
+          value: 1,
+          label: (l) => l.downloadPlaylist,
           iconAssetName: Assets.svgDownload,
-          isActive: !isDownloaded,
         ),
       ],
     );
@@ -86,42 +92,96 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
 
     switch (selectedOption) {
       case 0:
-        if (playlistAudio.audio == null || playlistAudio.audio?.localPath != null) {
-          Logger.root
-              .warning('PlaylistCubit.onPlaylistAudioMenuPressed: audio is null or already downloaded');
-          return;
-        }
-
-        _eventBus.fire(DownloadsEvent.enqueuePlaylistAudio(playlistAudio));
-
-        _toastNotifier.info(description: (l) => l.downloadStarted);
+        _triggerDownloadPlaylist();
         break;
     }
   }
 
-  void _onPlaylistAudioEvent(EventPlaylistAudio event) {
-    event.when(
-      downloaded: (playlistAudio) async {
-        final newState = await state.map((playlist) {
-          final containsPlaylistAudio =
-              playlist.playlistAudios?.any((e) => e.id == playlistAudio.id) ?? false;
+  Future<void> onPlaylistAudioMenuPressed(PlaylistAudio playlistAudio) async {
+    if (playlistAudio.audio?.id == null) {
+      Logger.root.warning('PlaylistCubit.onPlaylistAudioMenuPressed: audio id is null');
+      return;
+    }
 
-          if (!containsPlaylistAudio) {
-            return playlist;
-          }
+    final authUserId = await _authUserInfoProvider.getId();
+    if (authUserId == null) {
+      Logger.root.warning('PlaylistCubit.onPlaylistAudioMenuPressed: authUserId is null');
+      return;
+    }
 
-          return playlist.copyWith(
-            playlistAudios:
-                playlist.playlistAudios?.replace((e) => e.id == playlistAudio.id, (_) => playlistAudio),
-          );
-        });
+    final isDownloaded = playlistAudio.audio?.localPath != null;
 
-        emit(newState);
+    final userAudioRes = await _userAudioLocalRepository.getByUserIdAndAudioId(
+      userId: authUserId,
+      audioId: playlistAudio.audio!.id!,
+    );
+    final userAudioExists = userAudioRes.dataOrNull != null;
+
+    final selectedOption = await _bottomSheetManager.openOptionSelector<int>(
+      header: (l) => playlistAudio.audio?.title ?? l.audio,
+      options: [
+        SelectOption(
+          value: 0,
+          label: (l) => isDownloaded ? l.alreadyDownloaded : l.download,
+          iconAssetName: Assets.svgDownload,
+          isActive: !isDownloaded,
+        ),
+        SelectOption(
+          value: 1,
+          label: (l) => userAudioExists ? l.alreadyAddedToMyLibrary : l.addToMyLibrary,
+          iconAssetName: Assets.svgPlus,
+          isActive: !userAudioExists,
+        ),
+      ],
+    );
+
+    if (selectedOption == null) {
+      return;
+    }
+
+    switch (selectedOption) {
+      case 0:
+        return _triggerDownloadPlaylistAudio(playlistAudio);
+      case 1:
+        return _triggerAddAudioToMyLibrary(playlistAudio);
+    }
+  }
+
+  Future<void> _triggerDownloadPlaylistAudio(PlaylistAudio playlistAudio) async {
+    if (playlistAudio.audio?.localPath != null) {
+      Logger.root.warning('PlaylistCubit.onPlaylistAudioMenuPressed: audio already downloaded');
+      return;
+    }
+
+    _eventBus.fire(DownloadsEvent.enqueuePlaylistAudio(playlistAudio));
+
+    _toastNotifier.info(description: (l) => l.downloadStarted);
+  }
+
+  Future<void> _triggerAddAudioToMyLibrary(PlaylistAudio playlistAudio) {
+    return _userAudioRemoteRepository.createManyForAuthUser(
+      audioIds: [playlistAudio.audio!.id!],
+    ).awaitFold(
+      (err) => _toastNotifier.error(description: (l) => err.translate(l)),
+      (r) async {
+        if (r.isEmpty) {
+          Logger.root
+              .warning('PlaylistCubit.onPlaylistAudioMenuPressed: user audios created but result is empty');
+          return;
+        }
+
+        final localUserAudio = await _userAudioLocalRepository.save(r.first);
+        if (localUserAudio.isErr) {
+          _toastNotifier.error(description: (l) => l.failedToAddToMyLibrary);
+          return;
+        }
+
+        _toastNotifier.info(description: (l) => l.addedToMyLibrary);
       },
     );
   }
 
-  void onDownloadPlaylistPressed() {
+  void _triggerDownloadPlaylist() {
     final playlist = state.getOrNull;
 
     if (playlist == null) {
@@ -154,6 +214,28 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
 
     _toastNotifier.info(
       description: (l) => l.startedDownloadingNAudios(playlistAudiosToDownload.length),
+    );
+  }
+
+  void _onPlaylistAudioEvent(EventPlaylistAudio event) {
+    event.when(
+      downloaded: (playlistAudio) async {
+        final newState = await state.map((playlist) {
+          final containsPlaylistAudio =
+              playlist.playlistAudios?.any((e) => e.id == playlistAudio.id) ?? false;
+
+          if (!containsPlaylistAudio) {
+            return playlist;
+          }
+
+          return playlist.copyWith(
+            playlistAudios:
+                playlist.playlistAudios?.replace((e) => e.id == playlistAudio.id, (_) => playlistAudio),
+          );
+        });
+
+        emit(newState);
+      },
     );
   }
 }

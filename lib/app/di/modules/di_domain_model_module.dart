@@ -180,7 +180,7 @@ abstract class DiDomainModelModule {
     );
   }
 
-  // user audio --
+  // user audio ----------------------------------------------------------------
   @lazySingleton
   UserAudioMapper userAudioMapper(AudioMapper audioMapper) {
     return UserAudioMapper(audioMapper);
@@ -193,6 +193,17 @@ abstract class DiDomainModelModule {
   ) {
     return UserAudioLocalRepositoryImpl(
       userAudioEntityDao,
+      userAudioMapper,
+    );
+  }
+
+  @lazySingleton
+  UserAudioRemoteRepository userAudioRemoteRepository(
+    UserAudioRemoteService userAudioRemoteService,
+    UserAudioMapper userAudioMapper,
+  ) {
+    return UserAudioRemoteRepositoryImpl(
+      userAudioRemoteService,
       userAudioMapper,
     );
   }

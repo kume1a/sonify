@@ -160,5 +160,10 @@
         "type": "int"
       }
     }
-  }
+  },
+  "downloadPlaylist": "Download playlist",
+  "alreadyAddedToMyLibrary": "Already added to my library",
+  "addToMyLibrary": "Add to my library",
+  "addedToMyLibrary": "Added to my library",
+  "failedToAddToMyLibrary": "Failed to add to my library"
 }

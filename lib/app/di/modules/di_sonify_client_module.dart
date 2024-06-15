@@ -142,4 +142,10 @@ abstract class DiSonifyClientModule {
   ServerTimeRemoteService serverTimeRemoteService(ApiClient apiClient) {
     return ServerTimeRemoteServiceImpl(apiClient);
   }
+
+  // user audio ----------------------------------------------------------------
+  @lazySingleton
+  UserAudioRemoteService userAudioRemoteService(ApiClient apiClient) {
+    return UserAudioRemoteServiceImpl(apiClient);
+  }
 }

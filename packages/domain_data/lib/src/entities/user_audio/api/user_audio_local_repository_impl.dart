@@ -2,7 +2,7 @@ import 'package:common_models/common_models.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
 import '../../audio/model/user_audio.dart';
-import '../../audio/util/user_audio_mapper.dart';
+import '../util/user_audio_mapper.dart';
 import 'user_audio_local_repository.dart';
 
 class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepository {
@@ -42,5 +42,17 @@ class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepo
   @override
   Future<Result<List<String>>> getAllIdsByUserId(String userId) {
     return wrapWithResult(() => _userAudioEntityDao.getAllAudioIdsByUserId(userId));
+  }
+
+  @override
+  Future<Result<UserAudio?>> getByUserIdAndAudioId({
+    required String userId,
+    required String audioId,
+  }) {
+    return wrapWithResult(() async {
+      final res = await _userAudioEntityDao.getByUserIdAndAudioId(userId: userId, audioId: audioId);
+
+      return res != null ? _userAudioMapper.entityToModel(res) : null;
+    });
   }
 }

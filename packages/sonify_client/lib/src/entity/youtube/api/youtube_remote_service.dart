@@ -4,7 +4,7 @@ import 'package:common_models/common_models.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../../shared/dto/url_dto.dart';
-import '../../audio/model/user_audio_dto.dart';
+import '../../user_audio/model/user_audio_dto.dart';
 import '../model/download_youtube_audio_error.dart';
 import '../model/youtube_search_suggestions_dto.dart';
 

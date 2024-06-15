@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../entity/audio/model/upload_user_local_music_params.dart';
-import '../entity/audio/model/user_audio_dto.dart';
+import '../entity/user_audio/model/user_audio_dto.dart';
 
 class MultipartApiClient {
   MultipartApiClient(

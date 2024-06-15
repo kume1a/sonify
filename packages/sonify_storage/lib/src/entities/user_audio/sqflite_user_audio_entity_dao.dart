@@ -88,4 +88,18 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
 
     return query.map((e) => e[UserAudio_.audioId] as String).toList();
   }
+
+  @override
+  Future<UserAudioEntity?> getByUserIdAndAudioId({
+    required String userId,
+    required String audioId,
+  }) async {
+    final query = await _db.query(
+      UserAudio_.tn,
+      where: '${UserAudio_.userId} = ? AND ${UserAudio_.audioId} = ?',
+      whereArgs: [userId, audioId],
+    );
+
+    return query.isNotEmpty ? _userAudioEntityMapper.mapToEntity(query.first) : null;
+  }
 }

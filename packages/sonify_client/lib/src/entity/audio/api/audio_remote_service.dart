@@ -1,8 +1,8 @@
 import 'package:common_models/common_models.dart';
 
+import '../../user_audio/model/user_audio_dto.dart';
 import '../model/upload_user_local_music_error.dart';
 import '../model/upload_user_local_music_params.dart';
-import '../model/user_audio_dto.dart';
 
 abstract interface class AudioRemoteService {
   Future<Either<UploadUserLocalMusicError, UserAudioDto>> uploadUserLocalMusic(

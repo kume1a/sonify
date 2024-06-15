@@ -35,6 +35,7 @@ abstract final class Assets {
   static const svgSync = '$_icons/sync.svg';
   static const svgAudioLines = '$_icons/audio_lines.svg';
   static const svgSpotify = '$_icons/spotify.svg';
+  static const svgPlus = '$_icons/plus.svg';
 
   static const imageBlackMetalWall = '$_images/black_metal_wall.jpg';
 }

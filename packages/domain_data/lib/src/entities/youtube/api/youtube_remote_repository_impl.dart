@@ -6,7 +6,7 @@ import 'package:sonify_client/sonify_client.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../audio/model/user_audio.dart';
-import '../../audio/util/user_audio_mapper.dart';
+import '../../user_audio/util/user_audio_mapper.dart';
 import '../model/youtube_search_suggestions.dart';
 import '../util/youtube_search_suggestions_mapper.dart';
 import 'youtube_remote_repository.dart';

@@ -10,6 +10,8 @@ import '../../../features/play_audio/model/playback_button_state.dart';
 import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/animation/pulsing_fade.dart';
 import '../../../shared/ui/round_play_button.dart';
+import '../../../shared/util/color.dart';
+import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
 import '../state/playlist_state.dart';
 
@@ -122,18 +124,13 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
         Positioned(
           top: 12,
           right: 12,
-          child: Opacity(
-            opacity: 1 - colorProgress,
-            child: IconButton(
-              onPressed: colorProgress < .2 ? context.playlistCubit.onDownloadPlaylistPressed : null,
-              constraints: const BoxConstraints.tightFor(width: 32, height: 32),
-              icon: SvgPicture.asset(
-                Assets.svgDownload,
-              ),
-              style: IconButton.styleFrom(
-                backgroundColor: theme.colorScheme.secondary,
-              ),
+          child: IconButton(
+            icon: SvgPicture.asset(
+              Assets.svgMenuVertical,
+              colorFilter: svgColor(Colors.white),
             ),
+            splashRadius: 24,
+            onPressed: context.playlistCubit.onPlaylistMenuPressed,
           ),
         ),
         Positioned(

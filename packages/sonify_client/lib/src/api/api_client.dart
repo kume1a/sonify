@@ -4,8 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../entity/audio/model/audio_ids_body.dart';
-import '../entity/audio/model/user_audio_dto.dart';
 import '../entity/audiolike/model/audio_like_dto.dart';
 import '../entity/audiolike/model/like_unlike_audio_body.dart';
 import '../entity/playlist/model/playlist_dto.dart';
@@ -13,6 +11,7 @@ import '../entity/playlist_audio/model/playlist_audio_dto.dart';
 import '../entity/server_time/model/server_time_dto.dart';
 import '../entity/user/model/update_user_body.dart';
 import '../entity/user/model/user_dto.dart';
+import '../entity/user_audio/model/user_audio_dto.dart';
 import '../entity/user_playlist/model/user_playlist_dto.dart';
 import '../entity/usersync/model/user_sync_datum_dto.dart';
 import '../entity/youtube/model/youtube_search_suggestions_dto.dart';
@@ -23,6 +22,7 @@ import '../feature/spotifyauth/model/authorize_spotify_body.dart';
 import '../feature/spotifyauth/model/refresh_spotify_token_body.dart';
 import '../feature/spotifyauth/model/spotify_refresh_token_payload_dto.dart';
 import '../feature/spotifyauth/model/spotify_token_payload_dto.dart';
+import '../shared/dto/audio_ids_body.dart';
 import '../shared/dto/optional_ids_body.dart';
 import '../shared/dto/required_ids_body.dart';
 import '../shared/dto/url_dto.dart';
@@ -120,4 +120,8 @@ abstract class ApiClient {
 
   @GET('/v1/playlistaudio/myPlaylistAudioIds')
   Future<List<String>?> getPlaylistAudioIdsByAuthUser();
+
+  // user audio -------------------------
+  @POST('/v1/useraudio/createForAuthUser')
+  Future<List<UserAudioDto>?> createUserAudiosForAuthUser(@Body() AudioIdsBody body);
 }
