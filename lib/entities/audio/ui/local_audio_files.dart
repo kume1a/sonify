@@ -47,11 +47,13 @@ class _Item extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
-      buildWhen: (previous, current) => previous.nowPlayingAudio != current.nowPlayingAudio,
-      builder: (_, nowPlayingAudioState) {
-        final nowPlayingAudio = nowPlayingAudioState.nowPlayingAudio.getOrNull;
+      buildWhen: (previous, current) =>
+          previous.nowPlayingAudio != current.nowPlayingAudio || previous.playlist != current.playlist,
+      builder: (_, state) {
+        final nowPlayingAudio = state.nowPlayingAudio.getOrNull;
 
-        final isPlaying = nowPlayingAudio?.id != null && nowPlayingAudio?.id == audio.id;
+        final isPlaying =
+            nowPlayingAudio?.id != null && nowPlayingAudio?.id == audio.id && state.playlist == null;
 
         return AudioListItem(
           onTap: () => context.nowPlayingAudioCubit.onLocalAudioPressed(audio),

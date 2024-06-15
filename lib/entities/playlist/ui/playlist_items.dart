@@ -63,11 +63,16 @@ class _Item extends StatelessWidget {
     return BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
       buildWhen: (previous, current) =>
           previous.nowPlayingAudio != current.nowPlayingAudio ||
-          previous.canPlayRemoteAudio != current.canPlayRemoteAudio,
+          previous.canPlayRemoteAudio != current.canPlayRemoteAudio ||
+          previous.playlist != current.playlist,
       builder: (_, state) {
         final nowPlayingAudio = state.nowPlayingAudio.getOrNull;
 
-        final isPlaying = nowPlayingAudio?.id != null && nowPlayingAudio?.id == playlistAudio.audioId;
+        final isPlaying = nowPlayingAudio?.id != null &&
+            nowPlayingAudio?.id == playlistAudio.audioId &&
+            state.playlist != null &&
+            state.playlist?.id == playlistAudio.playlistId;
+
         final canPlayRemoteAudio = state.canPlayRemoteAudio.dataOrElse(() => false);
         final isDisabled = !canPlayRemoteAudio && playlistAudio.audio?.localPath == null;
 

@@ -79,7 +79,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
       header: (l) => playlist?.name ?? l.playlist,
       options: [
         SelectOption(
-          value: 1,
+          value: 0,
           label: (l) => l.downloadPlaylist,
           iconAssetName: Assets.svgDownload,
         ),
@@ -126,12 +126,13 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
           iconAssetName: Assets.svgDownload,
           isActive: !isDownloaded,
         ),
-        SelectOption(
-          value: 1,
-          label: (l) => userAudioExists ? l.alreadyAddedToMyLibrary : l.addToMyLibrary,
-          iconAssetName: Assets.svgPlus,
-          isActive: !userAudioExists,
-        ),
+        if (isDownloaded)
+          SelectOption(
+            value: 1,
+            label: (l) => userAudioExists ? l.alreadyAddedToMyLibrary : l.addToMyLibrary,
+            iconAssetName: Assets.svgPlus,
+            isActive: !userAudioExists,
+          ),
       ],
     );
 
