@@ -8,3 +8,5 @@ export 'user_audio/index.dart';
 export 'user_playlist/index.dart';
 export 'usersync/index.dart';
 export 'youtube/index.dart';
+export 'auth/index.dart';
+export 'spotify/index.dart';

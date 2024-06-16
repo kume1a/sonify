@@ -14,7 +14,7 @@ class SpotifyAuthRemoteRepositoryImpl implements SpotifyAuthRemoteRepository {
     this._spotifyRefreshTokenPayloadMapper,
   );
 
-  final SpotifyAuthRemoteService _spotifyAuthRemoteService;
+  final SpotifyRemoteService _spotifyAuthRemoteService;
   final SpotifyTokenPayloadMapper _spotifyTokenPayloadMapper;
   final SpotifyRefreshTokenPayloadMapper _spotifyRefreshTokenPayloadMapper;
 

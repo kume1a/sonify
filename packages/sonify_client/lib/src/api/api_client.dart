@@ -4,24 +4,25 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../entity/audiolike/model/audio_like_dto.dart';
-import '../entity/audiolike/model/like_unlike_audio_body.dart';
-import '../entity/playlist/model/playlist_dto.dart';
-import '../entity/playlist_audio/model/playlist_audio_dto.dart';
-import '../entity/server_time/model/server_time_dto.dart';
-import '../entity/user/model/update_user_body.dart';
-import '../entity/user/model/user_dto.dart';
-import '../entity/user_audio/model/user_audio_dto.dart';
-import '../entity/user_playlist/model/user_playlist_dto.dart';
-import '../entity/usersync/model/user_sync_datum_dto.dart';
-import '../entity/youtube/model/youtube_search_suggestions_dto.dart';
-import '../feature/auth/model/email_sign_in_body.dart';
-import '../feature/auth/model/google_sign_in_body.dart';
-import '../feature/auth/model/token_payload_dto.dart';
-import '../feature/spotifyauth/model/authorize_spotify_body.dart';
-import '../feature/spotifyauth/model/refresh_spotify_token_body.dart';
-import '../feature/spotifyauth/model/spotify_refresh_token_payload_dto.dart';
-import '../feature/spotifyauth/model/spotify_token_payload_dto.dart';
+import '../module/audiolike/model/audio_like_dto.dart';
+import '../module/audiolike/model/like_unlike_audio_body.dart';
+import '../module/playlist/model/playlist_dto.dart';
+import '../module/playlist_audio/model/playlist_audio_dto.dart';
+import '../module/server_time/model/server_time_dto.dart';
+import '../module/spotify/model/spotify_search_result_dto.dart';
+import '../module/user/model/update_user_body.dart';
+import '../module/user/model/user_dto.dart';
+import '../module/user_audio/model/user_audio_dto.dart';
+import '../module/user_playlist/model/user_playlist_dto.dart';
+import '../module/usersync/model/user_sync_datum_dto.dart';
+import '../module/youtube/model/youtube_search_suggestions_dto.dart';
+import '../module/auth/model/email_sign_in_body.dart';
+import '../module/auth/model/google_sign_in_body.dart';
+import '../module/auth/model/token_payload_dto.dart';
+import '../module/spotify/model/authorize_spotify_body.dart';
+import '../module/spotify/model/refresh_spotify_token_body.dart';
+import '../module/spotify/model/spotify_refresh_token_payload_dto.dart';
+import '../module/spotify/model/spotify_token_payload_dto.dart';
 import '../shared/dto/audio_ids_body.dart';
 import '../shared/dto/optional_ids_body.dart';
 import '../shared/dto/required_ids_body.dart';
@@ -81,6 +82,11 @@ abstract class ApiClient {
 
   @POST('/v1/spotify/refreshToken')
   Future<SpotifyRefreshTokenPayloadDto> refreshSpotifyToken(@Body() RefreshSpotifyTokenBody body);
+
+  Future<SpotifySearchResultDto> spotifySearch(
+    @Query('keyword') String keyword,
+    @Query('spotifyAccessToken') String spotifyAccessToken,
+  );
 
   // user sync --------------------------
   @GET('/v1/usersync/myUserSyncDatum')

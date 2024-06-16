@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../entity/user/model/user_dto.dart';
+import '../../user/model/user_dto.dart';
 
 part 'token_payload_dto.g.dart';
 

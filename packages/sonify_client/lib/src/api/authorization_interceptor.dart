@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:synchronized/synchronized.dart';
 
-import '../feature/auth/api/auth_token_store.dart';
+import '../module/auth/api/auth_token_store.dart';
 import '../shared/api_exception_message_code.dart';
 import '../shared/dto/error_response_dto.dart';
 

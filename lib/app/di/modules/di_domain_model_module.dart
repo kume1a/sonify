@@ -278,7 +278,7 @@ abstract class DiDomainModelModule {
 
   @lazySingleton
   SpotifyAuthRemoteRepository spotifyAuthRemoteRepository(
-    SpotifyAuthRemoteService spotifyAuthRemoteService,
+    SpotifyRemoteService spotifyAuthRemoteService,
     SpotifyTokenPayloadMapper spotifyTokenPayloadMapper,
     SpotifyRefreshTokenPayloadMapper spotifyRefreshTokenPayloadMapper,
   ) {

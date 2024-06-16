@@ -5,11 +5,12 @@ import '../../../api/api_client.dart';
 import '../model/authorize_spotify_body.dart';
 import '../model/refresh_spotify_token_body.dart';
 import '../model/spotify_refresh_token_payload_dto.dart';
+import '../model/spotify_search_result_dto.dart';
 import '../model/spotify_token_payload_dto.dart';
-import 'spotify_auth_remote_service.dart';
+import 'spotify_remote_service.dart';
 
-class SpotifyAuthRemoteServiceImpl with SafeHttpRequestWrap implements SpotifyAuthRemoteService {
-  SpotifyAuthRemoteServiceImpl(
+class SpotifyRemoteServiceImpl with SafeHttpRequestWrap implements SpotifyRemoteService {
+  SpotifyRemoteServiceImpl(
     this._apiClient,
   );
 
@@ -35,5 +36,13 @@ class SpotifyAuthRemoteServiceImpl with SafeHttpRequestWrap implements SpotifyAu
 
       return _apiClient.refreshSpotifyToken(body);
     });
+  }
+
+  @override
+  Future<Either<NetworkCallError, SpotifySearchResultDto>> search({
+    required String spotifyAccessToken,
+    required String keyword,
+  }) {
+    return callCatchHandleNetworkCallError(() => _apiClient.spotifySearch(keyword, spotifyAccessToken));
   }
 }

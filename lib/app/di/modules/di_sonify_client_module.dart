@@ -106,8 +106,8 @@ abstract class DiSonifyClientModule {
 
   // spotify ----------------------------------------------------------------
   @lazySingleton
-  SpotifyAuthRemoteService spotifyAuthRemotService(ApiClient apiClient) {
-    return SpotifyAuthRemoteServiceImpl(apiClient);
+  SpotifyRemoteService spotifyAuthRemotService(ApiClient apiClient) {
+    return SpotifyRemoteServiceImpl(apiClient);
   }
 
   // playlist ----------------------------------------------------------------
