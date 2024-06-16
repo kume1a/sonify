@@ -11,7 +11,7 @@ class SpotifySearchedPlaylists extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 175,
+      height: 160,
       child: BlocBuilder<SpotifySearchCubit, SpotifySearchState>(
         builder: (_, state) => state.maybeWhen(
           success: (data) => _Content(data),
@@ -33,11 +33,7 @@ class _Content extends StatelessWidget {
       itemCount: data.playlists.length,
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      itemBuilder: (_, index) {
-        final playlist = data.playlists[index];
-
-        return _PlaylistItem(playlist: playlist);
-      },
+      itemBuilder: (_, index) => _PlaylistItem(playlist: data.playlists[index]),
     );
   }
 }
@@ -56,19 +52,20 @@ class _PlaylistItem extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8),
-        width: 125,
+        width: 100,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Thumbnail(
               thumbnailUrl: playlist.imageUrl,
-              size: const Size.square(125),
+              size: const Size.square(100),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 5),
             Text(
               playlist.name,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 12),
             ),
           ],
         ),

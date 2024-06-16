@@ -4,17 +4,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../../../shared/values/assets.dart';
-import '../state/youtube_search_state.dart';
+import '../state/spotify_search_state.dart';
 
-class YoutubeSearchSuggestionsHeader extends StatelessWidget {
-  const YoutubeSearchSuggestionsHeader({super.key});
+class SpotifySearchedPlaylistsHeader extends StatelessWidget {
+  const SpotifySearchedPlaylistsHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<YoutubeSearchCubit, YoutubeSearchState>(
+    return BlocBuilder<SpotifySearchCubit, SpotifySearchState>(
       builder: (_, state) => state.maybeWhen(
         orElse: () => const SizedBox.shrink(),
-        success: (data) => data.suggestions.isEmpty ? const SizedBox.shrink() : const _Header(),
+        success: (data) => data.playlists.isEmpty ? const SizedBox.shrink() : const _Header(),
       ),
     );
   }
@@ -28,13 +28,13 @@ class _Header extends StatelessWidget {
     final l = AppLocalizations.of(context);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
       child: Row(
         children: [
-          SvgPicture.asset(Assets.svgYoutube, width: 14, height: 14),
+          SvgPicture.asset(Assets.svgSpotify, width: 24, height: 24),
           const SizedBox(width: 6),
           Text(
-            l.youtubeSuggestions,
+            l.spotifyPlaylists,
             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
           ),
         ],

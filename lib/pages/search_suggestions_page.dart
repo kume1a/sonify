@@ -6,6 +6,7 @@ import '../features/search/state/spotify_search_state.dart';
 import '../features/search/state/youtube_search_state.dart';
 import '../features/search/ui/search_suggestions_input.dart';
 import '../features/search/ui/spotify_searched_playlists.dart';
+import '../features/search/ui/spotify_searched_playlists_header.dart';
 import '../features/search/ui/youtube_search_results.dart';
 import '../features/search/ui/youtube_search_suggestions_header.dart';
 
@@ -40,6 +41,9 @@ class _Content extends StatelessWidget {
             Expanded(
               child: CustomScrollView(
                 slivers: [
+                  SliverToBoxAdapter(
+                    child: SpotifySearchedPlaylistsHeader(),
+                  ),
                   SliverToBoxAdapter(
                     child: SpotifySearchedPlaylists(),
                   ),
