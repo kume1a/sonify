@@ -272,20 +272,23 @@ abstract class DiDomainModelModule {
     return SpotifyTokenPayloadMapper();
   }
 
+  @lazySingleton
   SpotifyRefreshTokenPayloadMapper spotifyRefreshTokenPayloadMapper() {
     return SpotifyRefreshTokenPayloadMapper();
   }
 
   @lazySingleton
-  SpotifyAuthRemoteRepository spotifyAuthRemoteRepository(
+  SpotifyRemoteRepository spotifyAuthRemoteRepository(
     SpotifyRemoteService spotifyAuthRemoteService,
     SpotifyTokenPayloadMapper spotifyTokenPayloadMapper,
     SpotifyRefreshTokenPayloadMapper spotifyRefreshTokenPayloadMapper,
+    SpotifySearchResultMapper spotifySearchResultMapper,
   ) {
-    return SpotifyAuthRemoteRepositoryImpl(
+    return SpotifyRemoteRepositoryImpl(
       spotifyAuthRemoteService,
       spotifyTokenPayloadMapper,
       spotifyRefreshTokenPayloadMapper,
+      spotifySearchResultMapper,
     );
   }
 

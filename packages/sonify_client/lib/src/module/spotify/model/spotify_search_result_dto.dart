@@ -17,7 +17,7 @@ class SpotifySearchResultDto with _$SpotifySearchResultDto {
 @freezed
 class SpotifySearchResultPlaylistsDto with _$SpotifySearchResultPlaylistsDto {
   const factory SpotifySearchResultPlaylistsDto({
-    String? title,
+    String? name,
     String? imageUrl,
     String? spotifyId,
   }) = _SpotifySearchResultPlaylistsDto;
