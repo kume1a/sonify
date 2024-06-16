@@ -6,8 +6,8 @@ import '../features/youtube/state/youtube_videos_state.dart';
 import '../features/youtube/ui/youtube_home_top_bar.dart';
 import '../features/youtube/ui/youtube_home_videos.dart';
 
-class YoutubePage extends StatelessWidget {
-  const YoutubePage({super.key});
+class SearchPage extends StatelessWidget {
+  const SearchPage({super.key});
 
   @override
   Widget build(BuildContext context) {

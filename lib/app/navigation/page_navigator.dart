@@ -15,8 +15,8 @@ class PageNavigator {
 
   void toMain() => GlobalNavigator.pushNamedAndRemoveAll(Routes.main);
 
-  Future<YoutubeSearchResult?> toYoutubeSearch() async {
-    final dynamic result = await GlobalNavigator.pushNamed(Routes.youtubeSearch);
+  Future<YoutubeSearchResult?> toSearchSuggestions() async {
+    final dynamic result = await GlobalNavigator.pushNamed(Routes.searchSuggestions);
 
     if (result is YoutubeSearchResult) {
       return result;

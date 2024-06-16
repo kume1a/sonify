@@ -14,8 +14,12 @@ class YoutubeHomeVideos extends StatelessWidget {
       buildWhen: (previous, current) => previous.searchResults != current.searchResults,
       builder: (_, state) {
         return state.searchResults.maybeWhen(
-          success: (data) => _SearchResultsSuccess(data),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          success: (data) => Expanded(
+            child: _SearchResultsSuccess(data),
+          ),
+          loading: () => const Expanded(
+            child: Center(child: CircularProgressIndicator()),
+          ),
           orElse: () => const SizedBox.shrink(),
         );
       },
@@ -34,19 +38,17 @@ class _SearchResultsSuccess extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Expanded(
-      child: ListView.builder(
-        itemCount: data.length,
-        itemBuilder: (_, index) {
-          final video = data[index];
+    return ListView.builder(
+      itemCount: data.length,
+      itemBuilder: (_, index) {
+        final video = data[index];
 
-          return YoutubeVideoListItem(
-            videoId: video.id.value,
-            imageUrl: video.thumbnails.mediumResUrl,
-            title: video.title,
-          );
-        },
-      ),
+        return YoutubeVideoListItem(
+          videoId: video.id.value,
+          imageUrl: video.thumbnails.mediumResUrl,
+          title: video.title,
+        );
+      },
     );
   }
 }

@@ -278,6 +278,11 @@ abstract class DiDomainModelModule {
   }
 
   @lazySingleton
+  SpotifySearchResultMapper spotifySearchResultMapper() {
+    return SpotifySearchResultMapper();
+  }
+
+  @lazySingleton
   SpotifyRemoteRepository spotifyAuthRemoteRepository(
     SpotifyRemoteService spotifyAuthRemoteService,
     SpotifyTokenPayloadMapper spotifyTokenPayloadMapper,

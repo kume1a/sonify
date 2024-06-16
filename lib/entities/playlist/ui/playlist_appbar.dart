@@ -11,7 +11,6 @@ import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/animation/pulsing_fade.dart';
 import '../../../shared/ui/round_play_button.dart';
 import '../../../shared/util/color.dart';
-import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
 import '../state/playlist_state.dart';
 

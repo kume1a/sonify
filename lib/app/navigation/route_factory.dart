@@ -7,7 +7,7 @@ import '../../pages/main/main_page.dart';
 import '../../pages/my_library_page.dart';
 import '../../pages/playlist_page.dart';
 import '../../pages/user_name_page.dart';
-import '../../pages/youtube_search_page.dart';
+import '../../pages/search_suggestions_page.dart';
 import '../../pages/youtube_video_page.dart';
 import 'routes.dart';
 
@@ -15,7 +15,7 @@ Route<dynamic> routeFactory(RouteSettings settings) {
   return switch (settings.name) {
     Routes.root => _createAuthRoute(settings),
     Routes.main => _createMainRoute(settings),
-    Routes.youtubeSearch => _createYoutubeSearchRoute(settings),
+    Routes.searchSuggestions => _createSearchSuggestionsRoute(settings),
     Routes.youtubeVideo => _createYoutubeVideoRoute(settings),
     Routes.userName => _createUserNameRoute(settings),
     Routes.auth => _createAuthRoute(settings),
@@ -88,9 +88,9 @@ Route _createYoutubeVideoRoute(RouteSettings settings) {
   );
 }
 
-Route _createYoutubeSearchRoute(RouteSettings settings) {
+Route _createSearchSuggestionsRoute(RouteSettings settings) {
   return MaterialPageRoute(
-    builder: (_) => const YoutubeSearchPage(),
+    builder: (_) => const SearchSuggestionsPage(),
     settings: settings,
   );
 }

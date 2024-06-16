@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../shared/values/assets.dart';
-import '../state/youtube_search_state.dart';
+import '../../search/state/youtube_search_state.dart';
 
 class YoutubeSearchResults extends StatelessWidget {
   const YoutubeSearchResults({super.key});
@@ -15,8 +15,8 @@ class YoutubeSearchResults extends StatelessWidget {
       builder: (_, state) {
         return state.maybeWhen(
           success: (data) => _SuggestionList(data),
-          loading: () => const Center(child: CircularProgressIndicator()),
-          orElse: () => const SizedBox.shrink(),
+          loading: () => const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator())),
+          orElse: () => const SliverToBoxAdapter(),
         );
       },
     );
@@ -30,9 +30,8 @@ class _SuggestionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return SliverList.builder(
       itemCount: data.suggestions.length,
-      padding: const EdgeInsets.only(bottom: 24),
       itemBuilder: (_, index) {
         final suggestion = data.suggestions[index];
 

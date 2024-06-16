@@ -39,7 +39,7 @@ class YoutubeVideosCubit extends Cubit<YoutubeVideosState> {
   final PageNavigator _pageNavigator;
 
   Future<void> onSearchPressed() async {
-    final searchRes = await _pageNavigator.toYoutubeSearch();
+    final searchRes = await _pageNavigator.toSearchSuggestions();
 
     final searchQuery = searchRes?.query;
 
