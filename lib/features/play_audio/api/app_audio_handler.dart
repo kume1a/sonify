@@ -106,6 +106,11 @@ class AppAudioHandler extends BaseAudioHandler {
   Future<void> seek(Duration position) => _player.seek(position);
 
   @override
+  Future<void> setSpeed(double speed) {
+    return _player.setSpeed(speed);
+  }
+
+  @override
   Future<void> skipToQueueItem(int index) async {
     if (index < 0 || index >= queue.value.length) {
       return;
@@ -142,14 +147,17 @@ class AppAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> setShuffleMode(AudioServiceShuffleMode shuffleMode) async {
+    Logger.root.info('AudioHandler Shuffle mode set: $shuffleMode');
     if (shuffleMode == AudioServiceShuffleMode.none) {
       _player.setShuffleModeEnabled(false);
     } else {
+      Logger.root.info('AudioHandler shuffling');
       await _player.shuffle();
+      Logger.root.info('AudioHandler shuffled');
       _player.setShuffleModeEnabled(true);
-
-      // TODO check this.queue
     }
+
+    Logger.root.info('AudioHandler Shuffle mode set: ${_player.shuffleModeEnabled}');
   }
 
   @override
@@ -208,6 +216,12 @@ class AppAudioHandler extends BaseAudioHandler {
       bufferedPosition: _player.bufferedPosition,
       speed: _player.speed,
       queueIndex: event.currentIndex,
+      shuffleMode: _player.shuffleModeEnabled ? AudioServiceShuffleMode.all : AudioServiceShuffleMode.none,
+      repeatMode: const {
+        LoopMode.off: AudioServiceRepeatMode.none,
+        LoopMode.one: AudioServiceRepeatMode.one,
+        LoopMode.all: AudioServiceRepeatMode.all,
+      }[_player.loopMode]!,
     );
   }
 

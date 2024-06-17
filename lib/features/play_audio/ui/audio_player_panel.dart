@@ -82,12 +82,12 @@ class _PanelContent extends StatelessWidget {
       children: [
         const _AudioPlayerHeader(),
         const SizedBox(height: 24),
-        LayoutBuilder(builder: (_, constraints) {
-          return _AudioPlayerImage(
+        LayoutBuilder(
+          builder: (_, constraints) => _AudioPlayerImage(
             size: Size.square(constraints.maxWidth * 0.75),
             audio: audio,
-          );
-        }),
+          ),
+        ),
         const SizedBox(height: 32),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -224,7 +224,7 @@ class _AudioPlayerControls extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const _MetaAndPlayMode(),
+        const _MetaAndShuffleMode(),
         const SizedBox(height: 20),
         const _Progress(),
         const SizedBox(height: 24),
@@ -234,8 +234,8 @@ class _AudioPlayerControls extends StatelessWidget {
   }
 }
 
-class _MetaAndPlayMode extends StatelessWidget {
-  const _MetaAndPlayMode();
+class _MetaAndShuffleMode extends StatelessWidget {
+  const _MetaAndShuffleMode();
 
   @override
   Widget build(BuildContext context) {
@@ -272,9 +272,17 @@ class _MetaAndPlayMode extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        IconButton(
-          onPressed: () {},
-          icon: SvgPicture.asset(Assets.svgShuffle),
+        BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
+          buildWhen: (previous, current) => previous.isShuffleEnabled != current.isShuffleEnabled,
+          builder: (_, state) {
+            return state.isShuffleEnabled.maybeWhen(
+              orElse: () => const SizedBox.shrink(),
+              success: (isShuffleModeEnabled) => IconButton(
+                onPressed: context.audioPlayerControlsCubit.onShufflePressed,
+                icon: SvgPicture.asset(isShuffleModeEnabled ? Assets.svgShuffleActive : Assets.svgShuffle),
+              ),
+            );
+          },
         ),
       ],
     );
@@ -386,7 +394,7 @@ class _SkipToPreviousButton extends StatelessWidget {
     return BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
       buildWhen: (previous, current) => previous.isFirstSong != current.isFirstSong,
       builder: (_, state) {
-        final isDisabled = state.isFirstSong;
+        final isDisabled = state.isFirstSong.getOrNull ?? true;
 
         return IconButton(
           onPressed: isDisabled ? null : context.audioPlayerControlsCubit.onSkipToPrevious,
@@ -419,7 +427,7 @@ class _SkipToNextButton extends StatelessWidget {
     return BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
       buildWhen: (previous, current) => previous.isLastSong != current.isLastSong,
       builder: (_, state) {
-        final isDisabled = state.isLastSong;
+        final isDisabled = state.isLastSong.getOrNull ?? false;
 
         return IconButton(
           onPressed: isDisabled ? null : context.audioPlayerControlsCubit.onSkipToNext,
