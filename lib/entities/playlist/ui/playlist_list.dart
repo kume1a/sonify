@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import '../../../app/intl/app_localizations.dart';
 import '../../../shared/ui/animation/pulsing_fade.dart';
 import '../../../shared/ui/list_header.dart';
-import '../../../shared/ui/small_circular_progress_indicator.dart';
 import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
@@ -121,17 +120,23 @@ class _PlaylistItem extends StatelessWidget {
                         ProcessStatus.pending => Center(
                             child: Text(l.pending, style: const TextStyle(fontSize: 12)),
                           ),
-                        ProcessStatus.processing => Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const SmallCircularProgressIndicator(),
-                              const SizedBox(height: 4),
-                              Text(
-                                '${playlist.audioCount}/${playlist.totalAudioCount}',
-                                style: const TextStyle(fontSize: 12),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+                        ProcessStatus.processing => PulsingFade(
+                            cycleDuration: const Duration(milliseconds: 800),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  l.importing,
+                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${playlist.audioCount}/${playlist.totalAudioCount}',
+                                  style: const TextStyle(fontSize: 12),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
                           ),
                         ProcessStatus.failed => Center(
                             child: Text(

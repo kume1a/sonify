@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../app/intl/app_localizations.dart';
+import '../../../shared/typedefs.dart';
+import '../../../shared/util/color.dart';
+import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
 import '../state/playlist_tiles_state.dart';
 
@@ -29,23 +32,10 @@ class _MyLibraryPlaylistTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l = AppLocalizations.of(context);
-
-    return _PlaylistTile(
+    return _StaticPlaylistTile(
+      name: (l) => l.myLibrary,
+      iconAssetName: Assets.svgMusicNote,
       onPressed: context.playlistTilesCubit.onMyLibraryPressed,
-      image: AspectRatio(
-        aspectRatio: 1,
-        child: Container(
-          decoration: BoxDecoration(
-            color: theme.colorScheme.secondary,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          alignment: Alignment.center,
-          child: SvgPicture.asset(Assets.svgMusicNote),
-        ),
-      ),
-      name: l.myLibrary,
     );
   }
 }
@@ -55,11 +45,34 @@ class _LikedSongsPlaylistTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _StaticPlaylistTile(
+      name: (l) => l.likedSongs,
+      iconAssetName: Assets.svgHeart,
+      onPressed: null,
+    );
+  }
+}
+
+class _StaticPlaylistTile extends StatelessWidget {
+  const _StaticPlaylistTile({
+    required this.name,
+    required this.iconAssetName,
+    required this.onPressed,
+  });
+
+  final LocalizedStringResolver name;
+  final String iconAssetName;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l = AppLocalizations.of(context);
 
+    final isDisabled = onPressed == null;
+
     return _PlaylistTile(
-      onPressed: context.playlistTilesCubit.onLikedSongsPressed,
+      onPressed: onPressed,
       image: AspectRatio(
         aspectRatio: 1,
         child: Container(
@@ -68,10 +81,19 @@ class _LikedSongsPlaylistTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           alignment: Alignment.center,
-          child: SvgPicture.asset(Assets.svgHeart),
+          child: SvgPicture.asset(
+            iconAssetName,
+            colorFilter:
+                svgColor(isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onSecondary),
+          ),
         ),
       ),
-      name: l.likedSongs,
+      name: Text(
+        name(l),
+        style: TextStyle(
+          color: isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onSecondary,
+        ),
+      ),
     );
   }
 }
@@ -84,8 +106,8 @@ class _PlaylistTile extends StatelessWidget {
   });
 
   final Widget image;
-  final String name;
-  final VoidCallback onPressed;
+  final Widget name;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +124,7 @@ class _PlaylistTile extends StatelessWidget {
           children: [
             image,
             const SizedBox(width: 6),
-            Text(name),
+            name,
           ],
         ),
       ),

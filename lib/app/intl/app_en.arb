@@ -166,5 +166,6 @@
   "addedToMyLibrary": "Added to my library",
   "failedToAddToMyLibrary": "Failed to add to my library",
   "youtubeSuggestions": "Youtube suggestions",
-  "spotifyPlaylists": "Spotify playlists"
+  "spotifyPlaylists": "Spotify playlists",
+  "importing": "Importing"
 }

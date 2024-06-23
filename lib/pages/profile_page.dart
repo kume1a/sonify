@@ -39,7 +39,7 @@ class _Content extends StatelessWidget {
             indent: 16,
             endIndent: 16,
           ),
-          SettingsTile(),
+          // SettingsTile(),
           ImportLocalAudioFilesTile(),
           SyncDataTile(),
           SyncSpotifyPlaylistsFiles(),
