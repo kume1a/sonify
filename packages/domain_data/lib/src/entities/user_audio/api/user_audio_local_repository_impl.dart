@@ -1,7 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:common_models/common_models.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
 import '../../audio/model/user_audio.dart';
+import '../util/compare_audio_titles.dart';
 import '../util/user_audio_mapper.dart';
 import 'user_audio_local_repository.dart';
 
@@ -19,7 +21,15 @@ class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepo
     return wrapWithResult(() async {
       final audioEntities = await _userAudioEntityDao.getAllByUserId(userId);
 
-      return audioEntities.map(_userAudioMapper.entityToModel).toList();
+      return audioEntities
+          .sorted((a, b) {
+            final aTitle = a.audio?.title?.toLowerCase() ?? '';
+            final bTitle = b.audio?.title?.toLowerCase() ?? '';
+
+            return compareAudioTitles(aTitle, bTitle);
+          })
+          .map(_userAudioMapper.entityToModel)
+          .toList();
     });
   }
 
