@@ -156,29 +156,12 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     _audioHandler.play();
   }
 
-  Future<void> onPlayPlaylistPressed({
-    required String playlistId,
-  }) async {
-    final playlistEnqueued = await _ensurePlaylistEnqueued(playlistId: playlistId);
-    if (!playlistEnqueued) {
-      Logger.root.warning('NowPlayingAudioCubit.onPlayPlaylistPressed: failed to enqueue playlist');
-      return;
-    }
+  Future<void> onPlayPlaylistPressed({required String playlistId}) {
+    return _playOrPausePlaylist(playlistId: playlistId);
+  }
 
-    final beforePlayingAudioInfo = await _nowPlayingAudioInfoStore.getNowPlayingAudioInfo();
-
-    if (beforePlayingAudioInfo == null || beforePlayingAudioInfo.playlistId != playlistId) {
-      await _audioHandler.skipToQueueItem(0);
-      _audioHandler.play();
-
-      return;
-    }
-
-    if (state.playButtonState == PlaybackButtonState.playing) {
-      _audioHandler.pause();
-    } else {
-      _audioHandler.play();
-    }
+  Future<void> onPlayLocalAudiosPressed() {
+    return _playOrPausePlaylist(playlistId: null);
   }
 
   Future<void> onLikePressed() async {
@@ -206,6 +189,29 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       audios: updatedNowPlayingAudios,
       playlist: updatedNowPlayingPlaylist,
     ));
+  }
+
+  Future<void> _playOrPausePlaylist({required String? playlistId}) async {
+    final playlistEnqueued = await _ensurePlaylistEnqueued(playlistId: playlistId);
+    if (!playlistEnqueued) {
+      Logger.root.warning('NowPlayingAudioCubit.onPlayPlaylistPressed: failed to enqueue playlist');
+      return;
+    }
+
+    final beforePlayingAudioInfo = await _nowPlayingAudioInfoStore.getNowPlayingAudioInfo();
+
+    if (beforePlayingAudioInfo == null || beforePlayingAudioInfo.playlistId != playlistId) {
+      await _audioHandler.skipToQueueItem(0);
+      _audioHandler.play();
+
+      return;
+    }
+
+    if (state.playButtonState == PlaybackButtonState.playing) {
+      _audioHandler.pause();
+    } else {
+      _audioHandler.play();
+    }
   }
 
   Future<void> _reloadNowPlayingAudios() async {

@@ -109,7 +109,6 @@
       }
     }
   },
-  "shufflePlayback": "Shuffle Playback",
   "liked": "Liked",
   "allowAudioPermissionForLocalMusic": "Allow audio permission to import local music files",
   "grant": "Grant",

@@ -10,7 +10,6 @@ import '../entities/audio/state/local_audio_files_state.dart';
 import '../entities/audio/ui/local_audio_files.dart';
 import '../entities/audio/ui/local_audio_files_alphabet.dart';
 import '../entities/playlist/ui/my_library_header.dart';
-import '../entities/playlist/ui/my_library_tiles.dart';
 import '../features/play_audio/state/audio_player_panel_state.dart';
 import '../features/play_audio/ui/audio_player_panel.dart';
 import '../shared/ui/default_back_button.dart';
@@ -31,10 +30,8 @@ class MyLibraryPage extends StatelessWidget {
   }
 }
 
-final _spacingAfterTiles = 20.h;
 final _spacingAfterHeader = 12.h;
-final _tilesAndHeaderHeght =
-    MyLibraryTiles.tileHeight + _spacingAfterTiles + MyLibraryHeader.height + _spacingAfterHeader;
+final _tilesAndHeaderHeght = MyLibraryHeader.height + _spacingAfterHeader;
 
 class _Content extends HookWidget {
   const _Content();
@@ -89,13 +86,6 @@ class _Content extends HookWidget {
                       controller: scrollController,
                       physics: const ClampingScrollPhysics(),
                       slivers: [
-                        SliverPadding(
-                          padding: horizontalPadding,
-                          sliver: const SliverToBoxAdapter(
-                            child: MyLibraryTiles(),
-                          ),
-                        ),
-                        SliverSizedBox(height: _spacingAfterTiles),
                         SliverPadding(
                           padding: horizontalPadding,
                           sliver: const SliverToBoxAdapter(
