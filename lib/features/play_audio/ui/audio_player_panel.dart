@@ -400,24 +400,15 @@ class _SkipToPreviousButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
-      buildWhen: (previous, current) => previous.isFirstSong != current.isFirstSong,
-      builder: (_, state) {
-        final isDisabled = state.isFirstSong.getOrNull ?? true;
-
-        return IconButton(
-          onPressed: isDisabled ? null : context.audioPlayerControlsCubit.onSkipToPrevious,
-          visualDensity: VisualDensity.compact,
-          icon: SvgPicture.asset(
-            width: size,
-            height: size,
-            Assets.svgSkipBack,
-            colorFilter: svgColor(
-              isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onSurface,
-            ),
-          ),
-        );
-      },
+    return IconButton(
+      onPressed: context.audioPlayerControlsCubit.onSkipToPrevious,
+      visualDensity: VisualDensity.compact,
+      icon: SvgPicture.asset(
+        width: size,
+        height: size,
+        Assets.svgSkipBack,
+        colorFilter: svgColor(theme.colorScheme.onSurface),
+      ),
     );
   }
 }
@@ -433,24 +424,15 @@ class _SkipToNextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
-      buildWhen: (previous, current) => previous.isLastSong != current.isLastSong,
-      builder: (_, state) {
-        const isDisabled = false; // state.isLastSong.getOrNull ?? false;
-
-        return IconButton(
-          onPressed: isDisabled ? null : context.audioPlayerControlsCubit.onSkipToNext,
-          visualDensity: VisualDensity.compact,
-          icon: SvgPicture.asset(
-            Assets.svgSkipForward,
-            width: size,
-            height: size,
-            colorFilter: svgColor(
-              isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onSurface,
-            ),
-          ),
-        );
-      },
+    return IconButton(
+      onPressed: context.audioPlayerControlsCubit.onSkipToNext,
+      visualDensity: VisualDensity.compact,
+      icon: SvgPicture.asset(
+        Assets.svgSkipForward,
+        width: size,
+        height: size,
+        colorFilter: svgColor(theme.colorScheme.onSurface),
+      ),
     );
   }
 }

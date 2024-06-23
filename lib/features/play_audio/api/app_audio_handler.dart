@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audio_service/audio_service.dart';
 import 'package:collection/collection.dart';
 import 'package:just_audio/just_audio.dart';
@@ -94,10 +96,36 @@ class AppAudioHandler extends BaseAudioHandler {
   }
 
   @override
-  Future<void> skipToNext() => _player.seekToNext();
+  Future<void> skipToNext() {
+    if (_player.effectiveIndices != null && _player.effectiveIndices!.isNotEmpty) {
+      final isLast = _player.effectiveIndices?.lastOrNull == _player.currentIndex;
+
+      if (isLast) {
+        return _player.seek(
+          Duration.zero,
+          index: _player.effectiveIndices!.firstOrNull ?? 0,
+        );
+      }
+    }
+
+    return _player.seekToNext();
+  }
 
   @override
-  Future<void> skipToPrevious() => _player.seekToPrevious();
+  Future<void> skipToPrevious() {
+    if (_player.effectiveIndices != null && _player.effectiveIndices!.isNotEmpty) {
+      final isFirst = _player.effectiveIndices?.firstOrNull == _player.currentIndex;
+
+      if (isFirst) {
+        return _player.seek(
+          Duration.zero,
+          index: _player.effectiveIndices!.lastOrNull ?? 0,
+        );
+      }
+    }
+
+    return _player.seekToPrevious();
+  }
 
   @override
   Future<void> setRepeatMode(AudioServiceRepeatMode repeatMode) async {
@@ -132,20 +160,24 @@ class AppAudioHandler extends BaseAudioHandler {
   }
 
   void _listenForPlaybackStateChanges() {
-    Logger.root.info('Listening for playback state changes');
     _player.playbackEventStream.listen(
       (event) {
         final state = _transformEvent(event);
 
         playbackState.add(state);
 
-        Logger.root.info('Playback state: ${event.processingState}');
+        final effectiveIndices = _player.effectiveIndices;
 
-        if (event.processingState == ProcessingState.completed) {
-          Logger.root.finer(
-              'Playback completed, seeking to the beginning of the next song, ${_player.effectiveIndices?.firstOrNull ?? 0}');
+        if (effectiveIndices != null && effectiveIndices.isNotEmpty) {
+          final isLast = effectiveIndices.lastOrNull == event.currentIndex;
 
-          skipToQueueItem(_player.effectiveIndices?.firstOrNull ?? 0);
+          if (isLast && event.processingState == ProcessingState.completed) {
+            final firstIndex = effectiveIndices.firstOrNull ?? 0;
+
+            Logger.root.finer('Playback completed, seeking to the beginning of the next song, $firstIndex');
+
+            Future.delayed(Duration.zero, () => _player.seek(Duration.zero, index: firstIndex));
+          }
         }
       },
       onError: (Object error) {
