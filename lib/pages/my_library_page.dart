@@ -84,7 +84,6 @@ class _Content extends HookWidget {
                   children: [
                     CustomScrollView(
                       controller: scrollController,
-                      physics: const ClampingScrollPhysics(),
                       slivers: [
                         SliverPadding(
                           padding: horizontalPadding,
