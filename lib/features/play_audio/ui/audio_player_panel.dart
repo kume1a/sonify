@@ -329,13 +329,29 @@ class _Controls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SvgPicture.asset(
-          Assets.svgRepeat,
-          width: 24,
-          height: 24,
+        BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
+          buildWhen: (previous, current) => previous.isRepeatEnabled != current.isRepeatEnabled,
+          builder: (_, state) {
+            return state.isRepeatEnabled.maybeWhen(
+              orElse: () => const SizedBox.shrink(),
+              success: (isRepeatEnabled) => IconButton(
+                onPressed: context.audioPlayerControlsCubit.onRepeatPressed,
+                icon: SvgPicture.asset(
+                  Assets.svgRepeat,
+                  width: 24,
+                  height: 24,
+                  colorFilter: svgColor(
+                    isRepeatEnabled ? theme.colorScheme.secondary : theme.colorScheme.onSurface,
+                  ),
+                ),
+              ),
+            );
+          },
         ),
         const _SkipToPreviousButton(size: 28),
         const _PlayPauseButton(size: 38),
