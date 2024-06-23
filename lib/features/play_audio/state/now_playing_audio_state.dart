@@ -232,6 +232,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
 
     final beforePlayingAudio =
         state.nowPlaying.firstWhereOrNull((e) => e.id == beforePlayingAudioInfo.audioId);
+
     if (beforePlayingAudio == null) {
       Logger.root.warning('NowPlayingAudioCubit._reloadNowPlayingAudios: beforePlayingAudio is null');
       return;
@@ -290,6 +291,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
 
     if (playlistId == null) {
       final localUserAudios = await _audioLocalRepository.getAllByUserId(authUserId);
+
       if (localUserAudios.isErr) {
         Logger.root.warning('PlaylistCubit._loadNowPlayingPlaylist: failed to get local user audios');
         return null;
@@ -340,6 +342,9 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
+    Logger.root.finer(
+        'NowPlayingAudioCubit._onMediaItemChanged: payload.audio.title=${payload.audio.title}, url=${payload.audio.path}');
+
     final nowPlayingAudioLike = await _audioLikeLocalRepository.getByUserAndAudioId(
       userId: authUserId,
       audioId: payload.audio.id ?? kInvalidId,
@@ -350,8 +355,6 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     emit(state.copyWith(
       nowPlayingAudio: SimpleDataState.success(nowPlayingAudio),
     ));
-
-    Logger.root.finer('Playing audio uri ${nowPlayingAudio.audioUri}');
 
     await _nowPlayingAudioInfoStore.setNowPlayingAudioInfo(
       NowPlayingAudioInfo(

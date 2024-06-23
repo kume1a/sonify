@@ -95,9 +95,6 @@ class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
       newPlayButtonState = PlaybackButtonState.paused;
     } else if (processingState != AudioProcessingState.completed) {
       newPlayButtonState = PlaybackButtonState.playing;
-    } else {
-      _audioHandler.seek(Duration.zero);
-      _audioHandler.pause();
     }
 
     final newProgress = (state.playbackProgress ?? PlaybackProgressState.zero()).copyWith(

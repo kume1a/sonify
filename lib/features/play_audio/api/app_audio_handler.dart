@@ -3,33 +3,14 @@ import 'package:collection/collection.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
 
-import '../../../entities/audio/util/audio_extension.dart';
-import '../../../shared/util/utils.dart';
-import '../model/media_item_payload.dart';
+import '../util/mediaItemToAudioSource.dart';
 
 class AppAudioHandler extends BaseAudioHandler {
   AppAudioHandler() {
-    _player.playbackEventStream.listen(
-      (event) {
-        final state = _transformEvent(event);
-
-        playbackState.add(state);
-      },
-      onError: (Object error) {
-        Logger.root.warning('Playback error: $error');
-
-        _player.stop();
-
-        playbackState.add(playbackState.value.copyWith(
-          processingState: AudioProcessingState.error,
-          errorCode: -1,
-          errorMessage: error.toString(),
-        ));
-      },
-    );
-
+    _listenForPlaybackStateChanges();
     _listenForDurationChanges();
     _listenForCurrentSongIndexChanges();
+    _listenForSequenceStateChanges();
 
     _player.setAudioSource(_playlist);
   }
@@ -38,62 +19,52 @@ class AppAudioHandler extends BaseAudioHandler {
   final _playlist = ConcatenatingAudioSource(children: []);
 
   @override
-  Future<void> addQueueItems(List<MediaItem> mediaItems) async {
-    final audioSource = mediaItems.map(_createAudioSource).whereNotNull().toList();
+  Future<void> addQueueItems(List<MediaItem> mediaItems) {
+    final audioSource = mediaItems.map(mediaItemToAudioSource).whereNotNull().toList();
 
     _playlist.addAll(audioSource);
 
-    final newQueue = queue.value..addAll(mediaItems);
-    queue.add(newQueue);
+    return Future.value();
   }
 
   @override
-  Future<void> addQueueItem(MediaItem mediaItem) async {
-    final audioSource = _createAudioSource(mediaItem);
+  Future<void> addQueueItem(MediaItem mediaItem) {
+    final audioSource = mediaItemToAudioSource(mediaItem);
     if (audioSource == null) {
-      return;
+      return Future.value();
     }
 
     _playlist.add(audioSource);
 
-    final newQueue = queue.value..add(mediaItem);
-    queue.add(newQueue);
+    return Future.value();
   }
 
   @override
-  Future<void> insertQueueItem(int index, MediaItem mediaItem) async {
-    final audioSource = _createAudioSource(mediaItem);
+  Future<void> insertQueueItem(int index, MediaItem mediaItem) {
+    final audioSource = mediaItemToAudioSource(mediaItem);
     if (audioSource == null) {
-      return;
+      return Future.value();
     }
 
     _playlist.insert(index, audioSource);
 
-    final newQueue = queue.value..insert(index, mediaItem);
-    queue.add(newQueue);
+    return Future.value();
   }
 
   @override
-  Future<void> removeQueueItemAt(int index) async {
+  Future<void> removeQueueItemAt(int index) {
     _playlist.removeAt(index);
 
-    final newQueue = queue.value..removeAt(index);
-    queue.add(newQueue);
+    return Future.value();
   }
 
   @override
   Future<void> updateQueue(List<MediaItem> queue) async {
-    final audioSources = queue.map(_createAudioSource).where((e) => e != null).cast<AudioSource>().toList();
+    final audioSources =
+        queue.map(mediaItemToAudioSource).where((e) => e != null).cast<AudioSource>().toList();
 
     await _playlist.clear();
     await _playlist.addAll(audioSources);
-
-    final sequence = _player.sequenceState?.effectiveSequence;
-    if (sequence == null || sequence.isEmpty) {
-      return;
-    }
-    final items = sequence.map((source) => source.tag as MediaItem);
-    this.queue.add(items.toList());
   }
 
   @override
@@ -116,9 +87,8 @@ class AppAudioHandler extends BaseAudioHandler {
       return;
     }
 
-    if (_player.shuffleModeEnabled) {
-      index = _player.shuffleIndices![index];
-    }
+    Logger.root.info(
+        'AudioHandler skipToQueueItem: $index, shuffleModeEnabled: ${_player.shuffleModeEnabled}, shuffleIndices: ${_player.shuffleIndices}');
 
     _player.seek(Duration.zero, index: index);
   }
@@ -147,17 +117,12 @@ class AppAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> setShuffleMode(AudioServiceShuffleMode shuffleMode) async {
-    Logger.root.info('AudioHandler Shuffle mode set: $shuffleMode');
     if (shuffleMode == AudioServiceShuffleMode.none) {
       _player.setShuffleModeEnabled(false);
     } else {
-      Logger.root.info('AudioHandler shuffling');
       await _player.shuffle();
-      Logger.root.info('AudioHandler shuffled');
       _player.setShuffleModeEnabled(true);
     }
-
-    Logger.root.info('AudioHandler Shuffle mode set: ${_player.shuffleModeEnabled}');
   }
 
   @override
@@ -166,62 +131,34 @@ class AppAudioHandler extends BaseAudioHandler {
     return super.stop();
   }
 
-  UriAudioSource? _createAudioSource(MediaItem mediaItem) {
-    if (mediaItem.extras == null) {
-      Logger.root.warning('Media extras is null, mediaItem: $mediaItem');
-      return null;
-    }
+  void _listenForPlaybackStateChanges() {
+    Logger.root.info('Listening for playback state changes');
+    _player.playbackEventStream.listen(
+      (event) {
+        final state = _transformEvent(event);
 
-    final payload = callOrDefault(
-      () => MediaItemPayload.fromExtras(mediaItem.extras ?? {}),
-      null,
-    );
-    if (payload == null) {
-      Logger.root.warning('MediaItemPayload is null, mediaItem: $mediaItem');
-      return null;
-    }
+        playbackState.add(state);
 
-    final audioUri = payload.audio.audioUri;
-    if (audioUri == null) {
-      Logger.root.warning('Audio uri is null, audio: ${payload.audio}');
-      return null;
-    }
+        Logger.root.info('Playback state: ${event.processingState}');
 
-    return AudioSource.uri(
-      audioUri,
-      tag: mediaItem,
-    );
-  }
+        if (event.processingState == ProcessingState.completed) {
+          Logger.root.finer(
+              'Playback completed, seeking to the beginning of the next song, ${_player.effectiveIndices?.firstOrNull ?? 0}');
 
-  PlaybackState _transformEvent(PlaybackEvent event) {
-    return PlaybackState(
-      controls: [
-        if (_player.playing) MediaControl.pause else MediaControl.play,
-      ],
-      systemActions: const {
-        MediaAction.seek,
-        MediaAction.skipToPrevious,
-        MediaAction.skipToNext,
+          skipToQueueItem(_player.effectiveIndices?.firstOrNull ?? 0);
+        }
       },
-      androidCompactActionIndices: const [0, 1, 2],
-      processingState: const {
-        ProcessingState.idle: AudioProcessingState.idle,
-        ProcessingState.loading: AudioProcessingState.loading,
-        ProcessingState.buffering: AudioProcessingState.buffering,
-        ProcessingState.ready: AudioProcessingState.ready,
-        ProcessingState.completed: AudioProcessingState.completed,
-      }[_player.processingState]!,
-      playing: _player.playing,
-      updatePosition: _player.position,
-      bufferedPosition: _player.bufferedPosition,
-      speed: _player.speed,
-      queueIndex: event.currentIndex,
-      shuffleMode: _player.shuffleModeEnabled ? AudioServiceShuffleMode.all : AudioServiceShuffleMode.none,
-      repeatMode: const {
-        LoopMode.off: AudioServiceRepeatMode.none,
-        LoopMode.one: AudioServiceRepeatMode.one,
-        LoopMode.all: AudioServiceRepeatMode.all,
-      }[_player.loopMode]!,
+      onError: (Object error) {
+        Logger.root.warning('Playback error: $error');
+
+        _player.stop();
+
+        playbackState.add(playbackState.value.copyWith(
+          processingState: AudioProcessingState.error,
+          errorCode: -1,
+          errorMessage: error.toString(),
+        ));
+      },
     );
   }
 
@@ -254,5 +191,53 @@ class AppAudioHandler extends BaseAudioHandler {
       }
       mediaItem.add(playlist[index]);
     });
+  }
+
+  void _listenForSequenceStateChanges() {
+    _player.sequenceStateStream.listen((sequenceState) {
+      if (sequenceState == null) {
+        return;
+      }
+
+      final sequence = sequenceState.effectiveSequence;
+      if (sequence.isEmpty) {
+        return;
+      }
+      final items = sequence.map((source) => source.tag as MediaItem);
+
+      queue.add(items.toList());
+    });
+  }
+
+  PlaybackState _transformEvent(PlaybackEvent event) {
+    return PlaybackState(
+      controls: [
+        if (_player.playing) MediaControl.pause else MediaControl.play,
+      ],
+      systemActions: const {
+        MediaAction.seek,
+        MediaAction.skipToPrevious,
+        MediaAction.skipToNext,
+      },
+      androidCompactActionIndices: const [0, 1, 2],
+      processingState: const {
+        ProcessingState.idle: AudioProcessingState.idle,
+        ProcessingState.loading: AudioProcessingState.loading,
+        ProcessingState.buffering: AudioProcessingState.buffering,
+        ProcessingState.ready: AudioProcessingState.ready,
+        ProcessingState.completed: AudioProcessingState.completed,
+      }[_player.processingState]!,
+      playing: _player.playing,
+      updatePosition: _player.position,
+      bufferedPosition: _player.bufferedPosition,
+      speed: _player.speed,
+      queueIndex: event.currentIndex,
+      shuffleMode: _player.shuffleModeEnabled ? AudioServiceShuffleMode.all : AudioServiceShuffleMode.none,
+      repeatMode: const {
+        LoopMode.off: AudioServiceRepeatMode.none,
+        LoopMode.one: AudioServiceRepeatMode.one,
+        LoopMode.all: AudioServiceRepeatMode.all,
+      }[_player.loopMode]!,
+    );
   }
 }

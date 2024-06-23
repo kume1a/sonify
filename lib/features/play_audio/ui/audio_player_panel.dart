@@ -239,6 +239,8 @@ class _MetaAndShuffleMode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -279,7 +281,14 @@ class _MetaAndShuffleMode extends StatelessWidget {
               orElse: () => const SizedBox.shrink(),
               success: (isShuffleModeEnabled) => IconButton(
                 onPressed: context.audioPlayerControlsCubit.onShufflePressed,
-                icon: SvgPicture.asset(isShuffleModeEnabled ? Assets.svgShuffleActive : Assets.svgShuffle),
+                icon: SvgPicture.asset(
+                  isShuffleModeEnabled ? Assets.svgShuffleActive : Assets.svgShuffle,
+                  width: 24,
+                  height: 24,
+                  colorFilter: svgColor(
+                    isShuffleModeEnabled ? theme.colorScheme.secondary : theme.colorScheme.onSurface,
+                  ),
+                ),
               ),
             );
           },
@@ -427,7 +436,7 @@ class _SkipToNextButton extends StatelessWidget {
     return BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
       buildWhen: (previous, current) => previous.isLastSong != current.isLastSong,
       builder: (_, state) {
-        final isDisabled = state.isLastSong.getOrNull ?? false;
+        const isDisabled = false; // state.isLastSong.getOrNull ?? false;
 
         return IconButton(
           onPressed: isDisabled ? null : context.audioPlayerControlsCubit.onSkipToNext,
