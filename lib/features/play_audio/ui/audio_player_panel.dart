@@ -11,7 +11,6 @@ import '../../../shared/ui/play_pause.dart';
 import '../../../shared/ui/sliding_up_panel.dart';
 import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/util/color.dart';
-import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
 import '../model/playback_button_state.dart';
 import '../state/audio_player_controls_state.dart';

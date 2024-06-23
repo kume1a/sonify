@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
-import '../../../app/navigation/page_navigator.dart';
 import '../../../shared/util/debounce.dart';
 import '../../spotifyauth/api/spotify_access_token_provider.dart';
 
@@ -20,12 +19,10 @@ class SpotifySearchCubit extends Cubit<SpotifySearchState> {
   SpotifySearchCubit(
     this._spotifyRemoteRepository,
     this._spotifyAccessTokenProvider,
-    this._pageNavigator,
   ) : super(SpotifySearchState.idle());
 
   final SpotifyRemoteRepository _spotifyRemoteRepository;
   final SpotifyAccessTokenProvider _spotifyAccessTokenProvider;
-  final PageNavigator _pageNavigator;
 
   final Debounce _debounce = Debounce.fromMilliseconds(400);
 

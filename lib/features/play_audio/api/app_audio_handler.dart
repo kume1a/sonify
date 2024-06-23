@@ -5,7 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
 
-import '../util/mediaItemToAudioSource.dart';
+import '../util/media_item_to_audio_source.dart';
 
 class AppAudioHandler extends BaseAudioHandler {
   AppAudioHandler() {

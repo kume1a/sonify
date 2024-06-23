@@ -9,7 +9,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
-import '../../../entities/audio/util/audio_extension.dart';
 import '../../../shared/ui/toast_notifier.dart';
 import '../../../shared/util/connectivity_status.dart';
 import '../../../shared/util/utils.dart';

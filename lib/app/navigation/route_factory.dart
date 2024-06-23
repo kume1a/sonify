@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../pages/auth_page.dart';
 import '../../pages/downloads_page.dart';
 import '../../pages/email_sign_in_page.dart';
@@ -6,8 +7,8 @@ import '../../pages/import_local_music_page.dart';
 import '../../pages/main/main_page.dart';
 import '../../pages/my_library_page.dart';
 import '../../pages/playlist_page.dart';
-import '../../pages/user_name_page.dart';
 import '../../pages/search_suggestions_page.dart';
+import '../../pages/user_name_page.dart';
 import '../../pages/youtube_video_page.dart';
 import 'routes.dart';
 
