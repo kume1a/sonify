@@ -117,12 +117,17 @@ class _Content extends HookWidget {
                       duration: const Duration(milliseconds: 150),
                       child: LocalAudioFilesAlphabet(
                         onIndexChanged: (index) {
-                          if (!scrollController.hasClients ||
-                              scrollController.offset > scrollController.position.maxScrollExtent - 20) {
+                          if (!scrollController.hasClients) {
                             return;
                           }
 
-                          scrollController.jumpTo(_tilesAndHeaderHeght + index * AudioListItem.height);
+                          final offsetToScroll = _tilesAndHeaderHeght + index * AudioListItem.height;
+
+                          if (offsetToScroll > scrollController.position.maxScrollExtent - 20) {
+                            return;
+                          }
+
+                          scrollController.jumpTo(offsetToScroll);
                         },
                       ),
                     ),
