@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
+import '../../../app/navigation/page_navigator.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../model/event_user_audio.dart';
 
@@ -22,6 +23,7 @@ final class LocalUserAudioFilesCubit extends EntityLoaderCubit<List<Audio>> {
     this._audioLocalRepository,
     this._authUserInfoProvider,
     this._eventBus,
+    this._pageNavigator,
   ) {
     _init();
 
@@ -31,6 +33,7 @@ final class LocalUserAudioFilesCubit extends EntityLoaderCubit<List<Audio>> {
   final UserAudioLocalRepository _audioLocalRepository;
   final AuthUserInfoProvider _authUserInfoProvider;
   final EventBus _eventBus;
+  final PageNavigator _pageNavigator;
 
   final _subscriptions = SubscriptionComposite();
 
@@ -56,12 +59,14 @@ final class LocalUserAudioFilesCubit extends EntityLoaderCubit<List<Audio>> {
       return null;
     }
 
-    final res = await _audioLocalRepository.getAllByUserId(userId);
+    final res = await _audioLocalRepository.getAll(userId: userId);
 
     return res.dataOrNull?.map((e) => e.audio).whereNotNull().toList();
   }
 
-  void onSearchQueryChanged(String value) {}
+  void onSearchContainerPressed() {
+    _pageNavigator.toMyLibrarySearch();
+  }
 
   Future<void> _onEventUserAudio(EventUserAudio event) async {
     await event.when(

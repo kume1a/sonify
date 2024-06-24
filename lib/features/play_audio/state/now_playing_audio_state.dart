@@ -295,7 +295,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     }
 
     if (playlistId == null) {
-      final localUserAudios = await _audioLocalRepository.getAllByUserId(authUserId);
+      final localUserAudios = await _audioLocalRepository.getAll(userId: authUserId);
 
       if (localUserAudios.isErr) {
         Logger.root.warning('PlaylistCubit._loadNowPlayingPlaylist: failed to get local user audios');

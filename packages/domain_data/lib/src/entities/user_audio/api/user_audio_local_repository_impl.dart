@@ -17,9 +17,15 @@ class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepo
   final UserAudioMapper _userAudioMapper;
 
   @override
-  Future<Result<List<UserAudio>>> getAllByUserId(String userId) {
+  Future<Result<List<UserAudio>>> getAll({
+    required String userId,
+    String? searchQuery,
+  }) {
     return wrapWithResult(() async {
-      final audioEntities = await _userAudioEntityDao.getAllByUserId(userId);
+      final audioEntities = await _userAudioEntityDao.getAll(
+        userId: userId,
+        searchQuery: searchQuery,
+      );
 
       return audioEntities
           .sorted((a, b) {

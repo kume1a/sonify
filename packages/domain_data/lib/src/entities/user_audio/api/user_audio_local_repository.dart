@@ -3,7 +3,10 @@ import 'package:common_models/common_models.dart';
 import '../../audio/model/user_audio.dart';
 
 abstract interface class UserAudioLocalRepository {
-  Future<Result<List<UserAudio>>> getAllByUserId(String userId);
+  Future<Result<List<UserAudio>>> getAll({
+    required String userId,
+    String? searchQuery,
+  });
 
   Future<Result<List<String>>> getAllIdsByUserId(String userId);
 

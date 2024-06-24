@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../app/di/register_dependencies.dart';
 import '../features/search/state/spotify_search_state.dart';
 import '../features/search/state/youtube_search_state.dart';
-import '../features/search/ui/search_suggestions_input.dart';
 import '../features/search/ui/spotify_searched_playlists.dart';
 import '../features/search/ui/spotify_searched_playlists_header.dart';
 import '../features/search/ui/youtube_search_results.dart';
 import '../features/search/ui/youtube_search_suggestions_header.dart';
+import '../shared/ui/search_input_with_cancel.dart';
 
 class SearchSuggestionsPage extends StatelessWidget {
   const SearchSuggestionsPage({super.key});
@@ -30,15 +30,21 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
-              child: SearchSuggestionsInput(),
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+              child: SearchInputWithCancel(
+                onChanged: (value) {
+                  context.youtubeSearchCubit.onSearchQueryChanged(value);
+                  context.spotifySearchCubit.onSearchQueryChanged(value);
+                },
+                onCancelPressed: () => Navigator.of(context).maybePop(),
+              ),
             ),
-            Expanded(
+            const Expanded(
               child: CustomScrollView(
                 slivers: [
                   SliverToBoxAdapter(

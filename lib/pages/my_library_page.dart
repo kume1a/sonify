@@ -6,10 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logging/logging.dart';
 
 import '../app/di/register_dependencies.dart';
-import '../app/intl/app_localizations.dart';
 import '../entities/audio/state/local_user_audio_files_state.dart';
-import '../entities/audio/ui/my_library_list.dart';
 import '../entities/audio/ui/my_library_alphabet.dart';
+import '../entities/audio/ui/my_library_list.dart';
+import '../entities/audio/ui/my_library_search_container.dart';
 import '../entities/playlist/ui/my_library_header.dart';
 import '../features/play_audio/state/audio_player_panel_state.dart';
 import '../features/play_audio/ui/audio_player_panel.dart';
@@ -39,8 +39,6 @@ class _Content extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-
     final horizontalPadding = EdgeInsets.symmetric(horizontal: 16.w);
 
     final scrollController = useScrollController();
@@ -66,15 +64,11 @@ class _Content extends HookWidget {
             children: [
               Padding(
                 padding: horizontalPadding.copyWith(left: 4.w, top: 20.h),
-                child: Row(
+                child: const Row(
                   children: [
-                    const DefaultBackButton(),
+                    DefaultBackButton(),
                     Expanded(
-                      child: TextField(
-                        autocorrect: false,
-                        onChanged: context.localAudioFilesCubit.onSearchQueryChanged,
-                        decoration: InputDecoration(hintText: l.search),
-                      ),
+                      child: MyLibrarySearchContainer(),
                     ),
                   ],
                 ),

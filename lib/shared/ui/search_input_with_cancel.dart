@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 
-import '../../../app/intl/app_localizations.dart';
-import '../../../shared/values/assets.dart';
-import '../state/spotify_search_state.dart';
-import '../state/youtube_search_state.dart';
+import '../../app/intl/app_localizations.dart';
+import '../values/assets.dart';
 
-class SearchSuggestionsInput extends StatelessWidget {
-  const SearchSuggestionsInput({super.key});
+class SearchInputWithCancel extends StatelessWidget {
+  const SearchInputWithCancel({
+    super.key,
+    required this.onChanged,
+    required this.onCancelPressed,
+  });
+
+  final ValueChanged<String> onChanged;
+  final VoidCallback onCancelPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +24,7 @@ class SearchSuggestionsInput extends StatelessWidget {
           child: TextField(
             autofocus: true,
             autocorrect: false,
-            onChanged: (value) {
-              context.youtubeSearchCubit.onSearchQueryChanged(value);
-              context.spotifySearchCubit.onSearchQueryChanged(value);
-            },
+            onChanged: onChanged,
             decoration: InputDecoration(
               hintText: l.search,
               contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
@@ -38,7 +40,7 @@ class SearchSuggestionsInput extends StatelessWidget {
         ),
         const SizedBox(width: 20),
         MaterialButton(
-          onPressed: () => Navigator.of(context).maybePop(),
+          onPressed: onCancelPressed,
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           padding: const EdgeInsets.symmetric(horizontal: 4),

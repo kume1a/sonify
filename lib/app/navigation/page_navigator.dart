@@ -41,4 +41,6 @@ class PageNavigator {
   void toImportLocalMusic() => GlobalNavigator.pushNamed(Routes.importLocalMusic);
 
   void toDownloads() => GlobalNavigator.pushNamed(Routes.downloads);
+
+  void toMyLibrarySearch() => GlobalNavigator.pushNamed(Routes.myLibrarySearch);
 }

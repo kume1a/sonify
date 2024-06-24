@@ -36,7 +36,14 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
   }
 
   @override
-  Future<List<UserAudioEntity>> getAllByUserId(String userId) async {
+  Future<List<UserAudioEntity>> getAll({
+    required String userId,
+    String? searchQuery,
+  }) async {
+    final dynamicSearchQueryCondition = searchQuery != null && searchQuery.isNotEmpty
+        ? 'AND (${Audio_.tn}.${Audio_.title} LIKE ?) OR (${Audio_.tn}.${Audio_.author} LIKE ?)'
+        : '';
+
     final res = await _db.rawQuery(
       '''
       SELECT 
@@ -58,11 +65,17 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
       FROM ${UserAudio_.tn}
       INNER JOIN ${Audio_.tn} ON ${UserAudio_.tn}.${UserAudio_.audioId} = ${Audio_.tn}.${Audio_.id}
       LEFT JOIN ${AudioLike_.tn} ON ${AudioLike_.tn}.${AudioLike_.userId} = ? 
-        AND ${AudioLike_.tn}.${AudioLike_.audioId} = ${UserAudio_.tn}.${UserAudio_.audioId}
-      WHERE ${UserAudio_.tn}.${UserAudio_.userId} = ?
+       AND ${AudioLike_.tn}.${AudioLike_.audioId} = ${UserAudio_.tn}.${UserAudio_.audioId}
+      WHERE ${UserAudio_.tn}.${UserAudio_.userId} = ? 
+        $dynamicSearchQueryCondition
       ORDER BY ${Audio_.tn}.${Audio_.title};
       ''',
-      [userId, userId],
+      [
+        userId,
+        userId,
+        if (searchQuery != null && searchQuery.isNotEmpty) '%$searchQuery%',
+        if (searchQuery != null && searchQuery.isNotEmpty) '%$searchQuery%',
+      ],
     );
 
     return res.map(_userAudioEntityMapper.mapToEntity).toList();
