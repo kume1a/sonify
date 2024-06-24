@@ -10,15 +10,15 @@ import 'package:logging/logging.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../model/event_user_audio.dart';
 
-typedef LocalAudioFilesState = SimpleDataState<List<Audio>>;
+typedef LocalUserAudioFilesState = SimpleDataState<List<Audio>>;
 
 extension LocalAudioFilesCubitX on BuildContext {
-  LocalAudioFilesCubit get localAudioFilesCubit => read<LocalAudioFilesCubit>();
+  LocalUserAudioFilesCubit get localAudioFilesCubit => read<LocalUserAudioFilesCubit>();
 }
 
 @injectable
-final class LocalAudioFilesCubit extends EntityLoaderCubit<List<Audio>> {
-  LocalAudioFilesCubit(
+final class LocalUserAudioFilesCubit extends EntityLoaderCubit<List<Audio>> {
+  LocalUserAudioFilesCubit(
     this._audioLocalRepository,
     this._authUserInfoProvider,
     this._eventBus,

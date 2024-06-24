@@ -43,7 +43,7 @@ class _QueueItem extends StatelessWidget {
     final l = AppLocalizations.of(context);
 
     final formattedProgress = '${task.progress.toStringAsFixed(1)}%';
-    final formattedSpeed = formatBitrate(task.speedInBytesPerSecond, l);
+    final formattedSpeed = formatBitrateLocalized(task.speedInBytesPerSecond, l);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

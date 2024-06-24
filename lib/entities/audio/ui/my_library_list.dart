@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/list_item/audio_list_item.dart';
 import '../../../shared/ui/small_circular_progress_indicator.dart';
-import '../state/local_audio_files_state.dart';
+import '../state/local_user_audio_files_state.dart';
 
-class LocalAudioFiles extends StatelessWidget {
-  const LocalAudioFiles({
+class MyLibraryList extends StatelessWidget {
+  const MyLibraryList({
     super.key,
     this.itemPadding,
   });
@@ -17,7 +17,7 @@ class LocalAudioFiles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LocalAudioFilesCubit, LocalAudioFilesState>(
+    return BlocBuilder<LocalUserAudioFilesCubit, LocalUserAudioFilesState>(
       builder: (_, state) {
         return state.maybeWhen(
           orElse: () => const SliverToBoxAdapter(),

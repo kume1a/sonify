@@ -6,10 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/alphabet_list.dart';
 import '../../../shared/values/app_theme_extension.dart';
-import '../state/local_audio_files_state.dart';
+import '../state/local_user_audio_files_state.dart';
 
-class LocalAudioFilesAlphabet extends StatelessWidget {
-  const LocalAudioFilesAlphabet({
+class MyLibraryAlphabet extends StatelessWidget {
+  const MyLibraryAlphabet({
     super.key,
     required this.onIndexChanged,
   });
@@ -18,7 +18,7 @@ class LocalAudioFilesAlphabet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LocalAudioFilesCubit, LocalAudioFilesState>(
+    return BlocBuilder<LocalUserAudioFilesCubit, LocalUserAudioFilesState>(
       builder: (_, localAudioFilesState) {
         return BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
           builder: (_, nowPlayingAudioState) => localAudioFilesState.maybeWhen(

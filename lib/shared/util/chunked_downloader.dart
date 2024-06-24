@@ -5,6 +5,8 @@ import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
+import 'formatting.dart';
+
 typedef ProgressCallback = void Function(int progress, int total, int speedInKbs);
 
 typedef OnDoneCallback = void Function(File file);
@@ -74,8 +76,10 @@ class ChunkedDownloader {
 
         offset += buffer.length;
 
-        Logger.root
-            .finest('Downloading ${offset ~/ 1024 ~/ 1024}MB, Speed: ${speedInBytesPerSecond ~/ 1024}kb/s');
+        final formattedSpeed = formatBitrateEn(speedInBytesPerSecond);
+        final formattedFileSize = formatFileSizeEn(offset);
+
+        Logger.root.finest('Downloading $formattedFileSize, Speed: $formattedSpeed');
 
         if (onProgress != null) {
           try {
