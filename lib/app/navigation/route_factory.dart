@@ -8,6 +8,7 @@ import '../../pages/main/main_page.dart';
 import '../../pages/my_library_page.dart';
 import '../../pages/my_library_search_page.dart';
 import '../../pages/playlist_page.dart';
+import '../../pages/search_playlist_audios_page.dart';
 import '../../pages/search_suggestions_page.dart';
 import '../../pages/user_name_page.dart';
 import '../../pages/youtube_video_page.dart';
@@ -27,8 +28,18 @@ Route<dynamic> routeFactory(RouteSettings settings) {
     Routes.importLocalMusic => _createImportLocalMusicRoute(settings),
     Routes.downloads => _createDownloadsRoute(settings),
     Routes.myLibrarySearch => _createMyLibrarySearchRoute(settings),
+    Routes.searchPlaylistAudios => _createSearchPlaylistAudiosRoute(settings),
     _ => throw Exception('route $settings is not supported'),
   };
+}
+
+Route _createSearchPlaylistAudiosRoute(RouteSettings settings) {
+  final args = _getArgs(settings);
+
+  return MaterialPageRoute(
+    builder: (_) => SearchPlaylistAudiosPage(args: args),
+    settings: settings,
+  );
 }
 
 Route _createMyLibrarySearchRoute(RouteSettings settings) {

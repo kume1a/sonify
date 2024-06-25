@@ -84,7 +84,14 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
   @override
   Future<List<PlaylistAudioEntity>> getAllWithAudio({
     required String playlistId,
+    String? searchQuery,
   }) async {
+    final searchQueryExists = searchQuery != null && searchQuery.isNotEmpty;
+
+    final dynamicSearchQueryCondition = searchQueryExists
+        ? 'AND (${Audio_.tn}.${Audio_.title} LIKE ?) OR (${Audio_.tn}.${Audio_.author} LIKE ?)'
+        : '';
+
     final res = await _db.rawQuery(
       '''
         SELECT 
@@ -109,9 +116,14 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
         FROM ${PlaylistAudio_.tn}
         LEFT JOIN ${Audio_.tn} ON ${PlaylistAudio_.tn}.${PlaylistAudio_.audioId} = ${Audio_.tn}.${Audio_.id}
         WHERE ${PlaylistAudio_.tn}.${PlaylistAudio_.playlistId} = ?
+          $dynamicSearchQueryCondition
         ORDER BY ${Audio_.tn}.${Audio_.title} ASC;
       ''',
-      [playlistId],
+      [
+        playlistId,
+        if (searchQueryExists) '%$searchQuery%',
+        if (searchQueryExists) '%$searchQuery%',
+      ],
     );
 
     return res.map(_playlistAudioEntityMapper.mapToEntity).toList();

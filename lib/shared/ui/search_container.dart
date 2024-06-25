@@ -23,6 +23,7 @@ class SearchContainer extends StatelessWidget {
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
         ),
         child: Text(
           l.search,

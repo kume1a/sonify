@@ -20,8 +20,9 @@ class PlaylistAudioLocalRepositoryImpl with ResultWrap implements PlaylistAudioL
   Future<Result<PlaylistAudio>> create(PlaylistAudio playlistAudios) {
     return wrapWithResult(
       () async {
-        final insertedId =
-            await _playlistAudioEntityDao.insert(_playlistAudioMapper.modelToEntity(playlistAudios));
+        final entity = _playlistAudioMapper.modelToEntity(playlistAudios);
+
+        final insertedId = await _playlistAudioEntityDao.insert(entity);
 
         return playlistAudios.copyWith(id: insertedId);
       },
@@ -61,5 +62,20 @@ class PlaylistAudioLocalRepositoryImpl with ResultWrap implements PlaylistAudioL
   @override
   Future<Result<List<String>>> getAllByPlaylistIds(List<String> playlistIds) {
     return wrapWithResult(() => _playlistAudioEntityDao.getAllIdsByPlaylistIds(playlistIds));
+  }
+
+  @override
+  Future<Result<List<PlaylistAudio>>> getAllWithAudios({
+    required String playlistId,
+    String? searchQuery,
+  }) {
+    return wrapWithResult(() async {
+      final res = await _playlistAudioEntityDao.getAllWithAudio(
+        playlistId: playlistId,
+        searchQuery: searchQuery,
+      );
+
+      return res.map(_playlistAudioMapper.entityToModel).toList();
+    });
   }
 }

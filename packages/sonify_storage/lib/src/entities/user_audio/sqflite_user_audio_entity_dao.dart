@@ -40,7 +40,9 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
     required String userId,
     String? searchQuery,
   }) async {
-    final dynamicSearchQueryCondition = searchQuery != null && searchQuery.isNotEmpty
+    final searchQueryExists = searchQuery != null && searchQuery.isNotEmpty;
+
+    final dynamicSearchQueryCondition = searchQueryExists
         ? 'AND (${Audio_.tn}.${Audio_.title} LIKE ?) OR (${Audio_.tn}.${Audio_.author} LIKE ?)'
         : '';
 
@@ -73,8 +75,8 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
       [
         userId,
         userId,
-        if (searchQuery != null && searchQuery.isNotEmpty) '%$searchQuery%',
-        if (searchQuery != null && searchQuery.isNotEmpty) '%$searchQuery%',
+        if (searchQueryExists) '%$searchQuery%',
+        if (searchQueryExists) '%$searchQuery%',
       ],
     );
 

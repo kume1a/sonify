@@ -1,4 +1,3 @@
-import 'package:common_widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,6 +7,7 @@ import '../entities/playlist/ui/playlist_appbar.dart';
 import '../entities/playlist/ui/playlist_items.dart';
 import '../features/play_audio/state/audio_player_panel_state.dart';
 import '../features/play_audio/ui/audio_player_panel.dart';
+import '../shared/ui/search_container.dart';
 
 class PlaylistPageArgs {
   const PlaylistPageArgs({
@@ -62,7 +62,14 @@ class _Content extends StatelessWidget {
                 playlistId: args.playlistId,
               ),
             ),
-            const SliverSizedBox(height: 42),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(16, 42, 16, 16),
+              sliver: SliverToBoxAdapter(
+                child: SearchContainer(
+                  onPressed: context.playlistCubit.onSearchContainerPressed,
+                ),
+              ),
+            ),
             const PlaylistItems(),
           ],
         ),

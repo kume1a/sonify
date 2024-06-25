@@ -7,7 +7,9 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../../../app/intl/extension/error_intl.dart';
+import '../../../app/navigation/page_navigator.dart';
 import '../../../features/download_file/model/downloads_event.dart';
+import '../../../pages/search_playlist_audios_page.dart';
 import '../../../shared/bottom_sheet/bottom_sheet_manager.dart';
 import '../../../shared/bottom_sheet/select_option/select_option.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
@@ -31,6 +33,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     this._eventBus,
     this._toastNotifier,
     this._authUserInfoProvider,
+    this._pageNavigator,
   );
 
   final UserAudioLocalRepository _userAudioLocalRepository;
@@ -40,6 +43,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   final EventBus _eventBus;
   final ToastNotifier _toastNotifier;
   final AuthUserInfoProvider _authUserInfoProvider;
+  final PageNavigator _pageNavigator;
 
   String? _playlistId;
 
@@ -70,6 +74,17 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     final res = await _playlistCachedRepository.getById(_playlistId!);
 
     return res.dataOrNull;
+  }
+
+  void onSearchContainerPressed() {
+    if (_playlistId == null) {
+      Logger.root.warning('PlaylistCubit.onSearchContainerPressed: _playlistId is null');
+      return;
+    }
+
+    final args = SearchPlaylistAudiosPageArgs(playlistId: _playlistId!);
+
+    _pageNavigator.toSearchPlaylistAudios(args);
   }
 
   Future<void> onPlaylistMenuPressed() async {

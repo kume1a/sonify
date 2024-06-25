@@ -12,4 +12,9 @@ abstract interface class PlaylistAudioLocalRepository {
   Future<Result<List<PlaylistAudio>>> getAll();
 
   Future<Result<List<String>>> getAllByPlaylistIds(List<String> playlistIds);
+
+  Future<Result<List<PlaylistAudio>>> getAllWithAudios({
+    required String playlistId,
+    String? searchQuery,
+  });
 }

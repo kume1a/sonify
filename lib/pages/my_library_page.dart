@@ -95,7 +95,6 @@ class _Content extends HookWidget {
                             right: isAlphabetListVisible.value ? 26.r : 16.r,
                           ),
                         ),
-                        SliverSizedBox(height: AudioListItem.height + 12.h),
                       ],
                     ),
                     AnimatedOpacity(

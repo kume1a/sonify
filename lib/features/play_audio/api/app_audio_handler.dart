@@ -89,9 +89,6 @@ class AppAudioHandler extends BaseAudioHandler {
       return;
     }
 
-    Logger.root.info(
-        'AudioHandler skipToQueueItem: $index, shuffleModeEnabled: ${_player.shuffleModeEnabled}, shuffleIndices: ${_player.shuffleIndices}');
-
     _player.seek(Duration.zero, index: index);
   }
 
