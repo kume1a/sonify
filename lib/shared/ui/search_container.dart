@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../../../app/intl/app_localizations.dart';
-import '../../../shared/values/app_theme_extension.dart';
-import '../state/local_user_audio_files_state.dart';
+import '../../app/intl/app_localizations.dart';
+import '../values/app_theme_extension.dart';
 
-class MyLibrarySearchContainer extends StatelessWidget {
-  const MyLibrarySearchContainer({super.key});
+class SearchContainer extends StatelessWidget {
+  const SearchContainer({
+    super.key,
+    required this.onPressed,
+  });
+
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +17,7 @@ class MyLibrarySearchContainer extends StatelessWidget {
     final theme = Theme.of(context);
 
     return GestureDetector(
-      onTap: context.localAudioFilesCubit.onSearchContainerPressed,
+      onTap: onPressed,
       child: InputDecorator(
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),

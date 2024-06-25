@@ -9,12 +9,12 @@ import '../app/di/register_dependencies.dart';
 import '../entities/audio/state/local_user_audio_files_state.dart';
 import '../entities/audio/ui/my_library_alphabet.dart';
 import '../entities/audio/ui/my_library_list.dart';
-import '../entities/audio/ui/my_library_search_container.dart';
 import '../entities/playlist/ui/my_library_header.dart';
 import '../features/play_audio/state/audio_player_panel_state.dart';
 import '../features/play_audio/ui/audio_player_panel.dart';
 import '../shared/ui/default_back_button.dart';
 import '../shared/ui/list_item/audio_list_item.dart';
+import '../shared/ui/search_container.dart';
 
 class MyLibraryPage extends StatelessWidget {
   const MyLibraryPage({super.key});
@@ -64,11 +64,13 @@ class _Content extends HookWidget {
             children: [
               Padding(
                 padding: horizontalPadding.copyWith(left: 4.w, top: 20.h),
-                child: const Row(
+                child: Row(
                   children: [
-                    DefaultBackButton(),
+                    const DefaultBackButton(),
                     Expanded(
-                      child: MyLibrarySearchContainer(),
+                      child: SearchContainer(
+                        onPressed: context.localAudioFilesCubit.onSearchContainerPressed,
+                      ),
                     ),
                   ],
                 ),
