@@ -14,6 +14,7 @@ import 'app/configuration/global_http_overrides.dart';
 import 'app/di/register_dependencies.dart';
 import 'app/navigation/page_navigator.dart';
 
+// https://medium.com/@ilia_zadiabin/websocket-reconnection-in-flutter-35bb7ff50d0d
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

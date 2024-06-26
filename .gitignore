@@ -50,4 +50,5 @@ lib/**/*.freezed.dart
 
 .env.local
 
-lib/app/intl/**.dart
+lib/app/intl/app_localizations_en.dart
+lib/app/intl/app_localizations.dart
