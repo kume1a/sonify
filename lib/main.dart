@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:global_navigator/global_navigator.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
+import 'package:sonify_client/sonify_client.dart';
 
 import 'app/app.dart';
 import 'app/configuration/before_app_start.dart';
@@ -14,7 +15,6 @@ import 'app/configuration/global_http_overrides.dart';
 import 'app/di/register_dependencies.dart';
 import 'app/navigation/page_navigator.dart';
 
-// https://medium.com/@ilia_zadiabin/websocket-reconnection-in-flutter-35bb7ff50d0d
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -28,7 +28,7 @@ Future<void> main() async {
 
   VVOConfig.password.minLength = 6;
 
-  Logger.root.level = Level.ALL;
+  Logger.root.level = Level.INFO;
   Logger.root.onRecord.listen((record) {
     log('${record.level.name}: ${record.time}: ${record.message}');
   });
@@ -36,4 +36,20 @@ Future<void> main() async {
   await beforeAppStart();
 
   runApp(const App());
+
+  final socketProvider = getIt<SocketProvider>();
+  final socket = await socketProvider.socket;
+
+  if (socket == null) {
+    log('Failed to connect to socket');
+    return;
+  }
+
+  socket.connection.listen((event) {
+    log('Socket connection event: $event');
+  });
+
+  socket.messages.listen((event) {
+    log('Socket event: $event');
+  });
 }

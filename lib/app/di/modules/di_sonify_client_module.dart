@@ -58,6 +58,12 @@ abstract class DiSonifyClientModule {
     );
   }
 
+  // ws ----------------------------------------------------------------
+  @lazySingleton
+  SocketProvider socketProvider() {
+    return SocketProviderImpl(AppEnvironment.wsUrl);
+  }
+
   // youtube ----------------------------------------------------------------
   @lazySingleton
   YoutubeRemoteService youtubeRemoteService(

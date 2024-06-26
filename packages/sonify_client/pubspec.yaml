@@ -13,9 +13,10 @@ dependencies:
   json_annotation: ^4.8.1
   json_serializable: ^6.7.1
   retrofit: ^4.1.0
-  synchronized: ^3.1.0+1
-  youtube_explode_dart: ^2.0.4
+  synchronized: ^3.1.0
+  youtube_explode_dart: ^2.2.1
   logging: ^1.2.0
+  web_socket_client: ^0.1.4
 
   common_models:
     git:
@@ -31,7 +32,7 @@ dependencies:
       path: packages/common_utilities
 
 dev_dependencies:
-  flutter_lints: ^3.0.1
+  flutter_lints: ^3.0.2
   freezed: ^2.3.5
   build_runner: ^2.4.5
-  retrofit_generator: ^7.0.1
+  retrofit_generator: ^7.0.8
