@@ -262,7 +262,7 @@ packages:
     description:
       path: "packages/common_models"
       ref: HEAD
-      resolved-ref: "668cc88f9a6208e2a828571b93ff85f306c95120"
+      resolved-ref: "1ef504c31d90d72e397f81b4f67e432808d52cb6"
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.4"
@@ -271,7 +271,7 @@ packages:
     description:
       path: "packages/common_network_components"
       ref: HEAD
-      resolved-ref: "668cc88f9a6208e2a828571b93ff85f306c95120"
+      resolved-ref: "1ef504c31d90d72e397f81b4f67e432808d52cb6"
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.7"
@@ -280,7 +280,7 @@ packages:
     description:
       path: "packages/common_utilities"
       ref: HEAD
-      resolved-ref: "668cc88f9a6208e2a828571b93ff85f306c95120"
+      resolved-ref: "1ef504c31d90d72e397f81b4f67e432808d52cb6"
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.1"
@@ -289,7 +289,7 @@ packages:
     description:
       path: "packages/common_widgets"
       ref: HEAD
-      resolved-ref: "668cc88f9a6208e2a828571b93ff85f306c95120"
+      resolved-ref: "1ef504c31d90d72e397f81b4f67e432808d52cb6"
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.6"

@@ -31,6 +31,10 @@ abstract final class AppTheme {
       unselectedLabelStyle: TextStyle(fontSize: 12),
       backgroundColor: Palette.primaryContainer,
     ),
+    dialogTheme: DialogTheme(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      backgroundColor: Palette.primaryContainer,
+    ),
     bottomSheetTheme: const BottomSheetThemeData(
       backgroundColor: Palette.surface,
       shape: RoundedRectangleBorder(

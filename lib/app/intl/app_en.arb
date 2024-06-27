@@ -144,7 +144,8 @@
   "syncSpotifyPlaylists": "Sync spotify playlists",
   "reimportSpotifyPlaylists": "Reimport Spotify Playlists",
   "retry": "Retry",
-  "failedToImportSpotifyPlaylists": "Failed to import Spotify Playlists",
+  "failedToImportSpotifyPlaylists": "Failed to import Spotify playlists",
+  "failedToImportSpotifyPlaylist": "Failed to import Spotify playlist",
   "authorizeSpotifyCaption": "To import Spotify playlists,please authorize with Spotify.",
   "importFailed": "Import failed",
   "pending": "Pending",
@@ -168,7 +169,8 @@
   "youtubeSuggestions": "Youtube suggestions",
   "spotifyPlaylists": "Spotify playlists",
   "importing": "Importing",
-  "importSelectedPlaylistCaption": "Import selected playlist? This may take a while depending on the number of songs",
+  "confirmImportSpotifyPlaylistCaption": "Import selected playlist? This may take a while depending on the number of songs",
   "nevermind": "Nevermind",
-  "confirm": "Confirm"
+  "confirm": "Confirm",
+  "importingSpotifyPlaylist": "Importing Spotify Playlist"
 }
