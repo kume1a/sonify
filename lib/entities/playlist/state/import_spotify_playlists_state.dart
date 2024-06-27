@@ -33,7 +33,7 @@ extension ImportSpotifyPlaylistsStateX on BuildContext {
 class ImportSpotifyPlaylistsCubit extends Cubit<ImportSpotifyPlaylistsState> {
   ImportSpotifyPlaylistsCubit(
     this._userSyncDatumRepository,
-    this._playlistRepository,
+    this._spotifyRemoteRepository,
     this._spotifyAccessTokenProvider,
     this._userSyncDatumLocalRepository,
     this._eventBus,
@@ -42,7 +42,7 @@ class ImportSpotifyPlaylistsCubit extends Cubit<ImportSpotifyPlaylistsState> {
   }
 
   final UserSyncDatumRemoteRepository _userSyncDatumRepository;
-  final PlaylistRemoteRepository _playlistRepository;
+  final SpotifyRemoteRepository _spotifyRemoteRepository;
   final SpotifyAccessTokenProvider _spotifyAccessTokenProvider;
   final UserSyncDatumLocalRepository _userSyncDatumLocalRepository;
   final EventBus _eventBus;
@@ -72,7 +72,9 @@ class ImportSpotifyPlaylistsCubit extends Cubit<ImportSpotifyPlaylistsState> {
       return;
     }
 
-    final res = await _playlistRepository.importSpotifyUserPlaylists(spotifyAccessToken: spotifyAccessToken);
+    final res = await _spotifyRemoteRepository.importSpotifyUserPlaylists(
+      spotifyAccessToken: spotifyAccessToken,
+    );
 
     emit(state.copyWith(importSpotifyPlaylistsState: ActionState.fromEither(res)));
 

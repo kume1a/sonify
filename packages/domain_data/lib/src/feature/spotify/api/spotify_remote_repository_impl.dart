@@ -54,4 +54,24 @@ class SpotifyRemoteRepositoryImpl implements SpotifyRemoteRepository {
 
     return res.map(_spotifySearchResultMapper.dtoToModel);
   }
+
+  @override
+  Future<Either<NetworkCallError, Unit>> importSpotifyPlaylist({
+    required String spotifyAccessToken,
+    required String spotifyPlaylistId,
+  }) {
+    return _spotifyAuthRemoteService.importSpotifyPlaylist(
+      spotifyAccessToken: spotifyAccessToken,
+      spotifyPlaylistId: spotifyPlaylistId,
+    );
+  }
+
+  @override
+  Future<Either<NetworkCallError, Unit>> importSpotifyUserPlaylists({
+    required String spotifyAccessToken,
+  }) {
+    return _spotifyAuthRemoteService.importSpotifyUserPlaylists(
+      spotifyAccessToken: spotifyAccessToken,
+    );
+  }
 }

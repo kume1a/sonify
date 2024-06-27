@@ -17,4 +17,13 @@ abstract interface class SpotifyRemoteService {
     required String spotifyAccessToken,
     required String keyword,
   });
+
+  Future<Either<NetworkCallError, Unit>> importSpotifyUserPlaylists({
+    required String spotifyAccessToken,
+  });
+
+  Future<Either<NetworkCallError, Unit>> importSpotifyPlaylist({
+    required String spotifyAccessToken,
+    required String spotifyPlaylistId,
+  });
 }

@@ -118,11 +118,8 @@ abstract class DiSonifyClientModule {
 
   // playlist ----------------------------------------------------------------
   @lazySingleton
-  PlaylistRemoteService playlistRemoteService(
-    ApiClient apiClient,
-    @Named(InjectionToken.authenticatedDio) Dio dio,
-  ) {
-    return PlaylistRemoteServiceImpl(apiClient, dio);
+  PlaylistRemoteService playlistRemoteService(ApiClient apiClient) {
+    return PlaylistRemoteServiceImpl(apiClient);
   }
 
   // user playlist ----------------------------------------------------------------

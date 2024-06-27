@@ -13,7 +13,9 @@ import '../module/playlist/model/playlist_dto.dart';
 import '../module/playlist_audio/model/playlist_audio_dto.dart';
 import '../module/server_time/model/server_time_dto.dart';
 import '../module/spotify/model/authorize_spotify_body.dart';
+import '../module/spotify/model/import_spotify_playlist_body.dart';
 import '../module/spotify/model/refresh_spotify_token_body.dart';
+import '../module/spotify/model/spotify_access_token_body.dart';
 import '../module/spotify/model/spotify_refresh_token_payload_dto.dart';
 import '../module/spotify/model/spotify_search_result_dto.dart';
 import '../module/spotify/model/spotify_token_payload_dto.dart';
@@ -88,6 +90,12 @@ abstract class ApiClient {
     @Query('keyword') String keyword,
     @Query('spotifyAccessToken') String spotifyAccessToken,
   );
+
+  @POST('/v1/spotify/importUserPlaylists')
+  Future<void> importSpotifyUserPlaylists(@Body() SpotifyAccessTokenBody body);
+
+  @POST('/v1/spotify/importPlaylist')
+  Future<void> importSpotifyPlaylist(@Body() ImportSpotifyPlaylistBody body);
 
   // user sync --------------------------
   @GET('/v1/usersync/myUserSyncDatum')
