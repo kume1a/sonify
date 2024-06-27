@@ -58,10 +58,21 @@ abstract class DiSonifyClientModule {
     );
   }
 
+  // usecase ----------------------------------------------------------------
+  @lazySingleton
+  ValidateAccessToken validateAccessToken(
+    @Named(InjectionToken.noInterceptorDio) Dio dio,
+  ) {
+    return ValidateAccessTokenImpl(dio, AppEnvironment.apiUrl);
+  }
+
   // ws ----------------------------------------------------------------
   @lazySingleton
-  SocketProvider socketProvider() {
-    return SocketProviderImpl(AppEnvironment.wsUrl);
+  SocketProvider socketProvider(
+    AuthTokenStore authTokenStore,
+    ValidateAccessToken validateAccessToken,
+  ) {
+    return SocketProviderImpl(authTokenStore, validateAccessToken, AppEnvironment.wsUrl);
   }
 
   // youtube ----------------------------------------------------------------

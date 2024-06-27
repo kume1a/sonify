@@ -1,27 +1,28 @@
 import 'dart:developer';
 
-import 'package:logging/logging.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
+import '../module/auth/api/auth_token_store.dart';
+import '../usecase/validate_access_token.dart';
 import 'socket_provider.dart';
 
 class SocketProviderImpl implements SocketProvider {
   SocketProviderImpl(
-    // this._authTokenStore,
-    // this._validateAuthTokenUsecase,
+    this._authTokenStore,
+    this._validateAccessToken,
     this._wsUrl,
   );
 
-  // final AuthTokenStore _authTokenStore;
-  // final ValidateAuthTokenUsecase _validateAuthTokenUsecase;
+  final AuthTokenStore _authTokenStore;
+  final ValidateAccessToken _validateAccessToken;
   final String _wsUrl;
 
   final Lock _lock = Lock();
 
   WebSocket? _socket;
 
-  // bool _waitingForValidAccessToken = false;
+  bool _waitingForValidAccessToken = false;
 
   @override
   Future<WebSocket?> get socket async => _lock.synchronized(() async => _socket ??= await _tryCreateSocket());
@@ -36,13 +37,12 @@ class SocketProviderImpl implements SocketProvider {
   }
 
   Future<WebSocket?> _createSocket() async {
-    // final accessToken = await _waitForValidAccessToken();
+    final accessToken = await _waitForValidAccessToken();
 
-    // if (accessToken == null) {
-    //   return null;
-    //
+    if (accessToken == null) {
+      return null;
+    }
 
-    Logger.root.info('Connecting to $_wsUrl');
     return WebSocket(
       Uri.parse(_wsUrl),
       timeout: const Duration(seconds: 20),
@@ -54,31 +54,36 @@ class SocketProviderImpl implements SocketProvider {
     );
   }
 
-  // Future<String?> _waitForValidAccessToken() async {
-  //   _waitingForValidAccessToken = true;
+  Future<String?> _waitForValidAccessToken() async {
+    _waitingForValidAccessToken = true;
 
-  //   String? accessToken;
+    String? accessToken;
 
-  //   while (true) {
-  //     if (!_waitingForValidAccessToken) {
-  //       return null;
-  //     }
+    while (true) {
+      if (!_waitingForValidAccessToken) {
+        return null;
+      }
 
-  //     accessToken = await _authTokenStore.readAccessToken();
+      accessToken = await _authTokenStore.readAccessToken();
 
-  //     final isAccessTokenValid = await _validateAuthTokenUsecase.isAccessTokenValid(accessToken);
+      if (accessToken == null) {
+        await _delay5s();
+        continue;
+      }
 
-  //     if (isAccessTokenValid) {
-  //       break;
-  //     }
+      final isAccessTokenValid = await _validateAccessToken(accessToken);
 
-  //     await _delay5s();
-  //   }
+      if (isAccessTokenValid) {
+        break;
+      }
 
-  //   _waitingForValidAccessToken = false;
+      await _delay5s();
+    }
 
-  //   return accessToken;
-  // }
+    _waitingForValidAccessToken = false;
+
+    return accessToken;
+  }
 
   @override
   Future<void> dispose() async {
@@ -88,9 +93,9 @@ class SocketProviderImpl implements SocketProvider {
       log('$e, $stack');
     }
 
-    // _waitingForValidAccessToken = false;
+    _waitingForValidAccessToken = false;
     _socket = null;
   }
 
-  // Future<void> _delay5s() => Future.delayed(const Duration(seconds: 5));
+  Future<void> _delay5s() => Future.delayed(const Duration(seconds: 5));
 }
