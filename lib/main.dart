@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:global_navigator/global_navigator.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
-import 'package:sonify_client/sonify_client.dart';
 
 import 'app/app.dart';
 import 'app/configuration/before_app_start.dart';
@@ -36,20 +35,4 @@ Future<void> main() async {
   await beforeAppStart();
 
   runApp(const App());
-
-  final socketProvider = getIt<SocketProvider>();
-  final socket = await socketProvider.socket;
-
-  if (socket == null) {
-    log('Failed to connect to socket');
-    return;
-  }
-
-  socket.connection.listen((event) {
-    log('Socket connection event: $event');
-  });
-
-  socket.messages.listen((event) {
-    log('Socket event: $event');
-  });
 }
