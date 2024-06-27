@@ -167,5 +167,8 @@
   "failedToAddToMyLibrary": "Failed to add to my library",
   "youtubeSuggestions": "Youtube suggestions",
   "spotifyPlaylists": "Spotify playlists",
-  "importing": "Importing"
+  "importing": "Importing",
+  "importSelectedPlaylistCaption": "Import selected playlist? This may take a while depending on the number of songs",
+  "nevermind": "Nevermind",
+  "confirm": "Confirm"
 }
