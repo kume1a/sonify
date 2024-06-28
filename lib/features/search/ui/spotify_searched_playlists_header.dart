@@ -15,6 +15,7 @@ class SpotifySearchedPlaylistsHeader extends StatelessWidget {
       builder: (_, state) => state.maybeWhen(
         orElse: () => const SizedBox.shrink(),
         success: (data) => data.playlists.isEmpty ? const SizedBox.shrink() : const _Header(),
+        loading: () => const _Header(),
       ),
     );
   }
