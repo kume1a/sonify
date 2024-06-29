@@ -114,10 +114,12 @@ class _Item extends StatelessWidget {
                       color: Colors.black45,
                       child: switch (playlist.audioImportStatus) {
                         ProcessStatus.pending => Center(
-                            child: Text(l.pending, style: const TextStyle(fontSize: 12)),
+                            child: Text(
+                              l.pending,
+                              style: const TextStyle(fontSize: 12),
+                            ),
                           ),
                         ProcessStatus.processing => PulsingFade(
-                            cycleDuration: const Duration(milliseconds: 800),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

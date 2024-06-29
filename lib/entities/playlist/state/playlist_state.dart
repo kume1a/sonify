@@ -9,6 +9,7 @@ import 'package:logging/logging.dart';
 import '../../../app/intl/extension/error_intl.dart';
 import '../../../app/navigation/page_navigator.dart';
 import '../../../features/download_file/model/downloads_event.dart';
+import '../../../features/spotifyauth/api/spotify_access_token_provider.dart';
 import '../../../pages/search_playlist_audios_page.dart';
 import '../../../shared/bottom_sheet/bottom_sheet_manager.dart';
 import '../../../shared/bottom_sheet/select_option/select_option.dart';
@@ -45,6 +46,8 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     this._authUserInfoProvider,
     this._pageNavigator,
     this._playlistUpdatedEventChannel,
+    this._spotifyRemoteRepository,
+    this._spotifyAccessTokenProvider,
   );
 
   final UserAudioLocalRepository _userAudioLocalRepository;
@@ -56,6 +59,8 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   final AuthUserInfoProvider _authUserInfoProvider;
   final PageNavigator _pageNavigator;
   final PlaylistUpdatedEventChannel _playlistUpdatedEventChannel;
+  final SpotifyRemoteRepository _spotifyRemoteRepository;
+  final SpotifyAccessTokenProvider _spotifyAccessTokenProvider;
 
   String? _playlistId;
 
@@ -255,16 +260,11 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     event.when(
       downloaded: (playlistAudio) async {
         final newState = await state.map((playlist) {
-          final containsPlaylistAudio =
-              playlist.playlistAudios?.any((e) => e.id == playlistAudio.id) ?? false;
-
-          if (!containsPlaylistAudio) {
-            return playlist;
-          }
-
           return playlist.copyWith(
-            playlistAudios:
-                playlist.playlistAudios?.replace((e) => e.id == playlistAudio.id, (_) => playlistAudio),
+            playlistAudios: playlist.playlistAudios?.replace(
+              (e) => e.id == playlistAudio.id,
+              (_) => playlistAudio,
+            ),
           );
         });
 
@@ -274,16 +274,45 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   }
 
   Future<void> _onPlaylistChanged(Playlist newPlaylist) async {
-    final beforePlaylist = state.getOrNull;
-
-    if (beforePlaylist == null || beforePlaylist.id != newPlaylist.id) {
+    if (newPlaylist.audioImportStatus != ProcessStatus.completed) {
+      emit(SimpleDataState.success(newPlaylist));
       return;
     }
 
-    final mergedNewPlaylist = newPlaylist.copyWith(
-      playlistAudios: beforePlaylist.playlistAudios,
+    loadEntityAndEmit();
+  }
+
+  Future<void> onRetryImportPlaylist() async {
+    final playlist = state.getOrNull;
+    if (playlist == null || playlist.spotifyId == null) {
+      Logger.root.warning('PlaylistCubit.onRetryImportPlaylist: playlist or spotifyId is null');
+      return;
+    }
+
+    final spotifyAccessToken = await _spotifyAccessTokenProvider.get();
+    if (spotifyAccessToken == null) {
+      Logger.root.warning('SpotifySearchCubit.onSearchedPlaylistPressed: Spotify access token is null');
+      return;
+    }
+
+    final res = await _spotifyRemoteRepository.importSpotifyPlaylist(
+      spotifyPlaylistId: playlist.spotifyId!,
+      spotifyAccessToken: spotifyAccessToken,
     );
 
-    emit(SimpleDataState.success(mergedNewPlaylist));
+    return res.fold(
+      (error) => _toastNotifier.error(
+        description: (l) => l.failedToImportSpotifyPlaylist,
+      ),
+      (r) {
+        _playlistId = r.id;
+
+        _toastNotifier.success(
+          description: (l) => l.importingSpotifyPlaylist,
+        );
+
+        emit(SimpleDataState.success(r));
+      },
+    );
   }
 }

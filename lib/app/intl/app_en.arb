@@ -172,5 +172,7 @@
   "confirmImportSpotifyPlaylistCaption": "Import selected playlist? This may take a while depending on the number of songs",
   "nevermind": "Nevermind",
   "confirm": "Confirm",
-  "importingSpotifyPlaylist": "Importing Spotify Playlist"
+  "importingSpotifyPlaylist": "Importing Spotify playlist",
+  "importSpotifyPlaylistPending": "Import Spotify playlist pending",
+  "importingPlaylist": "Importing playlist"
 }
