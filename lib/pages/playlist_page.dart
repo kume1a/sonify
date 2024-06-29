@@ -5,9 +5,9 @@ import '../app/di/register_dependencies.dart';
 import '../entities/playlist/state/playlist_state.dart';
 import '../entities/playlist/ui/playlist_appbar.dart';
 import '../entities/playlist/ui/playlist_items.dart';
+import '../entities/playlist/ui/playlist_search_container.dart';
 import '../features/play_audio/state/audio_player_panel_state.dart';
 import '../features/play_audio/ui/audio_player_panel.dart';
-import '../shared/ui/search_container.dart';
 
 class PlaylistPageArgs {
   const PlaylistPageArgs({
@@ -62,15 +62,13 @@ class _Content extends StatelessWidget {
                 playlistId: args.playlistId,
               ),
             ),
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 42, 16, 16),
+            const SliverPadding(
+              padding: EdgeInsets.fromLTRB(16, 42, 16, 16),
               sliver: SliverToBoxAdapter(
-                child: SearchContainer(
-                  onPressed: context.playlistCubit.onSearchContainerPressed,
-                ),
+                child: PlaylistSearchContainer(),
               ),
             ),
-            const PlaylistItems(),
+            const PlaylistItemsOrImportStatus(),
           ],
         ),
       ),

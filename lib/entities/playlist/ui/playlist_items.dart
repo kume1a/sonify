@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../shared/ui/animation/pulsing_fade.dart';
 import '../../../shared/ui/list_item/audio_list_item.dart';
 import '../state/playlist_state.dart';
 import 'playlist_list_item.dart';
 
-class PlaylistItems extends StatelessWidget {
-  const PlaylistItems({
+class PlaylistItemsOrImportStatus extends StatelessWidget {
+  const PlaylistItemsOrImportStatus({
     super.key,
   });
 
@@ -16,8 +17,13 @@ class PlaylistItems extends StatelessWidget {
     return BlocBuilder<PlaylistCubit, PlaylistState>(
       builder: (_, state) {
         return state.maybeWhen(
+          loading: () => PulsingFade.sliver(
+            child: SliverList.builder(
+              itemCount: 20,
+              itemBuilder: (_, __) => const BlankAudioListItem(),
+            ),
+          ),
           orElse: () => const SliverToBoxAdapter(),
-          loading: () => const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator())),
           success: (data) {
             final len = data.playlistAudios?.length ?? 0;
 

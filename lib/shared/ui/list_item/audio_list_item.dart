@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../util/color.dart';
+import '../../util/random.dart';
 import '../../values/app_theme_extension.dart';
 import '../../values/assets.dart';
 import '../thumbnail.dart';
@@ -125,6 +126,54 @@ class AudioListItem extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class BlankAudioListItem extends StatelessWidget {
+  const BlankAudioListItem({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      height: AudioListItem.height,
+      padding: EdgeInsets.symmetric(horizontal: 16.r),
+      child: Row(
+        children: [
+          Container(
+            width: 36.r,
+            height: 36.r,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.secondaryContainer,
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: randomDouble(100, 400),
+                    height: 12.h,
+                    color: theme.colorScheme.secondaryContainer,
+                  ),
+                  SizedBox(height: 4.h),
+                  Container(
+                    width: randomDouble(30, 80),
+                    height: 10.h,
+                    color: theme.colorScheme.secondaryContainer,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

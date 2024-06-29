@@ -7,7 +7,6 @@ import '../../../app/intl/app_localizations.dart';
 import '../../../shared/ui/animation/pulsing_fade.dart';
 import '../../../shared/ui/list_header.dart';
 import '../../../shared/ui/thumbnail.dart';
-import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
 import '../state/playlist_list_state.dart';
 
@@ -32,8 +31,8 @@ class PlaylistsList extends StatelessWidget {
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    itemBuilder: (_, __) => const _PlaylistItemBlank(),
-                    itemCount: 3,
+                    itemBuilder: (_, __) => const _ItemBlank(),
+                    itemCount: 10,
                   ),
                 ),
                 success: (playlists) {
@@ -41,7 +40,7 @@ class PlaylistsList extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     scrollDirection: Axis.horizontal,
                     itemCount: playlists.length,
-                    itemBuilder: (_, index) => _PlaylistItem(userPlaylist: playlists[index]),
+                    itemBuilder: (_, index) => _Item(userPlaylist: playlists[index]),
                   );
                 },
               );
@@ -53,8 +52,8 @@ class PlaylistsList extends StatelessWidget {
   }
 }
 
-class _PlaylistItemBlank extends StatelessWidget {
-  const _PlaylistItemBlank();
+class _ItemBlank extends StatelessWidget {
+  const _ItemBlank();
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +74,8 @@ class _PlaylistItemBlank extends StatelessWidget {
   }
 }
 
-class _PlaylistItem extends StatelessWidget {
-  const _PlaylistItem({
+class _Item extends StatelessWidget {
+  const _Item({
     required this.userPlaylist,
   });
 
@@ -92,11 +91,8 @@ class _PlaylistItem extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final isImportCompleted = playlist.audioImportStatus == ProcessStatus.completed;
-
     return InkWell(
-      onTap:
-          isImportCompleted ? () => context.spotifyPlaylistListCubit.onPlaylistPressed(userPlaylist) : null,
+      onTap: () => context.spotifyPlaylistListCubit.onPlaylistPressed(userPlaylist),
       borderRadius: BorderRadius.circular(8),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -169,15 +165,6 @@ class _PlaylistItem extends StatelessWidget {
                     child: SvgPicture.asset(Assets.svgSpotify, width: 15, height: 15),
                   ),
               ],
-            ),
-            Text(
-              'TODO artist names',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 12,
-                color: theme.appThemeExtension?.elSecondary,
-              ),
             ),
           ],
         ),

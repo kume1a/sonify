@@ -19,6 +19,16 @@ import '../model/event_playlist_audio.dart';
 
 typedef PlaylistState = SimpleDataState<Playlist>;
 
+extension PlaylistStateX on PlaylistState {
+  bool get isPlaylistPlayable {
+    return maybeWhen(
+      success: (data) =>
+          data.audioImportStatus == ProcessStatus.completed && data.audioCount == data.totalAudioCount,
+      orElse: () => false,
+    );
+  }
+}
+
 extension PlaylistCubitX on BuildContext {
   PlaylistCubit get playlistCubit => read<PlaylistCubit>();
 }
@@ -34,6 +44,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     this._toastNotifier,
     this._authUserInfoProvider,
     this._pageNavigator,
+    this._playlistUpdatedEventChannel,
   );
 
   final UserAudioLocalRepository _userAudioLocalRepository;
@@ -44,6 +55,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   final ToastNotifier _toastNotifier;
   final AuthUserInfoProvider _authUserInfoProvider;
   final PageNavigator _pageNavigator;
+  final PlaylistUpdatedEventChannel _playlistUpdatedEventChannel;
 
   String? _playlistId;
 
@@ -52,7 +64,12 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   void init(String playlistId) {
     _playlistId = playlistId;
 
-    _subscriptions.add(_eventBus.on<EventPlaylistAudio>().listen(_onPlaylistAudioEvent));
+    _subscriptions.addAll([
+      _eventBus.on<EventPlaylistAudio>().listen(_onPlaylistAudioEvent),
+      _playlistUpdatedEventChannel.events.listen(_onPlaylistChanged),
+    ]);
+
+    _playlistUpdatedEventChannel.startListening();
 
     loadEntityAndEmit();
   }
@@ -60,6 +77,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   @override
   Future<void> close() async {
     await _subscriptions.closeAll();
+    await _playlistUpdatedEventChannel.dispose();
 
     return super.close();
   }
@@ -253,5 +271,19 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
         emit(newState);
       },
     );
+  }
+
+  Future<void> _onPlaylistChanged(Playlist newPlaylist) async {
+    final beforePlaylist = state.getOrNull;
+
+    if (beforePlaylist == null || beforePlaylist.id != newPlaylist.id) {
+      return;
+    }
+
+    final mergedNewPlaylist = newPlaylist.copyWith(
+      playlistAudios: beforePlaylist.playlistAudios,
+    );
+
+    emit(SimpleDataState.success(mergedNewPlaylist));
   }
 }

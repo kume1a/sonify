@@ -120,6 +120,17 @@ abstract class DiDomainModelModule {
     );
   }
 
+  @injectable
+  PlaylistUpdatedEventChannel playlistUpdatedEventChannel(
+    PlaylistMapper playlistMapper,
+    SocketProvider socketProvider,
+  ) {
+    return WsPlaylistUpdatedEventChannel(
+      playlistMapper,
+      socketProvider,
+    );
+  }
+
   // playlist audio ----------------------------------------------------------------
   @lazySingleton
   PlaylistAudioMapper playlistAudioMapper(AudioMapper audioMapper) {

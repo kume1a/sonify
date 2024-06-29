@@ -135,19 +135,7 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
         Positioned(
           right: 16,
           bottom: -20,
-          child: BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
-            buildWhen: (previous, current) =>
-                previous.playlist != current.playlist || previous.playButtonState != current.playButtonState,
-            builder: (_, state) {
-              return RoundPlayButton(
-                size: 52,
-                iconSize: 26,
-                isPlaying:
-                    state.playlist?.id == playlistId && state.playButtonState == PlaybackButtonState.playing,
-                onPressed: () => context.nowPlayingAudioCubit.onPlayPlaylistPressed(playlistId: playlistId),
-              );
-            },
-          ),
+          child: _PlayButton(playlistId: playlistId),
         ),
       ],
     );
@@ -222,6 +210,37 @@ class _PlaylistTitle extends StatelessWidget {
           orElse: () => const SizedBox.shrink(),
         );
       },
+    );
+  }
+}
+
+class _PlayButton extends StatelessWidget {
+  const _PlayButton({
+    required this.playlistId,
+  });
+
+  final String playlistId;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
+      buildWhen: (previous, current) =>
+          previous.playlist != current.playlist || previous.playButtonState != current.playButtonState,
+      builder: (_, state) => BlocBuilder<PlaylistCubit, PlaylistState>(
+        builder: (_, playlistState) {
+          if (!playlistState.isPlaylistPlayable) {
+            return const SizedBox.shrink();
+          }
+
+          return RoundPlayButton(
+            size: 52,
+            iconSize: 26,
+            isPlaying:
+                state.playlist?.id == playlistId && state.playButtonState == PlaybackButtonState.playing,
+            onPressed: () => context.nowPlayingAudioCubit.onPlayPlaylistPressed(playlistId: playlistId),
+          );
+        },
+      ),
     );
   }
 }

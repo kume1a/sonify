@@ -49,7 +49,7 @@ class _Content extends StatelessWidget {
 }
 
 class _BlankItem extends StatelessWidget {
-  const _BlankItem({super.key});
+  const _BlankItem();
 
   @override
   Widget build(BuildContext context) {

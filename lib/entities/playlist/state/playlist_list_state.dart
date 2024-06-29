@@ -10,7 +10,6 @@ import 'package:logging/logging.dart';
 
 import '../../../app/navigation/page_navigator.dart';
 import '../../../pages/playlist_page.dart';
-import '../model/event_spotify_playlists_imported.dart';
 
 typedef PlaylistListState = SimpleDataState<List<UserPlaylist>>;
 
@@ -24,8 +23,8 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
     this._userPlaylistRemoteRepository,
     this._userPlaylistLocalRepository,
     this._pageNavigator,
-    this._eventBus,
     this._authUserInfoProvider,
+    this._playlistUpdatedEventChannel,
   ) : super(PlaylistListState.idle()) {
     init();
   }
@@ -33,18 +32,49 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
   final UserPlaylistRemoteRepository _userPlaylistRemoteRepository;
   final UserPlaylistLocalRepository _userPlaylistLocalRepository;
   final PageNavigator _pageNavigator;
-  final EventBus _eventBus;
   final AuthUserInfoProvider _authUserInfoProvider;
+  final PlaylistUpdatedEventChannel _playlistUpdatedEventChannel;
 
-  Timer? _pollingTimer;
   final _subscriptions = SubscriptionComposite();
 
   Future<void> init() async {
-    _subscriptions.add(
-      _eventBus.on<EventSpotifyPlaylistsImported>().listen((_) => _startPollingTimer()),
-    );
+    _subscriptions.add(_playlistUpdatedEventChannel.events.listen(_onPlaylistChanged));
+
+    _playlistUpdatedEventChannel.startListening();
 
     _loadPlaylists();
+  }
+
+  @override
+  Future<void> close() async {
+    await _subscriptions.closeAll();
+    await _playlistUpdatedEventChannel.dispose();
+
+    return super.close();
+  }
+
+  void onPlaylistPressed(UserPlaylist userPlaylist) {
+    final args = PlaylistPageArgs(playlistId: userPlaylist.playlistId);
+
+    _pageNavigator.toPlaylist(args);
+  }
+
+  bool isAllPlaylistsImported(List<UserPlaylist> userPlaylists) {
+    return userPlaylists.every((userPlaylist) =>
+        userPlaylist.playlist != null && userPlaylist.playlist?.audioImportStatus == ProcessStatus.completed);
+  }
+
+  Future<void> _onPlaylistChanged(Playlist playlist) async {
+    final state = this.state;
+
+    final newState = await state.map((data) {
+      return data.replace(
+        (userPlaylist) => userPlaylist.playlistId == playlist.id,
+        (userPlaylist) => userPlaylist.copyWith(playlist: playlist),
+      );
+    });
+
+    emit(newState);
   }
 
   Future<void> _loadPlaylists() async {
@@ -63,10 +93,6 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
 
       emit(SimpleDataState.success(remotePlaylists));
 
-      if (!isAllPlaylistsImported(remotePlaylists)) {
-        _startPollingTimer();
-      }
-
       return;
     }
 
@@ -84,54 +110,5 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
         emit(SimpleDataState.failure());
       },
     );
-  }
-
-  void _startPollingTimer() {
-    _pollingTimer?.cancel();
-
-    _pollingTimer = Timer.periodic(
-      const Duration(seconds: 10),
-      (_) {
-        final userPlaylists = state.getOrNull;
-
-        if (userPlaylists != null && isAllPlaylistsImported(userPlaylists)) {
-          _pollingTimer?.cancel();
-          return;
-        }
-
-        loadRemotePlaylistsAndEmit(emitLoading: false);
-      },
-    );
-  }
-
-  @override
-  Future<void> close() {
-    _pollingTimer?.cancel();
-    _subscriptions.closeAll();
-
-    return super.close();
-  }
-
-  Future<void> loadRemotePlaylistsAndEmit({
-    bool emitLoading = true,
-  }) async {
-    if (emitLoading) {
-      emit(PlaylistListState.loading());
-    }
-
-    final res = await _userPlaylistRemoteRepository.getAllFullByAuthUser();
-
-    emit(SimpleDataState.fromEither(res));
-  }
-
-  void onPlaylistPressed(UserPlaylist userPlaylist) {
-    final args = PlaylistPageArgs(playlistId: userPlaylist.playlistId);
-
-    _pageNavigator.toPlaylist(args);
-  }
-
-  bool isAllPlaylistsImported(List<UserPlaylist> userPlaylists) {
-    return userPlaylists.every((userPlaylist) =>
-        userPlaylist.playlist != null && userPlaylist.playlist?.audioImportStatus == ProcessStatus.completed);
   }
 }
