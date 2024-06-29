@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:synchronized/synchronized.dart';
 import 'package:web_socket_client/web_socket_client.dart';
@@ -51,6 +52,9 @@ class SocketProviderImpl implements SocketProvider {
         increment: const Duration(seconds: 2),
         maximum: const Duration(seconds: 20),
       ),
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $accessToken',
+      },
     );
   }
 

@@ -18,7 +18,7 @@ class ValidateAccessTokenImpl implements ValidateAccessToken {
   Future<bool> call(String accessToken) async {
     try {
       final res = await _dio.get(
-        '$_baseUrl/auth/status',
+        '$_baseUrl/v1/auth/status',
         options: Options(
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $accessToken',
