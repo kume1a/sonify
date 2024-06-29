@@ -1,10 +1,13 @@
 import 'package:common_models/common_models.dart';
+import 'package:common_utilities/common_utilities.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
+import '../../../app/navigation/page_navigator.dart';
+import '../../../pages/playlist_page.dart';
 import '../../../shared/dialog/dialog_manager.dart';
 import '../../../shared/ui/toast_notifier.dart';
 import '../../../shared/util/debounce.dart';
@@ -23,12 +26,14 @@ class SpotifySearchCubit extends Cubit<SpotifySearchState> {
     this._spotifyAccessTokenProvider,
     this._dialogManager,
     this._toastNotifier,
+    this._pageNavigator,
   ) : super(SpotifySearchState.idle());
 
   final SpotifyRemoteRepository _spotifyRemoteRepository;
   final SpotifyAccessTokenProvider _spotifyAccessTokenProvider;
   final DialogManager _dialogManager;
   final ToastNotifier _toastNotifier;
+  final PageNavigator _pageNavigator;
 
   final Debounce _debounce = Debounce.fromMilliseconds(400);
 
@@ -59,6 +64,13 @@ class SpotifySearchCubit extends Cubit<SpotifySearchState> {
   }
 
   Future<void> onSearchedPlaylistPressed(SpotifySearchResultPlaylist playlistSearchResult) async {
+    if (playlistSearchResult.playlistId != null) {
+      final args = PlaylistPageArgs(playlistId: playlistSearchResult.playlistId!);
+
+      _pageNavigator.toPlaylist(args);
+      return;
+    }
+
     final didConfirm = await _dialogManager.showConfirmationDialog(
       caption: (l) => l.confirmImportSpotifyPlaylistCaption,
     );
@@ -78,13 +90,30 @@ class SpotifySearchCubit extends Cubit<SpotifySearchState> {
       spotifyAccessToken: spotifyAccessToken,
     );
 
-    res.fold(
-      (error) => _toastNotifier.error(
-        description: (l) => l.failedToImportSpotifyPlaylist,
-      ),
-      (_) => _toastNotifier.success(
-        description: (l) => l.importingSpotifyPlaylist,
-      ),
+    return res.fold(
+      (error) {
+        _toastNotifier.error(
+          description: (l) => l.failedToImportSpotifyPlaylist,
+        );
+
+        return Future.value();
+      },
+      (r) async {
+        _toastNotifier.success(
+          description: (l) => l.importingSpotifyPlaylist,
+        );
+
+        final newState = await state.map((data) {
+          final newPlaylists = data.playlists.replace(
+            (e) => e.spotifyId == playlistSearchResult.spotifyId,
+            (searchedPlaylist) => searchedPlaylist.copyWith(playlistId: r.id),
+          );
+
+          return data.copyWith(playlists: newPlaylists);
+        });
+
+        emit(newState);
+      },
     );
   }
 }

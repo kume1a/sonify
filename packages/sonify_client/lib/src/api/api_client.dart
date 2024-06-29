@@ -95,7 +95,7 @@ abstract class ApiClient {
   Future<void> importSpotifyUserPlaylists(@Body() SpotifyAccessTokenBody body);
 
   @POST('/v1/spotify/importPlaylist')
-  Future<void> importSpotifyPlaylist(@Body() ImportSpotifyPlaylistBody body);
+  Future<PlaylistDto> importSpotifyPlaylist(@Body() ImportSpotifyPlaylistBody body);
 
   // user sync --------------------------
   @GET('/v1/usersync/myUserSyncDatum')

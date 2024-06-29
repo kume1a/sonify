@@ -1,5 +1,6 @@
 import 'package:common_models/common_models.dart';
 
+import '../../playlist/model/playlist_dto.dart';
 import '../model/spotify_refresh_token_payload_dto.dart';
 import '../model/spotify_search_result_dto.dart';
 import '../model/spotify_token_payload_dto.dart';
@@ -22,7 +23,7 @@ abstract interface class SpotifyRemoteService {
     required String spotifyAccessToken,
   });
 
-  Future<Either<NetworkCallError, Unit>> importSpotifyPlaylist({
+  Future<Either<NetworkCallError, PlaylistDto>> importSpotifyPlaylist({
     required String spotifyAccessToken,
     required String spotifyPlaylistId,
   });

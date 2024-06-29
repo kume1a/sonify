@@ -20,6 +20,7 @@ class SpotifySearchResultPlaylistsDto with _$SpotifySearchResultPlaylistsDto {
     String? name,
     String? imageUrl,
     String? spotifyId,
+    String? playlistId,
   }) = _SpotifySearchResultPlaylistsDto;
 
   factory SpotifySearchResultPlaylistsDto.fromJson(Map<String, dynamic> json) =>

@@ -1,6 +1,8 @@
 import 'package:common_models/common_models.dart';
 import 'package:sonify_client/sonify_client.dart';
 
+import '../../../entities/playlist/model/playlist.dart';
+import '../../../entities/playlist/util/playlist_mapper.dart';
 import '../model/spotify_refresh_token_payload.dart';
 import '../model/spotify_search_result.dart';
 import '../model/spotify_token_payload.dart';
@@ -15,12 +17,14 @@ class SpotifyRemoteRepositoryImpl implements SpotifyRemoteRepository {
     this._spotifyTokenPayloadMapper,
     this._spotifyRefreshTokenPayloadMapper,
     this._spotifySearchResultMapper,
+    this._playlistMapper,
   );
 
   final SpotifyRemoteService _spotifyAuthRemoteService;
   final SpotifyTokenPayloadMapper _spotifyTokenPayloadMapper;
   final SpotifyRefreshTokenPayloadMapper _spotifyRefreshTokenPayloadMapper;
   final SpotifySearchResultMapper _spotifySearchResultMapper;
+  final PlaylistMapper _playlistMapper;
 
   @override
   Future<Either<NetworkCallError, SpotifyTokenPayload>> authorizeSpotify({
@@ -56,14 +60,16 @@ class SpotifyRemoteRepositoryImpl implements SpotifyRemoteRepository {
   }
 
   @override
-  Future<Either<NetworkCallError, Unit>> importSpotifyPlaylist({
+  Future<Either<NetworkCallError, Playlist>> importSpotifyPlaylist({
     required String spotifyAccessToken,
     required String spotifyPlaylistId,
-  }) {
-    return _spotifyAuthRemoteService.importSpotifyPlaylist(
+  }) async {
+    final res = await _spotifyAuthRemoteService.importSpotifyPlaylist(
       spotifyAccessToken: spotifyAccessToken,
       spotifyPlaylistId: spotifyPlaylistId,
     );
+
+    return res.map(_playlistMapper.dtoToModel);
   }
 
   @override

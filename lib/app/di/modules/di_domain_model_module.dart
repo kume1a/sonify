@@ -288,12 +288,14 @@ abstract class DiDomainModelModule {
     SpotifyTokenPayloadMapper spotifyTokenPayloadMapper,
     SpotifyRefreshTokenPayloadMapper spotifyRefreshTokenPayloadMapper,
     SpotifySearchResultMapper spotifySearchResultMapper,
+    PlaylistMapper playlistMapper,
   ) {
     return SpotifyRemoteRepositoryImpl(
       spotifyAuthRemoteService,
       spotifyTokenPayloadMapper,
       spotifyRefreshTokenPayloadMapper,
       spotifySearchResultMapper,
+      playlistMapper,
     );
   }
 

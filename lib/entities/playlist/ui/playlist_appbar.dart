@@ -72,7 +72,7 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
         ),
         Positioned(
           left: 16,
-          right: 16,
+          right: 70,
           bottom: -20,
           child: Opacity(
             opacity: contentOpacity,
@@ -86,7 +86,7 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
                 ),
                 const _PlaylistTitle(
                   style: TextStyle(
-                    fontSize: 28,
+                    fontSize: 24,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

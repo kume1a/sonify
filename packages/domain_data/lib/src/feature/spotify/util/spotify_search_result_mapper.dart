@@ -16,6 +16,7 @@ class SpotifySearchResultMapper {
       spotifyId: dto.spotifyId ?? kInvalidId,
       name: dto.name ?? '',
       imageUrl: dto.imageUrl,
+      playlistId: dto.playlistId,
     );
   }
 }

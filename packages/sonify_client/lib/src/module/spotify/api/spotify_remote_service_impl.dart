@@ -2,6 +2,7 @@ import 'package:common_models/common_models.dart';
 import 'package:common_network_components/common_network_components.dart';
 
 import '../../../api/api_client.dart';
+import '../../playlist/model/playlist_dto.dart';
 import '../model/authorize_spotify_body.dart';
 import '../model/import_spotify_playlist_body.dart';
 import '../model/refresh_spotify_token_body.dart';
@@ -62,7 +63,7 @@ class SpotifyRemoteServiceImpl with SafeHttpRequestWrap implements SpotifyRemote
   }
 
   @override
-  Future<Either<NetworkCallError, Unit>> importSpotifyPlaylist(
+  Future<Either<NetworkCallError, PlaylistDto>> importSpotifyPlaylist(
       {required String spotifyAccessToken, required String spotifyPlaylistId}) {
     return callCatchHandleNetworkCallError(() async {
       final body = ImportSpotifyPlaylistBody(
@@ -70,9 +71,7 @@ class SpotifyRemoteServiceImpl with SafeHttpRequestWrap implements SpotifyRemote
         spotifyPlaylistId: spotifyPlaylistId,
       );
 
-      await _apiClient.importSpotifyPlaylist(body);
-
-      return unit;
+      return _apiClient.importSpotifyPlaylist(body);
     });
   }
 }

@@ -15,5 +15,6 @@ class SpotifySearchResultPlaylist with _$SpotifySearchResultPlaylist {
     required String spotifyId,
     required String name,
     required String? imageUrl,
+    required String? playlistId,
   }) = _SpotifySearchResultPlaylist;
 }
