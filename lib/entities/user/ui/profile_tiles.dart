@@ -7,6 +7,7 @@ import '../../../features/sync_user_data/state/sync_user_data_state.dart';
 import '../../../shared/util/color.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
+import '../../playlist/state/import_spotify_playlists_state.dart';
 import '../state/profile_tiles_state.dart';
 
 class DownloadsTile extends StatelessWidget {
@@ -54,8 +55,8 @@ class ImportLocalAudioFilesTile extends StatelessWidget {
   }
 }
 
-class SyncAudioFiles extends StatelessWidget {
-  const SyncAudioFiles({super.key});
+class SyncDataTile extends StatelessWidget {
+  const SyncDataTile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +64,23 @@ class SyncAudioFiles extends StatelessWidget {
 
     return _ProfileTile(
       iconAssetName: Assets.svgSync,
-      label: l.syncAudios,
-      onPressed: context.syncUserAudioCubit.onSyncAudioFilesPressed,
+      label: l.syncData,
+      onPressed: context.syncUserAudioCubit.onSyncDataPressed,
+    );
+  }
+}
+
+class SyncSpotifyPlaylistsFiles extends StatelessWidget {
+  const SyncSpotifyPlaylistsFiles({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
+    return _ProfileTile(
+      iconAssetName: Assets.svgSync,
+      label: l.syncSpotifyPlaylists,
+      onPressed: context.importSpotifyPlaylistsCubit.onImportSpotifyPlaylists,
     );
   }
 }

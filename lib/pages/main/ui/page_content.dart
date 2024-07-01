@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../home_page.dart';
 import '../../profile_page.dart';
-import '../../youtube_page.dart';
+import '../../search_page.dart';
 import '../state/main_page_state.dart';
 
 class PageContent extends StatelessWidget {
@@ -17,9 +17,8 @@ class PageContent extends StatelessWidget {
         return IndexedStack(
           index: state.pageIndex,
           children: const [
-            // YoutubeVideoPage(args: YoutubeVideoPageArgs(videoId: 'EOnSh3QlpbQ')),
             HomePage(),
-            YoutubePage(),
+            SearchPage(),
             ProfilePage(),
           ],
         );

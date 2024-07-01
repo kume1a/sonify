@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:global_navigator/global_navigator.dart';
+import 'package:toastification/toastification.dart';
 
 import '../features/download_file/state/downloads_state.dart';
 import '../features/play_audio/state/audio_player_controls_state.dart';
@@ -28,16 +29,22 @@ class App extends StatelessWidget {
             BlocProvider(create: (_) => getIt<AudioPlayerControlsCubit>()),
             BlocProvider(create: (_) => getIt<NowPlayingAudioCubit>()),
           ],
-          child: MaterialApp(
-            title: 'Sonify',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.darkTheme,
-            initialRoute: Routes.root,
-            navigatorObservers: [GNObserver()],
-            onGenerateRoute: routeFactory,
-            navigatorKey: navigatorKey,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
+          child: ToastificationWrapper(
+            config: const ToastificationConfig(
+              animationDuration: Duration(milliseconds: 400),
+              alignment: Alignment.bottomCenter,
+            ),
+            child: MaterialApp(
+              title: 'Sonify',
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.darkTheme,
+              initialRoute: Routes.root,
+              navigatorObservers: [GNObserver()],
+              onGenerateRoute: routeFactory,
+              navigatorKey: navigatorKey,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+            ),
           ),
         );
       },

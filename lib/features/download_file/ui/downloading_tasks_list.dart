@@ -1,11 +1,11 @@
-import 'package:common_widgets/common_widgets.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../../../entities/audio/util/audio_extension.dart';
+import '../../../app/intl/app_localizations.dart';
+import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/util/equality.dart';
+import '../../../shared/util/formatting.dart';
 import '../state/downloads_state.dart';
 
 class DownloadingTasksList extends StatelessWidget {
@@ -23,7 +23,7 @@ class DownloadingTasksList extends StatelessWidget {
         return SliverList.builder(
           itemCount: state.downloading.length,
           itemBuilder: (_, index) => _QueueItem(
-            downloadTask: state.downloading[index],
+            task: state.downloading[index],
           ),
         );
       },
@@ -31,53 +31,46 @@ class DownloadingTasksList extends StatelessWidget {
   }
 }
 
-class _QueueItem extends HookWidget {
+class _QueueItem extends StatelessWidget {
   const _QueueItem({
-    required this.downloadTask,
+    required this.task,
   });
 
-  final DownloadTask downloadTask;
+  final DownloadTask task;
 
   @override
   Widget build(BuildContext context) {
-    String title = '';
-    Uri? imageUri;
+    final l = AppLocalizations.of(context);
 
-    switch (downloadTask.fileType) {
-      case FileType.audioMp3:
-        imageUri = downloadTask.payload.userAudio?.audio?.thumbnailUri;
-        title = downloadTask.payload.userAudio?.audio?.title ?? '';
-        break;
-    }
-
-    final progress = downloadTask.progress.toStringAsFixed(2);
-    final speed = downloadTask.speedInKbs.toString();
+    final formattedProgress = '${task.progress.toStringAsFixed(1)}%';
+    final formattedSpeed = formatBitrateLocalized(task.speedInBytesPerSecond, l);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (imageUri != null)
+          if (task.payload.hasImage)
             Padding(
               padding: const EdgeInsets.only(right: 10),
-              child: SafeImage(
-                url: imageUri.toString(),
-                width: 36,
-                height: 36,
+              child: Thumbnail(
+                size: const Size.square(36),
                 borderRadius: BorderRadius.circular(8),
+                localThumbnailPath: task.payload.audioLocalThumbnailPath,
+                thumbnailPath: task.payload.audioThumbnailPath,
+                thumbnailUrl: task.payload.audioThumbnailUrl,
               ),
             ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title),
-                Text('$progress%'),
+                Text(task.payload.audioTitle ?? ''),
+                Text(formattedProgress),
               ],
             ),
           ),
-          Text('${speed}kb/s'),
+          Text(formattedSpeed),
         ],
       ),
     );

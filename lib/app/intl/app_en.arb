@@ -16,10 +16,10 @@
   "kb": "KB",
   "mb": "MB",
   "gb": "GB",
-  "bitrateB": "Bit/s",
-  "bitrateKB": "Kbit/s",
-  "bitrateMB": "Mbit/s",
-  "bitrateGB": "Gbit/s",
+  "bitrateBs": "B/s",
+  "bitrateKBs": "KB/s",
+  "bitrateMBs": "MB/s",
+  "bitrateGBs": "GB/s",
   "openSettings": "Open settings",
   "storagePermissionDenied": "Allow permisison to storage",
   "storagePermissionPermanentlyDenied": "Permission to storage has been denied, please allow from settings",
@@ -109,7 +109,6 @@
       }
     }
   },
-  "shufflePlayback": "Shuffle Playback",
   "liked": "Liked",
   "allowAudioPermissionForLocalMusic": "Allow audio permission to import local music files",
   "grant": "Grant",
@@ -140,10 +139,40 @@
   "syncingAudio": "Syncing audio",
   "seeDownloads": "See downloads",
   "syncFailed": "Sync failed",
-  "nothingToSync": "Nothing to sync",
-  "syncAudios": "Sync audios",
+  "syncCompleted": "Sync completed",
+  "syncData": "Sync data",
+  "syncSpotifyPlaylists": "Sync spotify playlists",
   "reimportSpotifyPlaylists": "Reimport Spotify Playlists",
   "retry": "Retry",
-  "failedToImportSpotifyPlaylists": "Failed to import Spotify Playlists",
-  "authorizeSpotifyCaption": "To import Spotify playlists,please authorize with Spotify."
+  "failedToImportSpotifyPlaylists": "Failed to import Spotify playlists",
+  "failedToImportSpotifyPlaylist": "Failed to import Spotify playlist",
+  "authorizeSpotifyCaption": "To import Spotify playlists,please authorize with Spotify.",
+  "importFailed": "Import failed",
+  "pending": "Pending",
+  "errorPlayingAudio": "Error playing audio",
+  "downloadStarted": "Download started",
+  "alreadyDownloaded": "Already downloaded",
+  "allAudiosAlreadyDownloaded": "All audios already downloaded",
+  "startedDownloadingNAudios": "Started downloading {n} audios",
+  "@startedDownloadingNAudios": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadPlaylist": "Download playlist",
+  "alreadyAddedToMyLibrary": "Already added to my library",
+  "addToMyLibrary": "Add to my library",
+  "addedToMyLibrary": "Added to my library",
+  "failedToAddToMyLibrary": "Failed to add to my library",
+  "youtubeSuggestions": "Youtube suggestions",
+  "spotifyPlaylists": "Spotify playlists",
+  "importing": "Importing",
+  "confirmImportSpotifyPlaylistCaption": "Import selected playlist? This may take a while depending on the number of songs",
+  "nevermind": "Nevermind",
+  "confirm": "Confirm",
+  "importingSpotifyPlaylist": "Importing Spotify playlist",
+  "importSpotifyPlaylistPending": "Import Spotify playlist pending",
+  "importingPlaylist": "Importing playlist"
 }

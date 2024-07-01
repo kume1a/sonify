@@ -7,5 +7,5 @@ abstract interface class PlaylistLocalRepository {
 
   Future<EmptyResult> bulkWrite(List<Playlist> playlists);
 
-  Future<Result<List<String>>> getAllIds();
+  Future<Result<Playlist?>> getById(String id);
 }

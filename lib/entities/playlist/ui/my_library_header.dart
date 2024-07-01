@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 
 import '../../../app/intl/app_localizations.dart';
+import '../../../features/play_audio/model/playback_button_state.dart';
+import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/round_play_button.dart';
-import '../../../shared/values/assets.dart';
 
 class MyLibraryHeader extends StatelessWidget {
   const MyLibraryHeader({super.key});
@@ -18,24 +19,30 @@ class MyLibraryHeader extends StatelessWidget {
 
     return Row(
       children: [
-        RoundPlayButton(
-          size: height,
-          iconSize: 16.h,
-          isPlaying: false,
-          onPressed: () {},
+        BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
+          buildWhen: (previous, current) =>
+              previous.playlist != current.playlist || previous.playButtonState != current.playButtonState,
+          builder: (_, state) {
+            return RoundPlayButton(
+              size: height,
+              iconSize: 16.h,
+              isPlaying: state.playlist == null && state.playButtonState == PlaybackButtonState.playing,
+              onPressed: context.nowPlayingAudioCubit.onPlayLocalAudiosPressed,
+            );
+          },
         ),
         SizedBox(width: 8.w),
         Expanded(
           child: Text(
-            l.shufflePlayback,
+            l.myLibrary,
             style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
           ),
         ),
-        SvgPicture.asset(
-          Assets.svgArrowDownUp,
-          width: 16.h,
-          height: 16.h,
-        ),
+        // SvgPicture.asset(
+        //   Assets.svgArrowDownUp,
+        //   width: 16.h,
+        //   height: 16.h,
+        // ),
       ],
     );
   }

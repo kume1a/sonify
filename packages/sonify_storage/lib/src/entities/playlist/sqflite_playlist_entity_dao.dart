@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../db/db_batch.dart';
@@ -32,9 +31,17 @@ class SqflitePlaylistEntityDao implements PlaylistEntityDao {
     final entityMap = _playlistEntityMapper.entityToMap(insertEntity);
 
     if (batchProvider != null) {
-      batchProvider.get.insert(Playlist_.tn, entityMap);
+      batchProvider.get.insert(
+        Playlist_.tn,
+        entityMap,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
     } else {
-      await _db.insert(Playlist_.tn, entityMap);
+      await _db.insert(
+        Playlist_.tn,
+        entityMap,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
     }
 
     return insertEntity.id ?? kInvalidId;
@@ -50,12 +57,13 @@ class SqflitePlaylistEntityDao implements PlaylistEntityDao {
   }
 
   @override
-  Future<List<String>> getAllIds() async {
+  Future<PlaylistEntity?> getById(String id) async {
     final res = await _db.query(
       Playlist_.tn,
-      columns: [Playlist_.id],
+      where: '${Playlist_.id} = ?',
+      whereArgs: [id],
     );
 
-    return res.map((m) => m[Playlist_.id] as String?).whereNotNull().toList();
+    return res.isNotEmpty ? _playlistEntityMapper.mapToEntity(res.first) : null;
   }
 }

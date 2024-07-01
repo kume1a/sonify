@@ -1,8 +1,9 @@
+import 'package:common_widgets/common_widgets.dart';
 import 'package:global_navigator/global_navigator.dart';
 import 'package:injectable/injectable.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../ui/status_dialog.dart';
+import '../../app/intl/app_localizations.dart';
 import 'permission_manager.dart';
 import 'permission_resolver.dart';
 
@@ -31,9 +32,15 @@ class PermissionResolverImpl implements PermissionResolver {
       case PermissionStatus.permanentlyDenied:
         GlobalNavigator.dialog(
           StatusDialog(
-            content: (l) => l.audioPermissionPermanentlyDenied,
-            buttonLabel: (l) => l.openSettings,
             onPressed: _permissionManager.openPermissionSettings,
+            strings: (c) {
+              final l = AppLocalizations.of(c);
+
+              return StatusDialogStrings(
+                content: l.audioPermissionPermanentlyDenied,
+                buttonLabel: l.openSettings,
+              );
+            },
           ),
         );
         return false;
@@ -42,8 +49,14 @@ class PermissionResolverImpl implements PermissionResolver {
       case PermissionStatus.provisional:
         GlobalNavigator.dialog(
           StatusDialog(
-            content: (l) => l.audioPermissionDenied,
-            buttonLabel: (l) => l.ok,
+            strings: (c) {
+              final l = AppLocalizations.of(c);
+
+              return StatusDialogStrings(
+                content: l.audioPermissionDenied,
+                buttonLabel: l.ok,
+              );
+            },
           ),
         );
         return false;

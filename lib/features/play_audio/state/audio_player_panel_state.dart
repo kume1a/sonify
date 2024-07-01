@@ -28,13 +28,6 @@ class AudioPlayerPanelCubit extends Cubit<AudioPlayerPanelState> {
 
   final panelController = PanelController();
 
-  @override
-  Future<void> close() async {
-    await panelController.close();
-
-    return super.close();
-  }
-
   void onMiniAudioPlayerPanelPressed() {
     if (panelController.isAttached) {
       panelController.open();

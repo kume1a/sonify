@@ -2,6 +2,7 @@ import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
+import '../../../shared/util/utils.dart';
 import 'download_task_downloader.dart';
 import 'downloader.dart';
 import 'resolve_file_size.dart';
@@ -51,11 +52,15 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
     String? thumbnailSavePath;
     if (imageUri != null) {
       final imageSaveDirectory = await ResourceSavePathProvider.getAudioMp3ImagesSavePath();
-      final imageName = imageUri.pathSegments.lastOrNull ?? '${_uuidFactory.generate()}.webp';
+
+      var imageName = imageUri.pathSegments.lastOrNull ?? '${_uuidFactory.generate()}.jpg';
+      if (!imageName.contains('.')) {
+        imageName = '$imageName.jpg';
+      }
 
       thumbnailSavePath = '$imageSaveDirectory/$imageName';
 
-      await _downloader.download(
+      final didDownloadThumbnail = await _downloader.download(
         uri: imageUri,
         savePath: thumbnailSavePath,
         onReceiveProgress: (count, total, speed) {
@@ -63,16 +68,20 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
           onReceiveProgress?.call(downloadedSize, totalDownloadSize, speed);
         },
       );
+
+      if (!didDownloadThumbnail) {
+        thumbnailSavePath = null;
+      }
     }
 
-    final newDownloadTask = downloadTask.copyWith(
-      payload: downloadTask.payload.copyWith(
-        userAudio: downloadTask.payload.userAudio?.copyWith(
-          audio: downloadTask.payload.userAudio?.audio?.copyWith(
-            localPath: downloadTask.savePath,
-            localThumbnailPath: thumbnailSavePath,
-          ),
-        ),
+    final newDownloadTask = downloadTask.copyWith.payload(
+      userAudio: downloadTask.payload.userAudio?.copyWith.audio?.call(
+        localPath: downloadTask.savePath,
+        localThumbnailPath: thumbnailSavePath,
+      ),
+      playlistAudio: downloadTask.payload.playlistAudio?.copyWith.audio?.call(
+        localPath: downloadTask.savePath,
+        localThumbnailPath: thumbnailSavePath,
       ),
     );
 
@@ -82,14 +91,18 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
   Uri? _resolveImageUri(DownloadTask downloadTask) {
     switch (downloadTask.fileType) {
       case FileType.audioMp3:
-        final audio = downloadTask.payload.userAudio?.audio;
+        final audio = downloadTask.payload.userAudio?.audio ?? downloadTask.payload.playlistAudio?.audio;
 
-        if (audio?.thumbnailPath != null) {
-          return Uri.tryParse(assembleRemoteMediaUrl(audio!.thumbnailPath!));
+        if (audio == null) {
+          return null;
         }
 
-        if (audio?.thumbnailUrl != null) {
-          return Uri.tryParse(audio!.thumbnailUrl!);
+        if (audio.thumbnailPath.notNullOrEmpty) {
+          return Uri.tryParse(assembleRemoteMediaUrl(audio.thumbnailPath!));
+        }
+
+        if (audio.thumbnailUrl.notNullOrEmpty) {
+          return Uri.tryParse(audio.thumbnailUrl!);
         }
 
         return null;

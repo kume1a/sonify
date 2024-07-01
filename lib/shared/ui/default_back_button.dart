@@ -16,7 +16,7 @@ class DefaultBackButton extends StatelessWidget {
 
     return IconButton(
       icon: const BackButtonIcon(),
-      color: color ?? theme.colorScheme.onBackground,
+      color: color ?? theme.colorScheme.onSurface,
       splashRadius: 24,
       iconSize: 24,
       onPressed: onPressed ?? () => Navigator.maybePop(context),

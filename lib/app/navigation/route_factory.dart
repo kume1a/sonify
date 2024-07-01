@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+
 import '../../pages/auth_page.dart';
 import '../../pages/downloads_page.dart';
 import '../../pages/email_sign_in_page.dart';
 import '../../pages/import_local_music_page.dart';
 import '../../pages/main/main_page.dart';
 import '../../pages/my_library_page.dart';
+import '../../pages/my_library_search_page.dart';
 import '../../pages/playlist_page.dart';
+import '../../pages/search_playlist_audios_page.dart';
+import '../../pages/search_suggestions_page.dart';
 import '../../pages/user_name_page.dart';
-import '../../pages/youtube_search_page.dart';
 import '../../pages/youtube_video_page.dart';
 import 'routes.dart';
 
@@ -15,7 +18,7 @@ Route<dynamic> routeFactory(RouteSettings settings) {
   return switch (settings.name) {
     Routes.root => _createAuthRoute(settings),
     Routes.main => _createMainRoute(settings),
-    Routes.youtubeSearch => _createYoutubeSearchRoute(settings),
+    Routes.searchSuggestions => _createSearchSuggestionsRoute(settings),
     Routes.youtubeVideo => _createYoutubeVideoRoute(settings),
     Routes.userName => _createUserNameRoute(settings),
     Routes.auth => _createAuthRoute(settings),
@@ -24,8 +27,26 @@ Route<dynamic> routeFactory(RouteSettings settings) {
     Routes.myLibrary => _createMyLibraryRoute(settings),
     Routes.importLocalMusic => _createImportLocalMusicRoute(settings),
     Routes.downloads => _createDownloadsRoute(settings),
+    Routes.myLibrarySearch => _createMyLibrarySearchRoute(settings),
+    Routes.searchPlaylistAudios => _createSearchPlaylistAudiosRoute(settings),
     _ => throw Exception('route $settings is not supported'),
   };
+}
+
+Route _createSearchPlaylistAudiosRoute(RouteSettings settings) {
+  final args = _getArgs(settings);
+
+  return MaterialPageRoute(
+    builder: (_) => SearchPlaylistAudiosPage(args: args),
+    settings: settings,
+  );
+}
+
+Route _createMyLibrarySearchRoute(RouteSettings settings) {
+  return MaterialPageRoute(
+    builder: (_) => const MyLibrarySearchPage(),
+    settings: settings,
+  );
 }
 
 Route _createDownloadsRoute(RouteSettings settings) {
@@ -88,9 +109,9 @@ Route _createYoutubeVideoRoute(RouteSettings settings) {
   );
 }
 
-Route _createYoutubeSearchRoute(RouteSettings settings) {
+Route _createSearchSuggestionsRoute(RouteSettings settings) {
   return MaterialPageRoute(
-    builder: (_) => const YoutubeSearchPage(),
+    builder: (_) => const SearchSuggestionsPage(),
     settings: settings,
   );
 }

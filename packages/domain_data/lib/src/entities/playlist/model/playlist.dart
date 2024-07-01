@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../audio/model/audio.dart';
+import '../../playlist_audio/model/playlist_audio.dart';
+import 'process_status.dart';
 
 part 'playlist.freezed.dart';
 
@@ -13,6 +14,9 @@ class Playlist with _$Playlist {
     required String? thumbnailPath,
     required String? thumbnailUrl,
     required String? spotifyId,
-    required List<Audio>? audios,
+    required ProcessStatus? audioImportStatus,
+    required int audioCount,
+    required int totalAudioCount,
+    required List<PlaylistAudio>? playlistAudios,
   }) = _Playlist;
 }

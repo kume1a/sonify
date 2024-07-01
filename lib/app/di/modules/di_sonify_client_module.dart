@@ -16,7 +16,7 @@ abstract class DiSonifyClientModule {
   Dio dio() {
     return NetworkClientFactory.createNoInterceptorDio(
       apiUrl: AppEnvironment.apiUrl,
-      logPrint: Logger.root.finer,
+      logPrint: Logger.root.finest,
       // logPrint: null,
     );
   }
@@ -32,7 +32,7 @@ abstract class DiSonifyClientModule {
       noInterceptorDio: noInterceptorDio,
       authTokenStore: authTokenStore,
       afterExit: afterSignOut.call,
-      logPrint: Logger.root.finer,
+      logPrint: Logger.root.finest,
       // logPrint: null,
       apiUrl: AppEnvironment.apiUrl,
     );
@@ -56,6 +56,23 @@ abstract class DiSonifyClientModule {
       dio: dio,
       apiUrl: AppEnvironment.apiUrl,
     );
+  }
+
+  // usecase ----------------------------------------------------------------
+  @lazySingleton
+  ValidateAccessToken validateAccessToken(
+    @Named(InjectionToken.noInterceptorDio) Dio dio,
+  ) {
+    return ValidateAccessTokenImpl(dio, AppEnvironment.apiUrl);
+  }
+
+  // ws ----------------------------------------------------------------
+  @lazySingleton
+  SocketProvider socketProvider(
+    AuthTokenStore authTokenStore,
+    ValidateAccessToken validateAccessToken,
+  ) {
+    return SocketProviderImpl(authTokenStore, validateAccessToken, AppEnvironment.wsUrl);
   }
 
   // youtube ----------------------------------------------------------------
@@ -106,17 +123,26 @@ abstract class DiSonifyClientModule {
 
   // spotify ----------------------------------------------------------------
   @lazySingleton
-  SpotifyAuthRemoteService spotifyAuthRemotService(ApiClient apiClient) {
-    return SpotifyAuthRemoteServiceImpl(apiClient);
+  SpotifyRemoteService spotifyAuthRemotService(ApiClient apiClient) {
+    return SpotifyRemoteServiceImpl(apiClient);
   }
 
   // playlist ----------------------------------------------------------------
   @lazySingleton
-  PlaylistRemoteService playlistRemoteService(
-    ApiClient apiClient,
-    @Named(InjectionToken.authenticatedDio) Dio dio,
-  ) {
-    return PlaylistRemoteServiceImpl(apiClient, dio);
+  PlaylistRemoteService playlistRemoteService(ApiClient apiClient) {
+    return PlaylistRemoteServiceImpl(apiClient);
+  }
+
+  // user playlist ----------------------------------------------------------------
+  @lazySingleton
+  UserPlaylistRemoteService userPlaylistRemoteService(ApiClient apiClient) {
+    return UserPlaylistRemoteServiceImpl(apiClient);
+  }
+
+  // playlist audio ----------------------------------------------------------------
+  @lazySingleton
+  PlaylistAudioRemoteService playlistAudioRemoteService(ApiClient apiClient) {
+    return PlaylistAudioRemoteServiceImpl(apiClient);
   }
 
   // user sync datum ----------------------------------------------------------------
@@ -129,5 +155,11 @@ abstract class DiSonifyClientModule {
   @lazySingleton
   ServerTimeRemoteService serverTimeRemoteService(ApiClient apiClient) {
     return ServerTimeRemoteServiceImpl(apiClient);
+  }
+
+  // user audio ----------------------------------------------------------------
+  @lazySingleton
+  UserAudioRemoteService userAudioRemoteService(ApiClient apiClient) {
+    return UserAudioRemoteServiceImpl(apiClient);
   }
 }

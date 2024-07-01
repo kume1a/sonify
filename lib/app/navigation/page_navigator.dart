@@ -4,6 +4,7 @@ import 'package:global_navigator/global_navigator.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../pages/playlist_page.dart';
+import '../../pages/search_playlist_audios_page.dart';
 import '../../pages/youtube_video_page.dart';
 import 'routes.dart';
 
@@ -15,8 +16,8 @@ class PageNavigator {
 
   void toMain() => GlobalNavigator.pushNamedAndRemoveAll(Routes.main);
 
-  Future<YoutubeSearchResult?> toYoutubeSearch() async {
-    final dynamic result = await GlobalNavigator.pushNamed(Routes.youtubeSearch);
+  Future<YoutubeSearchResult?> toSearchSuggestions() async {
+    final dynamic result = await GlobalNavigator.pushNamed(Routes.searchSuggestions);
 
     if (result is YoutubeSearchResult) {
       return result;
@@ -41,4 +42,9 @@ class PageNavigator {
   void toImportLocalMusic() => GlobalNavigator.pushNamed(Routes.importLocalMusic);
 
   void toDownloads() => GlobalNavigator.pushNamed(Routes.downloads);
+
+  void toMyLibrarySearch() => GlobalNavigator.pushNamed(Routes.myLibrarySearch);
+
+  void toSearchPlaylistAudios(SearchPlaylistAudiosPageArgs args) =>
+      GlobalNavigator.pushNamed(Routes.searchPlaylistAudios, arguments: args);
 }

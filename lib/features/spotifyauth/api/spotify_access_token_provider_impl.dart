@@ -16,7 +16,7 @@ class SpotifyAccessTokenProviderImpl implements SpotifyAccessTokenProvider {
   );
 
   final SpotifyCredsStore _spotifyCredsStore;
-  final SpotifyAuthRemoteRepository _spotifyAuthRemoteRepository;
+  final SpotifyRemoteRepository _spotifyAuthRemoteRepository;
   final GetServerTime _getServerTime;
 
   @override

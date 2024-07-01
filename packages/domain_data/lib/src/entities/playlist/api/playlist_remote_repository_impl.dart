@@ -15,34 +15,9 @@ class PlaylistRemoteRepositoryImpl implements PlaylistRemoteRepository {
   final PlaylistMapper _playlistMapper;
 
   @override
-  Future<Either<NetworkCallError, Unit>> importSpotifyUserPlaylists({
-    required String spotifyAccessToken,
-  }) {
-    return _playlistRemoteService.importSpotifyUserPlaylists(
-      spotifyAccessToken: spotifyAccessToken,
-    );
-  }
-
-  @override
-  Future<Either<NetworkCallError, List<Playlist>>> getAuthUserPlaylists({
-    List<String>? ids,
-  }) async {
-    final res = await _playlistRemoteService.getAuthUserPlaylists(ids: ids);
-
-    return res.map((r) => r.map(_playlistMapper.dtoToModel).toList());
-  }
-
-  @override
-  Future<Either<NetworkCallError, Playlist>> getPlaylistById({
-    required String playlistId,
-  }) async {
-    final res = await _playlistRemoteService.getPlaylistById(playlistId: playlistId);
+  Future<Either<NetworkCallError, Playlist>> getById(String id) async {
+    final res = await _playlistRemoteService.getPlaylistById(playlistId: id);
 
     return res.map(_playlistMapper.dtoToModel);
-  }
-
-  @override
-  Future<Either<NetworkCallError, List<String>>> getAuthUserPlaylistIds() {
-    return _playlistRemoteService.getAuthUserPlaylistIds();
   }
 }

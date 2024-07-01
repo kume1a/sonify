@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:logging/logging.dart';
 
+final _engLetterRegex = RegExp(r'^[a-zA-Z]+$');
+
 Future<T> callOrDefaultAsync<T>(Future<T> Function() fn, T defaultValue) {
   try {
     return fn();
@@ -27,7 +29,7 @@ extension StringX on String? {
 
   bool get isNullOrEmpty => this == null || this?.isEmpty == true;
 
-  bool get isEngLetter => this != null && RegExp(r'^[a-zA-Z]+$').hasMatch(this!);
+  bool get isEngLetter => this != null && _engLetterRegex.hasMatch(this!);
 }
 
 double deg2rad(double deg) {

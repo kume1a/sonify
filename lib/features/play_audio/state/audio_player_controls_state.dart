@@ -1,4 +1,5 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:common_models/common_models.dart';
 import 'package:common_utilities/common_utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,15 +16,19 @@ part 'audio_player_controls_state.freezed.dart';
 class AudioPlayerControlsState with _$AudioPlayerControlsState {
   const factory AudioPlayerControlsState({
     required PlaybackButtonState playButtonState,
+    required SimpleDataState<bool> isShuffleEnabled,
+    required SimpleDataState<bool> isRepeatEnabled,
     PlaybackProgressState? playbackProgress,
-    required bool isFirstSong,
-    required bool isLastSong,
+    required SimpleDataState<bool> isFirstSong,
+    required SimpleDataState<bool> isLastSong,
   }) = _AudioPlayerControlsState;
 
-  factory AudioPlayerControlsState.initial() => const AudioPlayerControlsState(
+  factory AudioPlayerControlsState.initial() => AudioPlayerControlsState(
         playButtonState: PlaybackButtonState.idle,
-        isFirstSong: true,
-        isLastSong: true,
+        isShuffleEnabled: SimpleDataState.idle(),
+        isRepeatEnabled: SimpleDataState.idle(),
+        isFirstSong: SimpleDataState.idle(),
+        isLastSong: SimpleDataState.idle(),
       );
 }
 
@@ -80,27 +85,68 @@ class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
 
   void onSkipToNext() => _audioHandler.skipToNext();
 
+  void onShufflePressed() {
+    final beforeShuffleModeEnabled = state.isShuffleEnabled.getOrNull;
+
+    if (beforeShuffleModeEnabled == null) {
+      Logger.root.warning('Shuffle mode is not yet initialized, so not doing anything.');
+      return;
+    }
+
+    final newShuffleMode =
+        beforeShuffleModeEnabled ? AudioServiceShuffleMode.none : AudioServiceShuffleMode.all;
+
+    _audioHandler.setShuffleMode(newShuffleMode);
+
+    emit(state.copyWith(
+      isShuffleEnabled: SimpleDataState.success(!beforeShuffleModeEnabled),
+    ));
+  }
+
+  void onRepeatPressed() {
+    final beforeRepeatModeEnabled = state.isRepeatEnabled.getOrNull;
+
+    if (beforeRepeatModeEnabled == null) {
+      Logger.root.warning('Repeat mode is not yet initialized, so not doing anything.');
+      return;
+    }
+
+    final newRepeatMode = beforeRepeatModeEnabled ? AudioServiceRepeatMode.none : AudioServiceRepeatMode.one;
+
+    _audioHandler.setRepeatMode(newRepeatMode);
+
+    emit(state.copyWith(
+      isRepeatEnabled: SimpleDataState.success(!beforeRepeatModeEnabled),
+    ));
+  }
+
   void _onPlaybackStateChanged(PlaybackState playbackState) {
     final isPlaying = playbackState.playing;
     final processingState = playbackState.processingState;
 
+    PlaybackButtonState? newPlayButtonState;
     if (processingState == AudioProcessingState.loading ||
         processingState == AudioProcessingState.buffering) {
-      emit(state.copyWith(playButtonState: PlaybackButtonState.loading));
+      newPlayButtonState = PlaybackButtonState.loading;
     } else if (!isPlaying) {
-      emit(state.copyWith(playButtonState: PlaybackButtonState.paused));
+      newPlayButtonState = PlaybackButtonState.paused;
     } else if (processingState != AudioProcessingState.completed) {
-      emit(state.copyWith(playButtonState: PlaybackButtonState.playing));
-    } else {
-      _audioHandler.seek(Duration.zero);
-      _audioHandler.pause();
+      newPlayButtonState = PlaybackButtonState.playing;
     }
 
     final newProgress = (state.playbackProgress ?? PlaybackProgressState.zero()).copyWith(
       buffered: playbackState.bufferedPosition,
     );
 
-    emit(state.copyWith(playbackProgress: newProgress));
+    final isShuffleModeEnabled = playbackState.shuffleMode == AudioServiceShuffleMode.all;
+    final isRepeatModeEnabled = playbackState.repeatMode == AudioServiceRepeatMode.one;
+
+    emit(state.copyWith(
+      playbackProgress: newProgress,
+      playButtonState: newPlayButtonState ?? state.playButtonState,
+      isShuffleEnabled: SimpleDataState.success(isShuffleModeEnabled),
+      isRepeatEnabled: SimpleDataState.success(isRepeatModeEnabled),
+    ));
   }
 
   void _onPositionChanged(Duration position) {
@@ -126,11 +172,14 @@ class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
     final playlist = _audioHandler.queue.value;
 
     if (playlist.length < 2 || mediaItem == null) {
-      emit(state.copyWith(isFirstSong: true, isLastSong: true));
+      emit(state.copyWith(
+        isFirstSong: SimpleDataState.success(true),
+        isLastSong: SimpleDataState.success(true),
+      ));
     } else {
       emit(state.copyWith(
-        isFirstSong: playlist.first == mediaItem,
-        isLastSong: playlist.last == mediaItem,
+        isFirstSong: SimpleDataState.success(playlist.first == mediaItem),
+        isLastSong: SimpleDataState.success(playlist.last == mediaItem),
       ));
     }
   }

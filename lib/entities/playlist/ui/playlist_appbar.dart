@@ -3,7 +3,7 @@ import 'package:common_widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../../../features/play_audio/model/playback_button_state.dart';
@@ -11,7 +11,6 @@ import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/animation/pulsing_fade.dart';
 import '../../../shared/ui/round_play_button.dart';
 import '../../../shared/util/color.dart';
-import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
 import '../state/playlist_state.dart';
 
@@ -73,7 +72,7 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
         ),
         Positioned(
           left: 16,
-          right: 16,
+          right: 70,
           bottom: -20,
           child: Opacity(
             opacity: contentOpacity,
@@ -87,13 +86,10 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
                 ),
                 const _PlaylistTitle(
                   style: TextStyle(
-                    fontSize: 28,
+                    fontSize: 24,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const _PlaylistViewCount(),
-                const SizedBox(height: 12),
-                const _OptionButtons(),
               ],
             ),
           ),
@@ -108,36 +104,38 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
         ),
         Positioned(
           left: 2,
+          right: 32,
           top: mediaQueryData.padding.top + 4,
           child: Row(
             children: [
               BackButton(color: iconColor),
-              Opacity(
-                opacity: colorProgress,
-                child: const _PlaylistTitle(
-                  style: TextStyle(fontSize: 14),
+              Expanded(
+                child: Opacity(
+                  opacity: colorProgress,
+                  child: const _PlaylistTitle(
+                    style: TextStyle(fontSize: 14),
+                  ),
                 ),
               ),
             ],
           ),
         ),
         Positioned(
+          top: 12,
+          right: 12,
+          child: IconButton(
+            icon: SvgPicture.asset(
+              Assets.svgMenuVertical,
+              colorFilter: svgColor(Colors.white),
+            ),
+            splashRadius: 24,
+            onPressed: context.playlistCubit.onPlaylistMenuPressed,
+          ),
+        ),
+        Positioned(
           right: 16,
           bottom: -20,
-          child: BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
-            buildWhen: (previous, current) =>
-                previous.nowPlayingPlaylist != current.nowPlayingPlaylist ||
-                previous.playButtonState != current.playButtonState,
-            builder: (_, state) {
-              return RoundPlayButton(
-                size: 52,
-                iconSize: 26,
-                isPlaying: state.nowPlayingPlaylist?.id == playlistId &&
-                    state.playButtonState == PlaybackButtonState.playing,
-                onPressed: () => context.nowPlayingAudioCubit.onPlayPlaylistPressed(playlistId: playlistId),
-              );
-            },
-          ),
+          child: _PlayButton(playlistId: playlistId),
         ),
       ],
     );
@@ -216,69 +214,33 @@ class _PlaylistTitle extends StatelessWidget {
   }
 }
 
-class _PlaylistViewCount extends StatelessWidget {
-  const _PlaylistViewCount();
+class _PlayButton extends StatelessWidget {
+  const _PlayButton({
+    required this.playlistId,
+  });
+
+  final String playlistId;
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final l = AppLocalizations.of(context);
+    return BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
+      buildWhen: (previous, current) =>
+          previous.playlist != current.playlist || previous.playButtonState != current.playButtonState,
+      builder: (_, state) => BlocBuilder<PlaylistCubit, PlaylistState>(
+        builder: (_, playlistState) {
+          if (!playlistState.isPlaylistPlayable) {
+            return const SizedBox.shrink();
+          }
 
-    return BlocBuilder<PlaylistCubit, PlaylistState>(
-      builder: (_, state) {
-        return Row(
-          children: [
-            SvgPicture.asset(
-              Assets.svgMusicNote,
-              width: 16,
-              height: 16,
-              colorFilter: svgColor(theme.appThemeExtension?.elSecondary),
-            ),
-            const SizedBox(width: 5),
-            Text(
-              'TODO ${l.playedNTimes(10000)}',
-              style: TextStyle(
-                fontSize: 12,
-                color: theme.appThemeExtension?.elSecondary,
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _OptionButtons extends StatelessWidget {
-  const _OptionButtons();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Row(
-      children: [
-        SvgPicture.asset(
-          Assets.svgHeart,
-          width: 20,
-          height: 20,
-          colorFilter: svgColor(theme.appThemeExtension?.elSecondary),
-        ),
-        const SizedBox(width: 12),
-        SvgPicture.asset(
-          Assets.svgDownload,
-          width: 20,
-          height: 20,
-          colorFilter: svgColor(theme.appThemeExtension?.elSecondary),
-        ),
-        const SizedBox(width: 12),
-        SvgPicture.asset(
-          Assets.svgMenuVertical,
-          width: 20,
-          height: 20,
-          colorFilter: svgColor(theme.appThemeExtension?.elSecondary),
-        ),
-      ],
+          return RoundPlayButton(
+            size: 52,
+            iconSize: 26,
+            isPlaying:
+                state.playlist?.id == playlistId && state.playButtonState == PlaybackButtonState.playing,
+            onPressed: () => context.nowPlayingAudioCubit.onPlayPlaylistPressed(playlistId: playlistId),
+          );
+        },
+      ),
     );
   }
 }

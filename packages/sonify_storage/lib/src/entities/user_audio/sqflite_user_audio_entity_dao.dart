@@ -26,13 +26,26 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
 
     final entityMap = _userAudioEntityMapper.entityToMap(insertEntity);
 
-    await _db.insert(UserAudio_.tn, entityMap);
+    await _db.insert(
+      UserAudio_.tn,
+      entityMap,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
 
     return insertEntity.id ?? kInvalidId;
   }
 
   @override
-  Future<List<UserAudioEntity>> getAllByUserId(String userId) async {
+  Future<List<UserAudioEntity>> getAll({
+    required String userId,
+    String? searchQuery,
+  }) async {
+    final searchQueryExists = searchQuery != null && searchQuery.isNotEmpty;
+
+    final dynamicSearchQueryCondition = searchQueryExists
+        ? 'AND (${Audio_.tn}.${Audio_.title} LIKE ?) OR (${Audio_.tn}.${Audio_.author} LIKE ?)'
+        : '';
+
     final res = await _db.rawQuery(
       '''
       SELECT 
@@ -54,11 +67,17 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
       FROM ${UserAudio_.tn}
       INNER JOIN ${Audio_.tn} ON ${UserAudio_.tn}.${UserAudio_.audioId} = ${Audio_.tn}.${Audio_.id}
       LEFT JOIN ${AudioLike_.tn} ON ${AudioLike_.tn}.${AudioLike_.userId} = ? 
-        AND ${AudioLike_.tn}.${AudioLike_.audioId} = ${UserAudio_.tn}.${UserAudio_.audioId}
-      WHERE ${UserAudio_.tn}.${UserAudio_.userId} = ?
+       AND ${AudioLike_.tn}.${AudioLike_.audioId} = ${UserAudio_.tn}.${UserAudio_.audioId}
+      WHERE ${UserAudio_.tn}.${UserAudio_.userId} = ? 
+        $dynamicSearchQueryCondition
       ORDER BY ${Audio_.tn}.${Audio_.title};
       ''',
-      [userId, userId],
+      [
+        userId,
+        userId,
+        if (searchQueryExists) '%$searchQuery%',
+        if (searchQueryExists) '%$searchQuery%',
+      ],
     );
 
     return res.map(_userAudioEntityMapper.mapToEntity).toList();
@@ -83,5 +102,19 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
     );
 
     return query.map((e) => e[UserAudio_.audioId] as String).toList();
+  }
+
+  @override
+  Future<UserAudioEntity?> getByUserIdAndAudioId({
+    required String userId,
+    required String audioId,
+  }) async {
+    final query = await _db.query(
+      UserAudio_.tn,
+      where: '${UserAudio_.userId} = ? AND ${UserAudio_.audioId} = ?',
+      whereArgs: [userId, audioId],
+    );
+
+    return query.isNotEmpty ? _userAudioEntityMapper.mapToEntity(query.first) : null;
   }
 }

@@ -47,7 +47,7 @@ class SpotifyAuthCubit extends Cubit<SpotifyAuthState> {
   final SpotifyApi _spotifyApi;
   final IntentLauncher _intentLauncher;
   final SpotifyCredsStore _spotifyCredsStore;
-  final SpotifyAuthRemoteRepository _spotifyAuthRemoteRepository;
+  final SpotifyRemoteRepository _spotifyAuthRemoteRepository;
   final AppLinks _appLinks;
   final GetServerTime _getServerTime;
 

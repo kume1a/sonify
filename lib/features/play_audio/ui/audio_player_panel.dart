@@ -11,7 +11,6 @@ import '../../../shared/ui/play_pause.dart';
 import '../../../shared/ui/sliding_up_panel.dart';
 import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/util/color.dart';
-import '../../../shared/values/app_theme_extension.dart';
 import '../../../shared/values/assets.dart';
 import '../model/playback_button_state.dart';
 import '../state/audio_player_controls_state.dart';
@@ -82,12 +81,12 @@ class _PanelContent extends StatelessWidget {
       children: [
         const _AudioPlayerHeader(),
         const SizedBox(height: 24),
-        LayoutBuilder(builder: (_, constraints) {
-          return _AudioPlayerImage(
+        LayoutBuilder(
+          builder: (_, constraints) => _AudioPlayerImage(
             size: Size.square(constraints.maxWidth * 0.75),
             audio: audio,
-          );
-        }),
+          ),
+        ),
         const SizedBox(height: 32),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -224,7 +223,7 @@ class _AudioPlayerControls extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const _MetaAndPlayMode(),
+        const _MetaAndShuffleMode(),
         const SizedBox(height: 20),
         const _Progress(),
         const SizedBox(height: 24),
@@ -234,11 +233,13 @@ class _AudioPlayerControls extends StatelessWidget {
   }
 }
 
-class _MetaAndPlayMode extends StatelessWidget {
-  const _MetaAndPlayMode();
+class _MetaAndShuffleMode extends StatelessWidget {
+  const _MetaAndShuffleMode();
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -272,9 +273,24 @@ class _MetaAndPlayMode extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        IconButton(
-          onPressed: () {},
-          icon: SvgPicture.asset(Assets.svgShuffle),
+        BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
+          buildWhen: (previous, current) => previous.isShuffleEnabled != current.isShuffleEnabled,
+          builder: (_, state) {
+            return state.isShuffleEnabled.maybeWhen(
+              orElse: () => const SizedBox.shrink(),
+              success: (isShuffleModeEnabled) => IconButton(
+                onPressed: context.audioPlayerControlsCubit.onShufflePressed,
+                icon: SvgPicture.asset(
+                  isShuffleModeEnabled ? Assets.svgShuffleActive : Assets.svgShuffle,
+                  width: 24,
+                  height: 24,
+                  colorFilter: svgColor(
+                    isShuffleModeEnabled ? theme.colorScheme.secondary : theme.colorScheme.onSurface,
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ],
     );
@@ -313,13 +329,29 @@ class _Controls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SvgPicture.asset(
-          Assets.svgRepeat,
-          width: 24,
-          height: 24,
+        BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
+          buildWhen: (previous, current) => previous.isRepeatEnabled != current.isRepeatEnabled,
+          builder: (_, state) {
+            return state.isRepeatEnabled.maybeWhen(
+              orElse: () => const SizedBox.shrink(),
+              success: (isRepeatEnabled) => IconButton(
+                onPressed: context.audioPlayerControlsCubit.onRepeatPressed,
+                icon: SvgPicture.asset(
+                  Assets.svgRepeat,
+                  width: 24,
+                  height: 24,
+                  colorFilter: svgColor(
+                    isRepeatEnabled ? theme.colorScheme.secondary : theme.colorScheme.onSurface,
+                  ),
+                ),
+              ),
+            );
+          },
         ),
         const _SkipToPreviousButton(size: 28),
         const _PlayPauseButton(size: 38),
@@ -383,24 +415,15 @@ class _SkipToPreviousButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
-      buildWhen: (previous, current) => previous.isFirstSong != current.isFirstSong,
-      builder: (_, state) {
-        final isDisabled = state.isFirstSong;
-
-        return IconButton(
-          onPressed: isDisabled ? null : context.audioPlayerControlsCubit.onSkipToPrevious,
-          visualDensity: VisualDensity.compact,
-          icon: SvgPicture.asset(
-            width: size,
-            height: size,
-            Assets.svgSkipBack,
-            colorFilter: svgColor(
-              isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onBackground,
-            ),
-          ),
-        );
-      },
+    return IconButton(
+      onPressed: context.audioPlayerControlsCubit.onSkipToPrevious,
+      visualDensity: VisualDensity.compact,
+      icon: SvgPicture.asset(
+        width: size,
+        height: size,
+        Assets.svgSkipBack,
+        colorFilter: svgColor(theme.colorScheme.onSurface),
+      ),
     );
   }
 }
@@ -416,24 +439,15 @@ class _SkipToNextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocBuilder<AudioPlayerControlsCubit, AudioPlayerControlsState>(
-      buildWhen: (previous, current) => previous.isLastSong != current.isLastSong,
-      builder: (_, state) {
-        final isDisabled = state.isLastSong;
-
-        return IconButton(
-          onPressed: isDisabled ? null : context.audioPlayerControlsCubit.onSkipToNext,
-          visualDensity: VisualDensity.compact,
-          icon: SvgPicture.asset(
-            Assets.svgSkipForward,
-            width: size,
-            height: size,
-            colorFilter: svgColor(
-              isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onBackground,
-            ),
-          ),
-        );
-      },
+    return IconButton(
+      onPressed: context.audioPlayerControlsCubit.onSkipToNext,
+      visualDensity: VisualDensity.compact,
+      icon: SvgPicture.asset(
+        Assets.svgSkipForward,
+        width: size,
+        height: size,
+        colorFilter: svgColor(theme.colorScheme.onSurface),
+      ),
     );
   }
 }

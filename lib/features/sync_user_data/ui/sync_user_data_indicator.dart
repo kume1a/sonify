@@ -49,8 +49,8 @@ class SyncUserDataIndicator extends StatelessWidget {
           SyncAudiosState.error => _SyncContainer(
               child: Text(l.syncFailed),
             ),
-          SyncAudiosState.nothingToSync => _SyncContainer(
-              child: Text(l.nothingToSync),
+          SyncAudiosState.syncCompleted => _SyncContainer(
+              child: Text(l.syncCompleted),
             ),
         };
       },

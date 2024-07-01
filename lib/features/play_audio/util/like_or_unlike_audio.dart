@@ -1,22 +1,6 @@
-import 'package:common_utilities/common_utilities.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
-
-class LikeOrUnlikeAudioResult {
-  LikeOrUnlikeAudioResult({
-    required this.nowPlayingAudio,
-    required this.nowPlayingAudios,
-  });
-
-  final Audio nowPlayingAudio;
-  final List<Audio>? nowPlayingAudios;
-
-  @override
-  String toString() {
-    return 'LikeOrUnlikeAudioResult{nowPlayingAudio: $nowPlayingAudio, nowPlayingAudios: $nowPlayingAudios}';
-  }
-}
 
 @lazySingleton
 class LikeOrUnlikeAudio {
@@ -32,9 +16,8 @@ class LikeOrUnlikeAudio {
   final AudioLikeLocalRepository _audioLikeLocalRepository;
   final PendingChangeLocalRepository _pendingChangeLocalRepository;
 
-  Future<LikeOrUnlikeAudioResult?> call({
+  Future<Audio?> call({
     required Audio? nowPlayingAudio,
-    required List<Audio>? nowPlayingAudios,
   }) async {
     if (nowPlayingAudio == null || nowPlayingAudio.id == null) {
       Logger.root.warning('LikeOrUnlikeAudio.call: nowPlayingAudio or id is null $nowPlayingAudio');
@@ -68,11 +51,7 @@ class LikeOrUnlikeAudio {
           // don't await for speed
           _unlikeAudioRemote(audioId: nowPlayingAudioId, userId: authUserId);
 
-          return _updateAudioLikeAndResolveResult(
-            audioLike: null,
-            nowPlayingAudio: nowPlayingAudio,
-            nowPlayingAudios: nowPlayingAudios,
-          );
+          return nowPlayingAudio.copyWith(audioLike: null);
         },
       );
     } else {
@@ -89,31 +68,10 @@ class LikeOrUnlikeAudio {
           // don't await for speed
           _likeAudioRemote(audioId: nowPlayingAudioId, userId: authUserId);
 
-          return _updateAudioLikeAndResolveResult(
-            audioLike: r,
-            nowPlayingAudio: nowPlayingAudio,
-            nowPlayingAudios: nowPlayingAudios,
-          );
+          return nowPlayingAudio.copyWith(audioLike: r);
         },
       );
     }
-  }
-
-  LikeOrUnlikeAudioResult _updateAudioLikeAndResolveResult({
-    required AudioLike? audioLike,
-    required Audio nowPlayingAudio,
-    required List<Audio>? nowPlayingAudios,
-  }) {
-    final updatedNowPlayingAudio = nowPlayingAudio.copyWith(audioLike: audioLike);
-    final updatedNowPlayingAudios = nowPlayingAudios?.replace(
-      (e) => e.id == nowPlayingAudio.id,
-      (_) => updatedNowPlayingAudio,
-    );
-
-    return LikeOrUnlikeAudioResult(
-      nowPlayingAudio: updatedNowPlayingAudio,
-      nowPlayingAudios: updatedNowPlayingAudios,
-    );
   }
 
   Future<void> _likeAudioRemote({

@@ -34,7 +34,7 @@ class AudioMapper {
 
   Audio entityToModel(AudioEntity e) {
     return Audio(
-      id: e.id,
+      id: e.id ?? kInvalidId,
       title: e.title ?? '',
       author: e.author ?? '',
       durationMs: e.durationMs ?? 0,

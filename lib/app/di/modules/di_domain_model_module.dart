@@ -25,26 +25,6 @@ abstract class DiDomainModelModule {
   }
 
   @lazySingleton
-  UserAudioMapper userAudioMapper(AudioMapper audioMapper) {
-    return UserAudioMapper(audioMapper);
-  }
-
-  @lazySingleton
-  AudioLocalRepository audioLocalRepository(
-    UserAudioEntityDao userAudioEntityDao,
-    AudioMapper audioMapper,
-    UserAudioMapper userAudioMapper,
-    AudioEntityDao audioEntityDao,
-  ) {
-    return AudioLocalRepositoryImpl(
-      userAudioEntityDao,
-      audioMapper,
-      userAudioMapper,
-      audioEntityDao,
-    );
-  }
-
-  @lazySingleton
   AudioRemoteRepository audioRemoteRepository(
     AudioRemoteService audioRemoteService,
     UserAudioMapper userAudioMapper,
@@ -52,6 +32,17 @@ abstract class DiDomainModelModule {
     return AudioRemoteRepositoryImpl(
       audioRemoteService,
       userAudioMapper,
+    );
+  }
+
+  @lazySingleton
+  AudioLocalRepository audioLocalRepository(
+    AudioMapper audioMapper,
+    AudioEntityDao audioEntityDao,
+  ) {
+    return AudioLocalRepositoryImpl(
+      audioMapper,
+      audioEntityDao,
     );
   }
 
@@ -81,8 +72,16 @@ abstract class DiDomainModelModule {
 
   // playlist ----------------------------------------------------------------
   @lazySingleton
-  PlaylistMapper playlistMapper(AudioMapper audioMapper) {
-    return PlaylistMapper(audioMapper);
+  ProcessStatusMapper processStatusMapper() {
+    return ProcessStatusMapper();
+  }
+
+  @lazySingleton
+  PlaylistMapper playlistMapper(
+    PlaylistAudioMapper playlistAudioMapper,
+    ProcessStatusMapper processStatusMapper,
+  ) {
+    return PlaylistMapper(playlistAudioMapper, processStatusMapper);
   }
 
   @lazySingleton
@@ -98,11 +97,125 @@ abstract class DiDomainModelModule {
     PlaylistEntityDao playlistEntityDao,
     DbBatchProviderFactory dbBatchProviderFactory,
     PlaylistMapper playlistMapper,
+    PlaylistAudioEntityDao playlistAudioEntityDao,
   ) {
     return PlaylistLocalRepositoryImpl(
       playlistEntityDao,
       dbBatchProviderFactory,
       playlistMapper,
+      playlistAudioEntityDao,
+    );
+  }
+
+  @lazySingleton
+  PlaylistCachedRepository playlistCachedRepository(
+    PlaylistRemoteRepository playlistRemoteRepository,
+    PlaylistLocalRepository playlistLocalRepository,
+    AudioLocalRepository audioLocalRepository,
+  ) {
+    return PlaylistCachedRepositoryImpl(
+      playlistRemoteRepository,
+      playlistLocalRepository,
+      audioLocalRepository,
+    );
+  }
+
+  @injectable
+  PlaylistUpdatedEventChannel playlistUpdatedEventChannel(
+    PlaylistMapper playlistMapper,
+    SocketProvider socketProvider,
+  ) {
+    return WsPlaylistUpdatedEventChannel(
+      playlistMapper,
+      socketProvider,
+    );
+  }
+
+  // playlist audio ----------------------------------------------------------------
+  @lazySingleton
+  PlaylistAudioMapper playlistAudioMapper(AudioMapper audioMapper) {
+    return PlaylistAudioMapper(audioMapper);
+  }
+
+  @lazySingleton
+  PlaylistAudioRemoteRepository playlistAudioRemoteRepository(
+    PlaylistAudioRemoteService playlistAudioRemoteService,
+    PlaylistAudioMapper playlistAudioMapper,
+  ) {
+    return PlaylistAudioRemoteRepositoryImpl(
+      playlistAudioRemoteService,
+      playlistAudioMapper,
+    );
+  }
+
+  @lazySingleton
+  PlaylistAudioLocalRepository playlistAudioLocalRepository(
+    PlaylistAudioEntityDao playlistAudioEntityDao,
+    PlaylistAudioMapper playlistAudioMapper,
+    DbBatchProviderFactory dbBatchProviderFactory,
+  ) {
+    return PlaylistAudioLocalRepositoryImpl(
+      playlistAudioEntityDao,
+      playlistAudioMapper,
+      dbBatchProviderFactory,
+    );
+  }
+
+  // user playlist ----------------------------------------------------------------
+  @lazySingleton
+  UserPlaylistMapper userPlaylistMapper(PlaylistMapper playlistMapper) {
+    return UserPlaylistMapper(playlistMapper);
+  }
+
+  @lazySingleton
+  UserPlaylistLocalRepository userPlaylistLocalRepository(
+    UserPlaylistEntityDao userPlaylistEntityDao,
+    UserPlaylistMapper userPlaylistMapper,
+    DbBatchProviderFactory dbBatchProviderFactory,
+  ) {
+    return UserPlaylistLocalRepositoryImpl(
+      userPlaylistEntityDao,
+      userPlaylistMapper,
+      dbBatchProviderFactory,
+    );
+  }
+
+  @lazySingleton
+  UserPlaylistRemoteRepository userPlaylistRemoteRepository(
+    UserPlaylistRemoteService userPlaylistRemoteService,
+    UserPlaylistMapper userPlaylistMapper,
+  ) {
+    return UserPlaylistRemoteRepositoryImpl(
+      userPlaylistRemoteService,
+      userPlaylistMapper,
+    );
+  }
+
+  // user audio ----------------------------------------------------------------
+  @lazySingleton
+  UserAudioMapper userAudioMapper(AudioMapper audioMapper) {
+    return UserAudioMapper(audioMapper);
+  }
+
+  @lazySingleton
+  UserAudioLocalRepository userAudioLocalRepository(
+    UserAudioEntityDao userAudioEntityDao,
+    UserAudioMapper userAudioMapper,
+  ) {
+    return UserAudioLocalRepositoryImpl(
+      userAudioEntityDao,
+      userAudioMapper,
+    );
+  }
+
+  @lazySingleton
+  UserAudioRemoteRepository userAudioRemoteRepository(
+    UserAudioRemoteService userAudioRemoteService,
+    UserAudioMapper userAudioMapper,
+  ) {
+    return UserAudioRemoteRepositoryImpl(
+      userAudioRemoteService,
+      userAudioMapper,
     );
   }
 
@@ -170,20 +283,30 @@ abstract class DiDomainModelModule {
     return SpotifyTokenPayloadMapper();
   }
 
+  @lazySingleton
   SpotifyRefreshTokenPayloadMapper spotifyRefreshTokenPayloadMapper() {
     return SpotifyRefreshTokenPayloadMapper();
   }
 
   @lazySingleton
-  SpotifyAuthRemoteRepository spotifyAuthRemoteRepository(
-    SpotifyAuthRemoteService spotifyAuthRemoteService,
+  SpotifySearchResultMapper spotifySearchResultMapper() {
+    return SpotifySearchResultMapper();
+  }
+
+  @lazySingleton
+  SpotifyRemoteRepository spotifyAuthRemoteRepository(
+    SpotifyRemoteService spotifyAuthRemoteService,
     SpotifyTokenPayloadMapper spotifyTokenPayloadMapper,
     SpotifyRefreshTokenPayloadMapper spotifyRefreshTokenPayloadMapper,
+    SpotifySearchResultMapper spotifySearchResultMapper,
+    PlaylistMapper playlistMapper,
   ) {
-    return SpotifyAuthRemoteRepositoryImpl(
+    return SpotifyRemoteRepositoryImpl(
       spotifyAuthRemoteService,
       spotifyTokenPayloadMapper,
       spotifyRefreshTokenPayloadMapper,
+      spotifySearchResultMapper,
+      playlistMapper,
     );
   }
 
@@ -199,6 +322,13 @@ abstract class DiDomainModelModule {
     UserSyncDatumMapper userSyncDatumMapper,
   ) {
     return UserSyncDatumRemoteRepositoryImpl(userSyncDatumRemoteService, userSyncDatumMapper);
+  }
+
+  @lazySingleton
+  UserSyncDatumLocalRepository userSyncDatumLocalRepository(
+    SharedPreferences sharedPreferences,
+  ) {
+    return UserSyncDatumLocalRepositoryImpl(sharedPreferences);
   }
 
   // youtube ----------------------------------------------------------------
@@ -258,6 +388,40 @@ abstract class DiDomainModelModule {
     return PendingChangeLocalRepositoryImpl(
       pendingChangeEntityDao,
       pendingChangeMapper,
+    );
+  }
+
+  // usecase ------------------------------------------------------------
+  @lazySingleton
+  GetAuthUserLocalPlaylistIds getAuthUserLocalPlaylistIds(
+    AuthUserInfoProvider authUserInfoProvider,
+    UserPlaylistLocalRepository userPlaylistLocalRepository,
+  ) {
+    return GetAuthUserLocalPlaylistIds(
+      authUserInfoProvider,
+      userPlaylistLocalRepository,
+    );
+  }
+
+  @lazySingleton
+  SaveUserAudioWithAudio saveUserAudioWithAudio(
+    UserAudioLocalRepository userAudioLocalRepository,
+    AudioLocalRepository audioLocalRepository,
+  ) {
+    return SaveUserAudioWithAudio(
+      userAudioLocalRepository,
+      audioLocalRepository,
+    );
+  }
+
+  @lazySingleton
+  SavePlaylistAudioWithAudio savePlaylistAudioWithAudio(
+    PlaylistAudioLocalRepository playlistAudioLocalRepository,
+    AudioLocalRepository audioLocalRepository,
+  ) {
+    return SavePlaylistAudioWithAudio(
+      playlistAudioLocalRepository,
+      audioLocalRepository,
     );
   }
 }

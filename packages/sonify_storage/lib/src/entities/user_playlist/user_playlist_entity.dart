@@ -1,4 +1,5 @@
 import '../../shared/wrapped.dart';
+import '../playlist/playlist_entity.dart';
 
 class UserPlaylistEntity {
   UserPlaylistEntity({
@@ -7,6 +8,7 @@ class UserPlaylistEntity {
     required this.playlistId,
     required this.userId,
     required this.isSpotifySavedPlaylist,
+    required this.playlist,
   });
 
   final String? id;
@@ -15,12 +17,15 @@ class UserPlaylistEntity {
   final String? userId;
   final int? isSpotifySavedPlaylist;
 
+  final PlaylistEntity? playlist;
+
   UserPlaylistEntity copyWith({
     Wrapped<String?>? id,
     Wrapped<int?>? createdAtMillis,
     Wrapped<String?>? playlistId,
     Wrapped<String?>? userId,
     Wrapped<int?>? isSpotifySavedPlaylist,
+    Wrapped<PlaylistEntity?>? playlist,
   }) {
     return UserPlaylistEntity(
       id: id?.value ?? this.id,
@@ -28,6 +33,7 @@ class UserPlaylistEntity {
       playlistId: playlistId?.value ?? this.playlistId,
       userId: userId?.value ?? this.userId,
       isSpotifySavedPlaylist: isSpotifySavedPlaylist?.value ?? this.isSpotifySavedPlaylist,
+      playlist: playlist?.value ?? this.playlist,
     );
   }
 }

@@ -53,7 +53,7 @@ void createDbTables(Batch batch) {
       CREATE TABLE IF NOT EXISTS ${UserAudio_.tn} 
       (
         ${UserAudio_.id} TEXT PRIMARY KEY NOT NULL,
-        ${UserAudio_.createdAtMillis} INTEGER,
+        ${UserAudio_.createdAtMillis} INTEGER, 
         ${UserAudio_.userId} TEXT,
         ${UserAudio_.audioId} TEXT
       );
@@ -80,7 +80,10 @@ void createDbTables(Batch batch) {
         ${Playlist_.name} TEXT,
         ${Playlist_.thumbnailPath} TEXT,
         ${Playlist_.thumbnailUrl} TEXT,
-        ${Playlist_.spotifyId} TEXT
+        ${Playlist_.spotifyId} TEXT,
+        ${Playlist_.audioImportStatus} TEXT,
+        ${Playlist_.audioCount} INTEGER,
+        ${Playlist_.totalAudioCount} INTEGER
       );
     ''',
   );

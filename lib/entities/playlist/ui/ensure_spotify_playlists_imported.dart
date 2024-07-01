@@ -16,9 +16,6 @@ class EnsureSpotifyPlaylistsImported extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-
     const padding = EdgeInsets.fromLTRB(16, 48, 16, 16);
 
     return BlocBuilder<ImportSpotifyPlaylistsCubit, ImportSpotifyPlaylistsState>(
@@ -30,27 +27,8 @@ class EnsureSpotifyPlaylistsImported extends StatelessWidget {
             padding: padding,
             child: Center(child: SmallCircularProgressIndicator()),
           ),
-          failure: (_) => Center(
-            child: Padding(
-              padding: padding,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    l.failedToImportSpotifyPlaylists,
-                    style: TextStyle(color: theme.appThemeExtension?.elSecondary),
-                  ),
-                  const SizedBox(height: 4),
-                  TextButton(
-                    onPressed: context.importSpotifyPlaylistsCubit.onRefreshSpotifyPlaylistImportStatus,
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.all(8),
-                    ),
-                    child: Text(l.retry),
-                  ),
-                ],
-              ),
-            ),
+          failure: (_) => _ImportSpotifyPlaylistsFailed(
+            onRefresh: context.importSpotifyPlaylistsCubit.onRefreshSpotifyPlaylistImportStatus,
           ),
           success: (isSpotifyPlaylistsImported) {
             if (isSpotifyPlaylistsImported) {
@@ -125,15 +103,49 @@ class _ImportSpotifyPlaylistsFlow extends StatelessWidget {
               ),
             ),
           ),
-          failed: (_) => Center(
-            child: IconButton(
-              onPressed: context.importSpotifyPlaylistsCubit.onImportSpotifyPlaylists,
-              icon: const Icon(Icons.refresh),
-            ),
+          failed: (_) => _ImportSpotifyPlaylistsFailed(
+            onRefresh: context.importSpotifyPlaylistsCubit.onImportSpotifyPlaylists,
           ),
           executed: () => onImportSuccess,
         );
       },
+    );
+  }
+}
+
+class _ImportSpotifyPlaylistsFailed extends StatelessWidget {
+  const _ImportSpotifyPlaylistsFailed({
+    required this.onRefresh,
+  });
+
+  final VoidCallback onRefresh;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              l.failedToImportSpotifyPlaylists,
+              style: TextStyle(color: theme.appThemeExtension?.elSecondary),
+            ),
+            const SizedBox(height: 4),
+            TextButton(
+              onPressed: onRefresh,
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(8),
+              ),
+              child: Text(l.retry),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

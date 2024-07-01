@@ -1,7 +1,14 @@
 import '../../db/tables.dart';
+import '../playlist/playlist_entity_mapper.dart';
 import 'user_playlist_entity.dart';
 
 class UserPlaylistEntityMapper {
+  UserPlaylistEntityMapper(
+    this._playlistEntityMapper,
+  );
+
+  final PlaylistEntityMapper _playlistEntityMapper;
+
   UserPlaylistEntity mapToEntity(Map<String, dynamic> m) {
     return UserPlaylistEntity(
       id: m[UserPlaylist_.id] as String?,
@@ -9,6 +16,7 @@ class UserPlaylistEntityMapper {
       userId: m[UserPlaylist_.userId] as String?,
       playlistId: m[UserPlaylist_.playlistId] as String?,
       isSpotifySavedPlaylist: m[UserPlaylist_.isSpotifySavedPlaylist] as int?,
+      playlist: _playlistEntityMapper.joinedMapToEntity(m),
     );
   }
 
@@ -24,6 +32,7 @@ class UserPlaylistEntityMapper {
       userId: m[UserPlaylist_.joinedUserId] as String?,
       playlistId: m[UserPlaylist_.joinedPlaylistId] as String?,
       isSpotifySavedPlaylist: m[UserPlaylist_.joinedIsSpotifySavedPlaylist] as int?,
+      playlist: _playlistEntityMapper.joinedMapToEntity(m),
     );
   }
 

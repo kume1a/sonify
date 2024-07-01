@@ -2,7 +2,7 @@ import 'package:common_network_components/common_network_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../feature/auth/api/auth_token_store.dart';
+import '../module/auth/api/auth_token_store.dart';
 import '../shared/types.dart';
 import 'api_client.dart';
 import 'authorization_interceptor.dart';

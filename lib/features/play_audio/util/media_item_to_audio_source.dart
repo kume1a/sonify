@@ -1,0 +1,34 @@
+import 'package:audio_service/audio_service.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:logging/logging.dart';
+
+import '../../../entities/audio/util/audio_extension.dart';
+import '../../../shared/util/utils.dart';
+import '../model/media_item_payload.dart';
+
+UriAudioSource? mediaItemToAudioSource(MediaItem mediaItem) {
+  if (mediaItem.extras == null) {
+    Logger.root.warning('Media extras is null, mediaItem: $mediaItem');
+    return null;
+  }
+
+  final payload = callOrDefault(
+    () => MediaItemPayload.fromExtras(mediaItem.extras ?? {}),
+    null,
+  );
+  if (payload == null) {
+    Logger.root.warning('MediaItemPayload is null, mediaItem: $mediaItem');
+    return null;
+  }
+
+  final audioUri = payload.audio.audioUri;
+  if (audioUri == null) {
+    Logger.root.warning('Audio uri is null, audio: ${payload.audio}');
+    return null;
+  }
+
+  return AudioSource.uri(
+    audioUri,
+    tag: mediaItem,
+  );
+}

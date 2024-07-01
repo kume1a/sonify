@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../app/intl/app_localizations.dart';
 import '../features/download_file/ui/downloaded_tasks_list.dart';
 import '../features/download_file/ui/downloading_tasks_list.dart';
+import '../features/download_file/ui/failed_download_tasks_list.dart';
 import '../shared/ui/list_header.dart';
 
 class DownloadsPage extends StatelessWidget {
@@ -34,6 +35,7 @@ class _Content extends StatelessWidget {
               ),
             ),
             const DownloadingTasksList(),
+            const FailedDownloadTasksList(),
             SliverToBoxAdapter(
               child: ListHeader(
                 text: l.downloaded,

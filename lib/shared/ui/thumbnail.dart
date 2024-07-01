@@ -13,21 +13,21 @@ import '../values/assets.dart';
 class Thumbnail extends HookWidget {
   const Thumbnail({
     super.key,
+    required this.size,
+    this.borderRadius = BorderRadius.zero,
     this.thumbnailPath,
     this.thumbnailUrl,
     this.localThumbnailPath,
-    required this.size,
-    this.borderRadius = BorderRadius.zero,
   }) : assert(
           thumbnailPath != null || thumbnailUrl != null || localThumbnailPath != null,
           'Either thumbnailPath, thumbnailUrl or localThumbnailPath must be provided',
         );
 
+  final Size size;
+  final BorderRadiusGeometry borderRadius;
   final String? thumbnailPath;
   final String? thumbnailUrl;
   final String? localThumbnailPath;
-  final Size size;
-  final BorderRadiusGeometry borderRadius;
 
   @override
   Widget build(BuildContext context) {

@@ -8,6 +8,9 @@ class PlaylistEntity {
     required this.thumbnailPath,
     required this.thumbnailUrl,
     required this.spotifyId,
+    required this.audioImportStatus,
+    required this.audioCount,
+    required this.totalAudioCount,
   });
 
   final String? id;
@@ -16,6 +19,9 @@ class PlaylistEntity {
   final String? thumbnailPath;
   final String? thumbnailUrl;
   final String? spotifyId;
+  final String? audioImportStatus;
+  final int? audioCount;
+  final int? totalAudioCount;
 
   PlaylistEntity copyWith({
     Wrapped<String?>? id,
@@ -24,6 +30,9 @@ class PlaylistEntity {
     Wrapped<String?>? thumbnailPath,
     Wrapped<String?>? thumbnailUrl,
     Wrapped<String?>? spotifyId,
+    Wrapped<String?>? audioImportStatus,
+    Wrapped<int?>? audioCount,
+    Wrapped<int?>? totalAudioCount,
   }) {
     return PlaylistEntity(
       id: id?.value ?? this.id,
@@ -32,6 +41,9 @@ class PlaylistEntity {
       thumbnailPath: thumbnailPath?.value ?? this.thumbnailPath,
       thumbnailUrl: thumbnailUrl?.value ?? this.thumbnailUrl,
       spotifyId: spotifyId?.value ?? this.spotifyId,
+      audioImportStatus: audioImportStatus?.value ?? this.audioImportStatus,
+      audioCount: audioCount?.value ?? this.audioCount,
+      totalAudioCount: totalAudioCount?.value ?? this.totalAudioCount,
     );
   }
 }

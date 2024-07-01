@@ -84,9 +84,33 @@ class DownloadsCubit extends Cubit<DownloadsState> {
     return super.close();
   }
 
+  Future<void> retryFailedDownloadTask(DownloadTask task) async {
+    final failedDownloadTask = state.failed.firstWhereOrNull((e) => e.id == task.id);
+
+    if (failedDownloadTask == null) {
+      Logger.root.warning('retryFailedDownloadTask: failedDownloadTask not found: $task');
+      return;
+    }
+
+    final reEnqueuedDownloadTask = failedDownloadTask.copyWith(
+      state: DownloadTaskState.idle,
+      progress: 0,
+      speedInBytesPerSecond: 0,
+    );
+
+    await _lock.synchronized(() {
+      _queue.add(reEnqueuedDownloadTask);
+
+      final failed = List.of(state.failed)..remove(failedDownloadTask);
+
+      emit(state.copyWith(downloading: List.of(_queue), failed: failed));
+    });
+  }
+
   Future<void> _onDownloadsEvent(DownloadsEvent event) async {
     final downloadTask = await event.when(
       enqueueUserAudio: _downloadTaskMapper.userAudioToDownloadTask,
+      enqueuePlaylistAudio: _downloadTaskMapper.playlistAudioToDownloadTask,
     );
 
     if (downloadTask == null) {
@@ -94,31 +118,24 @@ class DownloadsCubit extends Cubit<DownloadsState> {
       return;
     }
 
-    _enqueueDownloadTask(downloadTask);
+    await _enqueueDownloadTask(downloadTask);
   }
 
-  Future<void> _enqueueDownloadTask(DownloadTask downloadTask) async {
-    final failedDownloadTask = state.failed.firstWhereOrNull((e) => e.id == downloadTask.id);
+  Future<void> _enqueueDownloadTask(DownloadTask downloadTask) {
+    return _lock.synchronized(
+      () async {
+        final payloadIdentifier =
+            downloadTask.payload.userAudio?.id ?? downloadTask.payload.playlistAudio?.id;
 
-    if (failedDownloadTask != null) {
-      final reEnqueuedDownloadTask = failedDownloadTask.copyWith(
-        state: DownloadTaskState.idle,
-        progress: 0,
-      );
+        bool predicate(DownloadTask e) =>
+            e.payload.userAudio?.id == payloadIdentifier || e.payload.playlistAudio?.id == payloadIdentifier;
 
-      await _lock.synchronized(() {
-        _queue.add(reEnqueuedDownloadTask);
+        final isAlreadyInQueue = state.downloading.any(predicate) || state.failed.any(predicate);
 
-        final failed = List.of(state.failed)..remove(failedDownloadTask);
+        if (isAlreadyInQueue) {
+          return;
+        }
 
-        emit(state.copyWith(downloading: List.of(_queue), failed: failed));
-      });
-
-      return;
-    }
-
-    _lock.synchronized(
-      () {
         _queue.add(downloadTask);
         emit(state.copyWith(downloading: List.of(_queue)));
       },
@@ -148,7 +165,7 @@ class DownloadsCubit extends Cubit<DownloadsState> {
       try {
         final downloadedTask = await _downloadTaskDownloader.download(
           downloadTask,
-          onReceiveProgress: (count, total, speed) {
+          onReceiveProgress: (count, total, speedInBytesPerSecond) {
             if (total < 0) {
               return;
             }
@@ -157,7 +174,7 @@ class DownloadsCubit extends Cubit<DownloadsState> {
               ..removeFirst()
               ..addFirst(downloadTask.copyWith(
                 progress: count / total,
-                speedInKbs: speed,
+                speedInBytesPerSecond: speedInBytesPerSecond,
                 state: DownloadTaskState.inProgress,
               ));
 

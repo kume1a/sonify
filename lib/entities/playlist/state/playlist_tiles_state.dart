@@ -20,6 +20,4 @@ class PlaylistTilesCubit extends Cubit<Unit> {
   void onMyLibraryPressed() {
     _pageNavigator.toMyLibrary();
   }
-
-  void onLikedSongsPressed() {}
 }

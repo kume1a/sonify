@@ -3,12 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../app/di/register_dependencies.dart';
 import '../app/intl/app_localizations.dart';
-import '../entities/playlist/state/import_spotify_playlists_state.dart';
+import '../entities/playlist/state/playlist_list_state.dart';
 import '../entities/playlist/state/playlist_tiles_state.dart';
-import '../entities/playlist/state/spotify_playlist_list_state.dart';
 import '../entities/playlist/ui/ensure_spotify_playlists_imported.dart';
+import '../entities/playlist/ui/playlist_list.dart';
 import '../entities/playlist/ui/playlist_tiles.dart';
-import '../entities/playlist/ui/spotify_playlists_list.dart';
 import '../features/spotifyauth/state/spotify_auth_state.dart';
 import '../features/spotifyauth/ui/auth_spotify_button.dart';
 import '../shared/values/app_theme_extension.dart';
@@ -21,8 +20,7 @@ class HomePage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => getIt<SpotifyAuthCubit>()),
-        BlocProvider(create: (_) => getIt<SpotifyPlaylistListCubit>()),
-        BlocProvider(create: (_) => getIt<ImportSpotifyPlaylistsCubit>()),
+        BlocProvider(create: (_) => getIt<PlaylistListCubit>()),
         BlocProvider(create: (_) => getIt<PlaylistTilesCubit>()),
       ],
       child: const _Content(),
@@ -49,7 +47,7 @@ class _Content extends StatelessWidget {
                 const PlaylistTiles(),
                 if (isSpotifyAuthenticated)
                   const EnsureSpotifyPlaylistsImported(
-                    child: SpotifyPlaylistsList(),
+                    child: PlaylistsList(),
                   )
                 else
                   Container(

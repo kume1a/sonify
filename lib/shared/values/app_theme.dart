@@ -20,8 +20,10 @@ abstract final class AppTheme {
       onSecondary: Palette.onSecondary,
       primaryContainer: Palette.primaryContainer,
       secondaryContainer: Palette.secondaryContainer,
+      surface: Palette.surface,
+      onSurface: Palette.onSurface,
     ),
-    scaffoldBackgroundColor: Palette.background,
+    scaffoldBackgroundColor: Palette.surface,
     dividerColor: Palette.elSecondary,
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: Palette.elPrimary,
@@ -29,8 +31,12 @@ abstract final class AppTheme {
       unselectedLabelStyle: TextStyle(fontSize: 12),
       backgroundColor: Palette.primaryContainer,
     ),
+    dialogTheme: DialogTheme(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      backgroundColor: Palette.primaryContainer,
+    ),
     bottomSheetTheme: const BottomSheetThemeData(
-      backgroundColor: Palette.background,
+      backgroundColor: Palette.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
@@ -90,10 +96,12 @@ abstract final class AppTheme {
     extensions: [
       AppThemeExtension(
         elSecondary: Palette.elSecondary,
+        elTertiary: Palette.elTertiary,
         myLibraryTileLikedBg: Palette.myLibraryTileLikedBg,
         myLibraryTilePlaylistsBg: Palette.myLibraryTilePlaylistsBg,
         myLibraryArtistsBg: Palette.myLibraryArtistsBg,
         success: Palette.success,
+        bgPopup: Palette.bgPopup,
       ),
     ],
   );

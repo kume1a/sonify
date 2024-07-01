@@ -1,7 +1,7 @@
 import 'package:common_utilities/common_utilities.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
-import '../../../entities/audio/util/user_audio_mapper.dart';
+import '../../../entities/user_audio/util/user_audio_mapper.dart';
 import '../../../shared/constant.dart';
 import '../model/download_task.dart';
 import '../model/downloaded_task.dart';

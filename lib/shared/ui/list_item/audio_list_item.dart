@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../util/color.dart';
+import '../../util/random.dart';
 import '../../values/app_theme_extension.dart';
 import '../../values/assets.dart';
 import '../thumbnail.dart';
@@ -14,7 +15,10 @@ class AudioListItem extends StatelessWidget {
     required this.onTap,
     required this.audio,
     required this.isPlaying,
+    this.isDisabled = false,
+    this.showDownloadedIndicator = false,
     this.padding,
+    this.end,
   });
 
   static final height = 46.h;
@@ -22,7 +26,10 @@ class AudioListItem extends StatelessWidget {
   final VoidCallback onTap;
   final Audio audio;
   final bool isPlaying;
+  final bool isDisabled;
   final EdgeInsets? padding;
+  final Widget? end;
+  final bool showDownloadedIndicator;
 
   @override
   Widget build(BuildContext context) {
@@ -31,23 +38,26 @@ class AudioListItem extends StatelessWidget {
     final hasThumbnail =
         audio.thumbnailPath != null || audio.thumbnailUrl != null || audio.localThumbnailPath != null;
 
+    final thumbnail = Thumbnail(
+      thumbnailPath: audio.thumbnailPath,
+      thumbnailUrl: audio.thumbnailUrl,
+      localThumbnailPath: audio.localThumbnailPath,
+      borderRadius: BorderRadius.circular(8.r),
+      size: Size.square(36.r),
+    );
+
     return InkWell(
-      onTap: onTap,
+      onTap: isDisabled ? null : onTap,
       child: Container(
         height: height,
         padding: padding ?? EdgeInsets.symmetric(horizontal: 16.r),
         child: Row(
           children: [
             if (hasThumbnail)
-              Padding(
+              Container(
                 padding: EdgeInsets.only(right: 10.w),
-                child: Thumbnail(
-                  thumbnailPath: audio.thumbnailPath,
-                  thumbnailUrl: audio.thumbnailUrl,
-                  localThumbnailPath: audio.localThumbnailPath,
-                  borderRadius: BorderRadius.circular(8.r),
-                  size: Size.square(36.r),
-                ),
+                foregroundDecoration: BoxDecoration(color: isDisabled ? Colors.black38 : null),
+                child: thumbnail,
               ),
             Expanded(
               child: Row(
@@ -63,17 +73,39 @@ class AudioListItem extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 13.sp,
-                            color: isPlaying ? theme.colorScheme.secondary : null,
+                            color: isPlaying
+                                ? theme.colorScheme.secondary
+                                : isDisabled
+                                    ? theme.appThemeExtension?.elSecondary
+                                    : null,
                           ),
                         ),
-                        Text(
-                          audio.author,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 11.sp,
-                            color: theme.appThemeExtension?.elSecondary,
-                          ),
+                        Row(
+                          children: [
+                            if (showDownloadedIndicator && audio.localPath != null)
+                              Padding(
+                                padding: EdgeInsets.only(right: 4.w),
+                                child: SvgPicture.asset(
+                                  Assets.svgDownload,
+                                  width: 12,
+                                  height: 12,
+                                  colorFilter: svgColor(theme.appThemeExtension?.success),
+                                ),
+                              ),
+                            Expanded(
+                              child: Text(
+                                audio.author,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  color: isDisabled
+                                      ? theme.appThemeExtension?.elTertiary
+                                      : theme.appThemeExtension?.elSecondary,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -88,11 +120,60 @@ class AudioListItem extends StatelessWidget {
                         colorFilter: svgColor(theme.colorScheme.secondary),
                       ),
                     ),
+                  if (end != null) end!,
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class BlankAudioListItem extends StatelessWidget {
+  const BlankAudioListItem({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      height: AudioListItem.height,
+      padding: EdgeInsets.symmetric(horizontal: 16.r),
+      child: Row(
+        children: [
+          Container(
+            width: 36.r,
+            height: 36.r,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.secondaryContainer,
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: randomDouble(100, 400),
+                    height: 12.h,
+                    color: theme.colorScheme.secondaryContainer,
+                  ),
+                  SizedBox(height: 4.h),
+                  Container(
+                    width: randomDouble(30, 80),
+                    height: 10.h,
+                    color: theme.colorScheme.secondaryContainer,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

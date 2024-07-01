@@ -29,7 +29,11 @@ class SqfliteDownloadedTaskEntityDao implements DownloadedTaskEntityDao {
 
     final entityMap = _downloadedTaskEntityMapper.entityToMap(insertEntity);
 
-    await _db.insert(DownloadedTask_.tn, entityMap);
+    await _db.insert(
+      DownloadedTask_.tn,
+      entityMap,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
 
     return insertEntity.id ?? kInvalidId;
   }

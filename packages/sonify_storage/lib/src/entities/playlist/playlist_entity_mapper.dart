@@ -10,6 +10,9 @@ class PlaylistEntityMapper {
       spotifyId: m[Playlist_.spotifyId] as String?,
       thumbnailPath: m[Playlist_.thumbnailPath] as String?,
       thumbnailUrl: m[Playlist_.thumbnailUrl] as String?,
+      audioImportStatus: m[Playlist_.audioImportStatus] as String?,
+      audioCount: m[Playlist_.audioCount] as int?,
+      totalAudioCount: m[Playlist_.totalAudioCount] as int?,
     );
   }
 
@@ -26,6 +29,9 @@ class PlaylistEntityMapper {
       thumbnailPath: m[Playlist_.joinedThumbnailPath] as String?,
       thumbnailUrl: m[Playlist_.joinedThumbnailUrl] as String?,
       name: m[Playlist_.joinedName] as String?,
+      audioCount: m[Playlist_.joinedAudioCount] as int?,
+      totalAudioCount: m[Playlist_.joinedTotalAudioCount] as int?,
+      audioImportStatus: m[Playlist_.joinedAudioImportStatus] as String?,
     );
   }
 
@@ -37,6 +43,9 @@ class PlaylistEntityMapper {
       Playlist_.thumbnailPath: e.thumbnailPath,
       Playlist_.thumbnailUrl: e.thumbnailUrl,
       Playlist_.name: e.name,
+      Playlist_.audioCount: e.audioCount,
+      Playlist_.totalAudioCount: e.totalAudioCount,
+      Playlist_.audioImportStatus: e.audioImportStatus,
     };
   }
 }

@@ -1,4 +1,5 @@
 import 'package:common_models/common_models.dart';
+import 'package:common_utilities/common_utilities.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
 import '../model/playlist.dart';
@@ -11,11 +12,13 @@ class PlaylistLocalRepositoryImpl with ResultWrap implements PlaylistLocalReposi
     this._playlistEntityDao,
     this._dbBatchProviderFactory,
     this._playlistMapper,
+    this._playlistAudioEntityDao,
   );
 
   final PlaylistEntityDao _playlistEntityDao;
   final DbBatchProviderFactory _dbBatchProviderFactory;
   final PlaylistMapper _playlistMapper;
+  final PlaylistAudioEntityDao _playlistAudioEntityDao;
 
   @override
   Future<EmptyResult> bulkWrite(List<Playlist> playlists) {
@@ -39,7 +42,13 @@ class PlaylistLocalRepositoryImpl with ResultWrap implements PlaylistLocalReposi
   }
 
   @override
-  Future<Result<List<String>>> getAllIds() {
-    return wrapWithResult(() => _playlistEntityDao.getAllIds());
+  Future<Result<Playlist?>> getById(String id) {
+    return wrapWithResult(() async {
+      final res = await _playlistEntityDao.getById(id);
+
+      final playlistAudios = await _playlistAudioEntityDao.getAllWithAudio(playlistId: id);
+
+      return tryMap(res, (e) => _playlistMapper.entityToModel(e, playlistAudioEntities: playlistAudios));
+    });
   }
 }

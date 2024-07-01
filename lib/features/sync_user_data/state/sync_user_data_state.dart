@@ -7,10 +7,12 @@ import 'package:logging/logging.dart';
 
 import '../../../app/navigation/page_navigator.dart';
 import '../../../entities/playlist/model/event_spotify_playlists_imported.dart';
+import '../api/sync_audio_likes.dart';
+import '../api/sync_playlist_audios.dart';
 import '../api/sync_playlists.dart';
 import '../api/sync_user_audio.dart';
-import '../api/sync_user_audio_likes.dart';
 import '../api/sync_user_pending_changes.dart';
+import '../api/sync_user_playlists.dart';
 
 part 'sync_user_data_state.freezed.dart';
 
@@ -18,7 +20,7 @@ enum SyncAudiosState {
   idle,
   loading,
   loaded,
-  nothingToSync,
+  syncCompleted,
   error,
 }
 
@@ -43,20 +45,25 @@ extension SyncUserAudioCubitX on BuildContext {
 class SyncUserDataCubit extends Cubit<SyncUserDataState> {
   SyncUserDataCubit(
     this._syncUserAudio,
-    this._syncUserAudioLikes,
+    this._syncAudioLikes,
     this._pageNavigator,
     this._syncUserPendingChanges,
     this._syncPlaylists,
+    this._syncUserPlaylists,
+    this._syncPlaylistAudios,
     this._eventBus,
   ) : super(SyncUserDataState.initial()) {
     _init();
   }
 
   final SyncUserAudio _syncUserAudio;
-  final SyncUserAudioLikes _syncUserAudioLikes;
+  final SyncAudioLikes _syncAudioLikes;
   final PageNavigator _pageNavigator;
   final SyncUserPendingChanges _syncUserPendingChanges;
   final SyncPlaylists _syncPlaylists;
+  final SyncUserPlaylists _syncUserPlaylists;
+  final SyncPlaylistAudios _syncPlaylistAudios;
+
   final EventBus _eventBus;
 
   final _subscriptions = SubscriptionComposite();
@@ -78,7 +85,7 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
     _pageNavigator.toDownloads();
   }
 
-  Future<void> onSyncAudioFilesPressed() async {
+  Future<void> onSyncDataPressed() async {
     if (state.syncState != SyncAudiosState.idle) {
       return;
     }
@@ -89,15 +96,13 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
   Future<void> _startSync() async {
     emit(state.copyWith(syncState: SyncAudiosState.loading));
 
-    await Future.delayed(const Duration(seconds: 1));
-
     final syncUserPendingChangesRes = await _syncUserPendingChanges();
     if (syncUserPendingChangesRes.isErr) {
       Logger.root.info('Failed to sync user pending changes, stopping sync process');
       return _handleSyncFailure();
     }
 
-    final syncUserAudioLikesRes = await _syncUserAudioLikes();
+    final syncUserAudioLikesRes = await _syncAudioLikes();
     if (syncUserAudioLikesRes.isErr) {
       Logger.root.info('Failed to sync user audio likes, stopping sync process');
       return _handleSyncFailure();
@@ -106,6 +111,18 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
     final syncPlaylistsRes = await _syncPlaylists();
     if (syncPlaylistsRes.isErr) {
       Logger.root.info('Failed to sync playlists, stopping sync process');
+      return _handleSyncFailure();
+    }
+
+    final syncUserPlaylistsRes = await _syncUserPlaylists();
+    if (syncUserPlaylistsRes.isErr) {
+      Logger.root.info('Failed to sync user playlists, stopping sync process');
+      return _handleSyncFailure();
+    }
+
+    final syncPlaylistAudiosRes = await _syncPlaylistAudios();
+    if (syncPlaylistAudiosRes.isErr) {
+      Logger.root.info('Failed to sync playlist audios, stopping sync process');
       return _handleSyncFailure();
     }
 
@@ -131,7 +148,7 @@ class SyncUserDataCubit extends Cubit<SyncUserDataState> {
             queuedDownloadsCount: 0,
           ));
         } else {
-          emit(state.copyWith(syncState: SyncAudiosState.nothingToSync));
+          emit(state.copyWith(syncState: SyncAudiosState.syncCompleted));
 
           await Future.delayed(const Duration(seconds: 1, milliseconds: 500));
 

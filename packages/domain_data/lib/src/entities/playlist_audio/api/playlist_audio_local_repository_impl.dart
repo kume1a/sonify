@@ -17,6 +17,19 @@ class PlaylistAudioLocalRepositoryImpl with ResultWrap implements PlaylistAudioL
   final DbBatchProviderFactory _dbBatchProviderFactory;
 
   @override
+  Future<Result<PlaylistAudio>> create(PlaylistAudio playlistAudios) {
+    return wrapWithResult(
+      () async {
+        final entity = _playlistAudioMapper.modelToEntity(playlistAudios);
+
+        final insertedId = await _playlistAudioEntityDao.insert(entity);
+
+        return playlistAudios.copyWith(id: insertedId);
+      },
+    );
+  }
+
+  @override
   Future<EmptyResult> batchCreate(List<PlaylistAudio> playlistAudios) {
     return wrapWithEmptyResult(() async {
       final batchProvider = _dbBatchProviderFactory.newBatchProvider();
@@ -33,14 +46,34 @@ class PlaylistAudioLocalRepositoryImpl with ResultWrap implements PlaylistAudioL
   }
 
   @override
-  Future<EmptyResult> deleteByIds(List<String> ids) {
-    return wrapWithEmptyResult(() => _playlistAudioEntityDao.deleteByIds(ids));
+  Future<Result<int>> deleteByIds(List<String> ids) {
+    return wrapWithResult(() => _playlistAudioEntityDao.deleteByIds(ids));
   }
 
   @override
   Future<Result<List<PlaylistAudio>>> getAll() {
     return wrapWithResult(() async {
       final res = await _playlistAudioEntityDao.getAll();
+
+      return res.map(_playlistAudioMapper.entityToModel).toList();
+    });
+  }
+
+  @override
+  Future<Result<List<String>>> getAllByPlaylistIds(List<String> playlistIds) {
+    return wrapWithResult(() => _playlistAudioEntityDao.getAllIdsByPlaylistIds(playlistIds));
+  }
+
+  @override
+  Future<Result<List<PlaylistAudio>>> getAllWithAudios({
+    required String playlistId,
+    String? searchQuery,
+  }) {
+    return wrapWithResult(() async {
+      final res = await _playlistAudioEntityDao.getAllWithAudio(
+        playlistId: playlistId,
+        searchQuery: searchQuery,
+      );
 
       return res.map(_playlistAudioMapper.entityToModel).toList();
     });
