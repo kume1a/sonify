@@ -90,7 +90,6 @@ class _AlphabetListState extends State<AlphabetList> {
   }
 
   void _init() {
-    widget.keywords.sort((x, y) => x.toLowerCase().compareTo(y.toLowerCase()));
     _keywords = widget.keywords;
 
     calculateFirstIndices();
@@ -107,15 +106,30 @@ class _AlphabetListState extends State<AlphabetList> {
     }
 
     for (var letter in _alphabet) {
-      final firstElementIndex =
-          _keywords.indexWhere((keyword) => keyword.isEngLetter && keyword.toLowerCase().startsWith(letter));
+      final firstElementIndex = _keywords.indexWhere((keyword) {
+        if (keyword.isEmpty) {
+          return false;
+        }
+
+        final firstLetter = keyword.substring(0, 1);
+
+        return firstLetter.isEngLetter && firstLetter.toLowerCase() == letter;
+      });
 
       if (firstElementIndex != -1) {
         firstIndexPositions[letter] = firstElementIndex;
       }
     }
 
-    final nonEngLetterFirstIndex = _keywords.indexWhere((keyword) => !keyword.isEngLetter);
+    final nonEngLetterFirstIndex = _keywords.indexWhere((keyword) {
+      if (keyword.isEmpty) {
+        return false;
+      }
+
+      final firstLetter = keyword.substring(0, 1);
+
+      return !firstLetter.isEngLetter;
+    });
     if (nonEngLetterFirstIndex != -1) {
       firstIndexPositions['#'] = nonEngLetterFirstIndex;
     }

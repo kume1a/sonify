@@ -110,6 +110,7 @@ class _Content extends HookWidget {
                           final offsetToScroll = _tilesAndHeaderHeght + index * AudioListItem.height;
 
                           if (offsetToScroll > scrollController.position.maxScrollExtent - 20) {
+                            scrollController.jumpTo(scrollController.position.maxScrollExtent);
                             return;
                           }
 
