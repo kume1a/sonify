@@ -5,27 +5,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logging/logging.dart';
 
-enum BuildFlavor {
-  development,
-  production;
-
-  static BuildFlavor fromString(String value) {
-    switch (value) {
-      case 'development':
-        return BuildFlavor.development;
-      case 'production':
-        return BuildFlavor.production;
-      default:
-        exit(1);
-    }
-  }
-}
-
 class AppEnvironment {
   AppEnvironment._();
 
   static Future<void> load() async {
     const environment = kDebugMode ? 'development' : 'production';
+
+    if (kReleaseMode) {
+      await dotenv.load(mergeWith: Platform.environment);
+      return;
+    }
 
     const envFileName = './env/.env.$environment';
 
