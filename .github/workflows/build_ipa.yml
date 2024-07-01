@@ -4,7 +4,6 @@ on:
   push:
     branches: ['main']
 
-# TODO extract version from pubspect.yaml and use it for tag
 jobs:
   build-ios:
     name: iOS Build
@@ -46,11 +45,14 @@ jobs:
         run: zip -qq -r -9 FlutterIpaExport.ipa Payload
         working-directory: build/ios/iphoneos
 
+      - name: Extract version from pubspec.yaml
+        run: echo "VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')" >> $GITHUB_ENV
+
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: build/ios/iphoneos/FlutterIpaExport.ipa
-          tag: v1.0
+          tag: ${{ env.VERSION }}
           overwrite: true
-          body: 'This is first release'
+          body: 'Release version ${{ env.VERSION }}'
