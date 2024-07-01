@@ -10,6 +10,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../../../shared/ui/toast_notifier.dart';
+import '../../../shared/util/app_lifecycle_observer.dart';
 import '../../../shared/util/connectivity_status.dart';
 import '../../../shared/util/utils.dart';
 import '../../../shared/values/constant.dart';
@@ -76,8 +77,13 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   final FilterPlayableAudios _filterPlayableAudios;
 
   final _subscriptions = SubscriptionComposite();
+  AppLifecycleObserver? _appLifecycleObserver;
 
   Future<void> _init() async {
+    _appLifecycleObserver = AppLifecycleObserver(
+      onResumed: _reloadNowPlayingAudio,
+    );
+
     _connectivityStatus.init();
 
     final hasConnection = await _connectivityStatus.checkConnection();
@@ -95,6 +101,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   Future<void> close() async {
     await _subscriptions.closeAll();
     await _connectivityStatus.dispose();
+    _appLifecycleObserver?.dispose();
 
     return super.close();
   }
@@ -324,6 +331,12 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     if (beforeConnectionStatus != hasConnection) {
       await _reloadNowPlayingAudios();
     }
+  }
+
+  void _reloadNowPlayingAudio() {
+    final nowPlayingMediaItem = _audioHandler.mediaItem.valueOrNull;
+
+    _onMediaItemChanged(nowPlayingMediaItem);
   }
 
   Future<void> _onMediaItemChanged(MediaItem? mediaItem) async {
