@@ -56,3 +56,10 @@ jobs:
           tag: ${{ env.VERSION }}
           overwrite: true
           body: 'Release version ${{ env.VERSION }}'
+
+    env:
+      API_URL: ${{ secrets.API_URL }}
+      WS_URL: ${{ secrets.WS_URL }}
+      GOOGLE_AUTH_CLIENT_ID_IOS: ${{ secrets.GOOGLE_AUTH_CLIENT_ID_IOS }}
+      GOOGLE_AUTH_CLIENT_ID_WEB: ${{ secrets.GOOGLE_AUTH_CLIENT_ID_WEB }}
+      SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
