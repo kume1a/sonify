@@ -12,7 +12,7 @@ class AppEnvironment {
     const environment = kDebugMode ? 'development' : 'production';
 
     if (kReleaseMode) {
-      await dotenv.load(mergeWith: Platform.environment);
+      await dotenv.load(mergeWith: Platform.environment, isOptional: true);
       return;
     }
 
