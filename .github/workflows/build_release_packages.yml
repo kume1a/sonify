@@ -22,7 +22,7 @@ jobs:
         with:
           channel: 'stable'
           architecture: x64
-           cache: true
+          cache: true
 
       - name: Extract version from pubspec.yaml
         run: echo "VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')" >> $GITHUB_ENV
