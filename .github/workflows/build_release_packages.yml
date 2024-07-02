@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-ios:
-    name: iOS Build
+    name: IPA & APK Build
     runs-on: macos-latest
     environment: production
     steps:
