@@ -8,6 +8,7 @@ jobs:
   build-ios:
     name: iOS Build
     runs-on: macos-latest
+    environment: production
     steps:
       - uses: actions/checkout@v3
 
