@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -8,17 +6,42 @@ import 'package:logging/logging.dart';
 class AppEnvironment {
   AppEnvironment._();
 
-  static Future<void> load() async {
-    const environment = kDebugMode ? 'development' : 'production';
+  static const String _keyApiUrl = 'API_URL';
+  static const String _keyWsUrl = 'WS_URL';
+  static const String _keyGoogleAuthClientIdIos = 'GOOGLE_AUTH_CLIENT_ID_IOS';
+  static const String _keyGoogleAuthClientIdWeb = 'GOOGLE_AUTH_CLIENT_ID_WEB';
+  static const String _keySpotifyClientId = 'SPOTIFY_CLIENT_ID';
 
+  static String _apiUrl = '';
+  static String _wsUrl = '';
+  static String _googleAuthClientIdIos = '';
+  static String _googleAuthClientIdWeb = '';
+  static String _spotifyClientId = '';
+
+  static Future<void> load() async {
     if (kReleaseMode) {
-      await dotenv.load(mergeWith: Platform.environment, isOptional: true);
+      _apiUrl = const String.fromEnvironment(_keyApiUrl);
+      _wsUrl = const String.fromEnvironment(_keyWsUrl);
+      _googleAuthClientIdIos = const String.fromEnvironment(_keyGoogleAuthClientIdIos);
+      _googleAuthClientIdWeb = const String.fromEnvironment(_keyGoogleAuthClientIdWeb);
+      _spotifyClientId = const String.fromEnvironment(_keySpotifyClientId);
+
+      if (_apiUrl.isEmpty ||
+          _wsUrl.isEmpty ||
+          _googleAuthClientIdIos.isEmpty ||
+          _googleAuthClientIdWeb.isEmpty ||
+          _spotifyClientId.isEmpty) {
+        throw Exception('Missing environment variables');
+      }
+
       return;
     }
 
+    const environment = kDebugMode ? 'development' : 'production';
+
     const envFileName = './env/.env.$environment';
 
-    Logger.root.info('Loading environment: $envFileName');
+    Logger.root.info('Loading environment file: $envFileName');
 
     final localEnv = await _DotEnvLoader.load('./env/.env.local');
 
@@ -28,18 +51,22 @@ class AppEnvironment {
 
     await dotenv.load(fileName: envFileName, mergeWith: localEnv);
 
-    Logger.root.info('loaded env ${dotenv.env}');
+    _apiUrl = dotenv.get(_keyApiUrl);
+    _wsUrl = dotenv.get(_keyWsUrl);
+    _googleAuthClientIdIos = dotenv.get(_keyGoogleAuthClientIdIos);
+    _googleAuthClientIdWeb = dotenv.get(_keyGoogleAuthClientIdWeb);
+    _spotifyClientId = dotenv.get(_keySpotifyClientId);
   }
 
-  static String get apiUrl => dotenv.get('API_URL');
+  static String get apiUrl => _apiUrl;
 
-  static String get wsUrl => dotenv.get('WS_URL');
+  static String get wsUrl => _wsUrl;
 
-  static String get googleAuthClientIdIos => dotenv.get('GOOGLE_AUTH_CLIENT_ID_IOS');
+  static String get googleAuthClientIdIos => _googleAuthClientIdIos;
 
-  static String get googleAuthClientIdWeb => dotenv.get('GOOGLE_AUTH_CLIENT_ID_WEB');
+  static String get googleAuthClientIdWeb => _googleAuthClientIdWeb;
 
-  static String get spotifyClientId => dotenv.get('SPOTIFY_CLIENT_ID');
+  static String get spotifyClientId => _spotifyClientId;
 }
 
 class _DotEnvLoader {
