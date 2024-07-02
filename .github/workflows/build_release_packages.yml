@@ -16,6 +16,10 @@ jobs:
         with:
           channel: 'stable'
           architecture: x64
+
+      - name: Extract version from pubspec.yaml
+        run: echo "VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')" >> $GITHUB_ENV
+
       - run: flutter pub get
 
       - run: pod repo update
@@ -32,7 +36,7 @@ jobs:
         working-directory: ./packages/domain_data
         run: dart run build_runner build
 
-      - name: Build
+      - name: Build IPA
         run: |
           flutter build ios --release --no-codesign \
             --dart-define=API_URL=${{ secrets.API_URL }} \
@@ -48,18 +52,35 @@ jobs:
       - run: mv Runner.app/ Payload
         working-directory: build/ios/iphoneos
 
-      - name: Zip output
+      - name: Zip IPA output
         run: zip -qq -r -9 FlutterIpaExport.ipa Payload
         working-directory: build/ios/iphoneos
 
-      - name: Extract version from pubspec.yaml
-        run: echo "VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')" >> $GITHUB_ENV
+      - name: Build APK
+        run: |
+          flutter build apk --release \
+            --dart-define=API_URL=${{ secrets.API_URL }} \
+            --dart-define=WS_URL=${{ secrets.WS_URL }} \
+            --dart-define=GOOGLE_AUTH_CLIENT_ID_IOS=${{ secrets.GOOGLE_AUTH_CLIENT_ID_IOS }} \
+            --dart-define=GOOGLE_AUTH_CLIENT_ID_WEB=${{ secrets.GOOGLE_AUTH_CLIENT_ID_WEB }} \
+            --dart-define=SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}
 
-      - name: Upload binaries to release
+      - name: Upload IPA to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: build/ios/iphoneos/FlutterIpaExport.ipa
           tag: ${{ env.VERSION }}
           overwrite: true
-          body: 'Release version ${{ env.VERSION }}'
+          file_name: sonify-${{ env.VERSION }}.ipa
+          body: 'iOS release version ${{ env.VERSION }}'
+
+      - name: Upload APK to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/app/outputs/flutter-apk/app-release.apk
+          tag: ${{ env.VERSION }}
+          overwrite: true
+          file_name: sonify-${{ env.VERSION }}.apk
+          body: 'Android release version ${{ env.VERSION }}'
