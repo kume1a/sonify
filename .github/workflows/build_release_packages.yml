@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '11.x'
+          java-version: '17.x'
           cache: 'gradle'
 
       - uses: subosito/flutter-action@v2
@@ -29,8 +29,8 @@ jobs:
 
       - run: flutter pub get
 
-      - run: pod repo update
-        working-directory: ios
+      # - run: pod repo update
+      #   working-directory: ios
 
       - name: build runner in root
         run: dart run build_runner build
@@ -43,25 +43,25 @@ jobs:
         working-directory: ./packages/domain_data
         run: dart run build_runner build
 
-      - name: Build IPA
-        run: |
-          flutter build ios --release --no-codesign \
-            --dart-define=API_URL=${{ secrets.API_URL }} \
-            --dart-define=WS_URL=${{ secrets.WS_URL }} \
-            --dart-define=GOOGLE_AUTH_CLIENT_ID_IOS=${{ secrets.GOOGLE_AUTH_CLIENT_ID_IOS }} \
-            --dart-define=GOOGLE_AUTH_CLIENT_ID_WEB=${{ secrets.GOOGLE_AUTH_CLIENT_ID_WEB }} \
-            --dart-define=SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}
+      # - name: Build IPA
+      #   run: |
+      #     flutter build ios --release --no-codesign \
+      #       --dart-define=API_URL=${{ secrets.API_URL }} \
+      #       --dart-define=WS_URL=${{ secrets.WS_URL }} \
+      #       --dart-define=GOOGLE_AUTH_CLIENT_ID_IOS=${{ secrets.GOOGLE_AUTH_CLIENT_ID_IOS }} \
+      #       --dart-define=GOOGLE_AUTH_CLIENT_ID_WEB=${{ secrets.GOOGLE_AUTH_CLIENT_ID_WEB }} \
+      #       --dart-define=SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}
 
-      - name: Create Payload folder
-        run: mkdir Payload
-        working-directory: build/ios/iphoneos
+      # - name: Create Payload folder
+      #   run: mkdir Payload
+      #   working-directory: build/ios/iphoneos
 
-      - run: mv Runner.app/ Payload
-        working-directory: build/ios/iphoneos
+      # - run: mv Runner.app/ Payload
+      #   working-directory: build/ios/iphoneos
 
-      - name: Zip IPA output
-        run: zip -qq -r -9 FlutterIpaExport.ipa Payload
-        working-directory: build/ios/iphoneos
+      # - name: Zip IPA output
+      #   run: zip -qq -r -9 FlutterIpaExport.ipa Payload
+      #   working-directory: build/ios/iphoneos
 
       - name: Build APK
         run: |
@@ -72,15 +72,15 @@ jobs:
             --dart-define=GOOGLE_AUTH_CLIENT_ID_WEB=${{ secrets.GOOGLE_AUTH_CLIENT_ID_WEB }} \
             --dart-define=SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}
 
-      - name: Upload IPA to release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: build/ios/iphoneos/FlutterIpaExport.ipa
-          tag: ${{ env.VERSION }}
-          overwrite: true
-          file_name: sonify-${{ env.VERSION }}.ipa
-          body: 'iOS release version ${{ env.VERSION }}'
+      # - name: Upload IPA to release
+      #   uses: svenstaro/upload-release-action@v2
+      #   with:
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     file: build/ios/iphoneos/FlutterIpaExport.ipa
+      #     tag: ${{ env.VERSION }}
+      #     overwrite: true
+      #     file_name: sonify-${{ env.VERSION }}.ipa
+      #     body: 'iOS release version ${{ env.VERSION }}'
 
       - name: Upload APK to release
         uses: svenstaro/upload-release-action@v2
