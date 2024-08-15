@@ -18,7 +18,7 @@ class UserAudioRemoteRepositoryImpl implements UserAudioRemoteRepository {
   Future<Either<NetworkCallError, List<UserAudio>>> createManyForAuthUser({
     required List<String> audioIds,
   }) async {
-    final res = await _userAudioRemoteService.createUserAudiosByAuthUser(audioIds: audioIds);
+    final res = await _userAudioRemoteService.createForAuthUser(audioIds: audioIds);
 
     return res.map((r) => r.map(_userAudioMapper.dtoToModel).toList());
   }

@@ -25,6 +25,7 @@ import '../module/user_audio/model/user_audio_dto.dart';
 import '../module/user_playlist/model/user_playlist_dto.dart';
 import '../module/usersync/model/user_sync_datum_dto.dart';
 import '../module/youtube/model/youtube_search_suggestions_dto.dart';
+import '../shared/dto/audio_id_body.dart';
 import '../shared/dto/audio_ids_body.dart';
 import '../shared/dto/optional_ids_body.dart';
 import '../shared/dto/required_ids_body.dart';
@@ -139,4 +140,14 @@ abstract class ApiClient {
   // user audio -------------------------
   @POST('/v1/useraudio/createForAuthUser')
   Future<List<UserAudioDto>?> createUserAudiosForAuthUser(@Body() AudioIdsBody body);
+
+  @POST('/v1/useraudio/deleteForAuthUser')
+  Future<void> deleteUserAudioForAuthUser(@Body() AudioIdBody body);
+
+  // hidden user audio -----------------
+  @POST('/v1/hiddenuseraudio/hideForAuthUser')
+  Future<void> hideUserAudioForAuthUser(@Body() AudioIdBody body);
+
+  @POST('/v1/hiddenuseraudio/unhideForAuthUser')
+  Future<void> unhideUserAudioForAuthUser(@Body() AudioIdBody body);
 }
