@@ -1,7 +1,7 @@
 import 'package:common_models/common_models.dart';
 import 'package:sonify_client/sonify_client.dart';
 
-import '../../audio/model/user_audio.dart';
+import '../model/user_audio.dart';
 import '../util/user_audio_mapper.dart';
 import 'user_audio_remote_repository.dart';
 

@@ -1,7 +1,7 @@
 import 'package:common_utilities/common_utilities.dart';
 
-import '../../../entities/audio/model/user_audio.dart';
 import '../../../entities/playlist_audio/model/playlist_audio.dart';
+import '../../../entities/user_audio/model/user_audio.dart';
 import '../../../shared/assemble_resource_url.dart';
 import '../../../shared/resource_save_path_provider.dart';
 import '../../../shared/uuid_factory.dart';

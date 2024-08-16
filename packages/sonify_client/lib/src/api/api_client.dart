@@ -9,6 +9,7 @@ import '../module/audiolike/model/like_unlike_audio_body.dart';
 import '../module/auth/model/email_sign_in_body.dart';
 import '../module/auth/model/google_sign_in_body.dart';
 import '../module/auth/model/token_payload_dto.dart';
+import '../module/hidden_user_audio/index.dart';
 import '../module/playlist/model/playlist_dto.dart';
 import '../module/playlist_audio/model/playlist_audio_dto.dart';
 import '../module/server_time/model/server_time_dto.dart';
@@ -146,7 +147,7 @@ abstract class ApiClient {
 
   // hidden user audio -----------------
   @POST('/v1/hiddenuseraudio/hideForAuthUser')
-  Future<void> hideUserAudioForAuthUser(@Body() AudioIdBody body);
+  Future<HiddenUserAudioDto> hideUserAudioForAuthUser(@Body() AudioIdBody body);
 
   @POST('/v1/hiddenuseraudio/unhideForAuthUser')
   Future<void> unhideUserAudioForAuthUser(@Body() AudioIdBody body);
