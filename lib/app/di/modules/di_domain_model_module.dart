@@ -219,6 +219,23 @@ abstract class DiDomainModelModule {
     );
   }
 
+  // hidden user audio
+  @lazySingleton
+  HiddenUserAudioMapper hiddenUserAudioMapper() {
+    return HiddenUserAudioMapper();
+  }
+
+  @lazySingleton
+  HiddenUserAudioRemoteRepository hiddenUserAudioRemoteRepository(
+    HiddenUserAudioRemoteService hiddenUserAudioRemoteService,
+    HiddenUserAudioMapper hiddenUserAudioMapper,
+  ) {
+    return HiddenUserAudioRemoteRepositoryImpl(
+      hiddenUserAudioRemoteService,
+      hiddenUserAudioMapper,
+    );
+  }
+
   // server time ----------------------------------------------------------------
   @lazySingleton
   ServerTimeMapper serverTimeMapper() {

@@ -3,6 +3,7 @@ import 'package:common_utilities/common_utilities.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:injectable/injectable.dart';
 import 'package:uuid/uuid.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 @module
 abstract class DiUtilModule {
@@ -17,4 +18,7 @@ abstract class DiUtilModule {
 
   @lazySingleton
   Connectivity get connectivity => Connectivity();
+
+  @lazySingleton
+  YoutubeExplode get youtubeExplode => YoutubeExplode();
 }

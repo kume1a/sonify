@@ -22,4 +22,11 @@ class UserAudioRemoteRepositoryImpl implements UserAudioRemoteRepository {
 
     return res.map((r) => r.map(_userAudioMapper.dtoToModel).toList());
   }
+
+  @override
+  Future<Either<NetworkCallError, Unit>> deleteForAuthUser({
+    required String audioId,
+  }) {
+    return _userAudioRemoteService.deleteForAuthUser(audioId: audioId);
+  }
 }

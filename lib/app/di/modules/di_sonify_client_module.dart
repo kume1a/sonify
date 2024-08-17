@@ -162,4 +162,10 @@ abstract class DiSonifyClientModule {
   UserAudioRemoteService userAudioRemoteService(ApiClient apiClient) {
     return UserAudioRemoteServiceImpl(apiClient);
   }
+
+  // hidden user audio ------------------------------------------------------------
+  @lazySingleton
+  HiddenUserAudioRemoteService hiddenUserAudioRemoteService(ApiClient apiClient) {
+    return HiddenUserAudioRemoteServiceImpl(apiClient);
+  }
 }
