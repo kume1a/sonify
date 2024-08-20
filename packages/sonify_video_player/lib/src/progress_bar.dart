@@ -10,12 +10,11 @@ class VideoProgressBar extends StatefulWidget {
     this.onDragEnd,
     this.onDragStart,
     this.onDragUpdate,
-    Key? key,
+    super.key,
     required this.barHeight,
     required this.handleHeight,
     required this.drawShadow,
-  })  : colors = colors ?? SonifyVideoPlayerProgressColors(),
-        super(key: key);
+  }) : colors = colors ?? SonifyVideoPlayerProgressColors();
 
   final VideoPlayerController controller;
   final SonifyVideoPlayerProgressColors colors;
@@ -130,14 +129,14 @@ class _VideoProgressBarState extends State<VideoProgressBar> {
 
 class StaticProgressBar extends StatelessWidget {
   const StaticProgressBar({
-    Key? key,
+    super.key,
     required this.value,
     required this.colors,
     required this.barHeight,
     required this.handleHeight,
     required this.drawShadow,
     this.latestDraggableOffset,
-  }) : super(key: key);
+  });
 
   final Offset? latestDraggableOffset;
   final VideoPlayerValue value;

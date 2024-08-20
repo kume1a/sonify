@@ -20,8 +20,14 @@ abstract class DiDomainModelModule {
   }
 
   @lazySingleton
-  AudioMapper audioMapper(AudioLikeMapper audioLikeMapper) {
-    return AudioMapper(audioLikeMapper);
+  AudioMapper audioMapper(
+    AudioLikeMapper audioLikeMapper,
+    HiddenUserAudioMapper hiddenUserAudioMapper,
+  ) {
+    return AudioMapper(
+      audioLikeMapper,
+      hiddenUserAudioMapper,
+    );
   }
 
   @lazySingleton

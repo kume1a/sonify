@@ -6,7 +6,7 @@ import '../sonify_video_player.dart';
 import 'notifiers/index.dart';
 
 class PlayerWithControls extends StatelessWidget {
-  const PlayerWithControls({Key? key}) : super(key: key);
+  const PlayerWithControls({super.key});
 
   @override
   Widget build(BuildContext context) {

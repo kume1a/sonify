@@ -4,14 +4,17 @@ import 'package:sonify_storage/sonify_storage.dart';
 
 import '../../../shared/constant.dart';
 import '../../audiolike/util/audio_like_mapper.dart';
+import '../../hidden_user_audio/util/hidden_user_audio_mapper.dart';
 import '../model/audio.dart';
 
 class AudioMapper {
   AudioMapper(
     this._audioLikeMapper,
+    this._hiddenUserAudioMapper,
   );
 
   final AudioLikeMapper _audioLikeMapper;
+  final HiddenUserAudioMapper _hiddenUserAudioMapper;
 
   Audio dtoToModel(AudioDto dto) {
     return Audio(
@@ -29,6 +32,7 @@ class AudioMapper {
       thumbnailPath: dto.thumbnailPath,
       localThumbnailPath: null,
       audioLike: tryMap(dto.audioLike, _audioLikeMapper.dtoToModel),
+      hiddenUserAudio: tryMap(dto.hiddenUserAudio, _hiddenUserAudioMapper.dtoToModel),
     );
   }
 
@@ -48,6 +52,7 @@ class AudioMapper {
       thumbnailUrl: e.thumbnailUrl,
       localThumbnailPath: e.localThumbnailPath,
       audioLike: tryMap(e.audioLike, _audioLikeMapper.entityToModel),
+      hiddenUserAudio: tryMap(e.hiddenUserAudio, _hiddenUserAudioMapper.entityToModel),
     );
   }
 
@@ -67,6 +72,7 @@ class AudioMapper {
       thumbnailUrl: m.thumbnailUrl,
       localThumbnailPath: m.localThumbnailPath,
       audioLike: tryMap(m.audioLike, _audioLikeMapper.modelToEntity),
+      hiddenUserAudio: tryMap(m.hiddenUserAudio, _hiddenUserAudioMapper.modelToEntity),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:common_utilities/common_utilities.dart';
 import 'package:sonify_client/sonify_client.dart';
+import 'package:sonify_storage/sonify_storage.dart';
 
 import '../../../shared/constant.dart';
 import '../model/hidden_user_audio.dart';
@@ -14,22 +15,21 @@ class HiddenUserAudioMapper {
     );
   }
 
-  // UserAudio entityToModel(UserAudioEntity e) {
-  //   return UserAudio(
-  //     id: e.id,
-  //     createdAt: tryMapDateMillis(e.createdAtMillis),
-  //     userId: e.userId ?? kInvalidId,
-  //     audioId: e.audioId ?? kInvalidId,
-  //   );
-  // }
+  HiddenUserAudio entityToModel(HiddenUserAudioEntity e) {
+    return HiddenUserAudio(
+      id: e.id ?? kInvalidId,
+      createdAt: tryMapDateMillis(e.createdAtMillis),
+      userId: e.userId ?? kInvalidId,
+      audioId: e.audioId ?? kInvalidId,
+    );
+  }
 
-  // UserAudioEntity modelToEntity(UserAudio m) {
-  //   return UserAudioEntity(
-  //     id: m.id,
-  //     createdAtMillis: m.createdAt?.millisecondsSinceEpoch,
-  //     userId: m.userId,
-  //     audioId: m.audioId,
-  //     audio: tryMap(m.audio, _audioMapper.modelToEntity),
-  //   );
-  // }
+  HiddenUserAudioEntity modelToEntity(HiddenUserAudio m) {
+    return HiddenUserAudioEntity(
+      id: m.id,
+      createdAtMillis: m.createdAt?.millisecondsSinceEpoch,
+      userId: m.userId,
+      audioId: m.audioId,
+    );
+  }
 }

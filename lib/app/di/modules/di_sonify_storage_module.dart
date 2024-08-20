@@ -31,8 +31,14 @@ abstract class DiSonifyStorageModule {
 
   // audio ---------------------------------------------------------------------
   @lazySingleton
-  AudioEntityMapper audioEntityMapper(AudioLikeEntityMapper audioLikeEntityMapper) {
-    return AudioEntityMapper(audioLikeEntityMapper);
+  AudioEntityMapper audioEntityMapper(
+    AudioLikeEntityMapper audioLikeEntityMapper,
+    HiddenUserAudioEntityMapper hiddenUserAudioEntityMapper,
+  ) {
+    return AudioEntityMapper(
+      audioLikeEntityMapper,
+      hiddenUserAudioEntityMapper,
+    );
   }
 
   @lazySingleton

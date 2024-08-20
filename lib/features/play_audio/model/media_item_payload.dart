@@ -18,11 +18,28 @@ class MediaItemPayload with _$MediaItemPayload {
     final audioLikeAudioId = extras['audio.audioLike.audioId'] as String?;
     final audioLikeUserId = extras['audio.audioLike.userId'] as String?;
 
+    final hiddenUserAudioId = extras['audio.hiddenUserAudio.id'] as String?;
+    final hiddenUserAudioCreatedAtMillis = extras['audio.hiddenUserAudio.createdAtMillis'] as int?;
+    final hiddenUserAudioUserId = extras['audio.hiddenUserAudio.userId'] as String?;
+    final hiddenUserAudioAudioId = extras['audio.hiddenUserAudio.audioId'] as String?;
+
     final audioLike = audioLikeId != null && audioLikeAudioId != null && audioLikeUserId != null
         ? AudioLike(
             id: audioLikeId,
             audioId: audioLikeAudioId,
             userId: audioLikeUserId,
+          )
+        : null;
+
+    final hiddenUserAudio = hiddenUserAudioId != null &&
+            hiddenUserAudioCreatedAtMillis != null &&
+            hiddenUserAudioUserId != null &&
+            hiddenUserAudioAudioId != null
+        ? HiddenUserAudio(
+            id: hiddenUserAudioId,
+            createdAt: tryMapDateMillis(hiddenUserAudioCreatedAtMillis),
+            userId: hiddenUserAudioUserId,
+            audioId: hiddenUserAudioAudioId,
           )
         : null;
 
@@ -42,6 +59,7 @@ class MediaItemPayload with _$MediaItemPayload {
         thumbnailUrl: extras['audio.thumbnailUrl'],
         localThumbnailPath: extras['audio.localThumbnailPath'],
         audioLike: audioLike,
+        hiddenUserAudio: hiddenUserAudio,
       ),
       playlistId: extras['playlistId'] as String?,
     );

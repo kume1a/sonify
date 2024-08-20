@@ -1,13 +1,16 @@
 import '../../db/tables.dart';
 import '../audio_like/audio_like_entity_mapper.dart';
+import '../hidden_user_audio/hidden_user_audio_entity_mapper.dart';
 import 'audio_entity.dart';
 
 class AudioEntityMapper {
   AudioEntityMapper(
     this._audioLikeEntityMapper,
+    this._hiddenUserAudioEntityMapper,
   );
 
   final AudioLikeEntityMapper _audioLikeEntityMapper;
+  final HiddenUserAudioEntityMapper _hiddenUserAudioEntityMapper;
 
   AudioEntity mapToEntity(Map<String, dynamic> m) {
     return AudioEntity(
@@ -25,6 +28,7 @@ class AudioEntityMapper {
       thumbnailUrl: m[Audio_.thumbnailUrl] as String?,
       localThumbnailPath: m[Audio_.localThumbnailPath] as String?,
       audioLike: _audioLikeEntityMapper.joinedMapToEntity(m),
+      hiddenUserAudio: _hiddenUserAudioEntityMapper.joinedMapToEntity(m),
     );
   }
 
@@ -49,6 +53,7 @@ class AudioEntityMapper {
       thumbnailUrl: m[Audio_.joinedThumbnailUrl] as String?,
       localThumbnailPath: m[Audio_.joinedLocalThumbnailPath] as String?,
       audioLike: _audioLikeEntityMapper.joinedMapToEntity(m),
+      hiddenUserAudio: _hiddenUserAudioEntityMapper.joinedMapToEntity(m),
     );
   }
 

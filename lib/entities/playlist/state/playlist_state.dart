@@ -149,11 +149,11 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
 
     final isDownloaded = playlistAudio.audio?.localPath != null;
 
-    final userAudioRes = await _userAudioLocalRepository.getByUserIdAndAudioId(
+    final localUserAudioRes = await _userAudioLocalRepository.getByUserIdAndAudioId(
       userId: authUserId,
       audioId: playlistAudio.audio!.id!,
     );
-    final userAudioExists = userAudioRes.dataOrNull != null;
+    final userAudioExists = localUserAudioRes.dataOrNull != null;
 
     final selectedOption = await _bottomSheetManager.openOptionSelector<int>(
       header: (l) => playlistAudio.audio?.title ?? l.audio,

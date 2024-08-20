@@ -12,9 +12,8 @@ class SonifyVideoProgressBar extends StatelessWidget {
     this.onDragEnd,
     this.onDragStart,
     this.onDragUpdate,
-    Key? key,
-  })  : colors = colors ?? SonifyVideoPlayerProgressColors(),
-        super(key: key);
+    super.key,
+  }) : colors = colors ?? SonifyVideoPlayerProgressColors();
 
   final double height;
   final VideoPlayerController controller;
