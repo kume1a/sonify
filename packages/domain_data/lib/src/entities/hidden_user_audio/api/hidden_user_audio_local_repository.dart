@@ -1,21 +1,28 @@
-// import 'package:common_models/common_models.dart';
+import 'package:common_models/common_models.dart';
 
-// import '../../user_audio/model/user_audio.dart';
+abstract interface class HiddenUserAudioLocalRepository {
+  Future<Result<bool>> existsByUserAndAudioId({
+    required String userId,
+    required String audioId,
+  });
 
-// abstract interface class UserAudioLocalRepository {
-//   Future<Result<List<UserAudio>>> getAll({
-//     required String userId,
-//     String? searchQuery,
-//   });
+  Future<Result<HiddenUserAudio>> create(AudioLike audioLike);
 
-//   Future<Result<List<String>>> getAllIdsByUserId(String userId);
+  Future<EmptyResult> deleteByAudioAndUserId({
+    required String userId,
+    required String audioId,
+  });
 
-//   Future<Result<UserAudio>> save(UserAudio audio);
+  Future<Result<List<AudioLike>>> getAllByUserId({
+    required String userId,
+  });
 
-//   Future<Result<int>> deleteByAudioIds(List<String> ids);
+  Future<Result<AudioLike?>> getByUserAndAudioId({
+    required String userId,
+    required String audioId,
+  });
 
-//   Future<Result<UserAudio?>> getByUserIdAndAudioId({
-//     required String userId,
-//     required String audioId,
-//   });
-// }
+  Future<EmptyResult> bulkCreate(List<AudioLike> audioLikes);
+
+  Future<Result<int>> deleteByIds(List<String> ids);
+}
