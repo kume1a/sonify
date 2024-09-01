@@ -242,6 +242,19 @@ abstract class DiDomainModelModule {
     );
   }
 
+  @lazySingleton
+  HiddenUserAudioLocalRepository hiddenUserAudioLocalRepository(
+    HiddenUserAudioEntityDao hiddenUserAudioEntityDao,
+    HiddenUserAudioMapper hiddenUserAudioMapper,
+    DbBatchProviderFactory dbBatchProviderFactory,
+  ) {
+    return HiddenUserAudioLocalRepositoryImpl(
+      hiddenUserAudioEntityDao,
+      hiddenUserAudioMapper,
+      dbBatchProviderFactory,
+    );
+  }
+
   // server time ----------------------------------------------------------------
   @lazySingleton
   ServerTimeMapper serverTimeMapper() {

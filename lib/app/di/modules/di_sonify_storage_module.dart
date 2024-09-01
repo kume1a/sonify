@@ -63,6 +63,20 @@ abstract class DiSonifyStorageModule {
     return SqfliteUserAudioEntityDao(db, userAudioEntityMapper);
   }
 
+  // hidden user audio --------------------------------------------------------
+  @lazySingleton
+  HiddenUserAudioEntityMapper hiddenUserAudioEntityMapper() {
+    return HiddenUserAudioEntityMapper();
+  }
+
+  @lazySingleton
+  HiddenUserAudioEntityDao hiddenUserAudioEntityDao(
+    Database db,
+    HiddenUserAudioEntityMapper hiddenUserAudioEntityMapper,
+  ) {
+    return SqfliteHiddenUserAudioEntityDao(db, hiddenUserAudioEntityMapper);
+  }
+
   // downloaded task -----------------------------------------------------------
   @lazySingleton
   DownloadedTaskEntityMapper downloadedTaskEntityMapper(UserAudioEntityMapper userAudioEntityMapper) {
