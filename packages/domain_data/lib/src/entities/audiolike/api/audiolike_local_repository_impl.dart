@@ -20,11 +20,11 @@ class AudioLikeLocalRepositoryImpl with ResultWrap implements AudioLikeLocalRepo
   @override
   Future<Result<AudioLike>> create(AudioLike audioLike) async {
     return wrapWithResult(() async {
-      await _audioLikeEntityDao.insert(
+      final insertedId = await _audioLikeEntityDao.insert(
         _audioLikeMapper.modelToEntity(audioLike),
       );
 
-      return audioLike;
+      return audioLike.copyWith(id: insertedId);
     });
   }
 

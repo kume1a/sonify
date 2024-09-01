@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
+import '../../db/db_batch.dart';
 import '../../db/sqlite_helpers.dart';
 import '../../db/tables.dart';
 import '../../shared/constant.dart';
@@ -19,18 +20,29 @@ class SqfliteHiddenUserAudioEntityDao implements HiddenUserAudioEntityDao {
   final HiddenUserAudioEntityMapper _hiddenUserAudioEntityMapper;
 
   @override
-  Future<String> insert(HiddenUserAudioEntity entity) async {
+  Future<String> insert(
+    HiddenUserAudioEntity entity, [
+    DbBatchProvider? batchProvider,
+  ]) async {
     final insertEntity = entity.copyWith(
       id: Wrapped(entity.id ?? newDBId()),
     );
 
     final entityMap = _hiddenUserAudioEntityMapper.entityToMap(insertEntity);
 
-    await _db.insert(
-      HiddenUserAudio_.tn,
-      entityMap,
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    if (batchProvider != null) {
+      batchProvider.get.insert(
+        HiddenUserAudio_.tn,
+        entityMap,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    } else {
+      await _db.insert(
+        HiddenUserAudio_.tn,
+        entityMap,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
 
     return insertEntity.id ?? kInvalidId;
   }
@@ -54,5 +66,14 @@ class SqfliteHiddenUserAudioEntityDao implements HiddenUserAudioEntityDao {
     );
 
     return query.map((e) => e[HiddenUserAudio_.audioId] as String).toList();
+  }
+
+  @override
+  Future<int> deleteByIds(List<String> ids) {
+    return _db.delete(
+      HiddenUserAudio_.tn,
+      where: '${HiddenUserAudio_.id} IN ${sqlListPlaceholders(ids.length)}',
+      whereArgs: ids,
+    );
   }
 }

@@ -1,74 +1,51 @@
-import 'package:collection/collection.dart';
 import 'package:common_models/common_models.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
-import '../../user_audio/model/user_audio.dart';
-import '../util/compare_audio_titles.dart';
+import '../model/hidden_user_audio.dart';
 import '../util/hidden_user_audio_mapper.dart';
 import 'hidden_user_audio_local_repository.dart';
 
-class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepository {
-  UserAudioLocalRepositoryImpl(
-    this._userAudioEntityDao,
-    this._userAudioMapper,
+class HiddenUserAudioLocalRepositoryImpl with ResultWrap implements HiddenUserAudioLocalRepository {
+  HiddenUserAudioLocalRepositoryImpl(
+    this._hiddenUserAudioEntityDao,
+    this._hiddenUserAudioMapper,
+    this._dbBatchProviderFactory,
   );
 
-  final UserAudioEntityDao _userAudioEntityDao;
-  final UserAudioMapper _userAudioMapper;
+  final HiddenUserAudioEntityDao _hiddenUserAudioEntityDao;
+  final HiddenUserAudioMapper _hiddenUserAudioMapper;
+  final DbBatchProviderFactory _dbBatchProviderFactory;
 
   @override
-  Future<Result<List<UserAudio>>> getAll({
-    required String userId,
-    String? searchQuery,
-  }) {
+  Future<Result<HiddenUserAudio>> create(HiddenUserAudio audioLike) async {
     return wrapWithResult(() async {
-      final audioEntities = await _userAudioEntityDao.getAll(
-        userId: userId,
-        searchQuery: searchQuery,
+      final insertedId = await _hiddenUserAudioEntityDao.insert(
+        _hiddenUserAudioMapper.modelToEntity(audioLike),
       );
 
-      return audioEntities
-          .sorted((a, b) {
-            final aTitle = a.audio?.title?.toLowerCase() ?? '';
-            final bTitle = b.audio?.title?.toLowerCase() ?? '';
-
-            return compareAudioTitles(aTitle, bTitle);
-          })
-          .map(_userAudioMapper.entityToModel)
-          .toList();
+      return audioLike.copyWith(id: insertedId);
     });
   }
 
   @override
-  Future<Result<UserAudio>> save(UserAudio userAudio) async {
-    return wrapWithResult(() async {
-      final userAudioEntity = _userAudioMapper.modelToEntity(userAudio);
+  Future<EmptyResult> bulkCreate(List<HiddenUserAudio> hiddenUserAudios) {
+    return wrapWithEmptyResult(() async {
+      final batchProvider = _dbBatchProviderFactory.newBatchProvider();
 
-      final userAudioEntityId = await _userAudioEntityDao.insert(userAudioEntity);
+      for (final hiddenUserAudio in hiddenUserAudios) {
+        final entity = _hiddenUserAudioMapper.modelToEntity(hiddenUserAudio);
 
-      return userAudio.copyWith(id: userAudioEntityId);
+        _hiddenUserAudioEntityDao.insert(entity, batchProvider);
+      }
+
+      await batchProvider.commit();
     });
   }
 
   @override
-  Future<Result<int>> deleteByAudioIds(List<String> ids) {
-    return wrapWithResult(() => _userAudioEntityDao.deleteByAudioIds(ids));
-  }
-
-  @override
-  Future<Result<List<String>>> getAllIdsByUserId(String userId) {
-    return wrapWithResult(() => _userAudioEntityDao.getAllAudioIdsByUserId(userId));
-  }
-
-  @override
-  Future<Result<UserAudio?>> getByUserIdAndAudioId({
-    required String userId,
-    required String audioId,
-  }) {
-    return wrapWithResult(() async {
-      final res = await _userAudioEntityDao.getByUserIdAndAudioId(userId: userId, audioId: audioId);
-
-      return res != null ? _userAudioMapper.entityToModel(res) : null;
-    });
+  Future<Result<int>> deleteByIds(List<String> ids) {
+    return wrapWithResult(
+      () => _hiddenUserAudioEntityDao.deleteByIds(ids),
+    );
   }
 }
