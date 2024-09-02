@@ -13,6 +13,7 @@ import 'app/configuration/before_app_start.dart';
 import 'app/configuration/global_http_overrides.dart';
 import 'app/di/register_dependencies.dart';
 import 'app/navigation/page_navigator.dart';
+import 'app/util/api_base_url_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,17 +21,18 @@ Future<void> main() async {
   await AppEnvironment.load();
 
   await registerDependencies(kDebugMode ? Environment.dev : Environment.prod);
-
   GlobalNavigator.navigatorKey = navigatorKey;
 
   GlobalHttpOverrides.configure();
 
   VVOConfig.password.minLength = 6;
 
-  Logger.root.level = Level.ALL;
+  Logger.root.level = Level.INFO;
   Logger.root.onRecord.listen((record) {
     log('${record.level.name}: ${record.time}: ${record.message}');
   });
+
+  await getIt<ApiBaseUrlProvider>().get();
 
   await beforeAppStart();
 

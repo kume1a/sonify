@@ -102,7 +102,6 @@ class _Content extends HookWidget {
                       duration: const Duration(milliseconds: 150),
                       child: MyLibraryAlphabet(
                         onIndexChanged: (index) {
-                          Logger.root.finer('Alphabet index: $index');
                           if (!scrollController.hasClients) {
                             return;
                           }

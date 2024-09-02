@@ -31,6 +31,7 @@ dependencies:
   http: ^1.2.1
   dio: ^5.4.1
   connectivity_plus: ^6.0.3
+  network_info_plus: ^6.0.1
 
   # Data
   json_serializable: ^6.7.1
