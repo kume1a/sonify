@@ -11,6 +11,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 import 'package:synchronized/synchronized.dart';
 
+import '../../dynamic_client/api/dynamic_api_url_provider.dart';
 import '../api/download_task_downloader.dart';
 import '../api/on_download_task_downloaded.dart';
 import '../model/downloads_event.dart';
@@ -109,8 +110,14 @@ class DownloadsCubit extends Cubit<DownloadsState> {
 
   Future<void> _onDownloadsEvent(DownloadsEvent event) async {
     final downloadTask = await event.when(
-      enqueueUserAudio: _downloadTaskMapper.userAudioToDownloadTask,
-      enqueuePlaylistAudio: _downloadTaskMapper.playlistAudioToDownloadTask,
+      enqueueUserAudio: (userAudio) => _downloadTaskMapper.userAudioToDownloadTask(
+        userAudio,
+        apiUrl: staticGetDynamicApiUrl(),
+      ),
+      enqueuePlaylistAudio: (playlistAudio) => _downloadTaskMapper.playlistAudioToDownloadTask(
+        playlistAudio,
+        apiUrl: staticGetDynamicApiUrl(),
+      ),
     );
 
     if (downloadTask == null) {

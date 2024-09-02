@@ -1,3 +1,4 @@
+import 'package:common_utilities/common_utilities.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sonify_client/sonify_client.dart';
@@ -14,7 +15,7 @@ class AfterSignOutImpl implements AfterSignOut {
     this._spotifyCredsStore,
     this._authUserInfoProvider,
     this._userSyncDatumLocalRepository,
-    this._socketProvider,
+    this._socketHolderProvider,
   );
 
   final PageNavigator _pageNavigator;
@@ -22,7 +23,7 @@ class AfterSignOutImpl implements AfterSignOut {
   final SpotifyCredsStore _spotifyCredsStore;
   final AuthUserInfoProvider _authUserInfoProvider;
   final UserSyncDatumLocalRepository _userSyncDatumLocalRepository;
-  final SocketProvider _socketProvider;
+  final DisposableProvider<SocketHolder> _socketHolderProvider;
 
   @override
   Future<void> call() async {
@@ -31,7 +32,7 @@ class AfterSignOutImpl implements AfterSignOut {
       _spotifyCredsStore.clear(),
       _authUserInfoProvider.clear(),
       _userSyncDatumLocalRepository.clear(),
-      _socketProvider.dispose(),
+      _socketHolderProvider.dispose(),
     ]);
 
     _pageNavigator.toAuth();

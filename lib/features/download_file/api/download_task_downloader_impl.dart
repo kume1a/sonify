@@ -2,6 +2,7 @@ import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
+import '../../../shared/util/assemble_resource_url.dart';
 import '../../../shared/util/utils.dart';
 import 'download_task_downloader.dart';
 import 'downloader.dart';

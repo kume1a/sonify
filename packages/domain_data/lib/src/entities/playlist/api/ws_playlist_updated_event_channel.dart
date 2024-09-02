@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:common_utilities/common_utilities.dart';
 import 'package:sonify_client/sonify_client.dart';
 
 import '../../../shared/constant.dart';
@@ -12,8 +13,8 @@ final class WsPlaylistUpdatedEventChannel extends WsEventChannel<Playlist>
     implements PlaylistUpdatedEventChannel {
   WsPlaylistUpdatedEventChannel(
     this._playlistMapper,
-    SocketProvider _socketProvider,
-  ) : super(_socketProvider);
+    DisposableProvider<SocketHolder> _socketHolderProvider,
+  ) : super(_socketHolderProvider);
 
   final PlaylistMapper _playlistMapper;
 

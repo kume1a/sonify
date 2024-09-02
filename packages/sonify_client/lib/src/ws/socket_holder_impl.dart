@@ -6,10 +6,10 @@ import 'package:web_socket_client/web_socket_client.dart';
 
 import '../module/auth/api/auth_token_store.dart';
 import '../usecase/validate_access_token.dart';
-import 'socket_provider.dart';
+import 'socket_holder.dart';
 
-class SocketProviderImpl implements SocketProvider {
-  SocketProviderImpl(
+class SocketHolderImpl implements SocketHolder {
+  SocketHolderImpl(
     this._authTokenStore,
     this._validateAccessToken,
     this._wsUrl,

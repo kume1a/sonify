@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:common_models/common_models.dart';
 import 'package:common_network_components/common_network_components.dart';
+import 'package:common_utilities/common_utilities.dart';
 import 'package:dio/dio.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -17,12 +18,14 @@ import 'youtube_remote_service.dart';
 
 class YoutubeRemoteServiceImpl with SafeHttpRequestWrap, ResultWrap implements YoutubeRemoteService {
   YoutubeRemoteServiceImpl(
-    this._apiClient,
+    this._apiClientProvider,
+    this._apiUrlProvider,
     this._yt,
     this._dio,
   );
 
-  final ApiClient _apiClient;
+  final Provider<ApiClient> _apiClientProvider;
+  final Provider<String> _apiUrlProvider;
   final YoutubeExplode _yt;
   final Dio _dio;
 
@@ -34,6 +37,8 @@ class YoutubeRemoteServiceImpl with SafeHttpRequestWrap, ResultWrap implements Y
 
     return callCatch(
       () async {
+        final apiUrl = _apiUrlProvider.get();
+
         final result = await _dio.fetch<Map<String, dynamic>>(
           Options(
             method: 'POST',
@@ -42,7 +47,7 @@ class YoutubeRemoteServiceImpl with SafeHttpRequestWrap, ResultWrap implements Y
             receiveTimeout: timeout,
           ).compose(
             _dio.options,
-            '/v1/youtube/downloadAudio',
+            '$apiUrl/v1/youtube/downloadAudio',
             data: DownloadYoutubeAudioBody(videoId: videoId),
           ),
         );
@@ -65,14 +70,14 @@ class YoutubeRemoteServiceImpl with SafeHttpRequestWrap, ResultWrap implements Y
   @override
   Future<Either<NetworkCallError, UrlDto>> getYoutubeMusicUrl(String videoId) {
     return callCatchHandleNetworkCallError(
-      () => _apiClient.getYoutubeMusicUrl(videoId),
+      () => _apiClientProvider.get().getYoutubeMusicUrl(videoId),
     );
   }
 
   @override
   Future<Either<NetworkCallError, YoutubeSearchSuggestionsDto>> getYoutubeSuggestions(String keyword) async {
     return callCatchHandleNetworkCallError(
-      () => _apiClient.getYoutubeSuggestions(keyword),
+      () => _apiClientProvider.get().getYoutubeSuggestions(keyword),
     );
   }
 

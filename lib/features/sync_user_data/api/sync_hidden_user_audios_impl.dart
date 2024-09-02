@@ -10,12 +10,12 @@ import 'sync_hidden_user_audios.dart';
 final class SyncHiddenUserAudiosImpl extends SyncEntityBase implements SyncHiddenUserAudios {
   SyncHiddenUserAudiosImpl(
     this._hiddenUserAudioLocalRepository,
-    this._hiddenUserAudioRemoteRepository,
+    // this._hiddenUserAudioRemoteRepository,
     this._authUserInfoProvider,
   );
 
   final HiddenUserAudioLocalRepository _hiddenUserAudioLocalRepository;
-  final HiddenUserAudioRemoteRepository _hiddenUserAudioRemoteRepository;
+  // final HiddenUserAudioRemoteRepository _hiddenUserAudioRemoteRepository;
   final AuthUserInfoProvider _authUserInfoProvider;
 
   // TODO implement

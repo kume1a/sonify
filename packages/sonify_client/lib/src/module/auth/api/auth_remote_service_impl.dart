@@ -1,5 +1,6 @@
 import 'package:common_models/common_models.dart';
 import 'package:common_network_components/common_network_components.dart';
+import 'package:common_utilities/common_utilities.dart';
 
 import '../../../api/api_client.dart';
 import '../../../shared/api_exception_message_code.dart';
@@ -12,10 +13,10 @@ import 'auth_remote_service.dart';
 
 class AuthRemoteServiceImpl with SafeHttpRequestWrap implements AuthRemoteService {
   AuthRemoteServiceImpl(
-    this._apiClient,
+    this._apiClientProvider,
   );
 
-  final ApiClient _apiClient;
+  final Provider<ApiClient> _apiClientProvider;
 
   @override
   Future<Either<NetworkCallError, TokenPayloadDto>> googleSignIn({
@@ -24,7 +25,7 @@ class AuthRemoteServiceImpl with SafeHttpRequestWrap implements AuthRemoteServic
     return callCatchHandleNetworkCallError(() {
       final body = GoogleSignInBody(token: token);
 
-      return _apiClient.googleSignIn(body);
+      return _apiClientProvider.get().googleSignIn(body);
     });
   }
 
@@ -37,7 +38,7 @@ class AuthRemoteServiceImpl with SafeHttpRequestWrap implements AuthRemoteServic
       () {
         final body = EmailSignInBody(email: email, password: password);
 
-        return _apiClient.emailSignIn(body);
+        return _apiClientProvider.get().emailSignIn(body);
       },
       networkError: const EmailSignInError.network(),
       unknownError: const EmailSignInError.unknown(),

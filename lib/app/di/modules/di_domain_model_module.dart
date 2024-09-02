@@ -1,3 +1,4 @@
+import 'package:common_utilities/common_utilities.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -129,11 +130,11 @@ abstract class DiDomainModelModule {
   @injectable
   PlaylistUpdatedEventChannel playlistUpdatedEventChannel(
     PlaylistMapper playlistMapper,
-    SocketProvider socketProvider,
+    DisposableProvider<SocketHolder> socketHolderProvider,
   ) {
     return WsPlaylistUpdatedEventChannel(
       playlistMapper,
-      socketProvider,
+      socketHolderProvider,
     );
   }
 

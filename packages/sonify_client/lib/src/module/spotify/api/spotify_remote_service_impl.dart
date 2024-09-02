@@ -1,5 +1,6 @@
 import 'package:common_models/common_models.dart';
 import 'package:common_network_components/common_network_components.dart';
+import 'package:common_utilities/common_utilities.dart';
 
 import '../../../api/api_client.dart';
 import '../../playlist/model/playlist_dto.dart';
@@ -14,10 +15,10 @@ import 'spotify_remote_service.dart';
 
 class SpotifyRemoteServiceImpl with SafeHttpRequestWrap implements SpotifyRemoteService {
   SpotifyRemoteServiceImpl(
-    this._apiClient,
+    this._apiClientProvider,
   );
 
-  final ApiClient _apiClient;
+  final Provider<ApiClient> _apiClientProvider;
 
   @override
   Future<Either<NetworkCallError, SpotifyTokenPayloadDto>> authorizeSpotify({
@@ -26,7 +27,7 @@ class SpotifyRemoteServiceImpl with SafeHttpRequestWrap implements SpotifyRemote
     return callCatchHandleNetworkCallError(() {
       final body = AuthorizeSpotifyBody(code: code);
 
-      return _apiClient.authorizeSpotify(body);
+      return _apiClientProvider.get().authorizeSpotify(body);
     });
   }
 
@@ -35,9 +36,11 @@ class SpotifyRemoteServiceImpl with SafeHttpRequestWrap implements SpotifyRemote
     required String spotifyRefreshToken,
   }) async {
     return callCatchHandleNetworkCallError(() {
-      final body = RefreshSpotifyTokenBody(spotifyRefreshToken: spotifyRefreshToken);
+      final body = RefreshSpotifyTokenBody(
+        spotifyRefreshToken: spotifyRefreshToken,
+      );
 
-      return _apiClient.refreshSpotifyToken(body);
+      return _apiClientProvider.get().refreshSpotifyToken(body);
     });
   }
 
@@ -46,32 +49,38 @@ class SpotifyRemoteServiceImpl with SafeHttpRequestWrap implements SpotifyRemote
     required String spotifyAccessToken,
     required String keyword,
   }) {
-    return callCatchHandleNetworkCallError(() => _apiClient.spotifySearch(keyword, spotifyAccessToken));
+    return callCatchHandleNetworkCallError(
+      () => _apiClientProvider.get().spotifySearch(keyword, spotifyAccessToken),
+    );
   }
 
   @override
-  Future<Either<NetworkCallError, Unit>> importSpotifyUserPlaylists({required String spotifyAccessToken}) {
+  Future<Either<NetworkCallError, Unit>> importSpotifyUserPlaylists({
+    required String spotifyAccessToken,
+  }) {
     return callCatchHandleNetworkCallError(() async {
       final body = SpotifyAccessTokenBody(
         spotifyAccessToken: spotifyAccessToken,
       );
 
-      await _apiClient.importSpotifyUserPlaylists(body);
+      await _apiClientProvider.get().importSpotifyUserPlaylists(body);
 
       return unit;
     });
   }
 
   @override
-  Future<Either<NetworkCallError, PlaylistDto>> importSpotifyPlaylist(
-      {required String spotifyAccessToken, required String spotifyPlaylistId}) {
+  Future<Either<NetworkCallError, PlaylistDto>> importSpotifyPlaylist({
+    required String spotifyAccessToken,
+    required String spotifyPlaylistId,
+  }) {
     return callCatchHandleNetworkCallError(() async {
       final body = ImportSpotifyPlaylistBody(
         spotifyAccessToken: spotifyAccessToken,
         spotifyPlaylistId: spotifyPlaylistId,
       );
 
-      return _apiClient.importSpotifyPlaylist(body);
+      return _apiClientProvider.get().importSpotifyPlaylist(body);
     });
   }
 }
