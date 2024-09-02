@@ -20,7 +20,7 @@ class DynamicWsUrlProviderImpl implements DynamicWsUrlProvider {
     final serverUrlOrigin = _serverUrlOriginStore.read();
 
     return switch (serverUrlOrigin) {
-      ServerUrlOrigin.home => AppEnvironment.homeWsUrl,
+      ServerUrlOrigin.local => AppEnvironment.localWsUrl,
       ServerUrlOrigin.remote => AppEnvironment.remoteWsUrl,
     };
   }

@@ -1,1 +1,1 @@
-enum ServerUrlOrigin { remote, home }
+enum ServerUrlOrigin { remote, local }

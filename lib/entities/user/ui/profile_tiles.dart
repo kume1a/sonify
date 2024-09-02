@@ -85,6 +85,21 @@ class SyncSpotifyPlaylistsFiles extends StatelessWidget {
   }
 }
 
+class ChangeServerUrlOriginTile extends StatelessWidget {
+  const ChangeServerUrlOriginTile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
+    return _ProfileTile(
+      iconAssetName: Assets.svgServer,
+      label: l.changeServerUrlOrigin,
+      onPressed: context.profileTilesCubit.onChangeServerUrlOriginTilePressed,
+    );
+  }
+}
+
 class SignOutTile extends StatelessWidget {
   const SignOutTile({super.key});
 

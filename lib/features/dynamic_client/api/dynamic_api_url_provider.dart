@@ -27,7 +27,7 @@ class DynamicApiUrlProviderImpl implements DynamicApiUrlProvider {
     final serverUrlOrigin = _serverUrlOriginStore.read();
 
     return switch (serverUrlOrigin) {
-      ServerUrlOrigin.home => AppEnvironment.homeApiUrl,
+      ServerUrlOrigin.local => AppEnvironment.localApiUrl,
       ServerUrlOrigin.remote => AppEnvironment.remoteApiUrl,
     };
   }
