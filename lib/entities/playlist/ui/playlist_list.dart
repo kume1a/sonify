@@ -92,7 +92,7 @@ class _Item extends StatelessWidget {
     }
 
     return InkWell(
-      onTap: () => context.spotifyPlaylistListCubit.onPlaylistPressed(userPlaylist),
+      onTap: () => context.playlistListCubit.onPlaylistPressed(userPlaylist),
       borderRadius: BorderRadius.circular(8),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8),
