@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../../../features/auth/state/sign_out_state.dart';
+import '../../../features/dynamic_client/state/change_server_url_origin_state.dart';
 import '../../../features/sync_user_data/state/sync_user_data_state.dart';
 import '../../../shared/util/color.dart';
 import '../../../shared/values/app_theme_extension.dart';
@@ -95,7 +96,7 @@ class ChangeServerUrlOriginTile extends StatelessWidget {
     return _ProfileTile(
       iconAssetName: Assets.svgServer,
       label: l.changeServerUrlOrigin,
-      onPressed: context.profileTilesCubit.onChangeServerUrlOriginTilePressed,
+      onPressed: context.changeServerUrlOriginCubit.onChangeServerUrlOriginTilePressed,
     );
   }
 }

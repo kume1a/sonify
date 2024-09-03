@@ -5,6 +5,7 @@ import 'package:global_navigator/global_navigator.dart';
 import 'package:toastification/toastification.dart';
 
 import '../features/download_file/state/downloads_state.dart';
+import '../features/dynamic_client/state/change_server_url_origin_state.dart';
 import '../features/play_audio/state/audio_player_controls_state.dart';
 import '../features/play_audio/state/now_playing_audio_state.dart';
 import '../shared/values/app_theme.dart';
@@ -28,6 +29,7 @@ class App extends StatelessWidget {
             BlocProvider(create: (_) => getIt<DownloadsCubit>(), lazy: false),
             BlocProvider(create: (_) => getIt<AudioPlayerControlsCubit>()),
             BlocProvider(create: (_) => getIt<NowPlayingAudioCubit>()),
+            BlocProvider(create: (_) => getIt<ChangeServerUrlOriginCubit>()),
           ],
           child: ToastificationWrapper(
             config: const ToastificationConfig(

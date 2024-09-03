@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../app/di/register_dependencies.dart';
 import '../features/auth/state/auth_state.dart';
 import '../features/auth/ui/sign_in_with_email_button.dart';
+import '../features/dynamic_client/ui/change_server_url_origin_button.dart';
 import '../shared/ui/logo_header.dart';
 
 class AuthPage extends StatelessWidget {
@@ -64,11 +65,19 @@ class _Content extends StatelessWidget {
           child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: 24),
+              Align(
+                alignment: Alignment.centerRight,
+                child: ChangeServerUrlOriginButton(),
+              ),
+              Spacer(),
               LogoHeaderMedium(),
               SizedBox(height: 28),
               // SignInWithGoogleButton(),
               // SignInWithGoogleErrortext(),
               SignInWithEmailButton(),
+              Spacer(),
+              SizedBox(height: 52),
             ],
           ),
         ),
