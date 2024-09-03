@@ -26,7 +26,7 @@ Future<void> main() async {
 
   VVOConfig.password.minLength = 6;
 
-  Logger.root.level = Level.ALL;
+  Logger.root.level = kDebugMode ? Level.ALL : Level.OFF;
   Logger.root.onRecord.listen((record) {
     log('${record.level.name}: ${record.time}: ${record.message}');
   });

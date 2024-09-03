@@ -28,6 +28,8 @@ UriAudioSource? mediaItemToAudioSource(MediaItem mediaItem) {
     return null;
   }
 
+  Logger.root.info('Audio uri: $audioUri');
+
   return AudioSource.uri(
     audioUri,
     tag: mediaItem,

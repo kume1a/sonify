@@ -42,8 +42,14 @@ class YoutubeSearchCubit extends Cubit<YoutubeSearchState> {
     return super.close();
   }
 
-  Future<void> onSearchSuggestionPressed(String suggestion) async {
+  void onSearchSuggestionPressed(String suggestion) {
     final result = YoutubeSearchResult(query: suggestion);
+
+    _pageNavigator.pop(result: result);
+  }
+
+  void onSubmitted(String query) {
+    final result = YoutubeSearchResult(query: query);
 
     _pageNavigator.pop(result: result);
   }

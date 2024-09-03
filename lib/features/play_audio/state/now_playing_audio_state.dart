@@ -361,7 +361,9 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     }
 
     Logger.root.finer(
-        'NowPlayingAudioCubit._onMediaItemChanged: payload.audio.title=${payload.audio.title}, url=${payload.audio.path}');
+        'NowPlayingAudioCubit._onMediaItemChanged: payload.audio.title=${payload.audio.title}, payload.audio.path=${payload.audio.path}');
+
+    // Logger.root.info('NowPlayingAudioCubit._onMediaItemChanged: payload=$payload');
 
     final nowPlayingAudioLike = await _audioLikeLocalRepository.getByUserAndAudioId(
       userId: authUserId,

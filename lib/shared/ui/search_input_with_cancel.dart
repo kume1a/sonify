@@ -9,10 +9,12 @@ class SearchInputWithCancel extends StatelessWidget {
     super.key,
     required this.onChanged,
     required this.onCancelPressed,
+    this.onSubmitted,
   });
 
   final ValueChanged<String> onChanged;
   final VoidCallback onCancelPressed;
+  final ValueChanged<String>? onSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,7 @@ class SearchInputWithCancel extends StatelessWidget {
             autofocus: true,
             autocorrect: false,
             onChanged: onChanged,
+            onSubmitted: onSubmitted,
             decoration: InputDecoration(
               hintText: l.search,
               contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),

@@ -42,6 +42,7 @@ class _Content extends StatelessWidget {
                   context.spotifySearchCubit.onSearchQueryChanged(value);
                 },
                 onCancelPressed: () => Navigator.of(context).maybePop(),
+                onSubmitted: context.youtubeSearchCubit.onSubmitted,
               ),
             ),
             const Expanded(

@@ -1,5 +1,6 @@
 import 'package:domain_data/domain_data.dart';
 
+import '../../../shared/util/assemble_resource_url.dart';
 import '../../../shared/util/utils.dart';
 
 extension AudioX on Audio? {
@@ -9,7 +10,7 @@ extension AudioX on Audio? {
     }
 
     if (this!.localThumbnailPath.notNullOrEmpty) {
-      return Uri.tryParse('$apiUrl/${this!.localThumbnailPath!}');
+      return Uri.tryParse(assembleLocalFileUrl(this!.localThumbnailPath!));
     } else if (this!.thumbnailPath.notNullOrEmpty) {
       return Uri.tryParse('$apiUrl/${this!.thumbnailPath!}');
     } else if (this!.thumbnailUrl.notNullOrEmpty) {
@@ -25,7 +26,7 @@ extension AudioX on Audio? {
     }
 
     if (this!.localPath.notNullOrEmpty) {
-      return Uri.tryParse('$apiUrl/${this!.localPath!}');
+      return Uri.tryParse(assembleLocalFileUrl(this!.localPath!));
     }
 
     return Uri.tryParse('$apiUrl/${this!.path}');
