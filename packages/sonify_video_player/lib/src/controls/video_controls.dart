@@ -15,8 +15,8 @@ import 'widgets/playback_speed_dialog.dart';
 class VideoControls extends StatefulWidget {
   const VideoControls({
     this.showPlayButton = true,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final bool showPlayButton;
 

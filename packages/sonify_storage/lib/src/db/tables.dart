@@ -90,6 +90,24 @@ abstract class UserAudio_ {
   static final joinedAudioId = joinPrefixColumn(audioId);
 }
 
+abstract class HiddenUserAudio_ {
+  static const String tn = 'hidden_user_audios';
+  static const String joinPrefix = '${tn}_entity_';
+
+  static String joinPrefixColumn(String column) => '$joinPrefix$column';
+
+  static const id = 'id';
+  static const createdAtMillis = 'created_at_millis';
+  static const userId = 'user_id';
+  static const audioId = 'audio_id';
+
+  // joined columns
+  static final joinedId = joinPrefixColumn(id);
+  static final joinedCreatedAtMillis = joinPrefixColumn(createdAtMillis);
+  static final joinedUserId = joinPrefixColumn(userId);
+  static final joinedAudioId = joinPrefixColumn(audioId);
+}
+
 abstract class PendingChange_ {
   static const tn = 'pending_changes';
   static const joinPrefix = '${tn}_entity_';

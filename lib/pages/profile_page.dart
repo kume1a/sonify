@@ -43,6 +43,7 @@ class _Content extends StatelessWidget {
           ImportLocalAudioFilesTile(),
           SyncDataTile(),
           SyncSpotifyPlaylistsFiles(),
+          ChangeServerUrlOriginTile(),
           SignOutTile(),
         ],
       ),

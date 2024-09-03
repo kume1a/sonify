@@ -1,2 +1,2 @@
-export 'socket_provider.dart';
-export 'socket_provider_impl.dart';
+export 'socket_holder.dart';
+export 'socket_holder_impl.dart';

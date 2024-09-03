@@ -1,5 +1,6 @@
 export 'audio/index.dart';
 export 'audiolike/index.dart';
+export 'hidden_user_audio/index.dart';
 export 'pending_change/index.dart';
 export 'playlist/index.dart';
 export 'playlist_audio/index.dart';

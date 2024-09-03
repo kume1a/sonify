@@ -174,5 +174,9 @@
   "confirm": "Confirm",
   "importingSpotifyPlaylist": "Importing Spotify playlist",
   "importSpotifyPlaylistPending": "Import Spotify playlist pending",
-  "importingPlaylist": "Importing playlist"
+  "importingPlaylist": "Importing playlist",
+  "changeServerUrlOrigin": "Change server url origin",
+  "selectServerUrlOrigin": "Select server url origin",
+  "local": "Local",
+  "remote": "Remote"
 }

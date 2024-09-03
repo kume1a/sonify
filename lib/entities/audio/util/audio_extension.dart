@@ -3,15 +3,15 @@ import 'package:domain_data/domain_data.dart';
 import '../../../shared/util/utils.dart';
 
 extension AudioX on Audio? {
-  Uri? get thumbnailUri {
+  Uri? thumbnailUri({required String apiUrl}) {
     if (this == null) {
       return null;
     }
 
     if (this!.localThumbnailPath.notNullOrEmpty) {
-      return Uri.tryParse(assembleLocalFileUrl(this!.localThumbnailPath!));
+      return Uri.tryParse('$apiUrl/${this!.localThumbnailPath!}');
     } else if (this!.thumbnailPath.notNullOrEmpty) {
-      return Uri.tryParse(assembleRemoteMediaUrl(this!.thumbnailPath!));
+      return Uri.tryParse('$apiUrl/${this!.thumbnailPath!}');
     } else if (this!.thumbnailUrl.notNullOrEmpty) {
       return Uri.tryParse(this!.thumbnailUrl!);
     }
@@ -19,15 +19,15 @@ extension AudioX on Audio? {
     return null;
   }
 
-  Uri? get audioUri {
+  Uri? audioUri({required String apiUrl}) {
     if (this == null) {
       return null;
     }
 
     if (this!.localPath.notNullOrEmpty) {
-      return Uri.tryParse(assembleLocalFileUrl(this!.localPath!));
+      return Uri.tryParse('$apiUrl/${this!.localPath!}');
     }
 
-    return Uri.tryParse(assembleRemoteMediaUrl(this!.path));
+    return Uri.tryParse('$apiUrl/${this!.path}');
   }
 }

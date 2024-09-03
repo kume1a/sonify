@@ -41,32 +41,35 @@ class _Content extends StatelessWidget {
         return state.isSpotifyAuthenticated.maybeWhen(
           orElse: () => const SizedBox.shrink(),
           success: (isSpotifyAuthenticated) {
-            return ListView(
-              children: [
-                const SizedBox(height: 24),
-                const PlaylistTiles(),
-                if (isSpotifyAuthenticated)
-                  const EnsureSpotifyPlaylistsImported(
-                    child: PlaylistsList(),
-                  )
-                else
-                  Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.all(32),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          l.authorizeSpotifyCaption,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: theme.appThemeExtension?.elSecondary),
-                        ),
-                        const SizedBox(height: 6),
-                        const AuthSpotifyButton(),
-                      ],
+            return RefreshIndicator(
+              onRefresh: context.playlistListCubit.onRefresh,
+              child: ListView(
+                children: [
+                  const SizedBox(height: 24),
+                  const PlaylistTiles(),
+                  if (isSpotifyAuthenticated)
+                    const EnsureSpotifyPlaylistsImported(
+                      child: PlaylistsList(),
+                    )
+                  else
+                    Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(32),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            l.authorizeSpotifyCaption,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: theme.appThemeExtension?.elSecondary),
+                          ),
+                          const SizedBox(height: 6),
+                          const AuthSpotifyButton(),
+                        ],
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             );
           },
         );

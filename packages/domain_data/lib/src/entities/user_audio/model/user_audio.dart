@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'audio.dart';
+import '../../audio/model/audio.dart';
 
 part 'user_audio.freezed.dart';
 

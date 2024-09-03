@@ -1,5 +1,5 @@
+import 'package:common_utilities/common_utilities.dart';
 import 'package:dio/dio.dart';
-import 'package:domain_data/domain_data.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
@@ -7,6 +7,7 @@ import 'package:sonify_client/sonify_client.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../../features/auth/api/after_sign_out.dart';
+import '../../../features/dynamic_client/api/dynamic_api_url_provider.dart';
 import '../injection_tokens.dart';
 
 @module
@@ -15,7 +16,6 @@ abstract class DiSonifyClientModule {
   @Named(InjectionToken.noInterceptorDio)
   Dio dio() {
     return NetworkClientFactory.createNoInterceptorDio(
-      apiUrl: AppEnvironment.apiUrl,
       logPrint: Logger.root.finest,
       // logPrint: null,
     );
@@ -24,37 +24,14 @@ abstract class DiSonifyClientModule {
   @lazySingleton
   @Named(InjectionToken.authenticatedDio)
   Dio authenticatedDio(
-    @Named(InjectionToken.noInterceptorDio) Dio noInterceptorDio,
     AuthTokenStore authTokenStore,
     AfterSignOut afterSignOut,
   ) {
     return NetworkClientFactory.createAuthenticatedDio(
-      noInterceptorDio: noInterceptorDio,
       authTokenStore: authTokenStore,
       afterExit: afterSignOut.call,
       logPrint: Logger.root.finest,
       // logPrint: null,
-      apiUrl: AppEnvironment.apiUrl,
-    );
-  }
-
-  @lazySingleton
-  ApiClient apiClient(
-    @Named(InjectionToken.authenticatedDio) Dio dio,
-  ) {
-    return NetworkClientFactory.createApiClient(
-      dio: dio,
-      apiUrl: AppEnvironment.apiUrl,
-    );
-  }
-
-  @lazySingleton
-  MultipartApiClient multipartApiClient(
-    @Named(InjectionToken.authenticatedDio) Dio dio,
-  ) {
-    return NetworkClientFactory.createMultipartApiClient(
-      dio: dio,
-      apiUrl: AppEnvironment.apiUrl,
     );
   }
 
@@ -62,28 +39,22 @@ abstract class DiSonifyClientModule {
   @lazySingleton
   ValidateAccessToken validateAccessToken(
     @Named(InjectionToken.noInterceptorDio) Dio dio,
+    DynamicApiUrlProvider dynamicApiUrlProvider,
   ) {
-    return ValidateAccessTokenImpl(dio, AppEnvironment.apiUrl);
-  }
-
-  // ws ----------------------------------------------------------------
-  @lazySingleton
-  SocketProvider socketProvider(
-    AuthTokenStore authTokenStore,
-    ValidateAccessToken validateAccessToken,
-  ) {
-    return SocketProviderImpl(authTokenStore, validateAccessToken, AppEnvironment.wsUrl);
+    return ValidateAccessTokenImpl(dio, dynamicApiUrlProvider);
   }
 
   // youtube ----------------------------------------------------------------
   @lazySingleton
   YoutubeRemoteService youtubeRemoteService(
-    ApiClient apiClient,
+    Provider<ApiClient> apiClientProvider,
+    DynamicApiUrlProvider apiUrlProvider,
     YoutubeExplode youtubeExplode,
     @Named(InjectionToken.authenticatedDio) Dio dio,
   ) {
     return YoutubeRemoteServiceImpl(
-      apiClient,
+      apiClientProvider,
+      apiUrlProvider,
       youtubeExplode,
       dio,
     );
@@ -96,70 +67,76 @@ abstract class DiSonifyClientModule {
   }
 
   @lazySingleton
-  AuthRemoteService authRemoteService(ApiClient apiClient) {
-    return AuthRemoteServiceImpl(apiClient);
+  AuthRemoteService authRemoteService(Provider<ApiClient> apiClientProvider) {
+    return AuthRemoteServiceImpl(apiClientProvider);
   }
 
   // audio ----------------------------------------------------------------
   @lazySingleton
   AudioRemoteService audioRepository(
-    ApiClient apiClient,
-    MultipartApiClient multipartApiClient,
+    Provider<ApiClient> apiClientProvider,
+    Provider<MultipartApiClient> multipartApiClientProvider,
   ) {
-    return AudioRemoteServiceImpl(apiClient, multipartApiClient);
+    return AudioRemoteServiceImpl(apiClientProvider, multipartApiClientProvider);
   }
 
   // audio like ----------------------------------------------------------------
   @lazySingleton
-  AudioLikeRemoteService audioLikeRemoteService(ApiClient apiClient) {
-    return AudioLikeRemoteServiceImpl(apiClient);
+  AudioLikeRemoteService audioLikeRemoteService(Provider<ApiClient> apiClientProvider) {
+    return AudioLikeRemoteServiceImpl(apiClientProvider);
   }
 
   // user ----------------------------------------------------------------
   @lazySingleton
-  UserRemoteService userRemoteService(ApiClient apiClient) {
-    return UserRemoteServiceImpl(apiClient);
+  UserRemoteService userRemoteService(Provider<ApiClient> apiClientProvider) {
+    return UserRemoteServiceImpl(apiClientProvider);
   }
 
   // spotify ----------------------------------------------------------------
   @lazySingleton
-  SpotifyRemoteService spotifyAuthRemotService(ApiClient apiClient) {
-    return SpotifyRemoteServiceImpl(apiClient);
+  SpotifyRemoteService spotifyAuthRemotService(Provider<ApiClient> apiClientProvider) {
+    return SpotifyRemoteServiceImpl(apiClientProvider);
   }
 
   // playlist ----------------------------------------------------------------
   @lazySingleton
-  PlaylistRemoteService playlistRemoteService(ApiClient apiClient) {
-    return PlaylistRemoteServiceImpl(apiClient);
+  PlaylistRemoteService playlistRemoteService(Provider<ApiClient> apiClientProvider) {
+    return PlaylistRemoteServiceImpl(apiClientProvider);
   }
 
   // user playlist ----------------------------------------------------------------
   @lazySingleton
-  UserPlaylistRemoteService userPlaylistRemoteService(ApiClient apiClient) {
-    return UserPlaylistRemoteServiceImpl(apiClient);
+  UserPlaylistRemoteService userPlaylistRemoteService(Provider<ApiClient> apiClientProvider) {
+    return UserPlaylistRemoteServiceImpl(apiClientProvider);
   }
 
   // playlist audio ----------------------------------------------------------------
   @lazySingleton
-  PlaylistAudioRemoteService playlistAudioRemoteService(ApiClient apiClient) {
-    return PlaylistAudioRemoteServiceImpl(apiClient);
+  PlaylistAudioRemoteService playlistAudioRemoteService(Provider<ApiClient> apiClientProvider) {
+    return PlaylistAudioRemoteServiceImpl(apiClientProvider);
   }
 
   // user sync datum ----------------------------------------------------------------
   @lazySingleton
-  UserSyncDatumRemoteService userSyncDatumRemoteService(ApiClient apiClient) {
-    return UserSyncDatumRemoteServiceImpl(apiClient);
+  UserSyncDatumRemoteService userSyncDatumRemoteService(Provider<ApiClient> apiClientProvider) {
+    return UserSyncDatumRemoteServiceImpl(apiClientProvider);
   }
 
   // server time ----------------------------------------------------------------
   @lazySingleton
-  ServerTimeRemoteService serverTimeRemoteService(ApiClient apiClient) {
-    return ServerTimeRemoteServiceImpl(apiClient);
+  ServerTimeRemoteService serverTimeRemoteService(Provider<ApiClient> apiClientProvider) {
+    return ServerTimeRemoteServiceImpl(apiClientProvider);
   }
 
   // user audio ----------------------------------------------------------------
   @lazySingleton
-  UserAudioRemoteService userAudioRemoteService(ApiClient apiClient) {
-    return UserAudioRemoteServiceImpl(apiClient);
+  UserAudioRemoteService userAudioRemoteService(Provider<ApiClient> apiClientProvider) {
+    return UserAudioRemoteServiceImpl(apiClientProvider);
+  }
+
+  // hidden user audio ------------------------------------------------------------
+  @lazySingleton
+  HiddenUserAudioRemoteService hiddenUserAudioRemoteService(Provider<ApiClient> apiClientProvider) {
+    return HiddenUserAudioRemoteServiceImpl(apiClientProvider);
   }
 }

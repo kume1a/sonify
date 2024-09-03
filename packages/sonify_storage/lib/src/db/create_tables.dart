@@ -62,6 +62,18 @@ void createDbTables(Batch batch) {
 
   batch.execute(
     '''
+      CREATE TABLE IF NOT EXISTS ${HiddenUserAudio_.tn} 
+      (
+        ${HiddenUserAudio_.id} TEXT PRIMARY KEY NOT NULL,
+        ${HiddenUserAudio_.createdAtMillis} INTEGER, 
+        ${HiddenUserAudio_.userId} TEXT,
+        ${HiddenUserAudio_.audioId} TEXT
+      );
+    ''',
+  );
+
+  batch.execute(
+    '''
       CREATE TABLE IF NOT EXISTS ${PendingChange_.tn} 
       (
         ${PendingChange_.id} TEXT PRIMARY KEY NOT NULL,

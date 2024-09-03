@@ -19,9 +19,9 @@ typedef SonifyVideoPlayerRoutePageBuilder = Widget Function(
 
 class SonifyVideoPlayer extends StatefulWidget {
   const SonifyVideoPlayer({
-    Key? key,
+    super.key,
     required this.controller,
-  }) : super(key: key);
+  });
 
   final SonifyVideoPlayerController controller;
 
@@ -594,10 +594,10 @@ class SonifyVideoPlayerController extends ChangeNotifier {
 
 class SonifyVideoPlayerControllerProvider extends InheritedWidget {
   const SonifyVideoPlayerControllerProvider({
-    Key? key,
+    super.key,
     required this.controller,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   final SonifyVideoPlayerController controller;
 

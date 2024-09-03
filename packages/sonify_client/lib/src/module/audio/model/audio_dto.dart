@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../audiolike/model/audio_like_dto.dart';
+import '../../hidden_user_audio/model/hidden_user_audio_dto.dart';
 
 part 'audio_dto.g.dart';
 
@@ -22,6 +23,7 @@ class AudioDto with _$AudioDto {
     String? thumbnailUrl,
     String? spotifyId,
     AudioLikeDto? audioLike,
+    HiddenUserAudioDto? hiddenUserAudio,
   }) = _AudioDto;
 
   factory AudioDto.fromJson(Map<String, dynamic> json) => _$AudioDtoFromJson(json);

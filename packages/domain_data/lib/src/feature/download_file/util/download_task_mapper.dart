@@ -1,8 +1,7 @@
 import 'package:common_utilities/common_utilities.dart';
 
-import '../../../entities/audio/model/user_audio.dart';
 import '../../../entities/playlist_audio/model/playlist_audio.dart';
-import '../../../shared/assemble_resource_url.dart';
+import '../../../entities/user_audio/model/user_audio.dart';
 import '../../../shared/resource_save_path_provider.dart';
 import '../../../shared/uuid_factory.dart';
 import '../model/download_task.dart';
@@ -15,8 +14,14 @@ class DownloadTaskMapper {
 
   final UuidFactory _uuidFactory;
 
-  Future<DownloadTask?> userAudioToDownloadTask(UserAudio userAudio) async {
-    final uri = tryMap(userAudio.audio?.path, (path) => Uri.tryParse(assembleRemoteMediaUrl(path)));
+  Future<DownloadTask?> userAudioToDownloadTask(
+    UserAudio userAudio, {
+    required String apiUrl,
+  }) async {
+    final uri = tryMap(
+      userAudio.audio?.path,
+      (path) => Uri.tryParse('$apiUrl/$path'),
+    );
     if (uri == null) {
       return null;
     }
@@ -36,8 +41,14 @@ class DownloadTaskMapper {
     );
   }
 
-  Future<DownloadTask?> playlistAudioToDownloadTask(PlaylistAudio playlistAudio) async {
-    final uri = tryMap(playlistAudio.audio?.path, (path) => Uri.tryParse(assembleRemoteMediaUrl(path)));
+  Future<DownloadTask?> playlistAudioToDownloadTask(
+    PlaylistAudio playlistAudio, {
+    required String apiUrl,
+  }) async {
+    final uri = tryMap(
+      playlistAudio.audio?.path,
+      (path) => Uri.tryParse('$apiUrl/$path'),
+    );
     if (uri == null) {
       return null;
     }

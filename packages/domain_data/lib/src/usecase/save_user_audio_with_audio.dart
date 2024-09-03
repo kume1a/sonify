@@ -2,8 +2,8 @@ import 'package:common_models/common_models.dart';
 import 'package:logging/logging.dart';
 
 import '../entities/audio/api/audio_local_repository.dart';
-import '../entities/audio/model/user_audio.dart';
 import '../entities/user_audio/api/user_audio_local_repository.dart';
+import '../entities/user_audio/model/user_audio.dart';
 
 class SaveUserAudioWithAudio {
   SaveUserAudioWithAudio(

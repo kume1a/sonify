@@ -3,8 +3,8 @@ import 'package:sonify_client/sonify_client.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
 import '../../../shared/constant.dart';
-import '../../audio/model/user_audio.dart';
 import '../../audio/util/audio_mapper.dart';
+import '../model/user_audio.dart';
 
 class UserAudioMapper {
   UserAudioMapper(

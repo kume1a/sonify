@@ -229,6 +229,7 @@ final dummyUserAudios = dummyAudioNames
         localThumbnailPath: '', // Replace '' with the actual local path of the thumbnail image
         audioLike: null,
         createdAt: DateTime.now(), // Replace null with the actual AudioLike object if applicable
+        hiddenUserAudio: null,
       ),
     )
     .toList();

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:common_utilities/common_utilities.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:sonify_client/sonify_client.dart';
@@ -35,10 +36,10 @@ class _WsPayloadDto {
 
 abstract base class WsEventChannel<T> implements EventChannel<T> {
   WsEventChannel(
-    this._socketProvider,
+    this._socketHolderProvider,
   );
 
-  final SocketProvider _socketProvider;
+  final DisposableProvider<SocketHolder> _socketHolderProvider;
 
   @protected
   String get messageType;
@@ -66,7 +67,7 @@ abstract base class WsEventChannel<T> implements EventChannel<T> {
       throw Exception('channel has been disposed');
     }
 
-    final socket = await _socketProvider.socket;
+    final socket = await _socketHolderProvider.get().socket;
 
     _subscription = socket?.messages.listen(_handleEvent);
   }

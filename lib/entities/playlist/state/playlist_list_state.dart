@@ -14,7 +14,7 @@ import '../../../pages/playlist_page.dart';
 typedef PlaylistListState = SimpleDataState<List<UserPlaylist>>;
 
 extension PlaylistListCubitX on BuildContext {
-  PlaylistListCubit get spotifyPlaylistListCubit => read<PlaylistListCubit>();
+  PlaylistListCubit get playlistListCubit => read<PlaylistListCubit>();
 }
 
 @injectable
@@ -53,13 +53,17 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
     return super.close();
   }
 
+  Future<void> onRefresh() {
+    return _loadPlaylists();
+  }
+
   void onPlaylistPressed(UserPlaylist userPlaylist) {
     final args = PlaylistPageArgs(playlistId: userPlaylist.playlistId);
 
     _pageNavigator.toPlaylist(args);
   }
 
-  bool isAllPlaylistsImported(List<UserPlaylist> userPlaylists) {
+  bool _isAllPlaylistsImported(List<UserPlaylist> userPlaylists) {
     return userPlaylists.every((userPlaylist) =>
         userPlaylist.playlist != null && userPlaylist.playlist?.audioImportStatus == ProcessStatus.completed);
   }
@@ -101,7 +105,7 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
     localPlaylists.fold(
       () => emit(SimpleDataState.failure()),
       (r) {
-        if (isAllPlaylistsImported(r)) {
+        if (_isAllPlaylistsImported(r)) {
           emit(SimpleDataState.success(r));
           return;
         }

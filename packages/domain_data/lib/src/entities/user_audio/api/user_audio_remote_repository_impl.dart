@@ -1,7 +1,7 @@
 import 'package:common_models/common_models.dart';
 import 'package:sonify_client/sonify_client.dart';
 
-import '../../audio/model/user_audio.dart';
+import '../model/user_audio.dart';
 import '../util/user_audio_mapper.dart';
 import 'user_audio_remote_repository.dart';
 
@@ -18,8 +18,15 @@ class UserAudioRemoteRepositoryImpl implements UserAudioRemoteRepository {
   Future<Either<NetworkCallError, List<UserAudio>>> createManyForAuthUser({
     required List<String> audioIds,
   }) async {
-    final res = await _userAudioRemoteService.createUserAudiosByAuthUser(audioIds: audioIds);
+    final res = await _userAudioRemoteService.createForAuthUser(audioIds: audioIds);
 
     return res.map((r) => r.map(_userAudioMapper.dtoToModel).toList());
+  }
+
+  @override
+  Future<Either<NetworkCallError, Unit>> deleteForAuthUser({
+    required String audioId,
+  }) {
+    return _userAudioRemoteService.deleteForAuthUser(audioId: audioId);
   }
 }

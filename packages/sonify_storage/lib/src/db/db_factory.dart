@@ -11,7 +11,7 @@ class DbFactory {
   static Future<Database> create() async {
     final Database database = await openDatabase(
       _databaseName,
-      version: 1,
+      version: 2,
       onConfigure: _onConfigure,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,

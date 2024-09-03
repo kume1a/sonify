@@ -1,0 +1,1 @@
+enum ServerUrlOrigin { remote, local }

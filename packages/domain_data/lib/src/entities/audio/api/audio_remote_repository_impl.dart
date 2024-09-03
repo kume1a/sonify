@@ -3,8 +3,8 @@ import 'dart:typed_data';
 import 'package:common_models/common_models.dart';
 import 'package:sonify_client/sonify_client.dart';
 
+import '../../user_audio/model/user_audio.dart';
 import '../../user_audio/util/user_audio_mapper.dart';
-import '../model/index.dart';
 import 'audio_remote_repository.dart';
 
 class AudioRemoteRepositoryImpl implements AudioRemoteRepository {

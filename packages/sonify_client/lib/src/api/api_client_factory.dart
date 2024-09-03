@@ -26,12 +26,10 @@ final class NetworkClientFactory {
   }
 
   static Dio createNoInterceptorDio({
-    required String apiUrl,
     required LogPrint? logPrint,
   }) {
     final dio = Dio(
       BaseOptions(
-        baseUrl: apiUrl,
         contentType: 'application/json',
         connectTimeout: _kTimeoutDuration,
         sendTimeout: _kTimeoutDuration,
@@ -47,15 +45,12 @@ final class NetworkClientFactory {
   }
 
   static Dio createAuthenticatedDio({
-    required Dio noInterceptorDio,
     required AuthTokenStore authTokenStore,
     required VoidCallback afterExit,
     required LogPrint? logPrint,
-    required String apiUrl,
   }) {
     final Dio dio = Dio(
       BaseOptions(
-        baseUrl: apiUrl,
         contentType: 'application/json',
         connectTimeout: _kTimeoutDuration,
         sendTimeout: _kTimeoutDuration,

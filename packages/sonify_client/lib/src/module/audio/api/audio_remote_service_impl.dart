@@ -1,5 +1,6 @@
 import 'package:common_models/common_models.dart';
 import 'package:common_network_components/common_network_components.dart';
+import 'package:common_utilities/common_utilities.dart';
 
 import '../../../api/api_client.dart';
 import '../../../api/multipart_api_client.dart';
@@ -13,19 +14,19 @@ import 'audio_remote_service.dart';
 
 class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteService {
   AudioRemoteServiceImpl(
-    this._apiClient,
-    this._multipartApiClient,
+    this._apiClientProvider,
+    this._multipartApiClientProvider,
   );
 
-  final ApiClient _apiClient;
-  final MultipartApiClient _multipartApiClient;
+  final Provider<ApiClient> _apiClientProvider;
+  final Provider<MultipartApiClient> _multipartApiClientProvider;
 
   @override
   Future<Either<UploadUserLocalMusicError, UserAudioDto>> uploadUserLocalMusic(
     UploadUserLocalMusicParams params,
   ) {
     return callCatch(
-      () => _multipartApiClient.importUserLocalMusic(params),
+      () => _multipartApiClientProvider.get().importUserLocalMusic(params),
       networkError: const UploadUserLocalMusicError.network(),
       unknownError: const UploadUserLocalMusicError.unknown(),
       onResponseError: (response) {
@@ -42,7 +43,7 @@ class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteServ
   @override
   Future<Either<NetworkCallError, List<String>>> getAuthUserAudioIds() {
     return callCatchHandleNetworkCallError(() async {
-      final res = await _apiClient.getAuthUserAudioIds();
+      final res = await _apiClientProvider.get().getAuthUserAudioIds();
 
       return res ?? [];
     });
@@ -53,7 +54,7 @@ class AudioRemoteServiceImpl with SafeHttpRequestWrap implements AudioRemoteServ
     return callCatchHandleNetworkCallError(() async {
       final body = AudioIdsBody(audioIds: audioIds);
 
-      final res = await _apiClient.getAuthUserUserAudiosByIds(body);
+      final res = await _apiClientProvider.get().getAuthUserUserAudiosByIds(body);
 
       return res ?? [];
     });

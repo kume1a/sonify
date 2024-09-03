@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class AnimatedPlayPause extends StatefulWidget {
   const AnimatedPlayPause({
-    Key? key,
+    super.key,
     required this.playing,
     this.size,
     this.color,
-  }) : super(key: key);
+  });
 
   final double? size;
   final bool playing;

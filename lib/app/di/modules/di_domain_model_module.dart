@@ -1,3 +1,4 @@
+import 'package:common_utilities/common_utilities.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,8 +21,14 @@ abstract class DiDomainModelModule {
   }
 
   @lazySingleton
-  AudioMapper audioMapper(AudioLikeMapper audioLikeMapper) {
-    return AudioMapper(audioLikeMapper);
+  AudioMapper audioMapper(
+    AudioLikeMapper audioLikeMapper,
+    HiddenUserAudioMapper hiddenUserAudioMapper,
+  ) {
+    return AudioMapper(
+      audioLikeMapper,
+      hiddenUserAudioMapper,
+    );
   }
 
   @lazySingleton
@@ -123,11 +130,11 @@ abstract class DiDomainModelModule {
   @injectable
   PlaylistUpdatedEventChannel playlistUpdatedEventChannel(
     PlaylistMapper playlistMapper,
-    SocketProvider socketProvider,
+    DisposableProvider<SocketHolder> socketHolderProvider,
   ) {
     return WsPlaylistUpdatedEventChannel(
       playlistMapper,
-      socketProvider,
+      socketHolderProvider,
     );
   }
 
@@ -216,6 +223,36 @@ abstract class DiDomainModelModule {
     return UserAudioRemoteRepositoryImpl(
       userAudioRemoteService,
       userAudioMapper,
+    );
+  }
+
+  // hidden user audio
+  @lazySingleton
+  HiddenUserAudioMapper hiddenUserAudioMapper() {
+    return HiddenUserAudioMapper();
+  }
+
+  @lazySingleton
+  HiddenUserAudioRemoteRepository hiddenUserAudioRemoteRepository(
+    HiddenUserAudioRemoteService hiddenUserAudioRemoteService,
+    HiddenUserAudioMapper hiddenUserAudioMapper,
+  ) {
+    return HiddenUserAudioRemoteRepositoryImpl(
+      hiddenUserAudioRemoteService,
+      hiddenUserAudioMapper,
+    );
+  }
+
+  @lazySingleton
+  HiddenUserAudioLocalRepository hiddenUserAudioLocalRepository(
+    HiddenUserAudioEntityDao hiddenUserAudioEntityDao,
+    HiddenUserAudioMapper hiddenUserAudioMapper,
+    DbBatchProviderFactory dbBatchProviderFactory,
+  ) {
+    return HiddenUserAudioLocalRepositoryImpl(
+      hiddenUserAudioEntityDao,
+      hiddenUserAudioMapper,
+      dbBatchProviderFactory,
     );
   }
 

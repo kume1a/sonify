@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:common_models/common_models.dart';
 import 'package:sonify_client/sonify_client.dart';
 
-import '../model/index.dart';
+import '../../user_audio/model/user_audio.dart';
 
 abstract interface class AudioRemoteRepository {
   Future<Either<UploadUserLocalMusicError, UserAudio>> uploadUserLocalMusic({

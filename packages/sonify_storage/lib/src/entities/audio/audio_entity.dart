@@ -1,6 +1,7 @@
 import '../../shared/wrapped.dart';
 
 import '../audio_like/audio_like_entity.dart';
+import '../hidden_user_audio/hidden_user_audio_entity.dart';
 
 class AudioEntity {
   AudioEntity({
@@ -18,6 +19,7 @@ class AudioEntity {
     required this.thumbnailUrl,
     required this.localThumbnailPath,
     required this.audioLike,
+    required this.hiddenUserAudio,
   });
 
   final String? id;
@@ -35,6 +37,7 @@ class AudioEntity {
   final String? localThumbnailPath;
 
   final AudioLikeEntity? audioLike;
+  final HiddenUserAudioEntity? hiddenUserAudio;
 
   AudioEntity copyWith({
     Wrapped<String?>? id,
@@ -51,6 +54,7 @@ class AudioEntity {
     Wrapped<String?>? thumbnailUrl,
     Wrapped<String?>? localThumbnailPath,
     Wrapped<AudioLikeEntity?>? audioLike,
+    Wrapped<HiddenUserAudioEntity?>? hiddenUserAudio,
   }) {
     return AudioEntity(
       id: id?.value ?? this.id,
@@ -67,6 +71,7 @@ class AudioEntity {
       thumbnailUrl: thumbnailUrl?.value ?? this.thumbnailUrl,
       localThumbnailPath: localThumbnailPath?.value ?? this.localThumbnailPath,
       audioLike: audioLike?.value ?? this.audioLike,
+      hiddenUserAudio: hiddenUserAudio?.value ?? this.hiddenUserAudio,
     );
   }
 }
