@@ -66,7 +66,6 @@ class EmailSignInCubit extends Cubit<EmailSignInState> {
     if (state.email.invalid || state.password.invalid) {
       return;
     }
-
     emit(state.copyWith(signInState: ActionState.executing()));
 
     await _authRemoteRepository

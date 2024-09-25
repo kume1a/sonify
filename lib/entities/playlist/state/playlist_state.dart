@@ -51,7 +51,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   );
 
   final UserAudioLocalRepository _userAudioLocalRepository;
-  final PlaylistCachedRepository _playlistCachedRepository;
+  final PlaylistLocalRepository _playlistCachedRepository;
   final UserAudioRemoteRepository _userAudioRemoteRepository;
   final BottomSheetManager _bottomSheetManager;
   final EventBus _eventBus;

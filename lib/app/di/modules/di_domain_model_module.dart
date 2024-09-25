@@ -114,19 +114,6 @@ abstract class DiDomainModelModule {
     );
   }
 
-  @lazySingleton
-  PlaylistCachedRepository playlistCachedRepository(
-    PlaylistRemoteRepository playlistRemoteRepository,
-    PlaylistLocalRepository playlistLocalRepository,
-    AudioLocalRepository audioLocalRepository,
-  ) {
-    return PlaylistCachedRepositoryImpl(
-      playlistRemoteRepository,
-      playlistLocalRepository,
-      audioLocalRepository,
-    );
-  }
-
   @injectable
   PlaylistUpdatedEventChannel playlistUpdatedEventChannel(
     PlaylistMapper playlistMapper,

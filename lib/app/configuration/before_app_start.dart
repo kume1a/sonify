@@ -13,6 +13,8 @@ Future<void> beforeAppStart() async {
     configureAudioComponents(),
     systemUiManager.lockPortraitOrientation(),
     configureSecureStorage(),
-    getServerTime(),
   ]);
+
+  // don't await to avoid long startup time.
+  getServerTime();
 }

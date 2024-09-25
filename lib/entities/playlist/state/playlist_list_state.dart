@@ -20,7 +20,6 @@ extension PlaylistListCubitX on BuildContext {
 @injectable
 final class PlaylistListCubit extends Cubit<PlaylistListState> {
   PlaylistListCubit(
-    this._userPlaylistRemoteRepository,
     this._userPlaylistLocalRepository,
     this._pageNavigator,
     this._authUserInfoProvider,
@@ -29,7 +28,6 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
     init();
   }
 
-  final UserPlaylistRemoteRepository _userPlaylistRemoteRepository;
   final UserPlaylistLocalRepository _userPlaylistLocalRepository;
   final PageNavigator _pageNavigator;
   final AuthUserInfoProvider _authUserInfoProvider;
@@ -89,16 +87,6 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
     }
 
     emit(PlaylistListState.loading());
-
-    final remotePlaylistsRes = await _userPlaylistRemoteRepository.getAllFullByAuthUser();
-
-    if (remotePlaylistsRes.isRight) {
-      final remotePlaylists = remotePlaylistsRes.rightOrThrow;
-
-      emit(SimpleDataState.success(remotePlaylists));
-
-      return;
-    }
 
     final localPlaylists = await _userPlaylistLocalRepository.getAllByUserId(userId);
 

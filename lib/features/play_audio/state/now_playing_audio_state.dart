@@ -56,7 +56,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     this._authUserInfoProvider,
     this._likeOrUnlikeAudio,
     this._audioLikeLocalRepository,
-    this._playlistCachedRepository,
+    this._playlistLocalRepository,
     this._connectivityStatus,
     this._toastNotifier,
     this._filterPlayableAudios,
@@ -71,7 +71,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   final AuthUserInfoProvider _authUserInfoProvider;
   final LikeOrUnlikeAudio _likeOrUnlikeAudio;
   final AudioLikeLocalRepository _audioLikeLocalRepository;
-  final PlaylistCachedRepository _playlistCachedRepository;
+  final PlaylistLocalRepository _playlistLocalRepository;
   final ConnectivityStatus _connectivityStatus;
   final ToastNotifier _toastNotifier;
   final FilterPlayableAudios _filterPlayableAudios;
@@ -316,7 +316,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return localAudios;
     }
 
-    final playlist = await _playlistCachedRepository.getById(playlistId);
+    final playlist = await _playlistLocalRepository.getById(playlistId);
 
     emit(state.copyWith(playlist: playlist.dataOrNull, audios: null));
 
