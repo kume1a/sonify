@@ -65,12 +65,22 @@ class _QueueItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(task.payload.audioTitle ?? ''),
+                Text(
+                  task.payload.audioTitle ?? '',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 Text(formattedProgress),
               ],
             ),
           ),
-          Text(formattedSpeed),
+          SizedBox(
+            width: 72,
+            child: Text(
+              formattedSpeed,
+              textAlign: TextAlign.end,
+            ),
+          ),
         ],
       ),
     );

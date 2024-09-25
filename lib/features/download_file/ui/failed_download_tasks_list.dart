@@ -2,6 +2,7 @@ import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../app/intl/app_localizations.dart';
 import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/util/equality.dart';
 import '../state/downloads_state.dart';
@@ -38,6 +39,8 @@ class _Item extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
@@ -58,10 +61,14 @@ class _Item extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(task.payload.audioTitle ?? ''),
-                const Text(
-                  'Failed',
-                  style: TextStyle(color: Colors.red),
+                Text(
+                  task.payload.audioTitle ?? '',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  l.failed,
+                  style: const TextStyle(color: Colors.red),
                 ),
               ],
             ),

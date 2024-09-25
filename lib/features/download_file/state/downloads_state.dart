@@ -50,6 +50,8 @@ class DownloadsCubit extends Cubit<DownloadsState> {
     _init();
   }
 
+  static const _maxConcurrentDownloads = 5;
+
   final _queue = Queue<DownloadTask>();
 
   final EventBus _eventBus;
@@ -59,15 +61,21 @@ class DownloadsCubit extends Cubit<DownloadsState> {
   final DownloadedTaskLocalRepository _downloadedTaskLocalRepository;
   final AuthUserInfoProvider _authUserInfoProvider;
 
-  final _lock = Lock();
+  final List<Lock> _downloadLocks = [];
+  final _queueLock = Lock();
   Timer? _timer;
 
   final _subscriptionComposite = SubscriptionComposite();
 
   Future<void> _init() async {
+    _downloadLocks.clear();
+    for (int i = 0; i < _maxConcurrentDownloads; i++) {
+      _downloadLocks.add(Lock());
+    }
+
     _timer = Timer.periodic(
-      const Duration(seconds: 2),
-      (_) => _downloadFirstFromQueue(),
+      const Duration(seconds: 5),
+      (_) => _downloadFromQueue(),
     );
 
     _subscriptionComposite.add(
@@ -99,13 +107,11 @@ class DownloadsCubit extends Cubit<DownloadsState> {
       speedInBytesPerSecond: 0,
     );
 
-    await _lock.synchronized(() {
-      _queue.add(reEnqueuedDownloadTask);
+    await _queueLock.synchronized(() => _queue.add(reEnqueuedDownloadTask));
 
-      final failed = List.of(state.failed)..remove(failedDownloadTask);
+    final failed = List.of(state.failed)..remove(failedDownloadTask);
 
-      emit(state.copyWith(downloading: List.of(_queue), failed: failed));
-    });
+    emit(state.copyWith(downloading: List.of(_queue), failed: failed));
   }
 
   Future<void> _onDownloadsEvent(DownloadsEvent event) async {
@@ -128,55 +134,61 @@ class DownloadsCubit extends Cubit<DownloadsState> {
     await _enqueueDownloadTask(downloadTask);
   }
 
-  Future<void> _enqueueDownloadTask(DownloadTask downloadTask) {
-    return _lock.synchronized(
-      () async {
-        final payloadIdentifier =
-            downloadTask.payload.userAudio?.id ?? downloadTask.payload.playlistAudio?.id;
+  Future<void> _enqueueDownloadTask(DownloadTask downloadTask) async {
+    final payloadIdentifier = downloadTask.payload.userAudio?.id ?? downloadTask.payload.playlistAudio?.id;
 
-        bool predicate(DownloadTask e) =>
-            e.payload.userAudio?.id == payloadIdentifier || e.payload.playlistAudio?.id == payloadIdentifier;
+    bool predicate(DownloadTask e) =>
+        e.payload.userAudio?.id == payloadIdentifier || e.payload.playlistAudio?.id == payloadIdentifier;
 
-        final isAlreadyInQueue = state.downloading.any(predicate) || state.failed.any(predicate);
+    final isAlreadyInQueue = state.downloading.any(predicate) || state.failed.any(predicate);
 
-        if (isAlreadyInQueue) {
-          return;
-        }
-
-        _queue.add(downloadTask);
-        emit(state.copyWith(downloading: List.of(_queue)));
-      },
-    );
-  }
-
-  Future<void> _downloadFirstFromQueue() async {
-    if (_lock.inLock) {
+    if (isAlreadyInQueue) {
       return;
     }
 
-    _lock.synchronized(() async {
-      final downloadTask = _queue.firstOrNull;
+    await _queueLock.synchronized(() => _queue.add(downloadTask));
 
-      if (downloadTask == null || downloadTask.state != DownloadTaskState.idle) {
-        return;
+    emit(state.copyWith(downloading: List.of(_queue)));
+  }
+
+  Future<void> _downloadFromQueue() async {
+    final downloadTasks = await _queueLock.synchronized(
+      () => _queue.where((e) => e.state == DownloadTaskState.idle).take(_maxConcurrentDownloads).toList(),
+    );
+
+    for (final lock in _downloadLocks) {
+      if (lock.locked) {
+        continue;
       }
 
-      // synchronized won't allow inProgress state before finished
-      // so it should be only idle in queue here
-      if (downloadTask.state != DownloadTaskState.idle) {
-        _queue.removeFirst();
-        emit(state.copyWith(downloading: List.of(_queue)));
-        return;
+      if (downloadTasks.isEmpty) {
+        break;
       }
 
-      try {
-        final downloadedTask = await _downloadTaskDownloader.download(
-          downloadTask,
-          onReceiveProgress: (count, total, speedInBytesPerSecond) {
-            if (total < 0) {
-              return;
-            }
+      final downloadTask = downloadTasks.removeAt(0);
 
+      lock.synchronized(() => _downloadFirstFromQueue(downloadTask));
+    }
+  }
+
+  Future<void> _downloadFirstFromQueue(DownloadTask downloadTask) async {
+    // synchronized won't allow inProgress state before finished
+    // so it should be only idle in queue here
+    if (downloadTask.state != DownloadTaskState.idle) {
+      await _queueLock.synchronized(() => _queue.removeFirst());
+      emit(state.copyWith(downloading: List.of(_queue)));
+      return;
+    }
+
+    try {
+      final downloadedTask = await _downloadTaskDownloader.download(
+        downloadTask,
+        onReceiveProgress: (count, total, speedInBytesPerSecond) async {
+          if (total < 0) {
+            return;
+          }
+
+          await _queueLock.synchronized(() {
             _queue
               ..removeFirst()
               ..addFirst(downloadTask.copyWith(
@@ -184,36 +196,36 @@ class DownloadsCubit extends Cubit<DownloadsState> {
                 speedInBytesPerSecond: speedInBytesPerSecond,
                 state: DownloadTaskState.inProgress,
               ));
+          });
 
-            emit(state.copyWith(downloading: List.of(_queue)));
-          },
-        );
-
-        if (downloadedTask != null) {
-          await _onDownloadTaskDownloaded(downloadedTask);
-
-          _queue.removeFirst();
-
-          final downloaded = List.of(state.downloaded)..insert(0, downloadedTask);
-
-          emit(state.copyWith(downloading: List.of(_queue), downloaded: downloaded));
-          return;
-        }
-      } catch (e) {
-        /* ignored */
-      }
-
-      final failedDownloadTask = downloadTask.copyWith(
-        progress: 0,
-        state: DownloadTaskState.failed,
+          emit(state.copyWith(downloading: List.of(_queue)));
+        },
       );
 
-      _queue.removeFirst();
+      if (downloadedTask != null) {
+        await _onDownloadTaskDownloaded(downloadedTask);
 
-      final failed = List.of(state.failed)..insert(0, failedDownloadTask);
+        await _queueLock.synchronized(() => _queue.removeFirst());
 
-      emit(state.copyWith(downloading: List.of(_queue), failed: failed));
-    });
+        final downloaded = List.of(state.downloaded)..insert(0, downloadedTask);
+
+        emit(state.copyWith(downloading: List.of(_queue), downloaded: downloaded));
+        return;
+      }
+    } catch (e) {
+      Logger.root.severe('Failed to download task: $downloadTask', e);
+    }
+
+    final failedDownloadTask = downloadTask.copyWith(
+      progress: 0,
+      state: DownloadTaskState.failed,
+    );
+
+    await _queueLock.synchronized(() => _queue.removeFirst());
+
+    final failed = List.of(state.failed)..insert(0, failedDownloadTask);
+
+    emit(state.copyWith(downloading: List.of(_queue), failed: failed));
   }
 
   Future<void> _loadDownloadedTasks() async {

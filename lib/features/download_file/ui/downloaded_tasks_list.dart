@@ -55,7 +55,11 @@ class _Item extends StatelessWidget {
               ),
             ),
           Expanded(
-            child: Text(task.payload.audioTitle ?? ''),
+            child: Text(
+              task.payload.audioTitle ?? '',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),

@@ -178,5 +178,6 @@
   "changeServerUrlOrigin": "Change server url origin",
   "selectServerUrlOrigin": "Select server url origin",
   "local": "Local",
-  "remote": "Remote"
+  "remote": "Remote",
+  "failed": "Failed"
 }
