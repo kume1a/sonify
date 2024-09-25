@@ -79,7 +79,10 @@ class _PanelContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const _AudioPlayerHeader(),
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: _AudioPlayerHeader(),
+        ),
         const SizedBox(height: 24),
         LayoutBuilder(
           builder: (_, constraints) => _AudioPlayerImage(
@@ -191,21 +194,13 @@ class _AudioPlayerHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: context.audioPlayerPanelCubit.onDownArrowPressed,
-            iconSize: 28,
-            icon: const RotatedBox(
-              quarterTurns: 1,
-              child: Icon(Icons.chevron_right),
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: SvgPicture.asset(Assets.svgQuillList),
-          ),
-        ],
+      child: IconButton(
+        onPressed: context.audioPlayerPanelCubit.onDownArrowPressed,
+        iconSize: 28,
+        icon: const RotatedBox(
+          quarterTurns: 1,
+          child: Icon(Icons.chevron_right),
+        ),
       ),
     );
   }
