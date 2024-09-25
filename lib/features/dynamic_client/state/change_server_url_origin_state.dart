@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../shared/bottom_sheet/bottom_sheet_manager.dart';
 import '../../../shared/bottom_sheet/select_option/select_option.dart';
+import '../../../shared/values/assets.dart';
 import '../model/server_url_origin.dart';
 import '../util/server_url_origin_store.dart';
 
@@ -23,16 +24,20 @@ class ChangeServerUrlOriginCubit extends Cubit<Unit> {
   final BottomSheetManager _bottomSheetManager;
 
   Future<void> onChangeServerUrlOriginTilePressed() async {
+    final storedValue = _serverUrlOriginStore.read();
+
     final selectedOption = await _bottomSheetManager.openOptionSelector(
       header: (l) => l.selectServerUrlOrigin,
       options: [
         SelectOption(
           label: (l) => l.local,
           value: ServerUrlOrigin.local,
+          iconAssetName: storedValue == ServerUrlOrigin.local ? Assets.svgCheck : null,
         ),
         SelectOption(
           label: (l) => l.remote,
           value: ServerUrlOrigin.remote,
+          iconAssetName: storedValue == ServerUrlOrigin.remote ? Assets.svgCheck : null,
         ),
       ],
     );
