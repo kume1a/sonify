@@ -117,4 +117,13 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
 
     return query.isNotEmpty ? _userAudioEntityMapper.mapToEntity(query.first) : null;
   }
+
+  @override
+  Future<int> deleteById(String id) {
+    return _db.delete(
+      UserAudio_.tn,
+      where: '${UserAudio_.id} = ?',
+      whereArgs: [id],
+    );
+  }
 }

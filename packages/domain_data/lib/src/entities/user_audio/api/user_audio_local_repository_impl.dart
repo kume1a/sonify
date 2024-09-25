@@ -71,4 +71,9 @@ class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepo
       return res != null ? _userAudioMapper.entityToModel(res) : null;
     });
   }
+
+  @override
+  Future<EmptyResult> deleteById(String id) {
+    return wrapWithEmptyResult(() => _userAudioEntityDao.deleteById(id));
+  }
 }

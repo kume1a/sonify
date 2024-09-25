@@ -2,13 +2,9 @@ import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 
 import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/list_item/audio_list_item.dart';
-import '../../../shared/util/color.dart';
-import '../../../shared/values/app_theme_extension.dart';
-import '../../../shared/values/assets.dart';
 
 class PlaylistListItem extends StatelessWidget {
   const PlaylistListItem({
@@ -22,8 +18,6 @@ class PlaylistListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
       buildWhen: (previous, current) =>
           previous.nowPlayingAudio != current.nowPlayingAudio ||
@@ -51,17 +45,7 @@ class PlaylistListItem extends StatelessWidget {
           isDisabled: isDisabled,
           padding: EdgeInsets.only(left: 16.r),
           showDownloadedIndicator: true,
-          end: onMenuPressed != null
-              ? IconButton(
-                  icon: SvgPicture.asset(
-                    Assets.svgMenuVertical,
-                    colorFilter: svgColor(
-                        isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onSurface),
-                  ),
-                  splashRadius: 24,
-                  onPressed: isDisabled ? null : onMenuPressed,
-                )
-              : null,
+          onMenuPressed: onMenuPressed,
         );
       },
     );

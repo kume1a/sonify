@@ -179,5 +179,8 @@
   "selectServerUrlOrigin": "Select server url origin",
   "local": "Local",
   "remote": "Remote",
-  "failed": "Failed"
+  "failed": "Failed",
+  "delete": "Delete",
+  "failedToDelete": "Failed to delete",
+  "error": "Error"
 }

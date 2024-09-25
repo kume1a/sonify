@@ -18,4 +18,6 @@ abstract interface class UserAudioLocalRepository {
     required String userId,
     required String audioId,
   });
+
+  Future<EmptyResult> deleteById(String id);
 }

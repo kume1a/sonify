@@ -18,7 +18,7 @@ class AudioListItem extends StatelessWidget {
     this.isDisabled = false,
     this.showDownloadedIndicator = false,
     this.padding,
-    this.end,
+    this.onMenuPressed,
   });
 
   static final height = 46.h;
@@ -28,8 +28,8 @@ class AudioListItem extends StatelessWidget {
   final bool isPlaying;
   final bool isDisabled;
   final EdgeInsets? padding;
-  final Widget? end;
   final bool showDownloadedIndicator;
+  final VoidCallback? onMenuPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +120,17 @@ class AudioListItem extends StatelessWidget {
                         colorFilter: svgColor(theme.colorScheme.secondary),
                       ),
                     ),
-                  if (end != null) end!,
+                  if (onMenuPressed != null)
+                    IconButton(
+                      icon: SvgPicture.asset(
+                        Assets.svgMenuVertical,
+                        colorFilter: svgColor(
+                          isDisabled ? theme.appThemeExtension?.elSecondary : theme.colorScheme.onSurface,
+                        ),
+                      ),
+                      splashRadius: 24,
+                      onPressed: isDisabled ? null : onMenuPressed,
+                    ),
                 ],
               ),
             ),

@@ -142,7 +142,7 @@ abstract class ApiClient {
   @POST('/v1/useraudio/createForAuthUser')
   Future<List<UserAudioDto>?> createUserAudiosForAuthUser(@Body() AudioIdsBody body);
 
-  @POST('/v1/useraudio/deleteForAuthUser')
+  @DELETE('/v1/useraudio/deleteForAuthUser')
   Future<void> deleteUserAudioForAuthUser(@Body() AudioIdBody body);
 
   // hidden user audio -----------------

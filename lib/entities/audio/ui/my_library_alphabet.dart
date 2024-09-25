@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../features/play_audio/state/now_playing_audio_state.dart';
 import '../../../shared/ui/alphabet_list.dart';
 import '../../../shared/values/app_theme_extension.dart';
-import '../state/local_user_audio_files_state.dart';
+import '../state/my_library_audios_state.dart';
 
 class MyLibraryAlphabet extends StatelessWidget {
   const MyLibraryAlphabet({
@@ -18,13 +19,13 @@ class MyLibraryAlphabet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LocalUserAudioFilesCubit, LocalUserAudioFilesState>(
+    return BlocBuilder<MyLibraryAudiosCubit, MyLibraryAudiosState>(
       builder: (_, localAudioFilesState) {
         return BlocBuilder<NowPlayingAudioCubit, NowPlayingAudioState>(
           builder: (_, nowPlayingAudioState) => localAudioFilesState.maybeWhen(
             orElse: () => const SizedBox.shrink(),
             success: (data) => _Content(
-              audios: data,
+              userAudios: data,
               nowPlayingAudio: nowPlayingAudioState.nowPlayingAudio.getOrNull,
               onIndexChanged: onIndexChanged,
             ),
@@ -37,12 +38,12 @@ class MyLibraryAlphabet extends StatelessWidget {
 
 class _Content extends StatelessWidget {
   const _Content({
-    required this.audios,
+    required this.userAudios,
     required this.nowPlayingAudio,
     required this.onIndexChanged,
   });
 
-  final List<Audio> audios;
+  final List<UserAudio> userAudios;
   final Audio? nowPlayingAudio;
   final ValueChanged<int> onIndexChanged;
 
@@ -51,7 +52,7 @@ class _Content extends StatelessWidget {
     final theme = Theme.of(context);
 
     return AlphabetList(
-      keywords: audios.map((e) => e.title).toList(),
+      keywords: userAudios.map((e) => e.audio?.title).whereNotNull().toList(),
       backgroundColor: theme.colorScheme.primaryContainer,
       onIndexChanged: onIndexChanged,
       padding: EdgeInsets.symmetric(vertical: 16.h),

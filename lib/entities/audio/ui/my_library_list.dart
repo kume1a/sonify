@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../shared/ui/list_item/audio_list_item.dart';
 import '../../../shared/ui/small_circular_progress_indicator.dart';
-import '../state/local_user_audio_files_state.dart';
+import '../state/my_library_audios_state.dart';
 import 'local_user_audio_list_item.dart';
 
 class MyLibraryList extends StatelessWidget {
@@ -17,7 +17,7 @@ class MyLibraryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LocalUserAudioFilesCubit, LocalUserAudioFilesState>(
+    return BlocBuilder<MyLibraryAudiosCubit, MyLibraryAudiosState>(
       builder: (_, state) {
         return state.maybeWhen(
           orElse: () => const SliverToBoxAdapter(),
@@ -30,7 +30,7 @@ class MyLibraryList extends StatelessWidget {
               }
 
               return LocalUserAudioListItem(
-                audio: data[index],
+                userAudio: data[index],
                 padding: itemPadding,
               );
             },

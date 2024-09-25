@@ -62,8 +62,7 @@ class AppAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> updateQueue(List<MediaItem> queue) async {
-    final audioSources =
-        queue.map(mediaItemToAudioSource).where((e) => e != null).cast<AudioSource>().toList();
+    final audioSources = queue.map(mediaItemToAudioSource).whereNotNull().toList();
 
     await _playlist.clear();
     await _playlist.addAll(audioSources);

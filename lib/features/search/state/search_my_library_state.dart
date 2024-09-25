@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:common_models/common_models.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:flutter/widgets.dart';
@@ -8,7 +7,7 @@ import 'package:logging/logging.dart';
 
 import '../../../shared/util/debounce.dart';
 
-typedef SearchMyLibraryState = SimpleDataState<List<Audio>>;
+typedef SearchMyLibraryState = SimpleDataState<List<UserAudio>>;
 
 extension SearchMyLibraryCubitX on BuildContext {
   SearchMyLibraryCubit get searchMyLibraryCubit => read<SearchMyLibraryCubit>();
@@ -49,9 +48,7 @@ class SearchMyLibraryCubit extends Cubit<SearchMyLibraryState> {
         searchQuery: query,
       );
 
-      final mapped = res.map((e) => e.map((userAudio) => userAudio.audio).whereNotNull().toList());
-
-      emit(SearchMyLibraryState.fromResult(mapped));
+      emit(SearchMyLibraryState.fromResult(res));
     });
   }
 }

@@ -106,13 +106,14 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     return super.close();
   }
 
-  Future<void> onLocalAudioPressed(Audio? audio) async {
-    if (audio == null) {
-      Logger.root.warning('NowPlayingAudioCubit.onLocalAudioPressed: audio is null');
+  Future<void> onLocalAudioPressed(UserAudio? userAudio) async {
+    if (userAudio == null || userAudio.audioId == null) {
+      Logger.root.warning(
+          'NowPlayingAudioCubit.onLocalAudioPressed: userAudio or userAudio.audioId is null', userAudio);
       return;
     }
 
-    if (state.nowPlayingAudio.getOrNull == audio) {
+    if (state.nowPlayingAudio.getOrNull?.id == userAudio.audioId) {
       return;
     }
 
@@ -127,7 +128,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
-    final audioIndex = state.audios?.indexWhere((e) => e.id == audio.id) ?? -1;
+    final audioIndex = state.audios?.indexWhere((e) => e.id == userAudio.audioId) ?? -1;
     if (audioIndex == -1) {
       Logger.root.warning('PlaylistCubit.onAudioPressed: audioIndex is -1');
       return;

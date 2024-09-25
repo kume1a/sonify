@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../app/di/register_dependencies.dart';
-import '../entities/audio/state/local_user_audio_files_state.dart';
+import '../entities/audio/state/my_library_audios_state.dart';
 import '../entities/audio/ui/my_library_alphabet.dart';
 import '../entities/audio/ui/my_library_list.dart';
 import '../entities/playlist/ui/my_library_header.dart';
@@ -22,7 +22,7 @@ class MyLibraryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => getIt<LocalUserAudioFilesCubit>()),
+        BlocProvider(create: (_) => getIt<MyLibraryAudiosCubit>()),
         BlocProvider(create: (_) => getIt<AudioPlayerPanelCubit>()),
       ],
       child: const _Content(),
@@ -68,7 +68,7 @@ class _Content extends HookWidget {
                     const DefaultBackButton(),
                     Expanded(
                       child: SearchContainer(
-                        onPressed: context.localAudioFilesCubit.onSearchContainerPressed,
+                        onPressed: context.myLibraryAudiosCubit.onSearchContainerPressed,
                       ),
                     ),
                   ],
@@ -91,7 +91,7 @@ class _Content extends HookWidget {
                         MyLibraryList(
                           itemPadding: EdgeInsets.only(
                             left: 16.r,
-                            right: isAlphabetListVisible.value ? 26.r : 16.r,
+                            right: isAlphabetListVisible.value ? 20.r : 2.r,
                           ),
                         ),
                       ],

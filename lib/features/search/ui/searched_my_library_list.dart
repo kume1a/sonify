@@ -25,7 +25,7 @@ class SearchedMyLibraryList extends StatelessWidget {
               }
 
               return LocalUserAudioListItem(
-                audio: data[index],
+                userAudio: data[index],
                 padding: EdgeInsets.symmetric(horizontal: 16.r),
               );
             },

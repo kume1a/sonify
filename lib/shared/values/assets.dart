@@ -38,6 +38,7 @@ abstract final class Assets {
   static const svgShuffleActive = '$_icons/shuffle_active.svg';
   static const svgServer = '$_icons/server.svg';
   static const svgCheck = '$_icons/check.svg';
+  static const svgTrashCan = '$_icons/trash_can.svg';
 
   static const imageBlackMetalWall = '$_images/black_metal_wall.jpg';
 }

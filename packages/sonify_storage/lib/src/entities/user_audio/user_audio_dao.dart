@@ -16,4 +16,6 @@ abstract interface class UserAudioEntityDao {
     required String userId,
     required String audioId,
   });
+
+  Future<int> deleteById(String id);
 }
