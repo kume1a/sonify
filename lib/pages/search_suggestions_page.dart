@@ -10,15 +10,28 @@ import '../features/search/ui/youtube_search_results.dart';
 import '../features/search/ui/youtube_search_suggestions_header.dart';
 import '../shared/ui/search_input_with_cancel.dart';
 
+class SearchSuggestionsPageArgs {
+  const SearchSuggestionsPageArgs({
+    this.initialValue,
+  });
+
+  final String? initialValue;
+}
+
 class SearchSuggestionsPage extends StatelessWidget {
-  const SearchSuggestionsPage({super.key});
+  const SearchSuggestionsPage({
+    super.key,
+    required this.args,
+  });
+
+  final SearchSuggestionsPageArgs args;
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => getIt<YoutubeSearchCubit>()),
-        BlocProvider(create: (_) => getIt<SpotifySearchCubit>()),
+        BlocProvider(create: (_) => getIt<YoutubeSearchCubit>()..init(args)),
+        BlocProvider(create: (_) => getIt<SpotifySearchCubit>()..init(args)),
       ],
       child: const _Content(),
     );
@@ -43,6 +56,7 @@ class _Content extends StatelessWidget {
                 },
                 onCancelPressed: () => Navigator.of(context).maybePop(),
                 onSubmitted: context.youtubeSearchCubit.onSubmitted,
+                controller: context.youtubeSearchCubit.searchQueryController,
               ),
             ),
             const Expanded(

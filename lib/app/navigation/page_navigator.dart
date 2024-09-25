@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../pages/playlist_page.dart';
 import '../../pages/search_playlist_audios_page.dart';
+import '../../pages/search_suggestions_page.dart';
 import '../../pages/youtube_video_page.dart';
 import 'routes.dart';
 
@@ -16,8 +17,11 @@ class PageNavigator {
 
   void toMain() => GlobalNavigator.pushNamedAndRemoveAll(Routes.main);
 
-  Future<YoutubeSearchResult?> toSearchSuggestions() async {
-    final dynamic result = await GlobalNavigator.pushNamed(Routes.searchSuggestions);
+  Future<YoutubeSearchResult?> toSearchSuggestions(SearchSuggestionsPageArgs args) async {
+    final dynamic result = await GlobalNavigator.pushNamed(
+      Routes.searchSuggestions,
+      arguments: args,
+    );
 
     if (result is YoutubeSearchResult) {
       return result;

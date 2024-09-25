@@ -10,11 +10,13 @@ class SearchInputWithCancel extends StatelessWidget {
     required this.onChanged,
     required this.onCancelPressed,
     this.onSubmitted,
+    this.controller,
   });
 
   final ValueChanged<String> onChanged;
   final VoidCallback onCancelPressed;
   final ValueChanged<String>? onSubmitted;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class SearchInputWithCancel extends StatelessWidget {
       children: [
         Expanded(
           child: TextField(
+            controller: controller,
             autofocus: true,
             autocorrect: false,
             onChanged: onChanged,

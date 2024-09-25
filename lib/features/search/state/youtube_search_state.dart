@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../app/navigation/page_navigator.dart';
+import '../../../pages/search_suggestions_page.dart';
 import '../../../shared/util/debounce.dart';
 
 typedef YoutubeSearchState = DataState<NetworkCallError, YoutubeSearchSuggestions>;
@@ -25,6 +26,17 @@ class YoutubeSearchCubit extends Cubit<YoutubeSearchState> {
 
   final Debounce _debounce = Debounce.fromMilliseconds(400);
 
+  final searchQueryController = TextEditingController();
+
+  void init(SearchSuggestionsPageArgs args) {
+    final initialValue = args.initialValue ?? '';
+
+    if (initialValue.isNotEmpty) {
+      searchQueryController.text = initialValue;
+      onSearchQueryChanged(initialValue);
+    }
+  }
+
   Future<void> onSearchQueryChanged(String value) async {
     _debounce.execute(() async {
       emit(YoutubeSearchState.loading());
@@ -35,9 +47,14 @@ class YoutubeSearchCubit extends Cubit<YoutubeSearchState> {
     });
   }
 
+  void onSearchSuggestionFillPressed(String value) {
+    searchQueryController.text = value;
+  }
+
   @override
   Future<void> close() {
     _debounce.dispose();
+    searchQueryController.dispose();
 
     return super.close();
   }

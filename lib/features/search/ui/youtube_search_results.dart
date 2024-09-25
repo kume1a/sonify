@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../shared/values/assets.dart';
 import '../../search/state/youtube_search_state.dart';
+import '../state/spotify_search_state.dart';
 
 class YoutubeSearchResults extends StatelessWidget {
   const YoutubeSearchResults({super.key});
@@ -38,7 +39,7 @@ class _SuggestionList extends StatelessWidget {
         return InkWell(
           onTap: () => context.youtubeSearchCubit.onSearchSuggestionPressed(suggestion),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+            padding: const EdgeInsets.fromLTRB(16, 5, 6, 5),
             child: Row(
               children: [
                 SvgPicture.asset(
@@ -47,9 +48,20 @@ class _SuggestionList extends StatelessWidget {
                   height: 20,
                 ),
                 const SizedBox(width: 10),
-                Text(
-                  suggestion,
-                  style: const TextStyle(fontSize: 16),
+                Expanded(
+                  child: Text(
+                    suggestion,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    context.youtubeSearchCubit.onSearchSuggestionFillPressed(suggestion);
+                    context.youtubeSearchCubit.onSearchQueryChanged(suggestion);
+                    context.spotifySearchCubit.onSearchQueryChanged(suggestion);
+                  },
+                  icon: const Icon(Icons.arrow_outward),
+                  visualDensity: VisualDensity.compact,
                 ),
               ],
             ),

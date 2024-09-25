@@ -45,9 +45,9 @@ class _NoSearchQueryView extends StatelessWidget {
           onTap: context.youtubeVideosCubit.onSearchPressed,
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(6),
               color: theme.colorScheme.primaryContainer,
             ),
             child: Row(
@@ -95,9 +95,9 @@ class _SearchQueryTopBar extends StatelessWidget {
           GestureDetector(
             onTap: context.youtubeVideosCubit.onSearchPressed,
             child: Container(
-              padding: const EdgeInsets.fromLTRB(12, 2, 4, 2),
+              padding: const EdgeInsets.only(left: 10, right: 2),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(6),
                 color: theme.colorScheme.primaryContainer,
               ),
               child: Row(

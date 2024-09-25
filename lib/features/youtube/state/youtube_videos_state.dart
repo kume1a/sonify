@@ -7,6 +7,7 @@ import 'package:injectable/injectable.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../../app/navigation/page_navigator.dart';
+import '../../../pages/search_suggestions_page.dart';
 import '../../../pages/youtube_video_page.dart';
 
 part 'youtube_videos_state.freezed.dart';
@@ -39,7 +40,9 @@ class YoutubeVideosCubit extends Cubit<YoutubeVideosState> {
   final PageNavigator _pageNavigator;
 
   Future<void> onSearchPressed() async {
-    final searchRes = await _pageNavigator.toSearchSuggestions();
+    final args = SearchSuggestionsPageArgs(initialValue: state.searchQuery);
+
+    final searchRes = await _pageNavigator.toSearchSuggestions(args);
 
     final searchQuery = searchRes?.query;
 

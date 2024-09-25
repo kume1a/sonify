@@ -111,7 +111,9 @@ Route _createYoutubeVideoRoute(RouteSettings settings) {
 
 Route _createSearchSuggestionsRoute(RouteSettings settings) {
   return MaterialPageRoute(
-    builder: (_) => const SearchSuggestionsPage(),
+    builder: (_) => SearchSuggestionsPage(
+      args: _getArgs<SearchSuggestionsPageArgs>(settings),
+    ),
     settings: settings,
   );
 }

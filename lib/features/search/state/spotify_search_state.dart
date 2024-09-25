@@ -8,6 +8,7 @@ import 'package:logging/logging.dart';
 
 import '../../../app/navigation/page_navigator.dart';
 import '../../../pages/playlist_page.dart';
+import '../../../pages/search_suggestions_page.dart';
 import '../../../shared/dialog/dialog_manager.dart';
 import '../../../shared/ui/toast_notifier.dart';
 import '../../../shared/util/debounce.dart';
@@ -36,6 +37,14 @@ class SpotifySearchCubit extends Cubit<SpotifySearchState> {
   final PageNavigator _pageNavigator;
 
   final Debounce _debounce = Debounce.fromMilliseconds(400);
+
+  void init(SearchSuggestionsPageArgs args) {
+    final value = args.initialValue ?? '';
+
+    if (value.isNotEmpty) {
+      onSearchQueryChanged(value);
+    }
+  }
 
   Future<void> onSearchQueryChanged(String value) async {
     final spotifyAccessToken = await _spotifyAccessTokenProvider.get();
