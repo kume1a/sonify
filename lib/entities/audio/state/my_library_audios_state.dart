@@ -13,7 +13,6 @@ import '../../../shared/bottom_sheet/select_option/select_option.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../../../shared/ui/toast_notifier.dart';
 import '../../../shared/values/assets.dart';
-import '../model/event_user_audio.dart';
 
 typedef MyLibraryAudiosState = SimpleDataState<List<UserAudio>>;
 
@@ -27,31 +26,21 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
     this._userAudioLocalRepository,
     this._userAudioRemoteRepository,
     this._authUserInfoProvider,
-    this._eventBus,
     this._pageNavigator,
     this._bottomSheetManager,
     this._toastNotifier,
   ) {
-    _init();
-
     loadEntityAndEmit();
   }
 
   final UserAudioLocalRepository _userAudioLocalRepository;
   final UserAudioRemoteRepository _userAudioRemoteRepository;
   final AuthUserInfoProvider _authUserInfoProvider;
-  final EventBus _eventBus;
   final PageNavigator _pageNavigator;
   final BottomSheetManager _bottomSheetManager;
   final ToastNotifier _toastNotifier;
 
   final _subscriptions = SubscriptionComposite();
-
-  void _init() {
-    _subscriptions.add(
-      _eventBus.on<EventUserAudio>().listen(_onEventUserAudio),
-    );
-  }
 
   @override
   Future<void> close() async {
@@ -127,26 +116,5 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
           () => _toastNotifier.error(description: (l) => l.failedToDelete, title: (l) => l.error),
           onRefresh,
         );
-  }
-
-  Future<void> _onEventUserAudio(EventUserAudio event) async {
-    await event.when(
-      downloaded: (userAudio) async {
-        if (userAudio.audio == null) {
-          Logger.root.warning('User audio is null, cannot add to local audio files.');
-          return;
-        }
-
-        final newState = await state.map((data) {
-          final dataCopy = List.of(data);
-
-          dataCopy.insert(0, userAudio);
-
-          return dataCopy;
-        });
-
-        emit(newState);
-      },
-    );
   }
 }

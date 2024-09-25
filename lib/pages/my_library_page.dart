@@ -78,23 +78,26 @@ class _Content extends HookWidget {
               Expanded(
                 child: Stack(
                   children: [
-                    CustomScrollView(
-                      controller: scrollController,
-                      slivers: [
-                        SliverPadding(
-                          padding: horizontalPadding,
-                          sliver: const SliverToBoxAdapter(
-                            child: MyLibraryHeader(),
+                    RefreshIndicator.adaptive(
+                      onRefresh: context.myLibraryAudiosCubit.onRefresh,
+                      child: CustomScrollView(
+                        controller: scrollController,
+                        slivers: [
+                          SliverPadding(
+                            padding: horizontalPadding,
+                            sliver: const SliverToBoxAdapter(
+                              child: MyLibraryHeader(),
+                            ),
                           ),
-                        ),
-                        SliverSizedBox(height: _spacingAfterHeader),
-                        MyLibraryList(
-                          itemPadding: EdgeInsets.only(
-                            left: 16.r,
-                            right: isAlphabetListVisible.value ? 20.r : 2.r,
+                          SliverSizedBox(height: _spacingAfterHeader),
+                          MyLibraryList(
+                            itemPadding: EdgeInsets.only(
+                              left: 16.r,
+                              right: isAlphabetListVisible.value ? 20.r : 2.r,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     AnimatedOpacity(
                       opacity: isAlphabetListVisible.value ? 1 : 0,
