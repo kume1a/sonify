@@ -6,24 +6,43 @@ import 'file_type.dart';
 
 part 'download_task.freezed.dart';
 
-enum DownloadTaskState {
-  idle,
-  inProgress,
-  failed,
-}
-
 @freezed
 class DownloadTask with _$DownloadTask {
-  const factory DownloadTask({
+  const DownloadTask._();
+
+  const factory DownloadTask.idle({
+    required String id,
+    required Uri uri,
+    required String savePath,
+    required FileType fileType,
+    required DownloadTaskPayload payload,
+  }) = _idle;
+
+  const factory DownloadTask.inProgress({
     required String id,
     required Uri uri,
     required String savePath,
     required double progress,
     required int speedInBytesPerSecond,
     required FileType fileType,
-    required DownloadTaskState state,
     required DownloadTaskPayload payload,
-  }) = _DownloadTask;
+  }) = _inProgress;
+
+  const factory DownloadTask.failed({
+    required String id,
+    required Uri uri,
+    required String savePath,
+    required FileType fileType,
+    required DownloadTaskPayload payload,
+  }) = _failed;
+
+  const factory DownloadTask.completed({
+    required String id,
+    required Uri uri,
+    required String savePath,
+    required FileType fileType,
+    required DownloadTaskPayload payload,
+  }) = _completed;
 
   factory DownloadTask.initial({
     required String id,
@@ -32,15 +51,32 @@ class DownloadTask with _$DownloadTask {
     required FileType fileType,
     required DownloadTaskPayload payload,
   }) =>
-      DownloadTask(
+      DownloadTask.idle(
         id: id,
         uri: uri,
         savePath: savePath,
-        progress: 0,
-        speedInBytesPerSecond: 0,
         fileType: fileType,
-        state: DownloadTaskState.idle,
         payload: payload,
+      );
+
+  bool get isIdle => maybeWhen(
+        idle: (_, __, ___, ____, _____) => true,
+        orElse: () => false,
+      );
+
+  bool get isInProgress => maybeWhen(
+        inProgress: (_, __, ___, ____, _____, ______, _______) => true,
+        orElse: () => false,
+      );
+
+  bool get isFailed => maybeWhen(
+        failed: (_, __, ___, ____, _____) => true,
+        orElse: () => false,
+      );
+
+  bool get isCompleted => maybeWhen(
+        completed: (_, __, ___, ____, _____) => true,
+        orElse: () => false,
       );
 }
 

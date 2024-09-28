@@ -9,6 +9,12 @@ import '../model/media_item_payload.dart';
 
 @lazySingleton
 class MediaItemMapper {
+  MediaItemMapper(
+    this._dynamicApiUrlProvider,
+  );
+
+  final DynamicApiUrlProvider _dynamicApiUrlProvider;
+
   MediaItem audioToMediaItem({
     required Audio audio,
     String? playlistId,
@@ -18,7 +24,7 @@ class MediaItemMapper {
       title: audio.title,
       artist: audio.author,
       duration: Duration(milliseconds: audio.durationMs),
-      artUri: audio.thumbnailUri(apiUrl: staticGetDynamicApiUrl()),
+      artUri: audio.thumbnailUri(apiUrl: _dynamicApiUrlProvider.get()),
       extras: MediaItemPayload(
         audio: audio,
         playlistId: playlistId,

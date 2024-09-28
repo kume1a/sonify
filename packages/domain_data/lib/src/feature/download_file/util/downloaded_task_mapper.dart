@@ -4,7 +4,6 @@ import 'package:sonify_storage/sonify_storage.dart';
 import '../../../entities/user_audio/util/user_audio_mapper.dart';
 import '../../../shared/constant.dart';
 import '../model/download_task.dart';
-import '../model/downloaded_task.dart';
 import '../model/file_type.dart';
 
 class DownloadedTaskMapper {
@@ -14,19 +13,8 @@ class DownloadedTaskMapper {
 
   final UserAudioMapper _userAudioMapper;
 
-  DownloadedTask downloadTaskToModel(
-    DownloadTask downloadTask,
-  ) {
-    return DownloadedTask(
-      id: downloadTask.id,
-      savePath: downloadTask.savePath,
-      fileType: downloadTask.fileType,
-      payload: downloadTask.payload,
-    );
-  }
-
   DownloadedTaskEntity modelToEntity(
-    DownloadedTask m, {
+    DownloadTask m, {
     String? userId,
   }) {
     return DownloadedTaskEntity(
@@ -39,11 +27,12 @@ class DownloadedTaskMapper {
     );
   }
 
-  DownloadedTask entityToModel(DownloadedTaskEntity e) {
-    return DownloadedTask(
+  DownloadTask entityToModel(DownloadedTaskEntity e) {
+    return DownloadTask.completed(
       id: e.id ?? kInvalidId,
       savePath: e.savePath ?? '',
       fileType: FileType.values.byName(e.fileType ?? ''),
+      uri: Uri(),
       payload: DownloadTaskPayload(
         userAudio: tryMap(e.payloadUserAudio, _userAudioMapper.entityToModel),
       ),

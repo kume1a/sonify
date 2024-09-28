@@ -14,16 +14,14 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
     this._downloader,
     this._resolveFileSize,
     this._uuidFactory,
-    this._downloadedTaskMapper,
   );
 
   final Downloader _downloader;
   final ResolveFileSize _resolveFileSize;
   final UuidFactory _uuidFactory;
-  final DownloadedTaskMapper _downloadedTaskMapper;
 
   @override
-  Future<DownloadedTask?> download(
+  Future<DownloadTask?> download(
     DownloadTask downloadTask, {
     ProgressCallback? onReceiveProgress,
   }) async {
@@ -75,7 +73,7 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
       }
     }
 
-    final newDownloadTask = downloadTask.copyWith.payload(
+    return downloadTask.copyWith.payload(
       userAudio: downloadTask.payload.userAudio?.copyWith.audio?.call(
         localPath: downloadTask.savePath,
         localThumbnailPath: thumbnailSavePath,
@@ -85,8 +83,6 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
         localThumbnailPath: thumbnailSavePath,
       ),
     );
-
-    return _downloadedTaskMapper.downloadTaskToModel(newDownloadTask);
   }
 
   Uri? _resolveImageUri(DownloadTask downloadTask) {

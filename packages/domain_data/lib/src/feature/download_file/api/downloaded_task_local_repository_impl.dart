@@ -3,7 +3,7 @@ import 'package:logging/logging.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
 import '../../auth/api/auth_user_info_provider.dart';
-import '../model/downloaded_task.dart';
+import '../model/download_task.dart';
 import '../util/downloaded_task_mapper.dart';
 import 'downloaded_task_local_repository.dart';
 
@@ -19,7 +19,7 @@ class DownloadedTaskLocalRepositoryImpl with ResultWrap implements DownloadedTas
   final AuthUserInfoProvider _authUserInfoProvider;
 
   @override
-  Future<Result<String>> save(DownloadedTask downloadedTask) async {
+  Future<Result<String>> save(DownloadTask downloadTask) async {
     final authUserId = await _authUserInfoProvider.getId();
     if (authUserId == null) {
       Logger.root.info('save downloaded task failed, authUserId is null');
@@ -28,7 +28,7 @@ class DownloadedTaskLocalRepositoryImpl with ResultWrap implements DownloadedTas
 
     return wrapWithResult(() async {
       final downloadedTaskEntity = _downloadedTaskMapper.modelToEntity(
-        downloadedTask,
+        downloadTask,
         userId: authUserId,
       );
 
@@ -37,7 +37,7 @@ class DownloadedTaskLocalRepositoryImpl with ResultWrap implements DownloadedTas
   }
 
   @override
-  Future<Result<List<DownloadedTask>>> getAllByUserId(String userId) {
+  Future<Result<List<DownloadTask>>> getAllByUserId(String userId) {
     return wrapWithResult(() async {
       final downloadedTaskEntities = await _downloadedTaskEntityDao.getAllByUserId(userId);
 

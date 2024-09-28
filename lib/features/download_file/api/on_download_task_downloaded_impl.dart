@@ -23,14 +23,13 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
   final EventBus _eventBus;
 
   @override
-  Future<void> call(DownloadedTask downloadedTask) async {
-    switch (downloadedTask.fileType) {
-      case FileType.audioMp3:
-        return _handleAudioMp3Downloaded(downloadedTask);
-    }
+  Future<void> call(DownloadTask downloadTask) async {
+    return switch (downloadTask.fileType) {
+      FileType.audioMp3 => _handleAudioMp3Downloaded(downloadTask),
+    };
   }
 
-  Future<void> _handleAudioMp3Downloaded(DownloadedTask downloadTask) async {
+  Future<void> _handleAudioMp3Downloaded(DownloadTask downloadTask) async {
     var payload = downloadTask.payload;
     if (payload.userAudio != null && payload.userAudio?.audio != null) {
       final newUserAudio = await _handleUserAudioDownloaded(downloadTask.payload.userAudio!);
