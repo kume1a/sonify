@@ -276,7 +276,7 @@ class _MetaAndShuffleMode extends StatelessWidget {
               success: (isShuffleModeEnabled) => IconButton(
                 onPressed: context.audioPlayerControlsCubit.onShufflePressed,
                 icon: SvgPicture.asset(
-                  isShuffleModeEnabled ? Assets.svgShuffleActive : Assets.svgShuffle,
+                  Assets.svgShuffle,
                   width: 24,
                   height: 24,
                   colorFilter: svgColor(

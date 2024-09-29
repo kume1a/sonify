@@ -35,7 +35,6 @@ abstract final class Assets {
   static const svgAudioLines = '$_icons/audio_lines.svg';
   static const svgSpotify = '$_icons/spotify.svg';
   static const svgPlus = '$_icons/plus.svg';
-  static const svgShuffleActive = '$_icons/shuffle_active.svg';
   static const svgServer = '$_icons/server.svg';
   static const svgCheck = '$_icons/check.svg';
   static const svgTrashCan = '$_icons/trash_can.svg';
