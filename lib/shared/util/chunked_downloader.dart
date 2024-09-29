@@ -20,6 +20,7 @@ class ChunkedDownloader {
     this.headers,
     this.chunkSizeInBytes = 1024 * 100, // 100kb
     this.onProgress,
+    this.progressInterval = const Duration(milliseconds: 750),
   });
 
   final String url;
@@ -27,6 +28,7 @@ class ChunkedDownloader {
   final Map<String, String>? headers;
   final int chunkSizeInBytes;
   final ProgressCallback? onProgress;
+  final Duration progressInterval;
 
   ChunkedStreamReader<int>? _reader;
 
@@ -57,6 +59,8 @@ class ChunkedDownloader {
 
     File file = File('$saveFilePath.tmp');
 
+    int lastProgressTime = DateTime.now().millisecondsSinceEpoch;
+
     await for (final r in response.asStream()) {
       // Get file size
       int fileSize = int.tryParse(r.headers['content-length'] ?? '-1') ?? -1;
@@ -67,8 +71,8 @@ class ChunkedDownloader {
         int startTime = DateTime.now().millisecondsSinceEpoch;
         final buffer = await _reader!.readBytes(chunkSizeInBytes);
 
-        int endTime = DateTime.now().millisecondsSinceEpoch;
-        int timeDiff = endTime - startTime;
+        int currentTime = DateTime.now().millisecondsSinceEpoch;
+        int timeDiff = currentTime - startTime;
         int speedInBytesPerSecond = 0;
         if (timeDiff > 0) {
           speedInBytesPerSecond = ((buffer.length / timeDiff) * Duration.millisecondsPerSecond).floor();
@@ -81,12 +85,14 @@ class ChunkedDownloader {
 
         Logger.root.finest('Downloading $formattedFileSize, Speed: $formattedSpeed');
 
-        if (onProgress != null) {
+        if (onProgress != null && currentTime - lastProgressTime >= progressInterval.inMilliseconds) {
           try {
             onProgress!(offset, fileSize, speedInBytesPerSecond);
           } catch (e) {
             Logger.root.severe('ChunkedDownloader error onProgress: $e');
           }
+
+          lastProgressTime = currentTime;
         }
 
         await file.writeAsBytes(buffer, mode: FileMode.append);

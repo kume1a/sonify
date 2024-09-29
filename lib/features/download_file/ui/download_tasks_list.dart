@@ -6,7 +6,6 @@ import '../../../app/intl/app_localizations.dart';
 import '../../../shared/ui/thumbnail.dart';
 import '../../../shared/util/equality.dart';
 import '../../../shared/util/formatting.dart';
-import '../../../shared/values/app_theme.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../state/downloads_state.dart';
 
@@ -45,19 +44,17 @@ class _Item extends StatelessWidget {
 
     return task.when(
       idle: (id, uri, savePath, fileType, payload) => _DownloadTaskItem(payload: payload),
-      failed: (id, uri, savePath, fileType, payload) {
-        return _DownloadTaskItem(
+      failed: (id, uri, savePath, fileType, payload) => _DownloadTaskItem(
           payload: payload,
           caption: Text(
             l.failed,
-            style: const TextStyle(color: Colors.red),
+            style:  TextStyle(color: theme.colorScheme.error),
           ),
           end: IconButton(
             onPressed: () => context.downloadsCubit.retryFailedDownloadTask(task),
             icon: const Icon(Icons.refresh),
           ),
-        );
-      },
+        ),
       completed: (_, __, ___, ____, payload) => _DownloadTaskItem(
         payload: payload,
         end: Icon(Icons.done, color: theme.appThemeExtension?.success),
