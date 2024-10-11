@@ -1,8 +1,10 @@
+import 'package:common_widgets/common_widgets.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../../shared/ui/animation/pulsing_fade.dart';
 import '../../../shared/values/assets.dart';
 import '../../search/state/youtube_search_state.dart';
 import '../state/spotify_search_state.dart';
@@ -16,7 +18,7 @@ class YoutubeSearchResults extends StatelessWidget {
       builder: (_, state) {
         return state.maybeWhen(
           success: (data) => _SuggestionList(data),
-          loading: () => const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator())),
+          loading: () => const _BlankAnimatedList(),
           orElse: () => const SliverToBoxAdapter(),
         );
       },
@@ -68,6 +70,45 @@ class _SuggestionList extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _BlankAnimatedList extends StatelessWidget {
+  const _BlankAnimatedList();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return PulsingFade.sliver(
+      child: SliverList.builder(
+        itemCount: 20,
+        itemBuilder: (_, __) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          child: Row(
+            children: [
+              Container(
+                width: 24,
+                height: 24,
+                color: theme.colorScheme.secondaryContainer,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: BlankContainer(
+                  height: 16,
+                  color: theme.colorScheme.secondaryContainer,
+                ),
+              ),
+              BlankContainer.circular(
+                margin: const EdgeInsets.only(left: 16),
+                radius: 14,
+                color: theme.colorScheme.secondaryContainer,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -10,13 +10,15 @@ import '../state/spotify_search_state.dart';
 class SpotifySearchedPlaylists extends StatelessWidget {
   const SpotifySearchedPlaylists({super.key});
 
+  static const _height = 160.0;
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 160,
-      child: BlocBuilder<SpotifySearchCubit, SpotifySearchState>(
-        builder: (_, state) => state.maybeWhen(
-          loading: () => PulsingFade(
+    return BlocBuilder<SpotifySearchCubit, SpotifySearchState>(
+      builder: (_, state) => state.maybeWhen(
+        loading: () => PulsingFade(
+          child: SizedBox(
+            height: _height,
             child: ListView.builder(
               itemCount: 10,
               scrollDirection: Axis.horizontal,
@@ -24,9 +26,12 @@ class SpotifySearchedPlaylists extends StatelessWidget {
               itemBuilder: (_, index) => const _BlankItem(),
             ),
           ),
-          success: (data) => _Content(data),
-          orElse: () => const SizedBox.shrink(),
         ),
+        success: (data) => SizedBox(
+          height: _height,
+          child: _Content(data),
+        ),
+        orElse: () => const SizedBox.shrink(),
       ),
     );
   }
