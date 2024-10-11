@@ -26,18 +26,22 @@ dependencies:
   fading_edge_scrollview: ^4.1.1
   toastification: ^2.0.0
 
-  # Network
+  # network
   youtube_explode_dart: ^2.1.0
   http: ^1.2.1
   dio: ^5.4.1
   connectivity_plus: ^6.0.3
 
-  # Data
+  # data
   json_serializable: ^6.7.1
   flutter_secure_storage: ^9.0.0
   shared_preferences: ^2.2.2
 
-  # File
+  # firebase
+  firebase_analytics: ^11.3.0
+  firebase_crashlytics: ^4.1.0
+
+  # file
   uri_to_file: ^1.0.0
   path_provider: ^2.1.2
 
@@ -45,7 +49,7 @@ dependencies:
   injectable: ^2.3.2
   get_it: ^7.6.7
 
-  # State
+  # state
   flutter_bloc: ^8.1.4
 
   # auth
@@ -57,7 +61,7 @@ dependencies:
   just_audio: ^0.9.30
   on_audio_query: ^2.9.0
 
-  # Util
+  # util
   logging: ^1.2.0
   timeago: ^3.6.1
   video_player: ^2.8.2
@@ -69,6 +73,7 @@ dependencies:
   collection: ^1.18.0
   url_launcher: ^6.2.5
   app_links: ^4.0.1
+  path: ^1.9.0
 
   sonify_storage:
     path: ./packages/sonify_storage
@@ -94,7 +99,6 @@ dependencies:
     git:
       url: https://github.com/kume1a/flutter_common.git
       path: packages/common_models
-  path: ^1.9.0
 
 dev_dependencies:
   flutter_test:
