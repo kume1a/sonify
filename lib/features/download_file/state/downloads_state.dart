@@ -102,7 +102,7 @@ class DownloadsCubit extends Cubit<List<DownloadTask>> {
     await _stateLock.synchronized(
       () {
         final newState = state.replace(
-          (e) => e.id == reEnqueuedDownloadTask,
+          (e) => e.id == reEnqueuedDownloadTask.id,
           (old) => reEnqueuedDownloadTask,
         );
 
