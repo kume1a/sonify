@@ -40,6 +40,7 @@ void createDbTables(Batch batch) {
       CREATE TABLE IF NOT EXISTS ${DownloadedTask_.tn} 
       (
         ${DownloadedTask_.id} TEXT PRIMARY KEY NOT NULL,
+        ${DownloadedTask_.createdAtMillis} INTEGER,
         ${DownloadedTask_.userId} TEXT,
         ${DownloadedTask_.savePath} TEXT,
         ${DownloadedTask_.fileType} TEXT,

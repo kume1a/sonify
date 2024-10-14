@@ -64,7 +64,8 @@ class SqfliteDownloadedTaskEntityDao implements DownloadedTaskEntityDao {
       FROM ${DownloadedTask_.tn}
       INNER JOIN ${UserAudio_.tn} ON ${DownloadedTask_.tn}.${DownloadedTask_.payloadUserAudioId} = ${UserAudio_.tn}.${UserAudio_.id}
       INNER JOIN ${Audio_.tn} ON ${UserAudio_.tn}.${UserAudio_.audioId} = ${Audio_.tn}.${Audio_.id}
-      WHERE ${DownloadedTask_.tn}.${DownloadedTask_.userId} = ?;
+      WHERE ${DownloadedTask_.tn}.${DownloadedTask_.userId} = ?
+      ORDER BY ${DownloadedTask_.tn}.${DownloadedTask_.createdAtMillis} DESC;
     ''',
       [userId],
     );

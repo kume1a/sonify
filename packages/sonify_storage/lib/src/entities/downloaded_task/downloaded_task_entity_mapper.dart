@@ -12,6 +12,7 @@ class DownloadedTaskEntityMapper {
   DownloadedTaskEntity mapToEntity(Map<String, dynamic> m) {
     return DownloadedTaskEntity(
       id: m[DownloadedTask_.id] as String?,
+      createdAtMillis: m[DownloadedTask_.createdAtMillis] as int?,
       userId: m[DownloadedTask_.userId] as String?,
       savePath: m[DownloadedTask_.savePath] as String?,
       fileType: m[DownloadedTask_.fileType] as String?,
@@ -28,6 +29,7 @@ class DownloadedTaskEntityMapper {
 
     return DownloadedTaskEntity(
       id: id,
+      createdAtMillis: m[DownloadedTask_.joinedCreatedAtMillis] as int?,
       userId: m[DownloadedTask_.joinedUserId] as String?,
       savePath: m[DownloadedTask_.joinedSavePath] as String?,
       fileType: m[DownloadedTask_.joinedFileType] as String?,
@@ -39,6 +41,7 @@ class DownloadedTaskEntityMapper {
   Map<String, dynamic> entityToMap(DownloadedTaskEntity e) {
     return {
       DownloadedTask_.id: e.id,
+      DownloadedTask_.createdAtMillis: e.createdAtMillis,
       DownloadedTask_.userId: e.userId,
       DownloadedTask_.savePath: e.savePath,
       DownloadedTask_.fileType: e.fileType,

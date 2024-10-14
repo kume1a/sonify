@@ -59,6 +59,7 @@ abstract class DownloadedTask_ {
   static String joinPrefixColumn(String column) => '$joinPrefix$column';
 
   static const id = 'id';
+  static const createdAtMillis = 'created_at_millis';
   static const userId = 'user_id';
   static const savePath = 'save_path';
   static const fileType = 'file_type';
@@ -66,6 +67,7 @@ abstract class DownloadedTask_ {
 
   // joined columns
   static final joinedId = joinPrefixColumn(id);
+  static final joinedCreatedAtMillis = joinPrefixColumn(createdAtMillis);
   static final joinedUserId = joinPrefixColumn(userId);
   static final joinedSavePath = joinPrefixColumn(savePath);
   static final joinedFileType = joinPrefixColumn(fileType);

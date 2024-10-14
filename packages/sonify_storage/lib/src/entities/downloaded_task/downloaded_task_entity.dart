@@ -3,6 +3,7 @@ import '../../../sonify_storage.dart';
 class DownloadedTaskEntity {
   DownloadedTaskEntity({
     required this.id,
+    required this.createdAtMillis,
     required this.userId,
     required this.savePath,
     required this.fileType,
@@ -11,6 +12,7 @@ class DownloadedTaskEntity {
   });
 
   final String? id;
+  final int? createdAtMillis;
   final String? userId;
   final String? savePath;
   final String? fileType;
@@ -19,6 +21,7 @@ class DownloadedTaskEntity {
 
   DownloadedTaskEntity copyWith({
     Wrapped<String?>? id,
+    Wrapped<int?>? createdAtMillis,
     Wrapped<String?>? userId,
     Wrapped<String?>? savePath,
     Wrapped<String?>? fileType,
@@ -27,6 +30,7 @@ class DownloadedTaskEntity {
   }) {
     return DownloadedTaskEntity(
       id: id?.value ?? this.id,
+      createdAtMillis: createdAtMillis?.value ?? this.createdAtMillis,
       userId: userId?.value ?? this.userId,
       savePath: savePath?.value ?? this.savePath,
       fileType: fileType?.value ?? this.fileType,

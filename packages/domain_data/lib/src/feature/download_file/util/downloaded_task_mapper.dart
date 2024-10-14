@@ -19,6 +19,7 @@ class DownloadedTaskMapper {
   }) {
     return DownloadedTaskEntity(
       id: m.id,
+      createdAtMillis: DateTime.now().millisecondsSinceEpoch,
       userId: userId,
       savePath: m.savePath,
       fileType: m.fileType.name,
