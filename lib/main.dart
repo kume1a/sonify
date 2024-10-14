@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:common_models/common_models.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,14 @@ Future<void> main() async {
   Logger.root.level = kDebugMode ? Level.ALL : Level.OFF;
   Logger.root.onRecord.listen((record) {
     log('${record.level.name}: ${record.time}: ${record.message}');
+
+    FirebaseAnalytics.instance.logEvent(name: 'log', parameters: {
+      'level': record.level.name,
+      'time': record.time.toString(),
+      'message': record.message,
+      'error': record.error ?? '',
+      'stackTrace': record.stackTrace ?? '',
+    });
   });
 
   await beforeAppStart();
