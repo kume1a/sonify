@@ -11,10 +11,12 @@ class LocalUserAudioListItem extends StatelessWidget {
     super.key,
     required this.userAudio,
     this.padding,
+    this.onMenuPressed,
   });
 
   final UserAudio userAudio;
   final EdgeInsets? padding;
+  final VoidCallback? onMenuPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class LocalUserAudioListItem extends StatelessWidget {
           audio: userAudio.audio!,
           isPlaying: isPlaying,
           padding: padding,
-          onMenuPressed: () => context.myLibraryAudiosCubit.onAudioMenuPressed(userAudio),
+          onMenuPressed: onMenuPressed,
         );
       },
     );

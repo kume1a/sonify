@@ -29,9 +29,12 @@ class MyLibraryList extends StatelessWidget {
                 return SizedBox(height: AudioListItem.height + 12.h);
               }
 
+              final userAudio = data[index];
+
               return LocalUserAudioListItem(
-                userAudio: data[index],
+                userAudio: userAudio,
                 padding: itemPadding,
+                onMenuPressed: () => context.myLibraryAudiosCubit.onAudioMenuPressed(userAudio),
               );
             },
           ),
