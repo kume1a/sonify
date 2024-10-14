@@ -1,4 +1,4 @@
-name: build ipa
+name: Build and upload Android & IOS
 
 on:
   push:
