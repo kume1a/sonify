@@ -53,3 +53,5 @@ lib/**/*.freezed.dart
 
 lib/app/intl/app_localizations_en.dart
 lib/app/intl/app_localizations.dart
+
+lib/firebase_options.dart
