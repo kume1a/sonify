@@ -275,7 +275,7 @@ packages:
     description:
       path: "packages/common_models"
       ref: HEAD
-      resolved-ref: c2b84f509ae238ffdc6aad372a0a9dbc86e48520
+      resolved-ref: ce3a0c392a6a378ebbc66f481de27e944b9b86ab
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.4"
@@ -284,7 +284,7 @@ packages:
     description:
       path: "packages/common_network_components"
       ref: HEAD
-      resolved-ref: c2b84f509ae238ffdc6aad372a0a9dbc86e48520
+      resolved-ref: ce3a0c392a6a378ebbc66f481de27e944b9b86ab
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.7"
@@ -293,7 +293,7 @@ packages:
     description:
       path: "packages/common_utilities"
       ref: HEAD
-      resolved-ref: c2b84f509ae238ffdc6aad372a0a9dbc86e48520
+      resolved-ref: ce3a0c392a6a378ebbc66f481de27e944b9b86ab
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.1"
@@ -302,7 +302,7 @@ packages:
     description:
       path: "packages/common_widgets"
       ref: HEAD
-      resolved-ref: c2b84f509ae238ffdc6aad372a0a9dbc86e48520
+      resolved-ref: ce3a0c392a6a378ebbc66f481de27e944b9b86ab
       url: "https://github.com/kume1a/flutter_common.git"
     source: git
     version: "0.0.6"
@@ -974,30 +974,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
-  libphonenumber_platform_interface:
-    dependency: transitive
-    description:
-      name: libphonenumber_platform_interface
-      sha256: f801f6c65523f56504b83f0890e6dad584ab3a7507dca65fec0eed640afea40f
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.2"
-  libphonenumber_plugin:
-    dependency: transitive
-    description:
-      name: libphonenumber_plugin
-      sha256: c615021d9816fbda2b2587881019ed595ecdf54d999652d7e4cce0e1f026368c
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.3"
-  libphonenumber_web:
-    dependency: transitive
-    description:
-      name: libphonenumber_web
-      sha256: "8186f420dbe97c3132283e52819daff1e55d60d6db46f7ea5ac42f42a28cc2ef"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.2"
   lints:
     dependency: transitive
     description:
