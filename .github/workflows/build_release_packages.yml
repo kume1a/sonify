@@ -12,6 +12,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Create google-services.json
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > android/app/google-services.json
+
+      - name: Create GoogleServices-Info.plist
+        run: echo "${{ secrets.GOOGLE_SERVICES_PLIST }}" > ios/Runner/GoogleServices-Info.plist
+
+      - name: Create firebase_options.dart
+        run: echo "${{ secrets.FIREBASE_OPTIONS_DART }}" > lib/firebase_options.dart
+
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
