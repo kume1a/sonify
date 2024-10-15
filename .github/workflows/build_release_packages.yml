@@ -13,13 +13,13 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Create google-services.json
-        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > android/app/google-services.json
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > android/app/google-services.json
 
       - name: Create GoogleServices-Info.plist
-        run: echo "${{ secrets.GOOGLE_SERVICES_PLIST }}" > ios/Runner/GoogleService-Info.plist
+        run: echo '${{ secrets.GOOGLE_SERVICES_PLIST }}' > ios/Runner/GoogleService-Info.plist
 
       - name: Create firebase_options.dart
-        run: echo "${{ secrets.FIREBASE_OPTIONS_DART }}" > lib/firebase_options.dart
+        run: echo '${{ secrets.FIREBASE_OPTIONS_DART }}' > lib/firebase_options.dart
 
       - uses: actions/setup-java@v3
         with:
@@ -55,27 +55,27 @@ jobs:
         working-directory: ./packages/domain_data
         run: dart run build_runner build
 
-      - name: Build IPA
-        run: |
-          flutter build ios --release --no-codesign \
-            --dart-define=LOCAL_API_URL=${{ secrets.LOCAL_API_URL }} \
-            --dart-define=REMOTE_API_URL=${{ secrets.REMOTE_API_URL }} \
-            --dart-define=LOCAL_WS_URL=${{ secrets.LOCAL_WS_URL }} \
-            --dart-define=REMOTE_WS_URL=${{ secrets.REMOTE_WS_URL }} \
-            --dart-define=GOOGLE_AUTH_CLIENT_ID_IOS=${{ secrets.GOOGLE_AUTH_CLIENT_ID_IOS }} \
-            --dart-define=GOOGLE_AUTH_CLIENT_ID_WEB=${{ secrets.GOOGLE_AUTH_CLIENT_ID_WEB }} \
-            --dart-define=SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}
+      # - name: Build IPA
+      #   run: |
+      #     flutter build ios --release --no-codesign \
+      #       --dart-define=LOCAL_API_URL=${{ secrets.LOCAL_API_URL }} \
+      #       --dart-define=REMOTE_API_URL=${{ secrets.REMOTE_API_URL }} \
+      #       --dart-define=LOCAL_WS_URL=${{ secrets.LOCAL_WS_URL }} \
+      #       --dart-define=REMOTE_WS_URL=${{ secrets.REMOTE_WS_URL }} \
+      #       --dart-define=GOOGLE_AUTH_CLIENT_ID_IOS=${{ secrets.GOOGLE_AUTH_CLIENT_ID_IOS }} \
+      #       --dart-define=GOOGLE_AUTH_CLIENT_ID_WEB=${{ secrets.GOOGLE_AUTH_CLIENT_ID_WEB }} \
+      #       --dart-define=SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}
 
-      - name: Create Payload folder
-        run: mkdir Payload
-        working-directory: build/ios/iphoneos
+      # - name: Create Payload folder
+      #   run: mkdir Payload
+      #   working-directory: build/ios/iphoneos
 
-      - run: mv Runner.app/ Payload
-        working-directory: build/ios/iphoneos
+      # - run: mv Runner.app/ Payload
+      #   working-directory: build/ios/iphoneos
 
-      - name: Zip IPA output
-        run: zip -qq -r -9 FlutterIpaExport.ipa Payload
-        working-directory: build/ios/iphoneos
+      # - name: Zip IPA output
+      #   run: zip -qq -r -9 FlutterIpaExport.ipa Payload
+      #   working-directory: build/ios/iphoneos
 
       - name: Build APK
         run: |
