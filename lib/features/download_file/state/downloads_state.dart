@@ -144,7 +144,7 @@ class DownloadsCubit extends Cubit<List<DownloadTask>> {
     }
 
     await _stateLock.synchronized(() {
-      final newState = List.of(state)..add(downloadTask);
+      final newState = List.of(state)..insert(0, downloadTask);
       emit(newState);
     });
   }
