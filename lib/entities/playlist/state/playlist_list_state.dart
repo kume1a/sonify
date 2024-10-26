@@ -90,17 +90,6 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
 
     final localPlaylists = await _userPlaylistLocalRepository.getAllByUserId(userId);
 
-    localPlaylists.fold(
-      () => emit(SimpleDataState.failure()),
-      (r) {
-        if (_isAllPlaylistsImported(r)) {
-          emit(SimpleDataState.success(r));
-          return;
-        }
-
-        Logger.root.warning('Local playlists are not imported, emitting failure');
-        emit(SimpleDataState.failure());
-      },
-    );
+    emit(SimpleDataState.fromResult(localPlaylists));
   }
 }
