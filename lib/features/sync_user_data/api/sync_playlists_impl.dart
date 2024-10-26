@@ -8,7 +8,7 @@ import '../util/sync_entity_base.dart';
 import 'sync_playlists.dart';
 
 @LazySingleton(as: SyncPlaylists)
-final class SyncPlaylistsImpl extends SyncEntityBase implements SyncPlaylists {
+final class SyncPlaylistsImpl extends FullSyncEntityBase implements SyncPlaylists {
   SyncPlaylistsImpl(
     this._userPlaylistRemoteRepository,
     this._playlistLocalRepository,
@@ -27,10 +27,8 @@ final class SyncPlaylistsImpl extends SyncEntityBase implements SyncPlaylists {
   }
 
   @override
-  Future<EmptyResult> downloadEntities(List<String> ids) async {
-    final authUserPlaylists = await _userPlaylistRemoteRepository.getAllFullByAuthUser(
-      playlistIds: ids,
-    );
+  Future<EmptyResult> downloadEntities() async {
+    final authUserPlaylists = await _userPlaylistRemoteRepository.getAllFullByAuthUser();
 
     if (authUserPlaylists.isLeft) {
       return EmptyResult.err();
@@ -50,15 +48,5 @@ final class SyncPlaylistsImpl extends SyncEntityBase implements SyncPlaylists {
     }
 
     return authUserPlaylistIds.dataOrThrow;
-  }
-
-  @override
-  Future<List<String>?> getRemoteEntityIds() async {
-    // final playlistIds = await _userPlaylistRemoteRepository.getAllPlaylistIdsByAuthUser();
-    //
-    // return playlistIds.rightOrNull;
-
-    // download all playlists
-    return [];
   }
 }

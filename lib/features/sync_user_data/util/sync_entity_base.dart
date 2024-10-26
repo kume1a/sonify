@@ -83,3 +83,43 @@ abstract base class SyncEntityBase {
     );
   }
 }
+
+abstract base class FullSyncEntityBase {
+  Future<List<String>?> getLocalEntityIds();
+
+  Future<EmptyResult> deleteLocalEntities(List<String> ids);
+
+  Future<EmptyResult> downloadEntities();
+
+  Future<EmptyResult> beforeSync() {
+    return Future.value(EmptyResult.success());
+  }
+
+  Future<EmptyResult> call() async {
+    final beforeSyncRes = await beforeSync();
+    if (beforeSyncRes.isErr) {
+      Logger.root.fine('Failed to run before sync');
+      return EmptyResult.err();
+    }
+
+    final localIds = await getLocalEntityIds();
+
+    if (localIds != null && localIds.isNotEmpty) {
+      final deleteRes = await deleteLocalEntities(localIds);
+
+      if (deleteRes.isErr) {
+        Logger.root.warning('Failed to delete local entities');
+        return EmptyResult.err();
+      }
+    }
+
+    final downloadRes = await downloadEntities();
+
+    if (downloadRes.isErr) {
+      Logger.root.warning('Failed to download remote entities');
+      return EmptyResult.err();
+    }
+
+    return EmptyResult.success();
+  }
+}
