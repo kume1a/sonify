@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../app/di/register_dependencies.dart';
 import '../app/intl/app_localizations.dart';
+import '../entities/audio/state/my_library_audios_state.dart';
 import '../features/download_file/ui/download_tasks_list.dart';
 import '../features/play_audio/ui/audio_player_panel.dart';
 
@@ -9,7 +12,12 @@ class DownloadsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _Content();
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => getIt<MyLibraryAudiosCubit>()),
+      ],
+      child: const _Content(),
+    );
   }
 }
 
