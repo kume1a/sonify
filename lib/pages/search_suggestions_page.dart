@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../app/di/register_dependencies.dart';
+import '../features/play_audio/ui/audio_player_panel.dart';
 import '../features/search/state/spotify_search_state.dart';
 import '../features/search/state/youtube_search_state.dart';
 import '../features/search/ui/spotify_searched_playlists.dart';
@@ -44,38 +45,40 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-              child: SearchInputWithCancel(
-                onChanged: (value) {
-                  context.youtubeSearchCubit.onSearchQueryChanged(value);
-                  context.spotifySearchCubit.onSearchQueryChanged(value);
-                },
-                onCancelPressed: () => Navigator.of(context).maybePop(),
-                onSubmitted: context.youtubeSearchCubit.onSubmitted,
-                controller: context.youtubeSearchCubit.searchQueryController,
+      body: AudioPlayerPanel(
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                child: SearchInputWithCancel(
+                  onChanged: (value) {
+                    context.youtubeSearchCubit.onSearchQueryChanged(value);
+                    context.spotifySearchCubit.onSearchQueryChanged(value);
+                  },
+                  onCancelPressed: () => Navigator.of(context).maybePop(),
+                  onSubmitted: context.youtubeSearchCubit.onSubmitted,
+                  controller: context.youtubeSearchCubit.searchQueryController,
+                ),
               ),
-            ),
-            const Expanded(
-              child: CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: SpotifySearchedPlaylistsHeader(),
-                  ),
-                  SliverToBoxAdapter(
-                    child: SpotifySearchedPlaylists(),
-                  ),
-                  SliverToBoxAdapter(
-                    child: YoutubeSearchSuggestionsHeader(),
-                  ),
-                  YoutubeSearchResults(),
-                ],
-              ),
-            )
-          ],
+              const Expanded(
+                child: CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: SpotifySearchedPlaylistsHeader(),
+                    ),
+                    SliverToBoxAdapter(
+                      child: SpotifySearchedPlaylists(),
+                    ),
+                    SliverToBoxAdapter(
+                      child: YoutubeSearchSuggestionsHeader(),
+                    ),
+                    YoutubeSearchResults(),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
