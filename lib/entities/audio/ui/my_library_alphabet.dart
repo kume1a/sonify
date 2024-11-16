@@ -75,6 +75,19 @@ class _Content extends StatelessWidget {
           style: TextStyle(fontSize: 15.sp),
         ),
       ),
+      centerOverlayWidgetBuilder: (value) => Container(
+        height: 48.w,
+        width: 48.w,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: theme.colorScheme.primaryContainer,
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          value.toUpperCase(),
+          style: TextStyle(fontSize: 18.sp),
+        ),
+      ),
     );
   }
 }

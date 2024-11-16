@@ -44,6 +44,7 @@ class AlphabetList extends StatefulWidget {
     required this.onIndexChanged,
     this.alignment = LetterAlignment.right,
     this.overlayWidgetBuilder,
+    this.centerOverlayWidgetBuilder,
     this.textStyle,
     this.backgroundColor,
     this.margin,
@@ -54,6 +55,7 @@ class AlphabetList extends StatefulWidget {
   final ValueChanged<int> onIndexChanged;
   final LetterAlignment alignment;
   final OverlayWidgetBuilder? overlayWidgetBuilder;
+  final OverlayWidgetBuilder? centerOverlayWidgetBuilder;
   final TextStyle? textStyle;
   final Color? backgroundColor;
   final EdgeInsets? padding;
@@ -170,62 +172,71 @@ class _AlphabetListState extends State<AlphabetList> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Align(
-          alignment: widget.alignment == LetterAlignment.left ? Alignment.centerLeft : Alignment.centerRight,
-          child: GestureDetector(
-            onVerticalDragStart: (details) => onVerticalDrag(details.localPosition),
-            onVerticalDragUpdate: (details) => onVerticalDrag(details.localPosition),
-            onVerticalDragEnd: (_) => setState(() => _isFocused = false),
-            child: Container(
-              padding: widget.padding,
-              margin: widget.margin,
-              decoration: BoxDecoration(
-                color: widget.backgroundColor,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: LayoutBuilder(
-                builder: (_, constraints) {
-                  final containerHeight = constraints.maxHeight / _alphabet.length;
+    return LayoutBuilder(
+      builder: (_, constraints) => Stack(
+        alignment: Alignment.center,
+        children: [
+          Align(
+            alignment:
+                widget.alignment == LetterAlignment.left ? Alignment.centerLeft : Alignment.centerRight,
+            child: GestureDetector(
+              onVerticalDragStart: (details) => onVerticalDrag(details.localPosition),
+              onVerticalDragUpdate: (details) => onVerticalDrag(details.localPosition),
+              onVerticalDragEnd: (_) => setState(() => _isFocused = false),
+              child: Container(
+                padding: widget.padding,
+                margin: widget.margin,
+                decoration: BoxDecoration(
+                  color: widget.backgroundColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: LayoutBuilder(
+                  builder: (_, constraints) {
+                    final containerHeight = constraints.maxHeight / _alphabet.length;
 
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: List.generate(
-                      _alphabet.length,
-                      (x) => GestureDetector(
-                        key: x == _selectedIndex ? letterKey : null,
-                        onTap: () {
-                          setState(() => _selectedIndex = x);
-                          onIndexChanged(x, _overlayPositionY);
-                        },
-                        child: Container(
-                          height: containerHeight,
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              _alphabet[x].toUpperCase(),
-                              style: widget.textStyle,
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: List.generate(
+                        _alphabet.length,
+                        (x) => GestureDetector(
+                          key: x == _selectedIndex ? letterKey : null,
+                          onTap: () {
+                            setState(() => _selectedIndex = x);
+                            onIndexChanged(x, _overlayPositionY);
+                          },
+                          child: Container(
+                            height: containerHeight,
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                _alphabet[x].toUpperCase(),
+                                style: widget.textStyle,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ),
-        ),
-        if (_isFocused && widget.overlayWidgetBuilder != null)
-          Positioned(
-            right: widget.alignment == LetterAlignment.right ? 24 : null,
-            left: widget.alignment == LetterAlignment.left ? 24 : null,
-            top: _overlayPositionY,
-            child: widget.overlayWidgetBuilder!(_alphabet[_selectedIndex]),
-          ),
-      ],
+          if (_isFocused && widget.overlayWidgetBuilder != null)
+            Positioned(
+              right: widget.alignment == LetterAlignment.right ? 24 : null,
+              left: widget.alignment == LetterAlignment.left ? 24 : null,
+              top: _overlayPositionY,
+              child: widget.overlayWidgetBuilder!(_alphabet[_selectedIndex]),
+            ),
+          if (_isFocused && widget.centerOverlayWidgetBuilder != null)
+            Positioned(
+              top: constraints.maxHeight * .25,
+              child: widget.centerOverlayWidgetBuilder!(_alphabet[_selectedIndex]),
+            ),
+        ],
+      ),
     );
   }
 }
