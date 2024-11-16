@@ -18,4 +18,6 @@ abstract interface class UserAudioEntityDao {
   });
 
   Future<int> deleteById(String id);
+
+  Future<UserAudioEntity?> getById(String id);
 }

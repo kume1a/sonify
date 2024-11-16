@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 import 'package:common_models/common_models.dart';
 import 'package:sonify_storage/sonify_storage.dart';
@@ -73,7 +76,31 @@ class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepo
   }
 
   @override
-  Future<EmptyResult> deleteById(String id) {
-    return wrapWithEmptyResult(() => _userAudioEntityDao.deleteById(id));
+  Future<EmptyResult> deleteById(String id) async {
+    try {
+      final entity = await _userAudioEntityDao.getById(id);
+
+      if (entity == null) {
+        return EmptyResult.err();
+      }
+
+      await _userAudioEntityDao.deleteById(id);
+
+      final localAudioPath = entity.audio?.localPath;
+      if (localAudioPath != null && localAudioPath.isNotEmpty) {
+        await File(localAudioPath).delete();
+      }
+
+      final localThumbnailPath = entity.audio?.localThumbnailPath;
+      if (localThumbnailPath != null && localThumbnailPath.isNotEmpty) {
+        await File(localThumbnailPath).delete();
+      }
+
+      return EmptyResult.success();
+    } catch (e) {
+      log('', error: e);
+    }
+
+    return EmptyResult.err();
   }
 }
