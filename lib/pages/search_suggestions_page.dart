@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../app/di/register_dependencies.dart';
 import '../entities/audio/state/my_library_audios_state.dart';
+import '../features/play_audio/state/audio_player_panel_state.dart';
 import '../features/play_audio/ui/audio_player_panel.dart';
 import '../features/search/state/spotify_search_state.dart';
 import '../features/search/state/youtube_search_state.dart';
@@ -35,6 +36,7 @@ class SearchSuggestionsPage extends StatelessWidget {
         BlocProvider(create: (_) => getIt<YoutubeSearchCubit>()..init(args)),
         BlocProvider(create: (_) => getIt<SpotifySearchCubit>()..init(args)),
         BlocProvider(create: (_) => getIt<MyLibraryAudiosCubit>()),
+        BlocProvider(create: (_) => getIt<AudioPlayerPanelCubit>()),
       ],
       child: const _Content(),
     );

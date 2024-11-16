@@ -61,11 +61,6 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
     _pageNavigator.toPlaylist(args);
   }
 
-  bool _isAllPlaylistsImported(List<UserPlaylist> userPlaylists) {
-    return userPlaylists.every((userPlaylist) =>
-        userPlaylist.playlist != null && userPlaylist.playlist?.audioImportStatus == ProcessStatus.completed);
-  }
-
   Future<void> _onPlaylistChanged(Playlist playlist) async {
     final state = this.state;
 
