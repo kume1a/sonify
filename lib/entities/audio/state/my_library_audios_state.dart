@@ -14,6 +14,7 @@ import '../../../shared/bottom_sheet/select_option/select_option.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../../../shared/ui/toast_notifier.dart';
 import '../../../shared/values/assets.dart';
+import '../model/event_user_audio.dart';
 
 typedef MyLibraryAudiosState = SimpleDataState<List<UserAudio>>;
 
@@ -32,7 +33,7 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
     this._toastNotifier,
     this._eventBus,
   ) {
-    loadEntityAndEmit();
+    _init();
   }
 
   final UserAudioLocalRepository _userAudioLocalRepository;
@@ -44,6 +45,14 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
   final EventBus _eventBus;
 
   final _subscriptions = SubscriptionComposite();
+
+  void _init() {
+    _subscriptions.addAll([
+      _eventBus.on<EventUserAudio>().listen(_onEventUserAudio),
+    ]);
+
+    loadEntityAndEmit();
+  }
 
   @override
   Future<void> close() async {
@@ -101,6 +110,24 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
       case 0:
         return _triggerDeleteUserAudio(userAudio);
     }
+  }
+
+  Future<void> _onEventUserAudio(EventUserAudio event) async {
+    await event.when(
+      downloaded: (userAudio) async {
+        if (userAudio.audio == null) {
+          Logger.root.warning('User audio is null, cannot add to local audio files.');
+          return;
+        }
+
+        // reload playlist to see newly downloaded audio in correct place
+        loadEntityAndEmit(emitLoading: false);
+
+        _eventBus.fire(
+          const EventPlayAudio.reloadNowPlayingPlaylist(allowLocalAudioPlaylistReload: true),
+        );
+      },
+    );
   }
 
   Future<void> _triggerDeleteUserAudio(UserAudio userAudio) async {
