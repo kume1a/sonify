@@ -223,23 +223,13 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   }
 
   Future<void> _reloadNowPlayingAudios() async {
-    final beforePlayingAudioInfo = await _nowPlayingAudioInfoStore.getNowPlayingAudioInfo();
-
-    if (beforePlayingAudioInfo != null) {
-      await _audioHandler.pause();
-    }
-
-    await _ensurePlaylistEnqueued(
-      playlistId: state.playlist?.id,
-      forceReload: true,
-    );
-
-    if (beforePlayingAudioInfo == null || state.nowPlaying.isEmpty) {
+    // don't reload if audio list is empty or playing local audios
+    if (state.nowPlaying.isEmpty || state.playlist == null) {
       return;
     }
 
-    final canPlayRemoteAudio = state.canPlayRemoteAudio.getOrNull;
-    if (canPlayRemoteAudio == null) {
+    final beforePlayingAudioInfo = await _nowPlayingAudioInfoStore.getNowPlayingAudioInfo();
+    if (beforePlayingAudioInfo == null) {
       return;
     }
 
@@ -248,6 +238,18 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
 
     if (beforePlayingAudio == null) {
       Logger.root.warning('NowPlayingAudioCubit._reloadNowPlayingAudios: beforePlayingAudio is null');
+      return;
+    }
+
+    await _audioHandler.pause();
+
+    await _ensurePlaylistEnqueued(
+      playlistId: state.playlist?.id,
+      forceReload: true,
+    );
+
+    final canPlayRemoteAudio = state.canPlayRemoteAudio.getOrNull;
+    if (canPlayRemoteAudio == null) {
       return;
     }
 
@@ -310,7 +312,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
         return null;
       }
 
-      final localAudios = await _filterPlayableAudios.userAudios(localUserAudios.dataOrNull);
+      final localAudios = localUserAudios.dataOrNull?.map((e) => e.audio).whereNotNull().toList();
 
       emit(state.copyWith(audios: localAudios, playlist: null));
 

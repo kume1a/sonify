@@ -13,16 +13,6 @@ class FilterPlayableAudios {
 
   final ConnectivityStatus _connectivityStatus;
 
-  Future<List<Audio>?> userAudios(List<UserAudio>? userAudios) {
-    if (userAudios == null) {
-      return Future.value();
-    }
-
-    final audios = userAudios.map((e) => e.audio).whereNotNull();
-
-    return _filterPlayableAudios(audios);
-  }
-
   Future<List<Audio>?> playlistAudios(Playlist? playlist) {
     if (playlist == null) {
       return Future.value();
