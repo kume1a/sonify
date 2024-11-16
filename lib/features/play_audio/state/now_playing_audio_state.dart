@@ -15,6 +15,7 @@ import '../../../shared/util/connectivity_status.dart';
 import '../../../shared/util/utils.dart';
 import '../../../shared/values/constant.dart';
 import '../api/now_playing_audio_info_store.dart';
+import '../model/event_play_audio.dart';
 import '../model/media_item_payload.dart';
 import '../model/playback_button_state.dart';
 import '../util/enqueue_playlist.dart';
@@ -60,6 +61,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     this._connectivityStatus,
     this._toastNotifier,
     this._filterPlayableAudios,
+    this._eventBus,
   ) : super(NowPlayingAudioState.initial()) {
     _init();
   }
@@ -75,6 +77,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   final ConnectivityStatus _connectivityStatus;
   final ToastNotifier _toastNotifier;
   final FilterPlayableAudios _filterPlayableAudios;
+  final EventBus _eventBus;
 
   final _subscriptions = SubscriptionComposite();
   AppLifecycleObserver? _appLifecycleObserver;
@@ -94,6 +97,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       _audioHandler.playbackState.listen(_onPlaybackStateChanged),
       _connectivityStatus.connectionChange.listen(_onConnectivityChanged),
       AudioService.position.listen(_onPositionChanged),
+      _eventBus.on<EventPlayAudio>().listen(_onEventPlayAudio),
     ]);
   }
 
@@ -222,9 +226,14 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     }
   }
 
-  Future<void> _reloadNowPlayingAudios() async {
-    // don't reload if audio list is empty or playing local audios
-    if (state.nowPlaying.isEmpty || state.playlist == null) {
+  Future<void> _reloadNowPlayingAudios({
+    bool allowLocalAudioPlaylistReload = false,
+  }) async {
+    if (state.nowPlaying.isEmpty) {
+      return;
+    }
+
+    if (state.playlist == null && !allowLocalAudioPlaylistReload) {
       return;
     }
 
@@ -255,12 +264,8 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
 
     if (canPlayRemoteAudio || beforePlayingAudio.localPath != null) {
       final audioIndex = state.nowPlaying.indexWhere((e) => e.id == beforePlayingAudioInfo.audioId);
-      if (audioIndex == -1) {
-        Logger.root.warning('NowPlayingAudioCubit._reloadNowPlayingAudios: audioIndex is -1');
-        return;
-      }
 
-      await _audioHandler.skipToQueueItem(audioIndex);
+      await _audioHandler.skipToQueueItem(audioIndex == -1 ? 0 : audioIndex);
       await _audioHandler.seek(beforePlayingAudioInfo.position);
       _audioHandler.play();
     }
@@ -340,6 +345,13 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     final nowPlayingMediaItem = _audioHandler.mediaItem.valueOrNull;
 
     _onMediaItemChanged(nowPlayingMediaItem);
+  }
+
+  void _onEventPlayAudio(EventPlayAudio event) {
+    event.when(
+      reloadNowPlayingPlaylist: (allowLocalAudioPlaylistReload) =>
+          _reloadNowPlayingAudios(allowLocalAudioPlaylistReload: allowLocalAudioPlaylistReload),
+    );
   }
 
   Future<void> _onMediaItemChanged(MediaItem? mediaItem) async {

@@ -8,6 +8,7 @@ import 'package:logging/logging.dart';
 
 import '../../../app/intl/extension/error_intl.dart';
 import '../../../app/navigation/page_navigator.dart';
+import '../../../features/play_audio/model/event_play_audio.dart';
 import '../../../shared/bottom_sheet/bottom_sheet_manager.dart';
 import '../../../shared/bottom_sheet/select_option/select_option.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
@@ -29,6 +30,7 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
     this._pageNavigator,
     this._bottomSheetManager,
     this._toastNotifier,
+    this._eventBus,
   ) {
     loadEntityAndEmit();
   }
@@ -39,6 +41,7 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
   final PageNavigator _pageNavigator;
   final BottomSheetManager _bottomSheetManager;
   final ToastNotifier _toastNotifier;
+  final EventBus _eventBus;
 
   final _subscriptions = SubscriptionComposite();
 
@@ -113,8 +116,16 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
     }
 
     await _userAudioLocalRepository.deleteById(userAudio.id!).awaitFold(
-          () => _toastNotifier.error(description: (l) => l.failedToDelete, title: (l) => l.error),
-          onRefresh,
+      () => _toastNotifier.error(description: (l) => l.failedToDelete, title: (l) => l.error),
+      () async {
+        final audios = await state.map((data) => List.of(data)..remove(userAudio));
+
+        emit(audios);
+
+        _eventBus.fire(
+          const EventPlayAudio.reloadNowPlayingPlaylist(allowLocalAudioPlaylistReload: true),
         );
+      },
+    );
   }
 }
