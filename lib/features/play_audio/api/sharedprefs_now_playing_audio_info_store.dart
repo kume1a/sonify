@@ -1,7 +1,9 @@
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'now_playing_audio_info_store.dart';
 
+@LazySingleton(as: NowPlayingAudioInfoStore)
 class SharedprefsNowPlayingAudioInfoStore implements NowPlayingAudioInfoStore {
   SharedprefsNowPlayingAudioInfoStore(
     this._sharedPreferences,
@@ -21,9 +23,13 @@ class SharedprefsNowPlayingAudioInfoStore implements NowPlayingAudioInfoStore {
     return Future.wait([
       _sharedPreferences.setBool(_isSet, true),
       if (nowPlayingAudioInfo.audioId != null)
-        _sharedPreferences.setString(_keyAudioId, nowPlayingAudioInfo.audioId!),
+        _sharedPreferences.setString(_keyAudioId, nowPlayingAudioInfo.audioId!)
+      else
+        _sharedPreferences.remove(_keyAudioId),
       if (nowPlayingAudioInfo.playlistId != null)
-        _sharedPreferences.setString(_keyPlaylistId, nowPlayingAudioInfo.playlistId!),
+        _sharedPreferences.setString(_keyPlaylistId, nowPlayingAudioInfo.playlistId!)
+      else
+        _sharedPreferences.remove(_keyPlaylistId),
       _sharedPreferences.setInt(_keyPositionMillis, nowPlayingAudioInfo.position.inMilliseconds),
     ]);
   }
@@ -54,5 +60,15 @@ class SharedprefsNowPlayingAudioInfoStore implements NowPlayingAudioInfoStore {
       _sharedPreferences.remove(_keyPlaylistId),
       _sharedPreferences.remove(_keyPositionMillis),
     ]);
+  }
+
+  @override
+  Future<void> setNowPlayingAudioInfoPosition(Duration position) {
+    final isSet = _sharedPreferences.getBool(_isSet);
+    if (isSet == null || !isSet) {
+      return Future.value();
+    }
+
+    return _sharedPreferences.setInt(_keyPositionMillis, position.inMilliseconds);
   }
 }

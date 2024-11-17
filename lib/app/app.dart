@@ -28,7 +28,7 @@ class App extends StatelessWidget {
           providers: [
             BlocProvider(create: (_) => getIt<DownloadsCubit>(), lazy: false),
             BlocProvider(create: (_) => getIt<AudioPlayerControlsCubit>()),
-            BlocProvider(create: (_) => getIt<NowPlayingAudioCubit>()),
+            BlocProvider(create: (_) => getIt<NowPlayingAudioCubit>(), lazy: false),
             BlocProvider(create: (_) => getIt<ChangeServerUrlOriginCubit>()),
           ],
           child: ToastificationWrapper(

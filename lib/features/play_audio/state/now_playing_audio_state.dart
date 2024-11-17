@@ -101,6 +101,8 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       AudioService.position.listen(_onPositionChanged),
       _eventBus.on<EventPlayAudio>().listen(_onEventPlayAudio),
     ]);
+
+    await _loadNowPlayingAudio();
   }
 
   @override
@@ -431,19 +433,28 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     }
   }
 
-  Future<void> _onPositionChanged(Duration position) async {
-    final nowPlayingAudio = await _nowPlayingAudioInfoStore.getNowPlayingAudioInfo();
+  Future<void> _onPositionChanged(Duration position) {
+    return _nowPlayingAudioInfoStore.setNowPlayingAudioInfoPosition(position);
+  }
 
-    if (nowPlayingAudio == null) {
-      return;
-    }
+  Future<void> _loadNowPlayingAudio() async {
+    // final nowPlayingAudioInfo = await _nowPlayingAudioInfoStore.getNowPlayingAudioInfo();
 
-    await _nowPlayingAudioInfoStore.setNowPlayingAudioInfo(
-      NowPlayingAudioInfo(
-        playlistId: nowPlayingAudio.playlistId,
-        audioId: nowPlayingAudio.audioId,
-        position: position,
-      ),
-    );
+    // if (nowPlayingAudioInfo == null) {
+    //   return;
+    // }
+
+    // await _ensurePlaylistEnqueued(playlistId: nowPlayingAudioInfo.playlistId);
+
+    // final audioIndex = state.nowPlaying.indexWhere((e) => e.id == nowPlayingAudioInfo.audioId);
+
+    // Logger.root.info('NowPlayingAudioCubit._loadNowPlayingAudio: nowPlaying=${state.nowPlaying}');
+
+    // Logger.root.info('NowPlayingAudioCubit._loadNowPlayingAudio: audioIndex=$audioIndex');
+    // Logger.root.info('NowPlayingAudioCubit._loadNowPlayingAudio: nowPlayingAudioInfo=$nowPlayingAudioInfo');
+
+    // // _audioHandler.pause();
+    // await _audioHandler.skipToQueueItem(audioIndex == -1 ? 0 : audioIndex);
+    // await _audioHandler.seek(nowPlayingAudioInfo.position);
   }
 }

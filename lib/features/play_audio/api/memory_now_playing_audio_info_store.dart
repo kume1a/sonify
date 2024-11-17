@@ -1,8 +1,6 @@
-import 'package:injectable/injectable.dart';
-
 import 'now_playing_audio_info_store.dart';
 
-@LazySingleton(as: NowPlayingAudioInfoStore)
+// @LazySingleton(as: NowPlayingAudioInfoStore)
 class MemoryNowPlayingAudioInfoStore implements NowPlayingAudioInfoStore {
   NowPlayingAudioInfo? _nowPlayingAudioInfo;
 
@@ -23,6 +21,21 @@ class MemoryNowPlayingAudioInfoStore implements NowPlayingAudioInfoStore {
   @override
   Future<void> clearNowPlayingAudioInfo() {
     _nowPlayingAudioInfo = null;
+
+    return Future.value();
+  }
+
+  @override
+  Future<void> setNowPlayingAudioInfoPosition(Duration position) {
+    if (_nowPlayingAudioInfo == null) {
+      return Future.value();
+    }
+
+    _nowPlayingAudioInfo = NowPlayingAudioInfo(
+      audioId: _nowPlayingAudioInfo!.audioId,
+      playlistId: _nowPlayingAudioInfo!.playlistId,
+      position: position,
+    );
 
     return Future.value();
   }

@@ -8,6 +8,11 @@ final class NowPlayingAudioInfo {
   final String? audioId;
   final String? playlistId;
   final Duration position;
+
+  @override
+  String toString() {
+    return 'NowPlayingAudioInfo(audioId: $audioId, playlistId: $playlistId, position: $position)';
+  }
 }
 
 abstract interface class NowPlayingAudioInfoStore {
@@ -18,4 +23,8 @@ abstract interface class NowPlayingAudioInfoStore {
   Future<NowPlayingAudioInfo?> getNowPlayingAudioInfo();
 
   Future<void> clearNowPlayingAudioInfo();
+
+  Future<void> setNowPlayingAudioInfoPosition(
+    Duration position,
+  );
 }
