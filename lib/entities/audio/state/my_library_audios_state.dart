@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../app/intl/extension/error_intl.dart';
 import '../../../app/navigation/page_navigator.dart';
@@ -48,7 +49,7 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
 
   void _init() {
     _subscriptions.addAll([
-      _eventBus.on<EventUserAudio>().listen(_onEventUserAudio),
+      _eventBus.on<EventUserAudio>().debounceTime(const Duration(seconds: 3)).listen(_onEventUserAudio),
     ]);
 
     loadEntityAndEmit();

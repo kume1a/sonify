@@ -52,8 +52,6 @@ class _Content extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     final horizontalPadding = EdgeInsets.symmetric(horizontal: 16.w);
 
     final scrollController = useScrollController();
@@ -233,12 +231,14 @@ class ScrollToNowPlayingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return AnimatedScale(
       scale: isAudioPlaying && !isVisible ? 1 : 0,
       duration: const Duration(milliseconds: 150),
       child: IconButton(
         style: IconButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          backgroundColor: theme.colorScheme.primaryContainer,
           padding: EdgeInsets.zero,
         ),
         onPressed: _scrollToNowPlayingAudio,
