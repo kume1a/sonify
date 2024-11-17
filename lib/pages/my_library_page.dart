@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../app/di/register_dependencies.dart';
 import '../entities/audio/state/my_library_audios_state.dart';
@@ -10,10 +11,12 @@ import '../entities/audio/ui/my_library_alphabet.dart';
 import '../entities/audio/ui/my_library_list.dart';
 import '../entities/playlist/ui/my_library_header.dart';
 import '../features/play_audio/state/audio_player_panel_state.dart';
+import '../features/play_audio/state/now_playing_audio_state.dart';
 import '../features/play_audio/ui/audio_player_panel.dart';
 import '../shared/ui/default_back_button.dart';
 import '../shared/ui/list_item/audio_list_item.dart';
 import '../shared/ui/search_container.dart';
+import '../shared/values/assets.dart';
 
 class MyLibraryPage extends StatelessWidget {
   const MyLibraryPage({super.key});
@@ -31,29 +34,82 @@ class MyLibraryPage extends StatelessWidget {
 }
 
 final _spacingAfterHeader = 12.h;
-final _tilesAndHeaderHeght = MyLibraryHeader.height + _spacingAfterHeader;
+final _myLibraryHeaderHeght = MyLibraryHeader.height + _spacingAfterHeader;
+
+class TileVisibilityInfo {
+  const TileVisibilityInfo({
+    required this.isVisible,
+    required this.isAboveViewportCenter,
+    required this.isBelowViewportCenter,
+  });
+  final bool isVisible;
+  final bool isAboveViewportCenter;
+  final bool isBelowViewportCenter;
+}
 
 class _Content extends HookWidget {
   const _Content();
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     final horizontalPadding = EdgeInsets.symmetric(horizontal: 16.w);
 
     final scrollController = useScrollController();
     final isAlphabetListVisible = useState(false);
+    final nowPlayingAudioIndex = useState(-1);
+    final nowPlayingAudioTileVisibilityInfo = useState<TileVisibilityInfo>(
+      const TileVisibilityInfo(
+        isVisible: false,
+        isAboveViewportCenter: false,
+        isBelowViewportCenter: false,
+      ),
+    );
 
     useEffect(
       () {
-        scrollController.addListener(() {
-          final offset = scrollController.offset;
+        void updateVisibility() {
+          final viewportStartOffset = scrollController.offset;
+          final viewportEndOffset = viewportStartOffset + scrollController.position.viewportDimension;
+          final viewportCenterOffset = (viewportStartOffset + viewportEndOffset) / 2;
 
-          isAlphabetListVisible.value = offset >= _tilesAndHeaderHeght;
-        });
+          final newIsAlphabetListVisible = viewportStartOffset >= _myLibraryHeaderHeght;
+          if (isAlphabetListVisible.value != newIsAlphabetListVisible) {
+            isAlphabetListVisible.value = newIsAlphabetListVisible;
+          }
 
-        return null;
+          if (nowPlayingAudioIndex.value != -1) {
+            final nowPlayingAudioTileOffsetStart =
+                _myLibraryHeaderHeght + nowPlayingAudioIndex.value * AudioListItem.height;
+            final nowPlayingAudioTileOffsetEnd = nowPlayingAudioTileOffsetStart + AudioListItem.height;
+
+            final newVisibilityInfo = TileVisibilityInfo(
+              isVisible: nowPlayingAudioTileOffsetStart >= viewportStartOffset &&
+                  nowPlayingAudioTileOffsetEnd <= viewportEndOffset,
+              isAboveViewportCenter: nowPlayingAudioTileOffsetEnd < viewportCenterOffset,
+              isBelowViewportCenter: nowPlayingAudioTileOffsetStart > viewportCenterOffset,
+            );
+
+            if (nowPlayingAudioTileVisibilityInfo.value != newVisibilityInfo) {
+              nowPlayingAudioTileVisibilityInfo.value = newVisibilityInfo;
+            }
+          }
+        }
+
+        void onScroll() {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            updateVisibility();
+          });
+        }
+
+        scrollController.addListener(onScroll);
+
+        return () {
+          scrollController.removeListener(onScroll);
+        };
       },
-      [scrollController],
+      [scrollController, nowPlayingAudioIndex],
     );
 
     return Scaffold(
@@ -108,7 +164,7 @@ class _Content extends HookWidget {
                             return;
                           }
 
-                          final offsetToScroll = _tilesAndHeaderHeght + index * AudioListItem.height;
+                          final offsetToScroll = _myLibraryHeaderHeght + index * AudioListItem.height;
 
                           if (offsetToScroll > scrollController.position.maxScrollExtent - 20) {
                             scrollController.jumpTo(scrollController.position.maxScrollExtent);
@@ -116,6 +172,55 @@ class _Content extends HookWidget {
                           }
 
                           scrollController.jumpTo(offsetToScroll);
+                        },
+                      ),
+                    ),
+                    AnimatedPositioned(
+                      duration: const Duration(milliseconds: 150),
+                      bottom: AudioPlayerPanel.minHeight + 10.h,
+                      right: isAlphabetListVisible.value ? 24.w : 4.w,
+                      child: BlocConsumer<NowPlayingAudioCubit, NowPlayingAudioState>(
+                        buildWhen: (previous, current) => previous.nowPlayingAudio != current.nowPlayingAudio,
+                        listenWhen: (previous, current) =>
+                            previous.nowPlayingAudioIndex != current.nowPlayingAudioIndex,
+                        listener: (_, state) {
+                          nowPlayingAudioIndex.value = state.nowPlayingAudioIndex;
+                        },
+                        builder: (_, state) {
+                          final isAudioPlaying = state.nowPlayingAudio.maybeWhen(
+                            orElse: () => false,
+                            success: (_) => true,
+                          );
+
+                          return AnimatedScale(
+                            scale:
+                                isAudioPlaying && !nowPlayingAudioTileVisibilityInfo.value.isVisible ? 1 : 0,
+                            duration: const Duration(milliseconds: 150),
+                            child: IconButton(
+                              style: IconButton.styleFrom(
+                                backgroundColor: theme.colorScheme.primaryContainer,
+                                padding: EdgeInsets.zero,
+                              ),
+                              onPressed: () {
+                                final viewportHeight = scrollController.position.viewportDimension;
+                                final tileHeight = AudioListItem.height;
+                                final targetOffset = _myLibraryHeaderHeght +
+                                    nowPlayingAudioIndex.value * tileHeight -
+                                    (viewportHeight - tileHeight) / 2;
+
+                                scrollController.animateTo(
+                                  targetOffset,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                );
+                              },
+                              icon: RotatedBox(
+                                quarterTurns:
+                                    nowPlayingAudioTileVisibilityInfo.value.isAboveViewportCenter ? 2 : 0,
+                                child: SvgPicture.asset(Assets.svgChevronDown),
+                              ),
+                            ),
+                          );
                         },
                       ),
                     ),

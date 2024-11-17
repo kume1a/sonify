@@ -28,6 +28,7 @@ part 'now_playing_audio_state.freezed.dart';
 class NowPlayingAudioState with _$NowPlayingAudioState {
   const factory NowPlayingAudioState({
     required SimpleDataState<Audio> nowPlayingAudio,
+    required int nowPlayingAudioIndex,
     Playlist? playlist,
     List<Audio>? audios,
     required List<Audio> nowPlaying,
@@ -37,6 +38,7 @@ class NowPlayingAudioState with _$NowPlayingAudioState {
 
   factory NowPlayingAudioState.initial() => NowPlayingAudioState(
         nowPlayingAudio: SimpleDataState.idle(),
+        nowPlayingAudioIndex: -1,
         playButtonState: PlaybackButtonState.idle,
         canPlayRemoteAudio: SimpleDataState.idle(),
         nowPlaying: [],
@@ -196,8 +198,11 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       ),
     );
 
+    final nowPlayingAudioIndex = updatedNowPlayingAudios?.indexWhere((e) => e.id == updatedAudio.id) ?? -1;
+
     emit(state.copyWith(
       nowPlayingAudio: SimpleDataState.success(updatedAudio),
+      nowPlayingAudioIndex: nowPlayingAudioIndex,
       audios: updatedNowPlayingAudios,
       playlist: updatedNowPlayingPlaylist,
     ));
@@ -371,14 +376,12 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       null,
     );
     if (payload == null) {
-      emit(state.copyWith(nowPlayingAudio: SimpleDataState.failure()));
+      emit(state.copyWith(
+        nowPlayingAudio: SimpleDataState.failure(),
+        nowPlayingAudioIndex: -1,
+      ));
       return;
     }
-
-    Logger.root.finer(
-        'NowPlayingAudioCubit._onMediaItemChanged: payload.audio.title=${payload.audio.title}, payload.audio.path=${payload.audio.path}');
-
-    // Logger.root.info('NowPlayingAudioCubit._onMediaItemChanged: payload=$payload');
 
     final nowPlayingAudioLike = await _audioLikeLocalRepository.getByUserAndAudioId(
       userId: authUserId,
@@ -386,9 +389,14 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     );
 
     final nowPlayingAudio = payload.audio.copyWith(audioLike: nowPlayingAudioLike.dataOrNull);
+    final nowPlayingAudioIndex = state.nowPlaying.indexWhere((e) => e.id == nowPlayingAudio.id);
+
+    Logger.root.finer(
+        'NowPlayingAudioCubit._onMediaItemChanged: payload.audio.title=${payload.audio.title}, payload.audio.path=${payload.audio.path}, index=$nowPlayingAudioIndex');
 
     emit(state.copyWith(
       nowPlayingAudio: SimpleDataState.success(nowPlayingAudio),
+      nowPlayingAudioIndex: nowPlayingAudioIndex,
     ));
 
     await _nowPlayingAudioInfoStore.setNowPlayingAudioInfo(

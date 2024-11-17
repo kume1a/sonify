@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../features/play_audio/state/now_playing_audio_state.dart';
+import '../../../features/play_audio/ui/audio_player_panel.dart';
 import '../../../shared/ui/alphabet_list.dart';
 import '../../../shared/values/app_theme_extension.dart';
 import '../state/my_library_audios_state.dart';
@@ -55,8 +56,12 @@ class _Content extends StatelessWidget {
       keywords: userAudios.map((e) => e.audio?.title).whereNotNull().toList(),
       backgroundColor: theme.colorScheme.primaryContainer,
       onIndexChanged: onIndexChanged,
+      width: 18.w,
       padding: EdgeInsets.symmetric(vertical: 16.h),
-      margin: EdgeInsets.only(top: 12.h, bottom: nowPlayingAudio != null ? 72.h : 12.h),
+      margin: EdgeInsets.only(
+        top: 12.h,
+        bottom: nowPlayingAudio != null ? AudioPlayerPanel.minHeight + 12.h : 12.h,
+      ),
       textStyle: TextStyle(
         fontSize: 10.sp,
         fontWeight: FontWeight.normal,

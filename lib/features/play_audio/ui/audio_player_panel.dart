@@ -25,6 +25,8 @@ class AudioPlayerPanel extends StatelessWidget {
 
   final Widget body;
 
+  static final double minHeight = 56.h;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -58,7 +60,7 @@ class _Panel extends HookWidget {
     return SlidingUpPanel(
       body: body,
       controller: context.audioPlayerPanelCubit.panelController,
-      minHeight: audio != null ? 56.h : 0,
+      minHeight: audio != null ? AudioPlayerPanel.minHeight : 0,
       maxHeight: mediaQuery.size.height + 100,
       panel: audio != null ? _PanelContent(audio: audio!) : const SizedBox.shrink(),
       collapsed: audio != null && panelPosition.value < 1 ? _MiniAudioPlayer(audio: audio!) : null,

@@ -47,6 +47,7 @@ class AlphabetList extends StatefulWidget {
     this.centerOverlayWidgetBuilder,
     this.textStyle,
     this.backgroundColor,
+    this.width,
     this.margin,
     this.padding,
   });
@@ -58,6 +59,7 @@ class AlphabetList extends StatefulWidget {
   final OverlayWidgetBuilder? centerOverlayWidgetBuilder;
   final TextStyle? textStyle;
   final Color? backgroundColor;
+  final double? width;
   final EdgeInsets? padding;
   final EdgeInsets? margin;
 
@@ -184,6 +186,7 @@ class _AlphabetListState extends State<AlphabetList> {
               onVerticalDragUpdate: (details) => onVerticalDrag(details.localPosition),
               onVerticalDragEnd: (_) => setState(() => _isFocused = false),
               child: Container(
+                width: widget.width,
                 padding: widget.padding,
                 margin: widget.margin,
                 decoration: BoxDecoration(
