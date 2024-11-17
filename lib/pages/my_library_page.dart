@@ -187,39 +187,17 @@ class _Content extends HookWidget {
                           nowPlayingAudioIndex.value = state.nowPlayingAudioIndex;
                         },
                         builder: (_, state) {
-                          final isAudioPlaying = state.nowPlayingAudio.maybeWhen(
-                            orElse: () => false,
-                            success: (_) => true,
-                          );
-
-                          return AnimatedScale(
-                            scale:
-                                isAudioPlaying && !nowPlayingAudioTileVisibilityInfo.value.isVisible ? 1 : 0,
-                            duration: const Duration(milliseconds: 150),
-                            child: IconButton(
-                              style: IconButton.styleFrom(
-                                backgroundColor: theme.colorScheme.primaryContainer,
-                                padding: EdgeInsets.zero,
-                              ),
-                              onPressed: () {
-                                final viewportHeight = scrollController.position.viewportDimension;
-                                final tileHeight = AudioListItem.height;
-                                final targetOffset = _myLibraryHeaderHeght +
-                                    nowPlayingAudioIndex.value * tileHeight -
-                                    (viewportHeight - tileHeight) / 2;
-
-                                scrollController.animateTo(
-                                  targetOffset,
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeInOut,
-                                );
-                              },
-                              icon: RotatedBox(
-                                quarterTurns:
-                                    nowPlayingAudioTileVisibilityInfo.value.isAboveViewportCenter ? 2 : 0,
-                                child: SvgPicture.asset(Assets.svgChevronDown),
-                              ),
+                          return ScrollToNowPlayingButton(
+                            isAudioPlaying: state.nowPlayingAudio.maybeWhen(
+                              orElse: () => false,
+                              success: (_) => true,
                             ),
+                            isVisible: nowPlayingAudioTileVisibilityInfo.value.isVisible,
+                            isAboveViewportCenter:
+                                nowPlayingAudioTileVisibilityInfo.value.isAboveViewportCenter,
+                            scrollController: scrollController,
+                            nowPlayingAudioIndex: nowPlayingAudioIndex,
+                            myLibraryHeaderHeight: _myLibraryHeaderHeght,
                           );
                         },
                       ),
@@ -231,6 +209,57 @@ class _Content extends HookWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ScrollToNowPlayingButton extends StatelessWidget {
+  const ScrollToNowPlayingButton({
+    super.key,
+    required this.isAudioPlaying,
+    required this.isVisible,
+    required this.isAboveViewportCenter,
+    required this.scrollController,
+    required this.nowPlayingAudioIndex,
+    required this.myLibraryHeaderHeight,
+  });
+
+  final bool isAudioPlaying;
+  final bool isVisible;
+  final bool isAboveViewportCenter;
+  final ScrollController scrollController;
+  final ValueNotifier<int> nowPlayingAudioIndex;
+  final double myLibraryHeaderHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedScale(
+      scale: isAudioPlaying && !isVisible ? 1 : 0,
+      duration: const Duration(milliseconds: 150),
+      child: IconButton(
+        style: IconButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          padding: EdgeInsets.zero,
+        ),
+        onPressed: _scrollToNowPlayingAudio,
+        icon: RotatedBox(
+          quarterTurns: isAboveViewportCenter ? 2 : 0,
+          child: SvgPicture.asset(Assets.svgChevronDown),
+        ),
+      ),
+    );
+  }
+
+  void _scrollToNowPlayingAudio() {
+    final viewportHeight = scrollController.position.viewportDimension;
+    final tileHeight = AudioListItem.height;
+    final targetOffset =
+        myLibraryHeaderHeight + nowPlayingAudioIndex.value * tileHeight - (viewportHeight - tileHeight) / 2;
+
+    scrollController.animateTo(
+      targetOffset,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
     );
   }
 }
