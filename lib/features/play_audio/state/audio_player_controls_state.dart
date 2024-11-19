@@ -7,6 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
+import '../../user_preferences/api/user_preferences_store.dart';
 import '../model/playback_button_state.dart';
 import '../model/playback_progress_state.dart';
 
@@ -40,11 +41,13 @@ extension AudioPlayerControlsCubitX on BuildContext {
 class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
   AudioPlayerControlsCubit(
     this._audioHandler,
+    this._userPreferencesStore,
   ) : super(AudioPlayerControlsState.initial()) {
     _init();
   }
 
   final AudioHandler _audioHandler;
+  final UserPreferencesStore _userPreferencesStore;
 
   final _subscriptions = SubscriptionComposite();
 
@@ -55,6 +58,7 @@ class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
     _subscriptions.add(_audioHandler.queue.listen((_) => _updateSkipButtons()));
 
     _updateSkipButtons();
+    _loadInitialPreferences();
   }
 
   @override
@@ -85,7 +89,7 @@ class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
 
   void onSkipToNext() => _audioHandler.skipToNext();
 
-  void onShufflePressed() {
+  Future<void> onShufflePressed() async {
     final beforeShuffleModeEnabled = state.isShuffleEnabled.getOrNull;
 
     if (beforeShuffleModeEnabled == null) {
@@ -101,9 +105,14 @@ class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
     emit(state.copyWith(
       isShuffleEnabled: SimpleDataState.success(!beforeShuffleModeEnabled),
     ));
+
+    final isSaveShuffleStateEnabled = await _userPreferencesStore.isSaveShuffleStateEnabled();
+    if (isSaveShuffleStateEnabled) {
+      await _userPreferencesStore.setShuffleEnabled(!beforeShuffleModeEnabled);
+    }
   }
 
-  void onRepeatPressed() {
+  Future<void> onRepeatPressed() async {
     final beforeRepeatModeEnabled = state.isRepeatEnabled.getOrNull;
 
     if (beforeRepeatModeEnabled == null) {
@@ -118,6 +127,11 @@ class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
     emit(state.copyWith(
       isRepeatEnabled: SimpleDataState.success(!beforeRepeatModeEnabled),
     ));
+
+    final isSaveRepeatStateEnabled = await _userPreferencesStore.isSaveRepeatStateEnabled();
+    if (isSaveRepeatStateEnabled) {
+      await _userPreferencesStore.setRepeatEnabled(!beforeRepeatModeEnabled);
+    }
   }
 
   void _onPlaybackStateChanged(PlaybackState playbackState) {
@@ -134,9 +148,8 @@ class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
       newPlayButtonState = PlaybackButtonState.playing;
     }
 
-    final newProgress = (state.playbackProgress ?? PlaybackProgressState.zero()).copyWith(
-      buffered: playbackState.bufferedPosition,
-    );
+    final playbackProgress = state.playbackProgress ?? PlaybackProgressState.zero();
+    final newProgress = playbackProgress.copyWith(buffered: playbackState.bufferedPosition);
 
     final isShuffleModeEnabled = playbackState.shuffleMode == AudioServiceShuffleMode.all;
     final isRepeatModeEnabled = playbackState.repeatMode == AudioServiceRepeatMode.one;
@@ -150,9 +163,8 @@ class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
   }
 
   void _onPositionChanged(Duration position) {
-    final newProgress = (state.playbackProgress ?? PlaybackProgressState.zero()).copyWith(
-      current: position,
-    );
+    final playbackProgress = state.playbackProgress ?? PlaybackProgressState.zero();
+    final newProgress = playbackProgress.copyWith(current: position);
 
     emit(state.copyWith(playbackProgress: newProgress));
   }
@@ -160,7 +172,8 @@ class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
   Future<void> _onMediaItemChanged(MediaItem? mediaItem) async {
     _updateSkipButtons();
 
-    final newProgress = (state.playbackProgress ?? PlaybackProgressState.zero()).copyWith(
+    final playbackProgress = state.playbackProgress ?? PlaybackProgressState.zero();
+    final newProgress = playbackProgress.copyWith(
       total: mediaItem?.duration ?? Duration.zero,
     );
 
@@ -180,6 +193,35 @@ class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
       emit(state.copyWith(
         isFirstSong: SimpleDataState.success(playlist.first == mediaItem),
         isLastSong: SimpleDataState.success(playlist.last == mediaItem),
+      ));
+    }
+  }
+
+  Future<void> _loadInitialPreferences() async {
+    final isSaveShuffleStateEnabled = await _userPreferencesStore.isSaveShuffleStateEnabled();
+
+    if (isSaveShuffleStateEnabled) {
+      final isShuffleEnabled = await _userPreferencesStore.isShuffleEnabled();
+
+      _audioHandler.setShuffleMode(
+        isShuffleEnabled ? AudioServiceShuffleMode.all : AudioServiceShuffleMode.none,
+      );
+
+      emit(state.copyWith(
+        isShuffleEnabled: SimpleDataState.success(isShuffleEnabled),
+      ));
+    }
+
+    final isSaveRepeatStateEnabled = await _userPreferencesStore.isSaveRepeatStateEnabled();
+    if (isSaveRepeatStateEnabled) {
+      final isRepeatEnabled = await _userPreferencesStore.isRepeatEnabled();
+
+      _audioHandler.setRepeatMode(
+        isRepeatEnabled ? AudioServiceRepeatMode.one : AudioServiceRepeatMode.none,
+      );
+
+      emit(state.copyWith(
+        isRepeatEnabled: SimpleDataState.success(isRepeatEnabled),
       ));
     }
   }

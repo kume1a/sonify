@@ -27,7 +27,7 @@ class App extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider(create: (_) => getIt<DownloadsCubit>(), lazy: false),
-            BlocProvider(create: (_) => getIt<AudioPlayerControlsCubit>()),
+            BlocProvider(create: (_) => getIt<AudioPlayerControlsCubit>(), lazy: false),
             BlocProvider(create: (_) => getIt<NowPlayingAudioCubit>(), lazy: false),
             BlocProvider(create: (_) => getIt<ChangeServerUrlOriginCubit>()),
           ],
