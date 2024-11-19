@@ -5,6 +5,7 @@ import 'package:sonify_client/sonify_client.dart';
 
 import '../../../app/navigation/page_navigator.dart';
 import '../../spotifyauth/api/spotify_creds_store.dart';
+import '../../user_preferences/api/user_preferences_store.dart';
 import 'after_sign_out.dart';
 
 @LazySingleton(as: AfterSignOut)
@@ -16,6 +17,7 @@ class AfterSignOutImpl implements AfterSignOut {
     this._authUserInfoProvider,
     this._userSyncDatumLocalRepository,
     this._socketHolderProvider,
+    this._userPreferencesStore,
   );
 
   final PageNavigator _pageNavigator;
@@ -24,6 +26,7 @@ class AfterSignOutImpl implements AfterSignOut {
   final AuthUserInfoProvider _authUserInfoProvider;
   final UserSyncDatumLocalRepository _userSyncDatumLocalRepository;
   final DisposableProvider<SocketHolder> _socketHolderProvider;
+  final UserPreferencesStore _userPreferencesStore;
 
   @override
   Future<void> call() async {
@@ -33,6 +36,7 @@ class AfterSignOutImpl implements AfterSignOut {
       _authUserInfoProvider.clear(),
       _userSyncDatumLocalRepository.clear(),
       _socketHolderProvider.dispose(),
+      _userPreferencesStore.clear(),
     ]);
 
     _pageNavigator.toAuth();

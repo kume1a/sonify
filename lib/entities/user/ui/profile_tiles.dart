@@ -24,8 +24,8 @@ class DownloadsTile extends StatelessWidget {
   }
 }
 
-class SettingsTile extends StatelessWidget {
-  const SettingsTile({super.key});
+class PreferencesTile extends StatelessWidget {
+  const PreferencesTile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +33,8 @@ class SettingsTile extends StatelessWidget {
 
     return _ProfileTile(
       iconAssetName: Assets.svgGear,
-      label: l.settings,
-      onPressed: context.profileTilesCubit.onSettingsTilePressed,
+      label: l.preferences,
+      onPressed: context.profileTilesCubit.onPreferencesTilePressed,
     );
   }
 }

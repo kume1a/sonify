@@ -51,4 +51,6 @@ class PageNavigator {
 
   void toSearchPlaylistAudios(SearchPlaylistAudiosPageArgs args) =>
       GlobalNavigator.pushNamed(Routes.searchPlaylistAudios, arguments: args);
+
+  void toPreferences() => GlobalNavigator.pushNamed(Routes.preferences);
 }

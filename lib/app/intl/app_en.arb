@@ -85,7 +85,6 @@
   "passwordIsTooShort": "Password is too short",
   "passwordIsTooLong": "Password is too long",
   "signOut": "Sign out",
-  "settings": "Settings",
   "importLocalAudioFiles": "Import local audio files",
   "invalidEmailOrPassword": "Invalid email or password",
   "emailAlreadyUsedWithDifferentAuthProvider": "Email already used with different authentication provider",
@@ -181,5 +180,9 @@
   "failed": "Failed",
   "delete": "Delete",
   "failedToDelete": "Failed to delete",
-  "error": "Error"
+  "error": "Error",
+  "saveShuffleState": "Save shuffle state",
+  "saveRepeatState": "Save repeat state",
+  "enableSearchHistory": "Enable search history",
+  "preferences": "Preferences"
 }

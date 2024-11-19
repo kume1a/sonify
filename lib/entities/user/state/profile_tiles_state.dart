@@ -21,7 +21,9 @@ class ProfileTilesCubit extends Cubit<Unit> {
     _pageNavigator.toDownloads();
   }
 
-  void onSettingsTilePressed() {}
+  void onPreferencesTilePressed() {
+    _pageNavigator.toPreferences();
+  }
 
   void onImportLocalAudioFilesTilePressed() {
     _pageNavigator.toImportLocalMusic();
