@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import '../../../shared/util/assemble_resource_url.dart';
+import '../../../shared/util/formatting.dart';
 import '../../../shared/util/utils.dart';
 import 'download_task_downloader.dart';
 import 'downloader.dart';
@@ -33,13 +34,14 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
     final totalDownloadSize = extraSize + mainFileSize;
     var downloadedSize = 0;
 
-    Logger.root.finer('resolved extraSize=$extraSize, mainFileSize=$mainFileSize');
+    Logger.root.finer(
+        'resolved extraSize=${formatFileSizeEn(extraSize)}, mainFileSize=${formatFileSizeEn(mainFileSize)}, totalDownloadSize=${formatFileSizeEn(mainFileSize)}');
 
     final success = await _downloader.download(
       uri: downloadTask.uri,
       savePath: downloadTask.savePath,
       onReceiveProgress: (count, total, speed) {
-        downloadedSize += count;
+        downloadedSize = count;
         onReceiveProgress?.call(downloadedSize, totalDownloadSize, speed);
       },
     );
@@ -63,7 +65,7 @@ class DownloadTaskDownloaderImpl implements DownloadTaskDownloader {
         uri: imageUri,
         savePath: thumbnailSavePath,
         onReceiveProgress: (count, total, speed) {
-          downloadedSize += count;
+          downloadedSize = mainFileSize + count;
           onReceiveProgress?.call(downloadedSize, totalDownloadSize, speed);
         },
       );

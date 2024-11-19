@@ -45,27 +45,41 @@ class _Item extends StatelessWidget {
     return task.when(
       idle: (id, uri, savePath, fileType, payload) => _DownloadTaskItem(payload: payload),
       failed: (id, uri, savePath, fileType, payload) => _DownloadTaskItem(
-          payload: payload,
-          caption: Text(
-            l.failed,
-            style:  TextStyle(color: theme.colorScheme.error),
-          ),
-          end: IconButton(
-            onPressed: () => context.downloadsCubit.retryFailedDownloadTask(task),
-            icon: const Icon(Icons.refresh),
-          ),
+        payload: payload,
+        caption: Text(
+          l.failed,
+          style: TextStyle(color: theme.colorScheme.error),
         ),
+        end: IconButton(
+          onPressed: () => context.downloadsCubit.retryFailedDownloadTask(task),
+          icon: const Icon(Icons.refresh),
+        ),
+      ),
       completed: (_, __, ___, ____, payload) => _DownloadTaskItem(
         payload: payload,
         end: Icon(Icons.done, color: theme.appThemeExtension?.success),
       ),
       inProgress: (_, __, ___, progress, speedInBytesPerSecond, ____, payload) {
-        final formattedProgress = '${progress.toStringAsFixed(1)}%';
+        final formattedProgress = '${(progress * 100).toStringAsFixed(1)}%';
         final formattedSpeed = formatBitrateLocalized(speedInBytesPerSecond, l);
 
         return _DownloadTaskItem(
           payload: payload,
-          caption: Text(formattedProgress),
+          caption: Row(
+            children: [
+              SizedBox(
+                width: 50,
+                child: Text(formattedProgress),
+              ),
+              Expanded(
+                child: LinearProgressIndicator(
+                  value: progress,
+                  backgroundColor: theme.colorScheme.secondaryContainer,
+                  color: theme.colorScheme.secondary,
+                ),
+              ),
+            ],
+          ),
           end: SizedBox(
             width: 72,
             child: Text(
@@ -114,7 +128,7 @@ class _DownloadTaskItem extends StatelessWidget {
               children: [
                 Text(
                   payload.audioTitle ?? '',
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (caption != null) caption!,
