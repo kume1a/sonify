@@ -35,11 +35,11 @@ class _Content extends StatelessWidget {
           AuthUserProfileHeader(),
           SizedBox(height: 16),
           DownloadsTile(),
+          PreferencesTile(),
           Divider(
             indent: 16,
             endIndent: 16,
           ),
-          PreferencesTile(),
           ImportLocalAudioFilesTile(),
           ChangeServerUrlOriginTile(),
           SignOutTile(),
