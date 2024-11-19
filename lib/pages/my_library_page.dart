@@ -182,9 +182,17 @@ class _Content extends HookWidget {
                         listenWhen: (previous, current) =>
                             previous.nowPlayingAudioIndex != current.nowPlayingAudioIndex,
                         listener: (_, state) {
+                          if (state.playlist != null) {
+                            return;
+                          }
+
                           nowPlayingAudioIndex.value = state.nowPlayingAudioIndex;
                         },
                         builder: (_, state) {
+                          if (state.playlist != null) {
+                            return const SizedBox.shrink();
+                          }
+
                           return ScrollToNowPlayingButton(
                             isAudioPlaying: state.nowPlayingAudio.maybeWhen(
                               orElse: () => false,

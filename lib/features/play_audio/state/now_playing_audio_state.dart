@@ -438,23 +438,20 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   }
 
   Future<void> _loadNowPlayingAudio() async {
-    // final nowPlayingAudioInfo = await _nowPlayingAudioInfoStore.getNowPlayingAudioInfo();
+    final nowPlayingAudioInfo = await _nowPlayingAudioInfoStore.getNowPlayingAudioInfo();
 
-    // if (nowPlayingAudioInfo == null) {
-    //   return;
-    // }
+    if (nowPlayingAudioInfo == null) {
+      return;
+    }
 
-    // await _ensurePlaylistEnqueued(playlistId: nowPlayingAudioInfo.playlistId);
+    await _ensurePlaylistEnqueued(
+      playlistId: nowPlayingAudioInfo.playlistId,
+      forceReload: true,
+    );
 
-    // final audioIndex = state.nowPlaying.indexWhere((e) => e.id == nowPlayingAudioInfo.audioId);
+    final audioIndex = state.nowPlaying.indexWhere((e) => e.id == nowPlayingAudioInfo.audioId);
 
-    // Logger.root.info('NowPlayingAudioCubit._loadNowPlayingAudio: nowPlaying=${state.nowPlaying}');
-
-    // Logger.root.info('NowPlayingAudioCubit._loadNowPlayingAudio: audioIndex=$audioIndex');
-    // Logger.root.info('NowPlayingAudioCubit._loadNowPlayingAudio: nowPlayingAudioInfo=$nowPlayingAudioInfo');
-
-    // // _audioHandler.pause();
-    // await _audioHandler.skipToQueueItem(audioIndex == -1 ? 0 : audioIndex);
-    // await _audioHandler.seek(nowPlayingAudioInfo.position);
+    await _audioHandler.skipToQueueItem(audioIndex == -1 ? 0 : audioIndex);
+    await _audioHandler.seek(nowPlayingAudioInfo.position);
   }
 }
