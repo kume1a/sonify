@@ -9,6 +9,8 @@ abstract interface class PlaylistAudioLocalRepository {
 
   Future<Result<int>> deleteByIds(List<String> ids);
 
+  Future<EmptyResult> deleteById(String id);
+
   Future<Result<List<PlaylistAudio>>> getAll();
 
   Future<Result<List<String>>> getAllByPlaylistIds(List<String> playlistIds);

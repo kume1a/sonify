@@ -11,27 +11,27 @@ import 'sync_user_audio.dart';
 @LazySingleton(as: SyncUserAudio)
 final class SyncUserAudioImpl extends SyncEntityBase implements SyncUserAudio {
   SyncUserAudioImpl(
-    this._audioRemoteRepository,
-    this._audioLocalRepository,
+    this._userAudioRemoteRepository,
+    this._userAudioLocalRepository,
     this._authUserInfoProvider,
     this._eventBus,
   );
 
-  final AudioRemoteRepository _audioRemoteRepository;
-  final UserAudioLocalRepository _audioLocalRepository;
+  final UserAudioRemoteRepository _userAudioRemoteRepository;
+  final UserAudioLocalRepository _userAudioLocalRepository;
   final AuthUserInfoProvider _authUserInfoProvider;
   final EventBus _eventBus;
 
   @override
   Future<EmptyResult> deleteLocalEntities(List<String> ids) async {
-    final res = await _audioLocalRepository.deleteByAudioIds(ids);
+    final res = await _userAudioLocalRepository.deleteByAudioIds(ids);
 
     return res.toEmptyResult();
   }
 
   @override
   Future<EmptyResult> downloadEntities(List<String> ids) async {
-    final toDownloadUserAudiosRes = await _audioRemoteRepository.getAuthUserAudiosByAudioIds(ids);
+    final toDownloadUserAudiosRes = await _userAudioRemoteRepository.getAuthUserAudiosByAudioIds(ids);
     if (toDownloadUserAudiosRes.isLeft) {
       return EmptyResult.err();
     }
@@ -53,13 +53,15 @@ final class SyncUserAudioImpl extends SyncEntityBase implements SyncUserAudio {
       return null;
     }
 
-    final userLocalAudiosRes = await _audioLocalRepository.getAllIdsByUserId(authUserId);
+    final userLocalAudiosRes = await _userAudioLocalRepository.getAllAudioIdsByUserId(authUserId);
 
     return userLocalAudiosRes.dataOrNull;
   }
 
   @override
-  Future<List<String>?> getRemoteEntityIds() {
-    return _audioRemoteRepository.getAuthUserAudioIds().then((value) => value.rightOrNull);
+  Future<List<String>?> getRemoteEntityIds() async {
+    final res = await _userAudioRemoteRepository.getAuthUserAudioIds();
+
+    return res.rightOrNull;
   }
 }

@@ -76,7 +76,6 @@ class EnableSearchHistoryPreferenceTile extends StatelessWidget {
 
 class _BoolPreferenceTile extends StatelessWidget {
   const _BoolPreferenceTile({
-    super.key,
     required this.label,
     required this.value,
     required this.onChanged,

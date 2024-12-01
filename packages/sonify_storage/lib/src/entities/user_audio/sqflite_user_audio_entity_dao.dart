@@ -163,4 +163,74 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
 
     return res.map(_userAudioEntityMapper.mapToEntity).toList().firstOrNull;
   }
+
+  @override
+  Future<List<UserAudioEntity>> getByIds(List<String> ids) async {
+    final res = await _db.rawQuery(
+      '''
+      SELECT 
+        ${UserAudio_.tn}.*,
+        ${Audio_.tn}.${Audio_.id} AS ${Audio_.joinedId},
+        ${Audio_.tn}.${Audio_.createdAtMillis} AS ${Audio_.joinedCreatedAtMillis},
+        ${Audio_.tn}.${Audio_.title} AS ${Audio_.joinedTitle},
+        ${Audio_.tn}.${Audio_.durationMs} AS ${Audio_.joinedDurationMs},
+        ${Audio_.tn}.${Audio_.path} AS ${Audio_.joinedPath},
+        ${Audio_.tn}.${Audio_.localPath} AS ${Audio_.joinedLocalPath},
+        ${Audio_.tn}.${Audio_.author} AS ${Audio_.joinedAuthor},
+        ${Audio_.tn}.${Audio_.sizeBytes} AS ${Audio_.joinedSizeBytes},
+        ${Audio_.tn}.${Audio_.youtubeVideoId} AS ${Audio_.joinedYoutubeVideoId},
+        ${Audio_.tn}.${Audio_.spotifyId} AS ${Audio_.joinedSpotifyId},
+        ${Audio_.tn}.${Audio_.thumbnailPath} AS ${Audio_.joinedThumbnailPath},
+        ${Audio_.tn}.${Audio_.thumbnailUrl} AS ${Audio_.joinedThumbnailUrl},
+        ${Audio_.tn}.${Audio_.localThumbnailPath} AS ${Audio_.joinedLocalThumbnailPath},
+        ${AudioLike_.tn}.${AudioLike_.id} AS ${AudioLike_.joinedId},
+        ${AudioLike_.tn}.${AudioLike_.userId} AS ${AudioLike_.joinedUserId},
+        ${AudioLike_.tn}.${AudioLike_.audioId} AS ${AudioLike_.joinedAudioId}
+      FROM ${UserAudio_.tn}
+      INNER JOIN ${Audio_.tn} ON ${UserAudio_.tn}.${UserAudio_.audioId} = ${Audio_.tn}.${Audio_.id}
+      LEFT JOIN ${AudioLike_.tn} ON ${AudioLike_.tn}.${AudioLike_.userId} = ${UserAudio_.tn}.${UserAudio_.userId}
+       AND ${AudioLike_.tn}.${AudioLike_.audioId} = ${UserAudio_.tn}.${UserAudio_.audioId}
+      WHERE ${UserAudio_.tn}.${UserAudio_.id} IN ${sqlListPlaceholders(ids.length)}
+      ''',
+      ids,
+    );
+
+    return res.map(_userAudioEntityMapper.mapToEntity).toList();
+  }
+
+  @override
+  Future<int> countByAudioId(String id) async {
+    final res = await _db.query(
+      UserAudio_.tn,
+      columns: ['COUNT(1)'],
+      where: '${UserAudio_.audioId} = ?',
+      whereArgs: [id],
+    );
+
+    return Sqflite.firstIntValue(res) ?? 0;
+  }
+
+  @override
+  Future<List<String>> getAudioIdsByIds(List<String> ids) {
+    final res = _db.query(
+      UserAudio_.tn,
+      columns: [UserAudio_.audioId],
+      where: '${UserAudio_.id} IN ${sqlListPlaceholders(ids.length)}',
+      whereArgs: ids,
+    );
+
+    return res.then((value) => value.map((e) => e[UserAudio_.audioId] as String).toList());
+  }
+
+  @override
+  Future<String?> getAudioIdById(String id) async {
+    final res = await _db.query(
+      UserAudio_.tn,
+      columns: [UserAudio_.audioId],
+      where: '${UserAudio_.id} = ?',
+      whereArgs: [id],
+    );
+
+    return res.map((e) => e[UserAudio_.audioId] as String).firstOrNull;
+  }
 }

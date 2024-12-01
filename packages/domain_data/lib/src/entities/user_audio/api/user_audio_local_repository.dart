@@ -8,7 +8,7 @@ abstract interface class UserAudioLocalRepository {
     String? searchQuery,
   });
 
-  Future<Result<List<String>>> getAllIdsByUserId(String userId);
+  Future<Result<List<String>>> getAllAudioIdsByUserId(String userId);
 
   Future<Result<UserAudio>> save(UserAudio audio);
 

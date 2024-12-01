@@ -6,4 +6,6 @@ abstract interface class AudioLocalRepository {
   Future<Result<Audio>> save(Audio audio);
 
   Future<Result<List<Audio>>> getByIds(List<String> audioIds);
+
+  Future<Result<Audio?>> getById(String id);
 }

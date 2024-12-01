@@ -36,16 +36,4 @@ class AudioRemoteRepositoryImpl implements AudioRemoteRepository {
 
     return res.map(_userAudioMapper.dtoToModel);
   }
-
-  @override
-  Future<Either<NetworkCallError, List<String>>> getAuthUserAudioIds() {
-    return _audioRemoteService.getAuthUserAudioIds();
-  }
-
-  @override
-  Future<Either<NetworkCallError, List<UserAudio>>> getAuthUserAudiosByAudioIds(List<String> audioIds) async {
-    final res = await _audioRemoteService.getAuthUserAudiosByAudioIds(audioIds);
-
-    return res.map((r) => r.map(_userAudioMapper.dtoToModel).toList());
-  }
 }

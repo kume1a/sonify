@@ -8,8 +8,4 @@ abstract interface class AudioRemoteService {
   Future<Either<UploadUserLocalMusicError, UserAudioDto>> uploadUserLocalMusic(
     UploadUserLocalMusicParams params,
   );
-
-  Future<Either<NetworkCallError, List<String>>> getAuthUserAudioIds();
-
-  Future<Either<NetworkCallError, List<UserAudioDto>>> getAuthUserAudiosByAudioIds(List<String> audioIds);
 }

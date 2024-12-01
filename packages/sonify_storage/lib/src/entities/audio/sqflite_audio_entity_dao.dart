@@ -45,4 +45,15 @@ class SqliteAudioEntityDao implements AudioEntityDao {
 
     return query.map((e) => _audioEntityMapper.mapToEntity(e)).toList();
   }
+
+  @override
+  Future<AudioEntity?> getById(String id) async {
+    final query = await _db.query(
+      Audio_.tn,
+      where: '${Audio_.id} = ?',
+      whereArgs: [id],
+    );
+
+    return query.map((e) => _audioEntityMapper.mapToEntity(e)).firstOrNull;
+  }
 }

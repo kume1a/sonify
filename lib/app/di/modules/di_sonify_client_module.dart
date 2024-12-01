@@ -73,10 +73,9 @@ abstract class DiSonifyClientModule {
   // audio ----------------------------------------------------------------
   @lazySingleton
   AudioRemoteService audioRepository(
-    Provider<ApiClient> apiClientProvider,
     Provider<MultipartApiClient> multipartApiClientProvider,
   ) {
-    return AudioRemoteServiceImpl(apiClientProvider, multipartApiClientProvider);
+    return AudioRemoteServiceImpl(multipartApiClientProvider);
   }
 
   // audio like ----------------------------------------------------------------

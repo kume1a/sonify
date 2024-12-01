@@ -14,8 +14,4 @@ abstract interface class AudioRemoteRepository {
     required Uint8List audio,
     required Uint8List? thumbnail,
   });
-
-  Future<Either<NetworkCallError, List<String>>> getAuthUserAudioIds();
-
-  Future<Either<NetworkCallError, List<UserAudio>>> getAuthUserAudiosByAudioIds(List<String> audioIds);
 }

@@ -10,4 +10,10 @@ abstract interface class UserAudioRemoteService {
   Future<Either<NetworkCallError, Unit>> deleteForAuthUser({
     required String audioId,
   });
+
+  Future<Either<NetworkCallError, List<String>>> getAuthUserAudioIds();
+
+  Future<Either<NetworkCallError, List<UserAudioDto>>> getAuthUserAudiosByAudioIds(
+    List<String> audioIds,
+  );
 }

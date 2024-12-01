@@ -1,10 +1,8 @@
-import 'dart:developer';
-import 'dart:io';
-
 import 'package:collection/collection.dart';
 import 'package:common_models/common_models.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
+import '../../audio/util/delete_unused_local_audio.dart';
 import '../model/user_audio.dart';
 import '../util/compare_audio_titles.dart';
 import '../util/user_audio_mapper.dart';
@@ -14,10 +12,12 @@ class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepo
   UserAudioLocalRepositoryImpl(
     this._userAudioEntityDao,
     this._userAudioMapper,
+    this._deleteUnusedLocalAudio,
   );
 
   final UserAudioEntityDao _userAudioEntityDao;
   final UserAudioMapper _userAudioMapper;
+  final DeleteUnusedLocalAudio _deleteUnusedLocalAudio;
 
   @override
   Future<Result<List<UserAudio>>> getAll({
@@ -54,12 +54,24 @@ class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepo
   }
 
   @override
-  Future<Result<int>> deleteByAudioIds(List<String> ids) {
-    return wrapWithResult(() => _userAudioEntityDao.deleteByAudioIds(ids));
+  Future<Result<int>> deleteByAudioIds(List<String> ids) async {
+    final audioIdsRes = await wrapWithResult(() => _userAudioEntityDao.getAudioIdsByIds(ids));
+    if (audioIdsRes.isErr) {
+      return Result.err();
+    }
+
+    final deleteResult = await wrapWithResult(() => _userAudioEntityDao.deleteByAudioIds(ids));
+
+    final deleteUnusedAudiosRes = await _deleteUnusedLocalAudio.deleteByIds(audioIdsRes.dataOrThrow);
+    if (deleteUnusedAudiosRes.isErr) {
+      return Result.err();
+    }
+
+    return deleteResult;
   }
 
   @override
-  Future<Result<List<String>>> getAllIdsByUserId(String userId) {
+  Future<Result<List<String>>> getAllAudioIdsByUserId(String userId) {
     return wrapWithResult(() => _userAudioEntityDao.getAllAudioIdsByUserId(userId));
   }
 
@@ -77,30 +89,18 @@ class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepo
 
   @override
   Future<EmptyResult> deleteById(String id) async {
-    try {
-      final entity = await _userAudioEntityDao.getById(id);
-
-      if (entity == null) {
-        return EmptyResult.err();
-      }
-
-      await _userAudioEntityDao.deleteById(id);
-
-      final localAudioPath = entity.audio?.localPath;
-      if (localAudioPath != null && localAudioPath.isNotEmpty) {
-        await File(localAudioPath).delete();
-      }
-
-      final localThumbnailPath = entity.audio?.localThumbnailPath;
-      if (localThumbnailPath != null && localThumbnailPath.isNotEmpty) {
-        await File(localThumbnailPath).delete();
-      }
-
-      return EmptyResult.success();
-    } catch (e) {
-      log('', error: e);
+    final audioIdRes = await wrapWithResult(() => _userAudioEntityDao.getAudioIdById(id));
+    if (audioIdRes.isErr || audioIdRes.dataOrNull == null) {
+      return EmptyResult.err();
     }
 
-    return EmptyResult.err();
+    final deleteRes = await wrapWithEmptyResult(() => _userAudioEntityDao.deleteById(id));
+
+    final deleteUnusedAudioRes = await _deleteUnusedLocalAudio.deleteById(audioIdRes.dataOrThrow!);
+    if (deleteUnusedAudioRes.isErr) {
+      return EmptyResult.err();
+    }
+
+    return deleteRes;
   }
 }

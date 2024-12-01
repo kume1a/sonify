@@ -40,4 +40,26 @@ class UserAudioRemoteServiceImpl with SafeHttpRequestWrap implements UserAudioRe
       return unit;
     });
   }
+
+  @override
+  Future<Either<NetworkCallError, List<String>>> getAuthUserAudioIds() {
+    return callCatchHandleNetworkCallError(() async {
+      final res = await _apiClientProvider.get().getAuthUserAudioIds();
+
+      return res ?? [];
+    });
+  }
+
+  @override
+  Future<Either<NetworkCallError, List<UserAudioDto>>> getAuthUserAudiosByAudioIds(
+    List<String> audioIds,
+  ) {
+    return callCatchHandleNetworkCallError(() async {
+      final body = AudioIdsBody(audioIds: audioIds);
+
+      final res = await _apiClientProvider.get().getAuthUserUserAudiosByIds(body);
+
+      return res ?? [];
+    });
+  }
 }

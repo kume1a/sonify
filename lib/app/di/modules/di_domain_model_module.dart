@@ -32,6 +32,19 @@ abstract class DiDomainModelModule {
   }
 
   @lazySingleton
+  DeleteUnusedLocalAudio deleteUnusedLocalAudio(
+    AudioLocalRepository audioLocalRepository,
+    UserAudioEntityDao userAudioEntityDao,
+    PlaylistAudioEntityDao playlistAudioEntityDao,
+  ) {
+    return DeleteUnusedLocalAudioImpl(
+      audioLocalRepository,
+      userAudioEntityDao,
+      playlistAudioEntityDao,
+    );
+  }
+
+  @lazySingleton
   AudioRemoteRepository audioRemoteRepository(
     AudioRemoteService audioRemoteService,
     UserAudioMapper userAudioMapper,
@@ -147,11 +160,13 @@ abstract class DiDomainModelModule {
     PlaylistAudioEntityDao playlistAudioEntityDao,
     PlaylistAudioMapper playlistAudioMapper,
     DbBatchProviderFactory dbBatchProviderFactory,
+    DeleteUnusedLocalAudio deleteUnusedLocalAudio,
   ) {
     return PlaylistAudioLocalRepositoryImpl(
       playlistAudioEntityDao,
       playlistAudioMapper,
       dbBatchProviderFactory,
+      deleteUnusedLocalAudio,
     );
   }
 
@@ -195,10 +210,12 @@ abstract class DiDomainModelModule {
   UserAudioLocalRepository userAudioLocalRepository(
     UserAudioEntityDao userAudioEntityDao,
     UserAudioMapper userAudioMapper,
+    DeleteUnusedLocalAudio deleteUnusedLocalAudio,
   ) {
     return UserAudioLocalRepositoryImpl(
       userAudioEntityDao,
       userAudioMapper,
+      deleteUnusedLocalAudio,
     );
   }
 

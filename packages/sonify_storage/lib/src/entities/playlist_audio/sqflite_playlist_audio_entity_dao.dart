@@ -57,6 +57,15 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
   }
 
   @override
+  Future<void> deleteById(String id) {
+    return _db.delete(
+      PlaylistAudio_.tn,
+      where: '${PlaylistAudio_.id} = ?',
+      whereArgs: [id],
+    );
+  }
+
+  @override
   Future<List<PlaylistAudioEntity>> getAll({
     String? playlistId,
   }) async {
@@ -127,5 +136,41 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
     );
 
     return res.map(_playlistAudioEntityMapper.mapToEntity).toList();
+  }
+
+  @override
+  Future<int> countByAudioId(String id) async {
+    final res = await _db.query(
+      PlaylistAudio_.tn,
+      columns: ['COUNT(1)'],
+      where: '${PlaylistAudio_.audioId} = ?',
+      whereArgs: [id],
+    );
+
+    return Sqflite.firstIntValue(res) ?? 0;
+  }
+
+  @override
+  Future<List<String>> getAudioIdsByIds(List<String> ids) async {
+    final result = await _db.query(
+      PlaylistAudio_.tn,
+      columns: [PlaylistAudio_.audioId],
+      where: '${PlaylistAudio_.id} IN ${sqlListPlaceholders(ids.length)}',
+      whereArgs: ids,
+    );
+
+    return result.map((e) => e[PlaylistAudio_.audioId] as String).toList();
+  }
+
+  @override
+  Future<String?> getAudioIdById(String id) async {
+    final result = await _db.query(
+      PlaylistAudio_.tn,
+      columns: [PlaylistAudio_.audioId],
+      where: '${PlaylistAudio_.id} = ?',
+      whereArgs: [id],
+    );
+
+    return result.isNotEmpty ? result.first[PlaylistAudio_.audioId] as String : null;
   }
 }

@@ -50,15 +50,7 @@ abstract class ApiClient {
   @GET('/v1/youtube/searchSuggestions')
   Future<YoutubeSearchSuggestionsDto> getYoutubeSuggestions(@Query('keyword') String keyword);
 
-  // audio -----------------------------
-  @GET('/v1/audio/myAudioIds')
-  Future<List<String>?> getAuthUserAudioIds();
-
-  @GET('/v1/audio/myUserAudiosByIds')
-  Future<List<UserAudioDto>?> getAuthUserUserAudiosByIds(
-    @Body() AudioIdsBody body, // using body for big payload
-  );
-
+  // audio like -----------------------------
   @POST('/v1/audiolike/like')
   Future<AudioLikeDto> likeAudio(@Body() LikeUnlikeAudioBody body);
 
@@ -152,6 +144,14 @@ abstract class ApiClient {
 
   @DELETE('/v1/useraudio/deleteForAuthUser')
   Future<void> deleteUserAudioForAuthUser(@Body() AudioIdBody body);
+
+  @GET('/v1/useraudio/myAudioIds')
+  Future<List<String>?> getAuthUserAudioIds();
+
+  @GET('/v1/useraudio/myUserAudiosByIds')
+  Future<List<UserAudioDto>?> getAuthUserUserAudiosByIds(
+    @Body() AudioIdsBody body, // using body for big payload
+  );
 
   // hidden user audio -----------------
   @POST('/v1/hiddenuseraudio/hideForAuthUser')

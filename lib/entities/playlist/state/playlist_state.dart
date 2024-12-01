@@ -9,12 +9,14 @@ import 'package:logging/logging.dart';
 import '../../../app/intl/extension/error_intl.dart';
 import '../../../app/navigation/page_navigator.dart';
 import '../../../features/download_file/model/downloads_event.dart';
+import '../../../features/play_audio/model/event_play_audio.dart';
 import '../../../features/spotifyauth/api/spotify_access_token_provider.dart';
 import '../../../pages/search_playlist_audios_page.dart';
 import '../../../shared/bottom_sheet/bottom_sheet_manager.dart';
 import '../../../shared/bottom_sheet/select_option/select_option.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../../../shared/ui/toast_notifier.dart';
+import '../../../shared/util/utils.dart';
 import '../../../shared/values/assets.dart';
 import '../model/event_playlist_audio.dart';
 
@@ -48,6 +50,8 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     this._playlistUpdatedEventChannel,
     this._spotifyRemoteRepository,
     this._spotifyAccessTokenProvider,
+    this._playlistAudioRemoteRepository,
+    this._playlistAudioLocalRepository,
   );
 
   final UserAudioLocalRepository _userAudioLocalRepository;
@@ -61,6 +65,8 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   final PlaylistUpdatedEventChannel _playlistUpdatedEventChannel;
   final SpotifyRemoteRepository _spotifyRemoteRepository;
   final SpotifyAccessTokenProvider _spotifyAccessTokenProvider;
+  final PlaylistAudioRemoteRepository _playlistAudioRemoteRepository;
+  final PlaylistAudioLocalRepository _playlistAudioLocalRepository;
 
   String? _playlistId;
 
@@ -135,6 +141,40 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     }
   }
 
+  Future<void> onRetryImportPlaylist() async {
+    final playlist = state.getOrNull;
+    if (playlist == null || playlist.spotifyId == null) {
+      Logger.root.warning('PlaylistCubit.onRetryImportPlaylist: playlist or spotifyId is null');
+      return;
+    }
+
+    final spotifyAccessToken = await _spotifyAccessTokenProvider.get();
+    if (spotifyAccessToken == null) {
+      Logger.root.warning('SpotifySearchCubit.onSearchedPlaylistPressed: Spotify access token is null');
+      return;
+    }
+
+    final res = await _spotifyRemoteRepository.importSpotifyPlaylist(
+      spotifyPlaylistId: playlist.spotifyId!,
+      spotifyAccessToken: spotifyAccessToken,
+    );
+
+    return res.fold(
+      (error) => _toastNotifier.error(
+        description: (l) => l.failedToImportSpotifyPlaylist,
+      ),
+      (r) {
+        _playlistId = r.id;
+
+        _toastNotifier.success(
+          description: (l) => l.importingSpotifyPlaylist,
+        );
+
+        emit(SimpleDataState.success(r));
+      },
+    );
+  }
+
   Future<void> onPlaylistAudioMenuPressed(PlaylistAudio playlistAudio) async {
     if (playlistAudio.audio?.id == null) {
       Logger.root.warning('PlaylistCubit.onPlaylistAudioMenuPressed: audio id is null');
@@ -166,11 +206,16 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
         ),
         if (isDownloaded)
           SelectOption(
-            value: 1,
+            value: 2,
             label: (l) => userAudioExists ? l.alreadyAddedToMyLibrary : l.addToMyLibrary,
             iconAssetName: Assets.svgPlus,
             isActive: !userAudioExists,
           ),
+        SelectOption(
+          value: 1,
+          label: (l) => l.delete,
+          iconAssetName: Assets.svgTrashCan,
+        ),
       ],
     );
 
@@ -178,12 +223,12 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
       return;
     }
 
-    switch (selectedOption) {
-      case 0:
-        return _triggerDownloadPlaylistAudio(playlistAudio);
-      case 1:
-        return _triggerAddAudioToMyLibrary(playlistAudio);
-    }
+    return switch (selectedOption) {
+      0 => _triggerDownloadPlaylistAudio(playlistAudio),
+      1 => _triggerDeleteUserAudio(playlistAudio),
+      2 => _triggerAddAudioToMyLibrary(playlistAudio),
+      _ => Future.value(),
+    };
   }
 
   Future<void> _triggerDownloadPlaylistAudio(PlaylistAudio playlistAudio) async {
@@ -282,36 +327,38 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     loadEntityAndEmit();
   }
 
-  Future<void> onRetryImportPlaylist() async {
-    final playlist = state.getOrNull;
-    if (playlist == null || playlist.spotifyId == null) {
-      Logger.root.warning('PlaylistCubit.onRetryImportPlaylist: playlist or spotifyId is null');
+  Future<void> _triggerDeleteUserAudio(PlaylistAudio playlistAudio) async {
+    if (playlistAudio.audioId.isNullOrEmpty || playlistAudio.playlistId.isNullOrEmpty) {
+      Logger.root
+          .warning('PlaylistCubit._triggerDeleteUserAudio: audioId or playlistId is null', playlistAudio);
       return;
     }
 
-    final spotifyAccessToken = await _spotifyAccessTokenProvider.get();
-    if (spotifyAccessToken == null) {
-      Logger.root.warning('SpotifySearchCubit.onSearchedPlaylistPressed: Spotify access token is null');
-      return;
-    }
-
-    final res = await _spotifyRemoteRepository.importSpotifyPlaylist(
-      spotifyPlaylistId: playlist.spotifyId!,
-      spotifyAccessToken: spotifyAccessToken,
+    final res = await _playlistAudioRemoteRepository.deleteByPlaylistIdAndAudioId(
+      audioId: playlistAudio.audioId,
+      playlistId: playlistAudio.playlistId,
     );
+    if (res.isLeft) {
+      _toastNotifier.error(description: (l) => res.leftOrThrow.translate(l));
+      return;
+    }
 
-    return res.fold(
-      (error) => _toastNotifier.error(
-        description: (l) => l.failedToImportSpotifyPlaylist,
-      ),
-      (r) {
-        _playlistId = r.id;
+    await _playlistAudioLocalRepository.deleteById(playlistAudio.id!).awaitFold(
+      () => _toastNotifier.error(description: (l) => l.failedToDelete, title: (l) => l.error),
+      () async {
+        final newState = await state.map((playlist) {
+          if (playlist.playlistAudios == null) {
+            return null;
+          }
 
-        _toastNotifier.success(
-          description: (l) => l.importingSpotifyPlaylist,
-        );
+          final playlistAudios = List.of(playlist.playlistAudios!)..remove(playlistAudio);
 
-        emit(SimpleDataState.success(r));
+          return playlist.copyWith(playlistAudios: playlistAudios);
+        });
+
+        emit(newState);
+
+        _eventBus.fire(const EventPlayAudio.reloadNowPlayingPlaylist());
       },
     );
   }

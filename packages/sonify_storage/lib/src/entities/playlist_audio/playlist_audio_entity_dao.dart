@@ -10,6 +10,8 @@ abstract interface class PlaylistAudioEntityDao {
 
   Future<int> deleteByIds(List<String> ids);
 
+  Future<void> deleteById(String id);
+
   Future<List<PlaylistAudioEntity>> getAll({
     String? playlistId,
   });
@@ -22,4 +24,10 @@ abstract interface class PlaylistAudioEntityDao {
     required String playlistId,
     String? searchQuery,
   });
+
+  Future<int> countByAudioId(String id);
+
+  Future<List<String>> getAudioIdsByIds(List<String> ids);
+
+  Future<String?> getAudioIdById(String id);
 }

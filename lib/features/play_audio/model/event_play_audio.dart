@@ -5,6 +5,6 @@ part 'event_play_audio.freezed.dart';
 @freezed
 class EventPlayAudio with _$EventPlayAudio {
   const factory EventPlayAudio.reloadNowPlayingPlaylist({
-    required bool allowLocalAudioPlaylistReload,
+    @Default(false) bool allowLocalAudioPlaylistReload,
   }) = _reloadNowPlayingPlaylist;
 }
