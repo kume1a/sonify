@@ -27,4 +27,25 @@ class PlaylistAudioRemoteRepositoryImpl implements PlaylistAudioRemoteRepository
   Future<Either<NetworkCallError, List<String>>> getAllIdsByAuthUser() {
     return _playlistAudioRemoteService.getAllIdsByAuthUser();
   }
+
+  @override
+  Future<Either<NetworkCallError, PlaylistAudio>> create({
+    required String playlistId,
+    required String audioId,
+  }) async {
+    final res = await _playlistAudioRemoteService.create(playlistId: playlistId, audioId: audioId);
+
+    return res.map(_playlistAudioMapper.dtoToModel);
+  }
+
+  @override
+  Future<Either<NetworkCallError, Unit>> deleteByPlaylistIdAndAudioId({
+    required String playlistId,
+    required String audioId,
+  }) {
+    return _playlistAudioRemoteService.deleteByPlaylistIdAndAudioId(
+      playlistId: playlistId,
+      audioId: audioId,
+    );
+  }
 }

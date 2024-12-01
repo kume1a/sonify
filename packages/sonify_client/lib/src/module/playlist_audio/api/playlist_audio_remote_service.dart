@@ -8,4 +8,14 @@ abstract interface class PlaylistAudioRemoteService {
   });
 
   Future<Either<NetworkCallError, List<String>>> getAllIdsByAuthUser();
+
+  Future<Either<NetworkCallError, PlaylistAudioDto>> create({
+    required String playlistId,
+    required String audioId,
+  });
+
+  Future<Either<NetworkCallError, Unit>> deleteByPlaylistIdAndAudioId({
+    required String playlistId,
+    required String audioId,
+  });
 }

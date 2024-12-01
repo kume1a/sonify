@@ -11,6 +11,8 @@ import '../module/auth/model/google_sign_in_body.dart';
 import '../module/auth/model/token_payload_dto.dart';
 import '../module/hidden_user_audio/index.dart';
 import '../module/playlist/model/playlist_dto.dart';
+import '../module/playlist_audio/model/create_playlist_audio_body_dto.dart';
+import '../module/playlist_audio/model/delete_playlist_audio_body_dto.dart';
 import '../module/playlist_audio/model/playlist_audio_dto.dart';
 import '../module/server_time/model/server_time_dto.dart';
 import '../module/spotify/model/authorize_spotify_body.dart';
@@ -137,6 +139,12 @@ abstract class ApiClient {
 
   @GET('/v1/playlistaudio/myPlaylistAudioIds')
   Future<List<String>?> getPlaylistAudioIdsByAuthUser();
+
+  @POST('/v1/playlistaudio')
+  Future<PlaylistAudioDto> createPlaylistAudio(@Body() CreatePlaylistAudioBodyDto body);
+
+  @DELETE('/v1/playlistaudio')
+  Future<void> deletePlaylistAudio(@Body() DeletePlaylistAudioBodyDto body);
 
   // user audio -------------------------
   @POST('/v1/useraudio/createForAuthUser')
