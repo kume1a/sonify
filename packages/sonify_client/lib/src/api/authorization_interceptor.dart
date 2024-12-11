@@ -56,6 +56,6 @@ class AuthorizationInterceptor extends Interceptor {
   }
 
   Future<void> _clearExit() async {
-    _afterExit.call();
+    _afterExit();
   }
 }

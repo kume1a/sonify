@@ -130,5 +130,27 @@
   "enableSearchHistory": "Enable search history",
   "preferences": "Preferences",
   "noPlaylistsFound": "No playlists found",
-  "createPlaylist": "Create Playlist"
+  "createPlaylist": "Create Playlist",
+  "name": "Name",
+  "failedToCreatePlaylist": "Failed to create playlist",
+  "success": "Success",
+  "playlistCreated": "Playlist {name} created",
+  "@playlistCreated": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "failedToLoadPlaylist": "Failed to load playlist",
+  "playlistNotFound": "Playlist not found",
+  "failedToUpdatePlaylist": "Failed to update playlist",
+  "playlistUpdated": "Playlist updated to {name}",
+  "@playlistUpdated": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

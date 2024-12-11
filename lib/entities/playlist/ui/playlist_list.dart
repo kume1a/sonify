@@ -43,7 +43,7 @@ class PlaylistsList extends StatelessWidget {
                         Text(l.noPlaylistsFound),
                         const SizedBox(height: 6),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: context.playlistListCubit.onCreatePlaylistPressed,
                           child: Text(l.createPlaylist),
                         ),
                       ],

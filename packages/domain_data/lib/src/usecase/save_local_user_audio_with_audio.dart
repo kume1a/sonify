@@ -5,8 +5,8 @@ import '../entities/audio/api/audio_local_repository.dart';
 import '../entities/user_audio/api/user_audio_local_repository.dart';
 import '../entities/user_audio/model/user_audio.dart';
 
-class SaveUserAudioWithAudio {
-  SaveUserAudioWithAudio(
+class SaveLocalUserAudioWithAudio {
+  SaveLocalUserAudioWithAudio(
     this._userAudioLocalRepository,
     this._audioLocalRepository,
   );
@@ -14,7 +14,7 @@ class SaveUserAudioWithAudio {
   final UserAudioLocalRepository _userAudioLocalRepository;
   final AudioLocalRepository _audioLocalRepository;
 
-  Future<Result<UserAudio>> save(UserAudio userAudio) async {
+  Future<Result<UserAudio>> call(UserAudio userAudio) async {
     if (userAudio.audio == null) {
       Logger.root.warning('SaveUserAudioWithAudio.save: userAudio.audio is null');
       return Result.err();

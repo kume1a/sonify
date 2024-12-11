@@ -12,14 +12,14 @@ import 'on_download_task_downloaded.dart';
 class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
   OnDownloadTaskDownloadedImpl(
     this._downloadedTaskLocalRepository,
-    this._saveUserAudioWithAudio,
-    this._savePlaylistAudioWithAudio,
+    this._saveLocalUserAudioWithAudio,
+    this._saveLocalPlaylistAudioWithAudio,
     this._eventBus,
   );
 
   final DownloadedTaskLocalRepository _downloadedTaskLocalRepository;
-  final SaveUserAudioWithAudio _saveUserAudioWithAudio;
-  final SavePlaylistAudioWithAudio _savePlaylistAudioWithAudio;
+  final SaveLocalUserAudioWithAudio _saveLocalUserAudioWithAudio;
+  final SaveLocalPlaylistAudioWithAudio _saveLocalPlaylistAudioWithAudio;
   final EventBus _eventBus;
 
   @override
@@ -63,7 +63,7 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
   }
 
   Future<Result<UserAudio>> _handleUserAudioDownloaded(UserAudio userAudio) async {
-    final insertedAudio = await _saveUserAudioWithAudio.save(userAudio);
+    final insertedAudio = await _saveLocalUserAudioWithAudio(userAudio);
     if (insertedAudio.isErr) {
       Logger.root.warning('Failed to save userAudio, $userAudio');
       return Result.err();
@@ -75,7 +75,7 @@ class OnDownloadTaskDownloadedImpl implements OnDownloadTaskDownloaded {
   }
 
   Future<Result<PlaylistAudio>> _handlePlaylistAudioDownloaded(PlaylistAudio playlistAudio) async {
-    final insertedAudio = await _savePlaylistAudioWithAudio.save(playlistAudio);
+    final insertedAudio = await _saveLocalPlaylistAudioWithAudio(playlistAudio);
     if (insertedAudio.isErr) {
       Logger.root.warning('Failed to save playlistAudio, $playlistAudio');
       return Result.err();

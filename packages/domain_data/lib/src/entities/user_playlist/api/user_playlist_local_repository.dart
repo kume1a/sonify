@@ -19,4 +19,6 @@ abstract interface class UserPlaylistLocalRepository {
   });
 
   Future<EmptyResult> deleteById(String id);
+
+  Future<Result<UserPlaylist?>> getById(String id);
 }

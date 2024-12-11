@@ -14,7 +14,7 @@ class SaveUserPlaylistWithPlaylist {
   final UserPlaylistLocalRepository _userPlaylistLocalRepository;
   final PlaylistLocalRepository _playlistLocalRepository;
 
-  Future<Result<UserPlaylist>> save(UserPlaylist userPlaylist) async {
+  Future<Result<UserPlaylist>> call(UserPlaylist userPlaylist) async {
     if (userPlaylist.playlist == null) {
       Logger.root.info('SaveUserPlaylistWithPlaylist.save: userPlaylist.playlist is null');
       return Result.err();

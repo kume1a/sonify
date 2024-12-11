@@ -106,4 +106,13 @@ class UserPlaylistLocalRepositoryImpl with ResultWrap implements UserPlaylistLoc
 
     return wrapWithEmptyResult(() => _userPlaylistEntityDao.deleteById(id));
   }
+
+  @override
+  Future<Result<UserPlaylist?>> getById(String id) {
+    return wrapWithResult(() async {
+      final res = await _userPlaylistEntityDao.getById(id);
+
+      return res != null ? _userPlaylistMapper.entityToModel(res) : null;
+    });
+  }
 }

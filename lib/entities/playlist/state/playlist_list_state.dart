@@ -10,6 +10,8 @@ import 'package:logging/logging.dart';
 
 import '../../../app/navigation/page_navigator.dart';
 import '../../../pages/playlist_page.dart';
+import '../model/event_user_playlist.dart';
+import '../util/playlist_dialogs.dart';
 
 typedef PlaylistListState = SimpleDataState<List<UserPlaylist>>;
 
@@ -24,6 +26,8 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
     this._pageNavigator,
     this._authUserInfoProvider,
     this._playlistUpdatedEventChannel,
+    this._playlistDialogs,
+    this._eventBus,
   ) : super(PlaylistListState.idle()) {
     init();
   }
@@ -32,11 +36,16 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
   final PageNavigator _pageNavigator;
   final AuthUserInfoProvider _authUserInfoProvider;
   final PlaylistUpdatedEventChannel _playlistUpdatedEventChannel;
+  final PlaylistDialogs _playlistDialogs;
+  final EventBus _eventBus;
 
   final _subscriptions = SubscriptionComposite();
 
   Future<void> init() async {
-    _subscriptions.add(_playlistUpdatedEventChannel.events.listen(_onPlaylistChanged));
+    _subscriptions.addAll([
+      _playlistUpdatedEventChannel.events.listen(_onPlaylistChanged),
+      _eventBus.on<EventUserPlaylist>().listen(_onEventUserPlaylist),
+    ]);
 
     _playlistUpdatedEventChannel.startListening();
 
@@ -59,6 +68,18 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
     final args = PlaylistPageArgs(playlistId: userPlaylist.playlistId);
 
     _pageNavigator.toPlaylist(args);
+  }
+
+  void onCreatePlaylistPressed() {
+    _playlistDialogs.showMutatePlaylistDialog();
+  }
+
+  void _onEventUserPlaylist(EventUserPlaylist event) {
+    event.when(
+      created: (_) => _loadPlaylists(),
+      updated: (_) => _loadPlaylists(),
+      deleted: (_) => _loadPlaylists(),
+    );
   }
 
   Future<void> _onPlaylistChanged(Playlist playlist) async {

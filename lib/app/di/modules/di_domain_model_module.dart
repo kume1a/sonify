@@ -447,24 +447,35 @@ abstract class DiDomainModelModule {
   }
 
   @lazySingleton
-  SaveUserAudioWithAudio saveUserAudioWithAudio(
+  SaveLocalUserAudioWithAudio saveUserAudioWithAudio(
     UserAudioLocalRepository userAudioLocalRepository,
     AudioLocalRepository audioLocalRepository,
   ) {
-    return SaveUserAudioWithAudio(
+    return SaveLocalUserAudioWithAudio(
       userAudioLocalRepository,
       audioLocalRepository,
     );
   }
 
   @lazySingleton
-  SavePlaylistAudioWithAudio savePlaylistAudioWithAudio(
+  SaveLocalPlaylistAudioWithAudio saveLocalPlaylistAudioWithAudio(
     PlaylistAudioLocalRepository playlistAudioLocalRepository,
     AudioLocalRepository audioLocalRepository,
   ) {
-    return SavePlaylistAudioWithAudio(
+    return SaveLocalPlaylistAudioWithAudio(
       playlistAudioLocalRepository,
       audioLocalRepository,
+    );
+  }
+
+  @lazySingleton
+  SaveUserPlaylistWithPlaylist saveUserPlaylistWithPlaylist(
+    UserPlaylistLocalRepository userPlaylistLocalRepository,
+    PlaylistLocalRepository playlistLocalRepository,
+  ) {
+    return SaveUserPlaylistWithPlaylist(
+      userPlaylistLocalRepository,
+      playlistLocalRepository,
     );
   }
 }
