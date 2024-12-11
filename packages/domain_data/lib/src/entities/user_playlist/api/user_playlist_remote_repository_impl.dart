@@ -41,4 +41,28 @@ class UserPlaylistRemoteRepositoryImpl implements UserPlaylistRemoteRepository {
   Future<Either<NetworkCallError, List<String>>> getAllPlaylistIdsByAuthUser() {
     return _userPlaylistRemoteService.getAllPlaylistIdsByAuthUser();
   }
+
+  @override
+  Future<Either<NetworkCallError, UserPlaylist>> create({
+    required String name,
+  }) async {
+    final res = await _userPlaylistRemoteService.create(name: name);
+
+    return res.map(_userPlaylistMapper.dtoToModel);
+  }
+
+  @override
+  Future<Either<NetworkCallError, Unit>> deleteById(String id) {
+    return _userPlaylistRemoteService.deleteById(id);
+  }
+
+  @override
+  Future<Either<NetworkCallError, UserPlaylist>> updateById({
+    required String id,
+    String? name,
+  }) async {
+    final res = await _userPlaylistRemoteService.updateById(id: id, name: name);
+
+    return res.map(_userPlaylistMapper.dtoToModel);
+  }
 }

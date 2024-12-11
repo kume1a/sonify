@@ -1,6 +1,7 @@
 import 'package:common_models/common_models.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
+import '../../playlist/api/playlist_local_repository.dart';
 import '../model/user_playlist.dart';
 import '../util/user_playlist_mapper.dart';
 import 'user_playlist_local_repository.dart';
@@ -10,11 +11,13 @@ class UserPlaylistLocalRepositoryImpl with ResultWrap implements UserPlaylistLoc
     this._userPlaylistEntityDao,
     this._userPlaylistMapper,
     this._dbBatchProviderFactory,
+    this._playlistLocalRePository,
   );
 
   final UserPlaylistEntityDao _userPlaylistEntityDao;
   final UserPlaylistMapper _userPlaylistMapper;
   final DbBatchProviderFactory _dbBatchProviderFactory;
+  final PlaylistLocalRepository _playlistLocalRePository;
 
   @override
   Future<EmptyResult> bulkWrite(
@@ -51,5 +54,56 @@ class UserPlaylistLocalRepositoryImpl with ResultWrap implements UserPlaylistLoc
   @override
   Future<Result<List<String>>> getAllIdsByUserId(String userId) {
     return wrapWithResult(() => _userPlaylistEntityDao.getAllIdsByUserId(userId));
+  }
+
+  @override
+  Future<Result<UserPlaylist>> create(UserPlaylist userPlaylist) {
+    return wrapWithResult(
+      () async {
+        final entity = _userPlaylistMapper.modelToEntity(userPlaylist);
+
+        final entityId = await _userPlaylistEntityDao.insert(entity);
+
+        return userPlaylist.copyWith(id: entityId);
+      },
+    );
+  }
+
+  @override
+  Future<EmptyResult> updateById({
+    required String id,
+    String? name,
+  }) async {
+    final userPlaylist = await wrapWithResult(() => _userPlaylistEntityDao.getById(id));
+    if (userPlaylist.isErr) {
+      return EmptyResult.err();
+    }
+
+    final playlistId = userPlaylist.dataOrThrow?.playlistId;
+    if (playlistId == null) {
+      return EmptyResult.err();
+    }
+
+    return wrapWithEmptyResult(
+      () => _playlistLocalRePository.updateById(
+        id: playlistId,
+        name: name,
+      ),
+    );
+  }
+
+  @override
+  Future<EmptyResult> deleteById(String id) async {
+    final userPlaylist = await wrapWithResult(() => _userPlaylistEntityDao.getById(id));
+    if (userPlaylist.isErr) {
+      return EmptyResult.err();
+    }
+
+    final playlistId = userPlaylist.dataOrThrow?.playlistId;
+    if (playlistId == null) {
+      return EmptyResult.err();
+    }
+
+    return wrapWithEmptyResult(() => _userPlaylistEntityDao.deleteById(id));
   }
 }

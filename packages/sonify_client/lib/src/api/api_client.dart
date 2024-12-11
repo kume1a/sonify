@@ -25,6 +25,8 @@ import '../module/spotify/model/spotify_token_payload_dto.dart';
 import '../module/user/model/update_user_body.dart';
 import '../module/user/model/user_dto.dart';
 import '../module/user_audio/model/user_audio_dto.dart';
+import '../module/user_playlist/model/create_user_playlist_body.dart';
+import '../module/user_playlist/model/update_user_playlist_body.dart';
 import '../module/user_playlist/model/user_playlist_dto.dart';
 import '../module/usersync/model/user_sync_datum_dto.dart';
 import '../module/youtube/model/youtube_search_suggestions_dto.dart';
@@ -122,6 +124,18 @@ abstract class ApiClient {
 
   @GET('/v1/userplaylist/myUserPlaylistIds')
   Future<List<String>?> getUserPlaylistIdsByAuthUser();
+
+  @POST('/v1/userplaylist')
+  Future<UserPlaylistDto> createUserPlaylist(CreateUserPlaylistBody body);
+
+  @PATCH('/v1/userplaylist/{id}')
+  Future<UserPlaylistDto> updateUserPlaylistById(
+    @Path('id') String id,
+    UpdateUserPlaylistBody body,
+  );
+
+  @DELETE('/v1/userplaylist/{id}')
+  Future<void> deleteUserPlaylistById(@Path('id') String id);
 
   // playlist audio ---------------------
   @GET('/v1/playlistaudio/myPlaylistAudios')

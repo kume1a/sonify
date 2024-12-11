@@ -10,4 +10,13 @@ abstract interface class UserPlaylistLocalRepository {
   Future<Result<List<UserPlaylist>>> getAllByUserId(String userId);
 
   Future<Result<List<String>>> getAllIdsByUserId(String userId);
+
+  Future<Result<UserPlaylist>> create(UserPlaylist userPlaylist);
+
+  Future<EmptyResult> updateById({
+    required String id,
+    String? name,
+  });
+
+  Future<EmptyResult> deleteById(String id);
 }

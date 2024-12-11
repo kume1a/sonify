@@ -66,4 +66,21 @@ class SqflitePlaylistEntityDao implements PlaylistEntityDao {
 
     return res.isNotEmpty ? _playlistEntityMapper.mapToEntity(res.first) : null;
   }
+
+  @override
+  Future<void> updateById({
+    required String id,
+    String? name,
+  }) {
+    final updateMap = <String, dynamic>{
+      if (name != null) Playlist_.name: name,
+    };
+
+    return _db.update(
+      Playlist_.tn,
+      updateMap,
+      where: '${Playlist_.id} = ?',
+      whereArgs: [id],
+    );
+  }
 }

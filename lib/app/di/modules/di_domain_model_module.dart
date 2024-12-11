@@ -181,11 +181,13 @@ abstract class DiDomainModelModule {
     UserPlaylistEntityDao userPlaylistEntityDao,
     UserPlaylistMapper userPlaylistMapper,
     DbBatchProviderFactory dbBatchProviderFactory,
+    PlaylistLocalRepository playlistLocalRepository,
   ) {
     return UserPlaylistLocalRepositoryImpl(
       userPlaylistEntityDao,
       userPlaylistMapper,
       dbBatchProviderFactory,
+      playlistLocalRepository,
     );
   }
 

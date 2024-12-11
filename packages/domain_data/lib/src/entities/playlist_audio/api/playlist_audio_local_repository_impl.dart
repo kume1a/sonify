@@ -20,14 +20,14 @@ class PlaylistAudioLocalRepositoryImpl with ResultWrap implements PlaylistAudioL
   final DeleteUnusedLocalAudio _deleteUnusedLocalAudio;
 
   @override
-  Future<Result<PlaylistAudio>> create(PlaylistAudio playlistAudios) {
+  Future<Result<PlaylistAudio>> create(PlaylistAudio playlistAudio) {
     return wrapWithResult(
       () async {
-        final entity = _playlistAudioMapper.modelToEntity(playlistAudios);
+        final entity = _playlistAudioMapper.modelToEntity(playlistAudio);
 
         final insertedId = await _playlistAudioEntityDao.insert(entity);
 
-        return playlistAudios.copyWith(id: insertedId);
+        return playlistAudio.copyWith(id: insertedId);
       },
     );
   }

@@ -96,4 +96,38 @@ class SqfliteUserPlaylistEntityDao implements UserPlaylistEntityDao {
 
     return res.then((value) => value.map((e) => e[UserPlaylist_.id] as String).toList());
   }
+
+  @override
+  Future<UserPlaylistEntity?> getById(String id) async {
+    final res = await _db.rawQuery(
+      '''
+        SELECT
+          ${UserPlaylist_.tn}.*,
+          ${Playlist_.tn}.${Playlist_.id} AS ${Playlist_.joinedId},
+          ${Playlist_.tn}.${Playlist_.createdAtMillis} AS ${Playlist_.joinedCreatedAtMillis},
+          ${Playlist_.tn}.${Playlist_.name} AS ${Playlist_.joinedName},
+          ${Playlist_.tn}.${Playlist_.thumbnailPath} AS ${Playlist_.joinedThumbnailPath},
+          ${Playlist_.tn}.${Playlist_.thumbnailUrl} AS ${Playlist_.joinedThumbnailUrl},
+          ${Playlist_.tn}.${Playlist_.spotifyId} AS ${Playlist_.joinedSpotifyId},
+          ${Playlist_.tn}.${Playlist_.audioImportStatus} AS ${Playlist_.joinedAudioImportStatus},
+          ${Playlist_.tn}.${Playlist_.audioCount} AS ${Playlist_.joinedAudioCount},
+          ${Playlist_.tn}.${Playlist_.totalAudioCount} AS ${Playlist_.joinedTotalAudioCount}
+        FROM ${UserPlaylist_.tn}
+        LEFT JOIN ${Playlist_.tn} ON ${UserPlaylist_.tn}.${UserPlaylist_.playlistId} = ${Playlist_.tn}.${Playlist_.id}
+        WHERE ${UserPlaylist_.tn}.${UserPlaylist_.id} = ?;
+      ''',
+      [id],
+    );
+
+    return res.map(_userPlaylistEntityMapper.mapToEntity).firstOrNull;
+  }
+
+  @override
+  Future<void> deleteById(String id) {
+    return _db.delete(
+      UserPlaylist_.tn,
+      where: '${UserPlaylist_.id} = ?',
+      whereArgs: [id],
+    );
+  }
 }

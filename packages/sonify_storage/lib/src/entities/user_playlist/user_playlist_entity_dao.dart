@@ -13,4 +13,8 @@ abstract interface class UserPlaylistEntityDao {
   Future<List<UserPlaylistEntity>> getAllByUserId(String userId);
 
   Future<List<String>> getAllIdsByUserId(String userId);
+
+  Future<UserPlaylistEntity?> getById(String id);
+
+  Future<void> deleteById(String id);
 }
