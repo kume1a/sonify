@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../app/di/register_dependencies.dart';
-import '../../entities/playlist/state/import_spotify_playlists_state.dart';
 import '../../features/play_audio/state/audio_player_panel_state.dart';
 import '../../features/play_audio/ui/audio_player_panel.dart';
 import '../../features/sync_user_data/state/sync_user_data_state.dart';
@@ -21,7 +20,6 @@ class MainPage extends StatelessWidget {
         BlocProvider(create: (_) => getIt<AudioPlayerPanelCubit>()),
         BlocProvider(create: (_) => getIt<MainPageCubit>()),
         BlocProvider(create: (_) => getIt<SyncUserDataCubit>(), lazy: false),
-        BlocProvider(create: (_) => getIt<ImportSpotifyPlaylistsCubit>()),
       ],
       child: const _Content(),
     );

@@ -62,7 +62,6 @@
   "shuffle": "Shuffle",
   "upNext": "Up Next",
   "createPlaylist": "Create Playlist",
-  "createNewPlaylist": "Create New Playlist",
   "stopDown": "Stop Download",
   "downDone": "Download Done",
   "down": "Download",
@@ -184,5 +183,6 @@
   "saveShuffleState": "Save shuffle state",
   "saveRepeatState": "Save repeat state",
   "enableSearchHistory": "Enable search history",
-  "preferences": "Preferences"
+  "preferences": "Preferences",
+  "noPlaylistsFound": "No playlists found"
 }

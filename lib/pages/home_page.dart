@@ -5,7 +5,6 @@ import '../app/di/register_dependencies.dart';
 import '../app/intl/app_localizations.dart';
 import '../entities/playlist/state/playlist_list_state.dart';
 import '../entities/playlist/state/playlist_tiles_state.dart';
-import '../entities/playlist/ui/ensure_spotify_playlists_imported.dart';
 import '../entities/playlist/ui/playlist_list.dart';
 import '../entities/playlist/ui/playlist_tiles.dart';
 import '../features/spotifyauth/state/spotify_auth_state.dart';
@@ -48,9 +47,7 @@ class _Content extends StatelessWidget {
                   const SizedBox(height: 24),
                   const PlaylistTiles(),
                   if (isSpotifyAuthenticated)
-                    const EnsureSpotifyPlaylistsImported(
-                      child: PlaylistsList(),
-                    )
+                    const PlaylistsList()
                   else
                     Container(
                       alignment: Alignment.center,

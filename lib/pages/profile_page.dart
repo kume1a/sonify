@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../app/di/register_dependencies.dart';
+import '../entities/playlist/state/import_spotify_playlists_state.dart';
 import '../entities/user/state/auth_user_state.dart';
 import '../entities/user/state/profile_tiles_state.dart';
 import '../entities/user/ui/auth_user_profile_header.dart';
@@ -18,6 +19,7 @@ class ProfilePage extends StatelessWidget {
         BlocProvider(create: (_) => getIt<SignOutCubit>()),
         BlocProvider(create: (_) => getIt<AuthUserCubit>()),
         BlocProvider(create: (_) => getIt<ProfileTilesCubit>()),
+        BlocProvider(create: (_) => getIt<ImportSpotifyPlaylistsCubit>()),
       ],
       child: const _Content(),
     );
@@ -41,6 +43,7 @@ class _Content extends StatelessWidget {
             endIndent: 16,
           ),
           ImportLocalAudioFilesTile(),
+          ImporSpotifyPlaylistsTile(),
           ChangeServerUrlOriginTile(),
           SignOutTile(),
         ],

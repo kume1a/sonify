@@ -36,6 +36,20 @@ class PlaylistsList extends StatelessWidget {
                   ),
                 ),
                 success: (playlists) {
+                  if (playlists.isEmpty) {
+                    return Column(
+                      children: [
+                        const SizedBox(height: 24),
+                        Text(l.noPlaylistsFound),
+                        const SizedBox(height: 6),
+                        TextButton(
+                          onPressed: () {},
+                          child: Text(l.createPlaylist),
+                        ),
+                      ],
+                    );
+                  }
+
                   return ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     scrollDirection: Axis.horizontal,

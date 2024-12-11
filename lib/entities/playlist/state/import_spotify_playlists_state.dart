@@ -15,12 +15,10 @@ part 'import_spotify_playlists_state.freezed.dart';
 @freezed
 class ImportSpotifyPlaylistsState with _$ImportSpotifyPlaylistsState {
   const factory ImportSpotifyPlaylistsState({
-    required SimpleDataState<bool> isSpotifyPlaylistsImported,
     required ActionState<NetworkCallError> importSpotifyPlaylistsState,
   }) = _ImportSpotifyPlaylistsState;
 
   factory ImportSpotifyPlaylistsState.initial() => ImportSpotifyPlaylistsState(
-        isSpotifyPlaylistsImported: SimpleDataState.idle(),
         importSpotifyPlaylistsState: ActionState.idle(),
       );
 }
@@ -32,36 +30,16 @@ extension ImportSpotifyPlaylistsStateX on BuildContext {
 @injectable
 class ImportSpotifyPlaylistsCubit extends Cubit<ImportSpotifyPlaylistsState> {
   ImportSpotifyPlaylistsCubit(
-    this._userSyncDatumRepository,
     this._spotifyRemoteRepository,
     this._spotifyAccessTokenProvider,
-    this._userSyncDatumLocalRepository,
     this._eventBus,
-  ) : super(ImportSpotifyPlaylistsState.initial()) {
-    _init();
-  }
+  ) : super(ImportSpotifyPlaylistsState.initial());
 
-  final UserSyncDatumRemoteRepository _userSyncDatumRepository;
   final SpotifyRemoteRepository _spotifyRemoteRepository;
   final SpotifyAccessTokenProvider _spotifyAccessTokenProvider;
-  final UserSyncDatumLocalRepository _userSyncDatumLocalRepository;
   final EventBus _eventBus;
 
-  Future<void> _init() {
-    return _checkIfSpotifyUserPlaylistsImported();
-  }
-
-  Future<void> onRefreshSpotifyPlaylistImportStatus() {
-    return _checkIfSpotifyUserPlaylistsImported();
-  }
-
   Future<void> onImportSpotifyPlaylists() async {
-    final isSpotifyPlaylistsImported = state.isSpotifyPlaylistsImported.getOrNull;
-    if (isSpotifyPlaylistsImported == null) {
-      Logger.root.warning('Spotify playlists import status not loaded');
-      return;
-    }
-
     emit(state.copyWith(importSpotifyPlaylistsState: ActionState.executing()));
 
     final spotifyAccessToken = await _spotifyAccessTokenProvider.get();
@@ -79,35 +57,5 @@ class ImportSpotifyPlaylistsCubit extends Cubit<ImportSpotifyPlaylistsState> {
     emit(state.copyWith(importSpotifyPlaylistsState: ActionState.fromEither(res)));
 
     res.ifRight((r) => _eventBus.fire(EventSpotifyPlaylistsImported()));
-  }
-
-  Future<void> _checkIfSpotifyUserPlaylistsImported() async {
-    emit(state.copyWith(isSpotifyPlaylistsImported: SimpleDataState.loading()));
-
-    final remoteUserSyncDatumRes = await _userSyncDatumRepository.getAuthUserSyncDatum();
-
-    if (remoteUserSyncDatumRes.isRight) {
-      final isSpotifyPlaylistsImported = remoteUserSyncDatumRes.rightOrThrow.spotifyLastSyncedAt != null;
-
-      emit(state.copyWith(isSpotifyPlaylistsImported: SimpleDataState.success(isSpotifyPlaylistsImported)));
-
-      await _userSyncDatumLocalRepository.writeAuthUserSyncDatum(remoteUserSyncDatumRes.rightOrThrow);
-
-      return;
-    }
-
-    await _userSyncDatumLocalRepository.getAuthUserSyncDatum().awaitFold(
-      () => emit(state.copyWith(isSpotifyPlaylistsImported: SimpleDataState.failure())),
-      (r) {
-        if (r == null) {
-          emit(state.copyWith(isSpotifyPlaylistsImported: SimpleDataState.failure()));
-          return;
-        }
-
-        final isSpotifyPlaylistsImported = r.spotifyLastSyncedAt != null;
-
-        emit(state.copyWith(isSpotifyPlaylistsImported: SimpleDataState.success(isSpotifyPlaylistsImported)));
-      },
-    );
   }
 }
