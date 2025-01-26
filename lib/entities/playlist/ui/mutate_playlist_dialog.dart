@@ -25,11 +25,12 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
 
     return Dialog(
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(10),
           child: BlocBuilder<MutatePlaylistCubit, MutatePlaylistState>(
             buildWhen: (previous, current) => previous.validateForm != current.validateForm,
             builder: (_, state) {
@@ -44,13 +45,15 @@ class _Content extends StatelessWidget {
                       autocorrect: false,
                       decoration: InputDecoration(
                         hintText: l.name,
+                        fillColor: theme.colorScheme.secondaryContainer,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       ),
                       onChanged: context.mutatePlaylistCubit.onNameChanged,
                       validator: (_) => context.mutatePlaylistCubit.state.name.errToString(
                         (err) => err.translate(l),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     TextButton(
                       onPressed: context.mutatePlaylistCubit.onSubmit,
                       child: Text(l.submit),

@@ -32,7 +32,7 @@ abstract final class AppTheme {
       backgroundColor: Palette.primaryContainer,
     ),
     dialogTheme: DialogTheme(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       backgroundColor: Palette.primaryContainer,
     ),
     bottomSheetTheme: const BottomSheetThemeData(

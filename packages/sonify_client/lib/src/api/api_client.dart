@@ -126,7 +126,7 @@ abstract class ApiClient {
   Future<List<String>?> getUserPlaylistIdsByAuthUser();
 
   @POST('/v1/userplaylist')
-  Future<UserPlaylistDto> createUserPlaylist(CreateUserPlaylistBody body);
+  Future<UserPlaylistDto> createUserPlaylist(@Body() CreateUserPlaylistBody body);
 
   @PATCH('/v1/userplaylist/{id}')
   Future<UserPlaylistDto> updateUserPlaylistById(

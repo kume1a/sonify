@@ -83,8 +83,6 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
   }
 
   Future<void> _onPlaylistChanged(Playlist playlist) async {
-    final state = this.state;
-
     final newState = await state.map((data) {
       return data.replace(
         (userPlaylist) => userPlaylist.playlistId == playlist.id,
