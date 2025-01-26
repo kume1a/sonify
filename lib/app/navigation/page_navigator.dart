@@ -53,4 +53,8 @@ class PageNavigator {
       GlobalNavigator.pushNamed(Routes.searchPlaylistAudios, arguments: args);
 
   void toPreferences() => GlobalNavigator.pushNamed(Routes.preferences);
+
+  void popTillMain() {
+    GlobalNavigator.popUntil((route) => route.settings.name == Routes.main);
+  }
 }

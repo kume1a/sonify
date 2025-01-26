@@ -11,6 +11,7 @@ import '../../../app/navigation/page_navigator.dart';
 import '../../../features/download_file/model/downloads_event.dart';
 import '../../../features/play_audio/model/event_play_audio.dart';
 import '../../../features/spotifyauth/api/spotify_access_token_provider.dart';
+import '../../../pages/main/model/event_main_navigation.dart';
 import '../../../pages/search_playlist_audios_page.dart';
 import '../../../shared/bottom_sheet/bottom_sheet_manager.dart';
 import '../../../shared/bottom_sheet/select_option/select_option.dart';
@@ -384,5 +385,8 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     );
   }
 
-  void onAddToThisPlaylistPressed() {}
+  void onAddToThisPlaylistPressed() {
+    _eventBus.fire(EventMainNavigation(pageIndex: 1));
+    _pageNavigator.popTillMain();
+  }
 }
