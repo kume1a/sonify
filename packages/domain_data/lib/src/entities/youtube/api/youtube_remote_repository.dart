@@ -28,7 +28,7 @@ abstract interface class YoutubeRemoteRepository {
     required String videoId,
   });
 
-  Future<Result<MuxedStreamInfo>> getHighestQualityMuxedStreamInfo({
+  Future<Result<VideoStreamInfo>> getHighestQualityStreamInfo({
     required String videoId,
   });
 

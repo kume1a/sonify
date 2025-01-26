@@ -103,13 +103,13 @@ class YoutubeRemoteServiceImpl with SafeHttpRequestWrap, ResultWrap implements Y
   }
 
   @override
-  Future<Result<MuxedStreamInfo>> getHighestQualityMuxedStreamInfo(
+  Future<Result<VideoStreamInfo>> getHighestQualityStreamInfo(
     String videoId,
   ) async {
     return wrapWithResult(() async {
       final manifest = await _yt.videos.streams.getManifest(videoId);
 
-      return manifest.muxed.withHighestBitrate();
+      return manifest.video.withHighestBitrate();
     });
   }
 }

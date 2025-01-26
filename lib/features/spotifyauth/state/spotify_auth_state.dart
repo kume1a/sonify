@@ -86,7 +86,7 @@ class SpotifyAuthCubit extends Cubit<SpotifyAuthState> {
 
   Future<void> _initDeepLinks() async {
     _subscriptions.add(
-      _appLinks.allUriLinkStream.listen(_handleSpotifyCallbackDeepLink),
+      _appLinks.uriLinkStream.listen(_handleSpotifyCallbackDeepLink),
     );
 
     // final appLink = await _appLinks.getInitialAppLink();

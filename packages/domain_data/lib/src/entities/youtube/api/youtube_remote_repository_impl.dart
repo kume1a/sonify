@@ -71,9 +71,9 @@ class YoutubeRemoteRepositoryImpl with SafeHttpRequestWrap implements YoutubeRem
   }
 
   @override
-  Future<Result<MuxedStreamInfo>> getHighestQualityMuxedStreamInfo({
+  Future<Result<VideoStreamInfo>> getHighestQualityStreamInfo({
     required String videoId,
   }) async {
-    return _youtubeRemoteService.getHighestQualityMuxedStreamInfo(videoId);
+    return _youtubeRemoteService.getHighestQualityStreamInfo(videoId);
   }
 }

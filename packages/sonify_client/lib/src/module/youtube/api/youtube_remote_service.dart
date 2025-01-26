@@ -21,7 +21,7 @@ abstract interface class YoutubeRemoteService {
 
   Future<Result<UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams(String videoId);
 
-  Future<Result<MuxedStreamInfo>> getHighestQualityMuxedStreamInfo(String videoId);
+  Future<Result<VideoStreamInfo>> getHighestQualityStreamInfo(String videoId);
 
   Future<Result<Video>> getVideo(String videoId);
 }

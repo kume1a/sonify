@@ -18,14 +18,14 @@ class YoutubeVideoState with _$YoutubeVideoState {
   const factory YoutubeVideoState({
     Uri? videoUri,
     required SimpleDataState<Video> video,
-    required SimpleDataState<MuxedStreamInfo> highQualityMuxedStreamInfo,
+    required SimpleDataState<VideoStreamInfo> highQualityStreamInfo,
     required ActionState<DownloadYoutubeAudioError> downloadAudioState,
     required bool isDownloadAvailable,
   }) = _YoutubeVideoState;
 
   factory YoutubeVideoState.initial() => YoutubeVideoState(
         video: SimpleDataState.idle(),
-        highQualityMuxedStreamInfo: SimpleDataState.idle(),
+        highQualityStreamInfo: SimpleDataState.idle(),
         downloadAudioState: ActionState.idle(),
         isDownloadAvailable: false,
       );
@@ -54,17 +54,16 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
   Future<void> _loadVideo(String videoId) async {
     emit(state.copyWith(
       video: SimpleDataState.loading(),
-      highQualityMuxedStreamInfo: SimpleDataState.loading(),
+      highQualityStreamInfo: SimpleDataState.loading(),
     ));
 
     final video = await _youtubeRemoteRepository.getVideo(videoId: videoId);
-    final highestBitrateVideo =
-        await _youtubeRemoteRepository.getHighestQualityMuxedStreamInfo(videoId: videoId);
+    final highestBitrateVideo = await _youtubeRemoteRepository.getHighestQualityStreamInfo(videoId: videoId);
 
     emit(state.copyWith(
       videoUri: highestBitrateVideo.dataOrNull?.url,
       video: SimpleDataState.fromResult(video),
-      highQualityMuxedStreamInfo: SimpleDataState.fromResult(highestBitrateVideo),
+      highQualityStreamInfo: SimpleDataState.fromResult(highestBitrateVideo),
       isDownloadAvailable: video.isSuccess,
     ));
   }
