@@ -46,7 +46,26 @@ class _PlaylistItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
     final len = playlist.playlistAudios?.length ?? 0;
+
+    if (len == 0) {
+      return SliverToBoxAdapter(
+        child: Center(
+          child: Column(
+            children: [
+              Text(l.letsStartBuildingYourPlaylist),
+              const SizedBox(height: 8),
+              TextButton(
+                onPressed: context.playlistCubit.onAddToThisPlaylistPressed,
+                child: Text(l.addToThisPlaylist),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return SliverList.builder(
       itemCount: len + 1,

@@ -152,5 +152,7 @@
         "type": "String"
       }
     }
-  }
+  },
+  "letsStartBuildingYourPlaylist": "Let's start building your playlist!",
+  "addToThisPlaylist": "Add to this playlist"
 }

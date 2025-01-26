@@ -19,6 +19,7 @@ import '../../../shared/ui/toast_notifier.dart';
 import '../../../shared/util/utils.dart';
 import '../../../shared/values/assets.dart';
 import '../model/event_playlist_audio.dart';
+import '../model/event_user_playlist.dart';
 
 typedef PlaylistState = SimpleDataState<Playlist>;
 
@@ -26,7 +27,9 @@ extension PlaylistStateX on PlaylistState {
   bool get isPlaylistPlayable {
     return maybeWhen(
       success: (data) =>
-          data.audioImportStatus == ProcessStatus.completed && data.audioCount == data.totalAudioCount,
+          data.audioImportStatus == ProcessStatus.completed &&
+          data.audioCount == data.totalAudioCount &&
+          data.playlistAudios?.isNotEmpty == true,
       orElse: () => false,
     );
   }
@@ -78,6 +81,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     _subscriptions.addAll([
       _eventBus.on<EventPlaylistAudio>().listen(_onPlaylistAudioEvent),
       _playlistUpdatedEventChannel.events.listen(_onPlaylistChanged),
+      _eventBus.on<EventUserPlaylist>().listen(_onUserPlaylistEvent),
     ]);
 
     _playlistUpdatedEventChannel.startListening();
@@ -126,6 +130,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
           value: 0,
           label: (l) => l.downloadPlaylist,
           iconAssetName: Assets.svgDownload,
+          isActive: state.isPlaylistPlayable,
         ),
       ],
     );
@@ -362,4 +367,22 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
       },
     );
   }
+
+  void _onUserPlaylistEvent(EventUserPlaylist event) {
+    event.when(
+      created: (_) {},
+      updated: (userPlaylist) {
+        if (userPlaylist.playlistId == state.getOrNull?.id) {
+          loadEntityAndEmit();
+        }
+      },
+      deleted: (userPlaylist) {
+        if (userPlaylist.playlistId == state.getOrNull?.id) {
+          emit(SimpleDataState.failure());
+        }
+      },
+    );
+  }
+
+  void onAddToThisPlaylistPressed() {}
 }
