@@ -32,15 +32,6 @@ class YoutubeRemoteRepositoryImpl with SafeHttpRequestWrap implements YoutubeRem
   }
 
   @override
-  Future<Either<NetworkCallError, String>> getYoutubeMusicUrl({
-    required String videoId,
-  }) async {
-    final res = await _youtubeRemoteService.getYoutubeMusicUrl(videoId);
-
-    return res.map((r) => r.url);
-  }
-
-  @override
   Future<Either<NetworkCallError, YoutubeSearchSuggestions>> getYoutubeSuggestions({
     required String keyword,
   }) async {

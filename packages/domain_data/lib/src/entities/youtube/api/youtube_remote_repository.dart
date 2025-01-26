@@ -12,10 +12,6 @@ abstract interface class YoutubeRemoteRepository {
     required String videoId,
   });
 
-  Future<Either<NetworkCallError, String>> getYoutubeMusicUrl({
-    required String videoId,
-  });
-
   Future<Either<NetworkCallError, YoutubeSearchSuggestions>> getYoutubeSuggestions({
     required String keyword,
   });

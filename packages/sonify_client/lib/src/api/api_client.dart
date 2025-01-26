@@ -46,9 +46,6 @@ abstract class ApiClient {
   Future<ServerTimeDto> getServerTime();
 
   // youtube ---------------------------
-  @GET('/v1/youtube/musicUrl')
-  Future<UrlDto> getYoutubeMusicUrl(@Query('videoId') String videoId);
-
   @GET('/v1/youtube/searchSuggestions')
   Future<YoutubeSearchSuggestionsDto> getYoutubeSuggestions(@Query('keyword') String keyword);
 

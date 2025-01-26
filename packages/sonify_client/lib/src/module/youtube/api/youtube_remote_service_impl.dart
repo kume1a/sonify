@@ -68,13 +68,6 @@ class YoutubeRemoteServiceImpl with SafeHttpRequestWrap, ResultWrap implements Y
   }
 
   @override
-  Future<Either<NetworkCallError, UrlDto>> getYoutubeMusicUrl(String videoId) {
-    return callCatchHandleNetworkCallError(
-      () => _apiClientProvider.get().getYoutubeMusicUrl(videoId),
-    );
-  }
-
-  @override
   Future<Either<NetworkCallError, YoutubeSearchSuggestionsDto>> getYoutubeSuggestions(String keyword) async {
     return callCatchHandleNetworkCallError(
       () => _apiClientProvider.get().getYoutubeSuggestions(keyword),
