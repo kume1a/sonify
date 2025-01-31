@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,7 +52,7 @@ class _Content extends StatelessWidget {
     final theme = Theme.of(context);
 
     return AlphabetList(
-      keywords: userAudios.map((e) => e.audio?.title).whereNotNull().toList(),
+      keywords: userAudios.map((e) => e.audio?.title).nonNulls.toList(),
       backgroundColor: theme.colorScheme.primaryContainer,
       onIndexChanged: onIndexChanged,
       width: 18.w,

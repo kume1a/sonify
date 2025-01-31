@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:common_models/common_models.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
@@ -52,13 +51,13 @@ final class SyncAudioLikesImpl extends SyncEntityBase implements SyncAudioLikes 
 
     final localUserAudioLikesRes = await _audioLikeLocalRepository.getAllByUserId(userId: authUserId);
 
-    return localUserAudioLikesRes.dataOrNull?.map((e) => e.id).whereNotNull().toList();
+    return localUserAudioLikesRes.dataOrNull?.map((e) => e.id).nonNulls.toList();
   }
 
   @override
   Future<List<String>?> getRemoteEntityIds() async {
     final audioLikes = await _audioLikeRemoteRepository.getAuthUserAudioLikes();
 
-    return audioLikes.rightOrNull?.map((e) => e.id).whereNotNull().toList();
+    return audioLikes.rightOrNull?.map((e) => e.id).nonNulls.toList();
   }
 }

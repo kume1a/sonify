@@ -9,7 +9,6 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import '../../../api/api_client.dart';
 import '../../../shared/api_exception_message_code.dart';
 import '../../../shared/dto/error_response_dto.dart';
-import '../../../shared/dto/url_dto.dart';
 import '../../user_audio/model/user_audio_dto.dart';
 import '../model/download_youtube_audio_body.dart';
 import '../model/download_youtube_audio_error.dart';

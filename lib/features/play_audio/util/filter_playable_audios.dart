@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 
@@ -18,7 +17,7 @@ class FilterPlayableAudios {
       return Future.value();
     }
 
-    final audios = playlist.playlistAudios?.map((e) => e.audio).whereNotNull();
+    final audios = playlist.playlistAudios?.map((e) => e.audio).nonNulls;
 
     return _filterPlayableAudios(audios);
   }
