@@ -56,6 +56,8 @@ class _VideoControlsState extends State<VideoControls> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     if (_latestValue.hasError) {
       return controller.errorBuilder?.call(
             context,
@@ -98,7 +100,7 @@ class _VideoControlsState extends State<VideoControls> with SingleTickerProvider
                       ),
                       child: _buildSubtitles(context, controller.subtitle!),
                     ),
-                  _buildBottomBar(context),
+                  _buildBottomBar(theme),
                 ],
               ),
             ],
@@ -238,10 +240,8 @@ class _VideoControlsState extends State<VideoControls> with SingleTickerProvider
     );
   }
 
-  AnimatedOpacity _buildBottomBar(
-    BuildContext context,
-  ) {
-    final iconColor = Theme.of(context).textTheme.labelLarge!.color;
+  AnimatedOpacity _buildBottomBar(ThemeData theme) {
+    final iconColor = theme.textTheme.labelLarge!.color;
 
     return AnimatedOpacity(
       opacity: notifier.hideStuff ? 0.0 : 1.0,
@@ -278,7 +278,7 @@ class _VideoControlsState extends State<VideoControls> with SingleTickerProvider
                     padding: const EdgeInsets.only(right: 20),
                     child: Row(
                       children: [
-                        _buildProgressBar(),
+                        _buildProgressBar(theme),
                       ],
                     ),
                   ),
@@ -381,7 +381,7 @@ class _VideoControlsState extends State<VideoControls> with SingleTickerProvider
             text: '/ ${formatDuration(duration)}',
             style: TextStyle(
               fontSize: 14.0,
-              color: Colors.white.withOpacity(.75),
+              color: Colors.white.withAlpha((255 * .75).toInt()),
               fontWeight: FontWeight.normal,
             ),
           )
@@ -535,7 +535,7 @@ class _VideoControlsState extends State<VideoControls> with SingleTickerProvider
     });
   }
 
-  Widget _buildProgressBar() {
+  Widget _buildProgressBar(ThemeData theme) {
     return Expanded(
       child: SonifyVideoProgressBar(
         videoPlayerController,
@@ -558,10 +558,10 @@ class _VideoControlsState extends State<VideoControls> with SingleTickerProvider
         },
         colors: controller.materialProgressColors ??
             SonifyVideoPlayerProgressColors(
-              playedColor: Theme.of(context).colorScheme.secondary,
-              handleColor: Theme.of(context).colorScheme.secondary,
-              bufferedColor: Theme.of(context).colorScheme.surface.withOpacity(0.5),
-              backgroundColor: Theme.of(context).disabledColor.withOpacity(.5),
+              playedColor: theme.colorScheme.secondary,
+              handleColor: theme.colorScheme.secondary,
+              bufferedColor: theme.colorScheme.surface.withAlpha((0.5 * 255).toInt()),
+              backgroundColor: theme.disabledColor.withAlpha((0.5 * 255).toInt()),
             ),
       ),
     );

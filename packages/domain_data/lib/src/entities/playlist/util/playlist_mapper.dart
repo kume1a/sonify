@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:common_utilities/common_utilities.dart';
 import 'package:sonify_client/sonify_client.dart';
 import 'package:sonify_storage/sonify_storage.dart';
@@ -52,7 +51,7 @@ class PlaylistMapper {
   }) {
     final playlistAudios = playlistAudioEntities
         ?.map((e) => e.audio != null ? _playlistAudioMapper.entityToModel(e) : null)
-        .whereNotNull()
+        .nonNulls
         .toList();
 
     return Playlist(

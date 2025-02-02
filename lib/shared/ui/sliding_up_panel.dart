@@ -300,7 +300,8 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                         //if a color exists, then touch events won't go through
                         color: _ac.value == 0.0
                             ? null
-                            : widget.backdropColor.withOpacity(widget.backdropOpacity * _ac.value),
+                            : widget.backdropColor
+                                .withAlpha((widget.backdropOpacity * _ac.value * 255).toInt()),
                       );
                     }),
               ),

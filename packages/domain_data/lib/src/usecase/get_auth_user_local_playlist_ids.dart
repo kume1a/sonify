@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:common_models/common_models.dart';
 import 'package:logging/logging.dart';
 
@@ -27,7 +26,7 @@ class GetAuthUserLocalPlaylistIds {
       return Result.err();
     }
 
-    final authUserPlaylistIds = userPlaylists.dataOrThrow.map((e) => e.playlistId).whereNotNull().toList();
+    final authUserPlaylistIds = userPlaylists.dataOrThrow.map((e) => e.playlistId).nonNulls.toList();
 
     return Result.success(authUserPlaylistIds);
   }

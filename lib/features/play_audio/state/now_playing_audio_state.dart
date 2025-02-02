@@ -324,7 +324,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
         return null;
       }
 
-      final localAudios = localUserAudios.dataOrNull?.map((e) => e.audio).whereNotNull().toList();
+      final localAudios = localUserAudios.dataOrNull?.map((e) => e.audio).nonNulls.toList();
 
       emit(state.copyWith(audios: localAudios, playlist: null));
 

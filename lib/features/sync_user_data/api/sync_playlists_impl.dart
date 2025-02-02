@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:common_models/common_models.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
@@ -34,7 +33,7 @@ final class SyncPlaylistsImpl extends FullSyncEntityBase implements SyncPlaylist
       return EmptyResult.err();
     }
 
-    final playlists = authUserPlaylists.rightOrThrow.map((e) => e.playlist).whereNotNull().toList();
+    final playlists = authUserPlaylists.rightOrThrow.map((e) => e.playlist).nonNulls.toList();
 
     return _playlistLocalRepository.bulkWrite(playlists);
   }

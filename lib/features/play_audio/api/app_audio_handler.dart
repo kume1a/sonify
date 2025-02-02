@@ -22,7 +22,7 @@ class AppAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> addQueueItems(List<MediaItem> mediaItems) {
-    final audioSource = mediaItems.map(mediaItemToAudioSource).whereNotNull().toList();
+    final audioSource = mediaItems.map(mediaItemToAudioSource).nonNulls.toList();
 
     _playlist.addAll(audioSource);
 
@@ -62,7 +62,7 @@ class AppAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> updateQueue(List<MediaItem> queue) async {
-    final audioSources = queue.map(mediaItemToAudioSource).whereNotNull().toList();
+    final audioSources = queue.map(mediaItemToAudioSource).nonNulls.toList();
 
     await _playlist.clear();
     await _playlist.addAll(audioSources);
