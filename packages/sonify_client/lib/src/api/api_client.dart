@@ -34,7 +34,6 @@ import '../shared/dto/audio_id_body.dart';
 import '../shared/dto/audio_ids_body.dart';
 import '../shared/dto/optional_ids_body.dart';
 import '../shared/dto/required_ids_body.dart';
-import '../shared/dto/url_dto.dart';
 
 part 'api_client.g.dart';
 
