@@ -1,5 +1,3 @@
-library marquee;
-
 import 'dart:async';
 
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';

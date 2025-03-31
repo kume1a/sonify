@@ -13,3 +13,5 @@ GeneratedPluginRegistrant.java
 **/*.jks
 
 google-services.json
+
+.cxx

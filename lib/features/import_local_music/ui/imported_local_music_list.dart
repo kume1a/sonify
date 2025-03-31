@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../../../shared/ui/thumbnail.dart';
@@ -101,16 +100,19 @@ class _Item extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           children: [
-            QueryArtworkWidget(
-              id: localMusic.id,
-              type: ArtworkType.AUDIO,
-              artworkBorder: BorderRadius.circular(8),
-              artworkWidth: 42,
-              artworkHeight: 42,
-              nullArtworkWidget: const ThumbnailPlaceholder(
-                size: Size.square(42),
-              ),
+            ThumbnailPlaceholder(
+              size: const Size.square(42),
             ),
+            // QueryArtworkWidget(
+            //   id: localMusic.id,
+            //   type: ArtworkType.AUDIO,
+            //   artworkBorder: BorderRadius.circular(8),
+            //   artworkWidth: 42,
+            //   artworkHeight: 42,
+            //   nullArtworkWidget: const ThumbnailPlaceholder(
+            //     size: Size.square(42),
+            //   ),
+            // ),
             const SizedBox(width: 10),
             Expanded(
               child: Column(

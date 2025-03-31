@@ -8,7 +8,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 import 'package:sonify_client/sonify_client.dart';
-import 'package:uri_to_file/uri_to_file.dart';
 
 import '../../../app/navigation/page_navigator.dart';
 import '../../../shared/permission/permission_manager.dart';
@@ -135,7 +134,11 @@ class ImportLocalMusicCubit extends Cubit<ImportLocalMusicState> {
         continue;
       }
 
-      final audioFile = Platform.isAndroid ? await toFile(localMusic.uri!) : File(localMusic.uri!);
+      // final audioFile = Platform.isAndroid ? await toFile(localMusic.uri!) : File(localMusic.uri!);
+      final audioFile = Platform.isAndroid
+          ? throw UnimplementedError('Android platform is not yet supported for this operation.')
+          : File(localMusic.uri!);
+
       final audioBytes = await audioFile.readAsBytes();
 
       final artworkBytes = await _queryLocalMusicArtwork(localMusicId: localMusic.id);

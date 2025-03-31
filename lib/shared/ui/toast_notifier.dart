@@ -57,7 +57,9 @@ final class ToastNotifier {
       description: Text(description(l), style: textStyle),
       type: type,
       style: ToastificationStyle.flatColored,
-      closeButtonShowType: CloseButtonShowType.none,
+      closeButton: ToastCloseButton(
+        showType: CloseButtonShowType.none,
+      ),
       backgroundColor: theme.colorScheme.surface,
       showProgressBar: false,
       borderSide: BorderSide(color: theme.colorScheme.secondaryContainer),
