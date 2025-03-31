@@ -76,7 +76,7 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
 
     emit(state.copyWith(downloadAudioState: ActionState.executing()));
 
-    _youtubeRemoteRepository.downloadYoutubeAudio(videoId: video.id.value).awaitFold(
+    _youtubeRemoteRepository.downloadYoutubeAudioToUserLibrary(videoId: video.id.value).awaitFold(
       (l) async {
         emit(state.copyWith(downloadAudioState: ActionState.failed(l)));
         await _resetDownloadAudioState();

@@ -5,6 +5,8 @@ import 'package:common_network_components/common_network_components.dart';
 import 'package:sonify_client/sonify_client.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
+import '../../playlist_audio/model/playlist_audio.dart';
+import '../../playlist_audio/util/playlist_audio_mapper.dart';
 import '../../user_audio/model/user_audio.dart';
 import '../../user_audio/util/user_audio_mapper.dart';
 import '../model/youtube_search_suggestions.dart';
@@ -16,19 +18,34 @@ class YoutubeRemoteRepositoryImpl with SafeHttpRequestWrap implements YoutubeRem
     this._youtubeRemoteService,
     this._youtubeSearchSuggestionsMapper,
     this._userAudioMapper,
+    this._playlistAudioMapper,
   );
 
   final YoutubeRemoteService _youtubeRemoteService;
   final YoutubeSearchSuggestionsMapper _youtubeSearchSuggestionsMapper;
   final UserAudioMapper _userAudioMapper;
+  final PlaylistAudioMapper _playlistAudioMapper;
 
   @override
-  Future<Either<DownloadYoutubeAudioError, UserAudio>> downloadYoutubeAudio({
+  Future<Either<DownloadYoutubeAudioError, UserAudio>> downloadYoutubeAudioToUserLibrary({
     required String videoId,
   }) async {
-    final res = await _youtubeRemoteService.downloadYoutubeAudio(videoId: videoId);
+    final res = await _youtubeRemoteService.downloadYoutubeAudioToUserLibrary(videoId: videoId);
 
     return res.map(_userAudioMapper.dtoToModel);
+  }
+
+  @override
+  Future<Either<DownloadYoutubeAudioError, PlaylistAudio>> downloadYoutubeAudioToPlaylist({
+    required String videoId,
+    required String playlistId,
+  }) async {
+    final res = await _youtubeRemoteService.downloadYoutubeAudioToPlaylist(
+      videoId: videoId,
+      playlistId: playlistId,
+    );
+
+    return res.map(_playlistAudioMapper.dtoToModel);
   }
 
   @override
