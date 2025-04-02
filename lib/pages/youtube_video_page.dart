@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../app/di/register_dependencies.dart';
 import '../features/youtube/state/youtube_video_state.dart';
-import '../features/youtube/ui/download_youtube_audio_error_text.dart';
 import '../features/youtube/ui/download_youtube_video_button.dart';
 import '../features/youtube/ui/youtube_video.dart';
 import '../features/youtube/ui/youtube_video_info.dart';
@@ -71,13 +70,6 @@ class _Content extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: DownloadYoutubeVideoButton(),
-              ),
-            ),
-            Padding(
-              padding: padding,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: DownloadYoutubeAudioErrorText(),
               ),
             ),
           ],
