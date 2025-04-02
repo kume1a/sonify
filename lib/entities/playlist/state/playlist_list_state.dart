@@ -36,7 +36,7 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
   final PageNavigator _pageNavigator;
   final AuthUserInfoProvider _authUserInfoProvider;
   final PlaylistUpdatedEventChannel _playlistUpdatedEventChannel;
-  final PlaylistDialogs _playlistDialogs;
+  final PlaylistPopups _playlistDialogs;
   final EventBus _eventBus;
 
   final _subscriptions = SubscriptionComposite();

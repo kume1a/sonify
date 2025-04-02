@@ -154,5 +154,7 @@
     }
   },
   "letsStartBuildingYourPlaylist": "Let's start building your playlist!",
-  "addToThisPlaylist": "Add to this playlist"
+  "addToThisPlaylist": "Add to this playlist",
+  "addToPlaylist": "Add to playlist",
+  "playlists": "Playlists"
 }
