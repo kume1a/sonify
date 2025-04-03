@@ -11,7 +11,7 @@ import 'package:logging/logging.dart';
 import '../../../app/navigation/page_navigator.dart';
 import '../../../pages/playlist_page.dart';
 import '../model/event_user_playlist.dart';
-import '../util/playlist_dialogs.dart';
+import '../util/playlist_popups.dart';
 
 typedef PlaylistListState = SimpleDataState<List<UserPlaylist>>;
 

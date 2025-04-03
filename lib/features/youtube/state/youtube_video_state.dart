@@ -9,7 +9,7 @@ import 'package:logging/logging.dart';
 import 'package:sonify_client/sonify_client.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart' hide Playlist;
 
-import '../../../entities/playlist/util/playlist_dialogs.dart';
+import '../../../entities/playlist/util/playlist_popups.dart';
 import '../../../shared/bottom_sheet/bottom_sheet_manager.dart';
 import '../../../shared/bottom_sheet/select_option/select_option.dart';
 import '../../download_file/model/downloads_event.dart';
@@ -104,13 +104,7 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
         await _downloadAudioToMyLibrary(video);
         break;
       case 1:
-        final playlist = await _playlistPopups.openPlaylistSelector();
-
-        if (playlist == null) {
-          return;
-        }
-
-        await _downloadAudioToPlaylist(video, playlist);
+        await _downloadAudioToPlaylist(video);
         break;
       default:
         Logger.root.warning('Unknown option selected: $option');
@@ -135,7 +129,13 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
     );
   }
 
-  Future<void> _downloadAudioToPlaylist(Video video, Playlist playlist) async {
+  Future<void> _downloadAudioToPlaylist(Video video) async {
+    final playlist = await _playlistPopups.openPlaylistSelector();
+
+    if (playlist == null) {
+      return;
+    }
+
     emit(state.copyWith(downloadAudioState: ActionState.executing()));
 
     _youtubeRemoteRepository

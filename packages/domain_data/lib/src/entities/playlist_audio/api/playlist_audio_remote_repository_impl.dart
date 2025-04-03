@@ -29,7 +29,7 @@ class PlaylistAudioRemoteRepositoryImpl implements PlaylistAudioRemoteRepository
   }
 
   @override
-  Future<Either<NetworkCallError, PlaylistAudio>> create({
+  Future<Either<CreatePlaylistAudioError, PlaylistAudio>> create({
     required String playlistId,
     required String audioId,
   }) async {

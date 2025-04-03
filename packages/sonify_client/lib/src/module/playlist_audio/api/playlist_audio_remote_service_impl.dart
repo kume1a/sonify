@@ -3,8 +3,11 @@ import 'package:common_network_components/common_network_components.dart';
 import 'package:common_utilities/common_utilities.dart';
 
 import '../../../api/api_client.dart';
+import '../../../shared/api_exception_message_code.dart';
+import '../../../shared/dto/error_response_dto.dart';
 import '../../../shared/dto/required_ids_body.dart';
 import '../model/create_playlist_audio_body_dto.dart';
+import '../model/create_playlist_audio_error.dart';
 import '../model/delete_playlist_audio_body_dto.dart';
 import '../model/playlist_audio_dto.dart';
 
@@ -40,20 +43,33 @@ class PlaylistAudioRemoteServiceImpl with SafeHttpRequestWrap implements Playlis
   }
 
   @override
-  Future<Either<NetworkCallError, PlaylistAudioDto>> create({
+  Future<Either<CreatePlaylistAudioError, PlaylistAudioDto>> create({
     required String playlistId,
     required String audioId,
   }) {
-    return callCatchHandleNetworkCallError(() async {
-      final body = CreatePlaylistAudioBodyDto(
-        playlistId: playlistId,
-        audioId: audioId,
-      );
+    return callCatch(
+      () async {
+        final body = CreatePlaylistAudioBodyDto(
+          playlistId: playlistId,
+          audioId: audioId,
+        );
 
-      final res = await _apiClientProvider.get().createPlaylistAudio(body);
+        final res = await _apiClientProvider.get().createPlaylistAudio(body);
 
-      return res;
-    });
+        return res;
+      },
+      networkError: const CreatePlaylistAudioError.network(),
+      unknownError: const CreatePlaylistAudioError.unknown(),
+      onResponseError: (response) {
+        final errorDto = ErrorResponseDto.fromJson(response?.data);
+
+        return switch (errorDto.message) {
+          ApiExceptionMessageCode.playlistAudioAlreadyExists =>
+            const CreatePlaylistAudioError.alreadyExists(),
+          _ => const CreatePlaylistAudioError.unknown(),
+        };
+      },
+    );
   }
 
   @override

@@ -15,6 +15,8 @@ import '../../../shared/bottom_sheet/select_option/select_option.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../../../shared/ui/toast_notifier.dart';
 import '../../../shared/values/assets.dart';
+import '../../playlist/model/event_playlist_audio.dart';
+import '../../playlist/util/playlist_popups.dart';
 import '../model/event_user_audio.dart';
 
 typedef MyLibraryAudiosState = SimpleDataState<List<UserAudio>>;
@@ -33,6 +35,9 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
     this._bottomSheetManager,
     this._toastNotifier,
     this._eventBus,
+    this._playlistPopups,
+    this._playlistAudioLocalRepository,
+    this._playlistAudioRemoteRepository,
   ) {
     _init();
   }
@@ -44,6 +49,9 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
   final BottomSheetManager _bottomSheetManager;
   final ToastNotifier _toastNotifier;
   final EventBus _eventBus;
+  final PlaylistPopups _playlistPopups;
+  final PlaylistAudioLocalRepository _playlistAudioLocalRepository;
+  final PlaylistAudioRemoteRepository _playlistAudioRemoteRepository;
 
   final _subscriptions = SubscriptionComposite();
 
@@ -100,6 +108,11 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
           label: (l) => l.delete,
           iconAssetName: Assets.svgTrashCan,
         ),
+        SelectOption(
+          value: 1,
+          label: (l) => l.addToPlaylist,
+          iconAssetName: Assets.svgPlaylist,
+        ),
       ],
     );
 
@@ -110,6 +123,8 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
     switch (selectedOption) {
       case 0:
         return _triggerDeleteUserAudio(userAudio);
+      case 1:
+        return _triggerAddToPlaylist(userAudio);
     }
   }
 
@@ -153,6 +168,40 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
         _eventBus.fire(
           const EventPlayAudio.reloadNowPlayingPlaylist(allowLocalAudioPlaylistReload: true),
         );
+      },
+    );
+  }
+
+  Future<void> _triggerAddToPlaylist(UserAudio userAudio) async {
+    if (userAudio.audioId == null) {
+      Logger.root.warning('MyLibraryAudiosCubit._triggerAddToPlaylist: audioId is null', userAudio);
+      return;
+    }
+
+    final playlist = await _playlistPopups.openPlaylistSelector();
+
+    if (playlist == null) {
+      return;
+    }
+
+    final remoteRes = await _playlistAudioRemoteRepository.create(
+      audioId: userAudio.audioId!,
+      playlistId: playlist.id,
+    );
+
+    if (remoteRes.isLeft) {
+      _toastNotifier.error(description: (l) => remoteRes.leftOrThrow.translate(l, playlist.name));
+      return;
+    }
+
+    final localRes = await _playlistAudioLocalRepository.create(remoteRes.rightOrThrow);
+
+    localRes.fold(
+      () => _toastNotifier.error(description: (l) => l.failedToAddToPlaylist),
+      (r) {
+        _eventBus.fire(EventPlaylistAudio.downloaded(localRes.dataOrThrow));
+
+        _toastNotifier.success(description: (l) => l.audioAddedToPlaylist(playlist.name));
       },
     );
   }

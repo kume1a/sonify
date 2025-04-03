@@ -156,5 +156,8 @@
   "letsStartBuildingYourPlaylist": "Let's start building your playlist!",
   "addToThisPlaylist": "Add to this playlist",
   "addToPlaylist": "Add to playlist",
-  "playlists": "Playlists"
+  "playlists": "Playlists",
+  "failedToAddToPlaylist": "Failed to add to playlist",
+  "audioAddedToPlaylist": "Audio added to playlist: {playlistName}",
+  "audioAlreadyInPlaylist": "Audio already exists in playlist: {playlistName}"
 }

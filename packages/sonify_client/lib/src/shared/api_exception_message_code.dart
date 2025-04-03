@@ -11,4 +11,5 @@ abstract class ApiExceptionMessageCode {
   static const audioAlreadyExists = 'AUDIO_ALREADY_EXISTS';
   static const invalidAuthMethod = 'INVALID_AUTH_METHOD';
   static const invalidEmailOrPassword = 'INVALID_EMAIL_OR_PASSWORD';
+  static const playlistAudioAlreadyExists = 'PLAYLIST_AUDIO_ALREADY_EXISTS';
 }

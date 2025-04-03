@@ -66,3 +66,13 @@ extension EmailSignInErrorIntl on EmailSignInError {
     );
   }
 }
+
+extension CreatePlaylistAudioErrorIntl on CreatePlaylistAudioError {
+  String translate(AppLocalizations l, String playlistName) {
+    return when(
+      network: () => l.noInternetConnection,
+      unknown: () => l.unknownError,
+      alreadyExists: () => l.audioAlreadyInPlaylist(playlistName),
+    );
+  }
+}

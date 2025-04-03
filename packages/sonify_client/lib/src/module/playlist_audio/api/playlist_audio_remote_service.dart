@@ -1,5 +1,6 @@
 import 'package:common_models/common_models.dart';
 
+import '../model/create_playlist_audio_error.dart';
 import '../model/playlist_audio_dto.dart';
 
 abstract interface class PlaylistAudioRemoteService {
@@ -9,7 +10,7 @@ abstract interface class PlaylistAudioRemoteService {
 
   Future<Either<NetworkCallError, List<String>>> getAllIdsByAuthUser();
 
-  Future<Either<NetworkCallError, PlaylistAudioDto>> create({
+  Future<Either<CreatePlaylistAudioError, PlaylistAudioDto>> create({
     required String playlistId,
     required String audioId,
   });
