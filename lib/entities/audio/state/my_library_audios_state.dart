@@ -120,12 +120,11 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
       return;
     }
 
-    switch (selectedOption) {
-      case 0:
-        return _triggerDeleteUserAudio(userAudio);
-      case 1:
-        return _triggerAddToPlaylist(userAudio);
-    }
+    return switch (selectedOption) {
+      0 => _triggerDeleteUserAudio(userAudio),
+      1 => _triggerAddToPlaylist(userAudio),
+      _ => Future.value(),
+    };
   }
 
   Future<void> _onEventUserAudio(EventUserAudio event) async {
