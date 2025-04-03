@@ -56,7 +56,7 @@ final class ToastNotifier {
       title: title != null ? Text(title(l), style: textStyle) : null,
       description: Text(description(l), style: textStyle),
       type: type,
-      style: ToastificationStyle.flatColored,
+      style: ToastificationStyle.minimal,
       closeButton: ToastCloseButton(
         showType: CloseButtonShowType.none,
       ),

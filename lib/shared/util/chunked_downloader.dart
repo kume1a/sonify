@@ -96,8 +96,6 @@ class ChunkedDownloader {
       }
 
       await file.rename(saveFilePath);
-
-      Logger.root.finest('Downloaded file');
     }
   }
 }
