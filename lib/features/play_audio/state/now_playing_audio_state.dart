@@ -121,7 +121,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
-    if (state.nowPlayingAudio.getOrNull?.id == userAudio.audioId) {
+    if (state.nowPlayingAudio.getOrNull?.id == userAudio.audioId && state.playlist == null) {
       return;
     }
 
@@ -147,7 +147,8 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   }
 
   Future<void> onPlaylistAudioPressed(PlaylistAudio playlistAudio) async {
-    if (state.nowPlayingAudio.getOrNull?.id == playlistAudio.audioId) {
+    if (state.nowPlayingAudio.getOrNull?.id == playlistAudio.audioId &&
+        state.playlist?.id == playlistAudio.playlistId) {
       return;
     }
 
