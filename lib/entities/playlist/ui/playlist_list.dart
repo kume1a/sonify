@@ -53,8 +53,14 @@ class PlaylistsList extends StatelessWidget {
                   return ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     scrollDirection: Axis.horizontal,
-                    itemCount: playlists.length,
-                    itemBuilder: (_, index) => _Item(userPlaylist: playlists[index]),
+                    itemCount: playlists.length + 1,
+                    itemBuilder: (_, index) {
+                      if (index == playlists.length) {
+                        return const _ItemNewPlaylist();
+                      }
+
+                      return _Item(userPlaylist: playlists[index]);
+                    },
                   );
                 },
               );
@@ -62,6 +68,43 @@ class PlaylistsList extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+}
+
+class _ItemNewPlaylist extends StatelessWidget {
+  const _ItemNewPlaylist();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
+    return InkWell(
+      onTap: context.playlistListCubit.onCreatePlaylistPressed,
+      borderRadius: BorderRadius.circular(8),
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 8),
+          width: 125,
+          height: 125,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondaryContainer,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.add, size: 20),
+              SizedBox(height: 4),
+              Text(
+                l.createPlaylist,
+                style: TextStyle(fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
