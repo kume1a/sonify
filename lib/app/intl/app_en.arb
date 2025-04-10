@@ -156,8 +156,40 @@
   "letsStartBuildingYourPlaylist": "Let's start building your playlist!",
   "addToThisPlaylist": "Add to this playlist",
   "addToPlaylist": "Add to playlist",
-  "playlists": "Playlists",
   "failedToAddToPlaylist": "Failed to add to playlist",
   "audioAddedToPlaylist": "Audio added to playlist: {playlistName}",
-  "audioAlreadyInPlaylist": "Audio already exists in playlist: {playlistName}"
+  "@audioAddedToPlaylist": {
+    "placeholders": {
+      "playlistName": {
+        "type": "String"
+      }
+    }
+  },
+  "audioAlreadyInPlaylist": "Audio already exists in playlist: {playlistName}",
+  "@audioAlreadyInPlaylist": {
+    "placeholders": {
+      "playlistName": {
+        "type": "String"
+      }
+    }
+  },
+  "editPlaylistDetails": "Edit playlist details",
+  "deletePlaylist": "Delete playlist",
+  "deletePlaylistConfirmation": "Are you sure you want to delete playlist {playlistName}? This action cannot be undone.",
+  "@deletePlaylistConfirmation": {
+    "placeholders": {
+      "playlistName": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistDeletedConfirmation": "Playlist {playlistName} deleted",
+  "@playlistDeletedConfirmation": {
+    "placeholders": {
+      "playlistName": {
+        "type": "String"
+      }
+    }
+  },
+  "notImplementedYet": "Not implemented yet"
 }

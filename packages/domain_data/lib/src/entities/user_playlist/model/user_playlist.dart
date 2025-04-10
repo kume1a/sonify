@@ -7,7 +7,7 @@ part 'user_playlist.freezed.dart';
 @freezed
 class UserPlaylist with _$UserPlaylist {
   const factory UserPlaylist({
-    required String? id,
+    required String id,
     required DateTime? createdAt,
     required String userId,
     required String playlistId,

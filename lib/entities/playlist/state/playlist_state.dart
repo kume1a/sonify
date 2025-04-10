@@ -16,6 +16,7 @@ import '../../../pages/search_playlist_audios_page.dart';
 import '../../../shared/bottom_sheet/bottom_sheet_manager.dart';
 import '../../../shared/bottom_sheet/select_option/select_option.dart';
 import '../../../shared/cubit/entity_loader_cubit.dart';
+import '../../../shared/dialog/dialog_manager.dart';
 import '../../../shared/ui/toast_notifier.dart';
 import '../../../shared/util/utils.dart';
 import '../../../shared/values/assets.dart';
@@ -56,6 +57,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     this._spotifyAccessTokenProvider,
     this._playlistAudioRemoteRepository,
     this._playlistAudioLocalRepository,
+    this._dialogManager,
   );
 
   final UserAudioLocalRepository _userAudioLocalRepository;
@@ -71,12 +73,15 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   final SpotifyAccessTokenProvider _spotifyAccessTokenProvider;
   final PlaylistAudioRemoteRepository _playlistAudioRemoteRepository;
   final PlaylistAudioLocalRepository _playlistAudioLocalRepository;
+  final DialogManager _dialogManager;
 
   String? _playlistId;
 
   final _subscriptions = SubscriptionComposite();
 
-  void init(String playlistId) {
+  void init({
+    required String playlistId,
+  }) {
     _playlistId = playlistId;
 
     _subscriptions.addAll([
@@ -133,6 +138,16 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
           iconAssetName: Assets.svgDownload,
           isActive: state.isPlaylistPlayable,
         ),
+        SelectOption(
+          value: 1,
+          label: (l) => l.editPlaylistDetails,
+          iconAssetName: Assets.svgPencil,
+        ),
+        SelectOption(
+          value: 2,
+          label: (l) => l.deletePlaylist,
+          iconAssetName: Assets.svgTrashCan,
+        ),
       ],
     );
 
@@ -140,11 +155,12 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
       return;
     }
 
-    switch (selectedOption) {
-      case 0:
-        _triggerDownloadPlaylist();
-        break;
-    }
+    return switch (selectedOption) {
+      0 => _triggerDownloadPlaylist(),
+      1 => _triggerEditPlaylistDetails(),
+      2 => _triggerDeletePlaylist(),
+      _ => null,
+    };
   }
 
   Future<void> onRetryImportPlaylist() async {
@@ -305,6 +321,34 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     _toastNotifier.info(
       description: (l) => l.startedDownloadingNAudios(playlistAudiosToDownload.length),
     );
+  }
+
+  void _triggerEditPlaylistDetails() {
+    if (_playlistId == null) {
+      Logger.root.warning('PlaylistCubit.onEditPlaylistDetailsPressed: _playlistId is null');
+      return;
+    }
+
+    _toastNotifier.info(description: (l) => l.notImplementedYet);
+  }
+
+  Future<void> _triggerDeletePlaylist() async {
+    final playlist = state.getOrNull;
+
+    if (playlist == null) {
+      Logger.root.warning('PlaylistCubit.onDeletePlaylistPressed: playlist is null');
+      return;
+    }
+
+    final didConfirm = await _dialogManager.showConfirmationDialog(
+      caption: (l) => l.deletePlaylistConfirmation(playlist.name),
+    );
+
+    if (!didConfirm) {
+      return;
+    }
+
+    _toastNotifier.info(description: (l) => l.notImplementedYet);
   }
 
   void _onPlaylistAudioEvent(EventPlaylistAudio event) {

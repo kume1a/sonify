@@ -30,7 +30,7 @@ class PlaylistPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => getIt<PlaylistCubit>()..init(args.playlistId),
+          create: (_) => getIt<PlaylistCubit>()..init(playlistId: args.playlistId),
         ),
         BlocProvider(create: (_) => getIt<AudioPlayerPanelCubit>()),
       ],

@@ -8,19 +8,30 @@ import '../../../app/intl/extension/error_intl.dart';
 import '../state/mutate_playlist_state.dart';
 
 class MutatePlaylistDialog extends StatelessWidget {
-  const MutatePlaylistDialog({super.key});
+  const MutatePlaylistDialog({
+    super.key,
+    required this.userPlaylistId,
+  });
+
+  final String? userPlaylistId;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => getIt<MutatePlaylistCubit>(),
-      child: const _Content(),
+      child: _Content(
+        userPlaylistId: userPlaylistId,
+      ),
     );
   }
 }
 
 class _Content extends StatelessWidget {
-  const _Content();
+  const _Content({
+    required this.userPlaylistId,
+  });
+
+  final String? userPlaylistId;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +50,7 @@ class _Content extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(l.createPlaylist),
+                    Text(userPlaylistId != null ? l.editPlaylistDetails : l.createPlaylist),
                     const SizedBox(height: 16),
                     TextFormField(
                       autocorrect: false,

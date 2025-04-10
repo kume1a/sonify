@@ -15,7 +15,7 @@ class UserPlaylistMapper {
 
   UserPlaylist dtoToModel(UserPlaylistDto dto) {
     return UserPlaylist(
-      id: dto.id,
+      id: dto.id ?? kInvalidId,
       createdAt: tryMapDate(dto.createdAt),
       userId: dto.userId ?? kInvalidId,
       playlistId: dto.playlistId ?? kInvalidId,
@@ -26,7 +26,7 @@ class UserPlaylistMapper {
 
   UserPlaylist entityToModel(UserPlaylistEntity entity) {
     return UserPlaylist(
-      id: entity.id,
+      id: entity.id ?? kInvalidId,
       createdAt: tryMapDateMillis(entity.createdAtMillis),
       userId: entity.userId ?? kInvalidId,
       playlistId: entity.playlistId ?? kInvalidId,

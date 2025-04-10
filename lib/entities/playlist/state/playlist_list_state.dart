@@ -65,6 +65,11 @@ final class PlaylistListCubit extends Cubit<PlaylistListState> {
   }
 
   void onPlaylistPressed(UserPlaylist userPlaylist) {
+    if (userPlaylist.id == null) {
+      Logger.root.warning('Playlist ID is null, cannot navigate to playlist page');
+      return;
+    }
+
     final args = PlaylistPageArgs(playlistId: userPlaylist.playlistId);
 
     _pageNavigator.toPlaylist(args);

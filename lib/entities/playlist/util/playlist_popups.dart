@@ -7,8 +7,10 @@ import '../ui/playlist_selector_sheet.dart';
 
 @lazySingleton
 class PlaylistPopups {
-  Future<void> showMutatePlaylistDialog() {
-    return GlobalNavigator.dialog(const MutatePlaylistDialog());
+  Future<void> showMutatePlaylistDialog({
+    String? userPlaylistId,
+  }) {
+    return GlobalNavigator.dialog(MutatePlaylistDialog(userPlaylistId: userPlaylistId));
   }
 
   Future<Playlist?> openPlaylistSelector() async {

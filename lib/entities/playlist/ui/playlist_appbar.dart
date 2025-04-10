@@ -123,14 +123,7 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
         Positioned(
           top: 12,
           right: 12,
-          child: IconButton(
-            icon: SvgPicture.asset(
-              Assets.svgMenuVertical,
-              colorFilter: svgColor(Colors.white),
-            ),
-            splashRadius: 24,
-            onPressed: context.playlistCubit.onPlaylistMenuPressed,
-          ),
+          child: _MenuButton(),
         ),
         Positioned(
           right: 16,
@@ -155,6 +148,27 @@ class PlaylistAppBar implements SliverPersistentHeaderDelegate {
 
   @override
   TickerProvider? get vsync => null;
+}
+
+class _MenuButton extends StatelessWidget {
+  const _MenuButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PlaylistCubit, PlaylistState>(
+      builder: (context, state) => state.maybeWhen(
+        orElse: () => SizedBox.shrink(),
+        success: (_) => IconButton(
+          icon: SvgPicture.asset(
+            Assets.svgMenuVertical,
+            colorFilter: svgColor(Colors.white),
+          ),
+          splashRadius: 24,
+          onPressed: context.playlistCubit.onPlaylistMenuPressed,
+        ),
+      ),
+    );
+  }
 }
 
 class _PlaylistImage extends StatelessWidget {

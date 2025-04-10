@@ -75,30 +75,7 @@ class MutatePlaylistCubit extends Cubit<MutatePlaylistState> {
     if (_userPlaylistId != null) {
       _updatePlaylist(userPlaylistId: _userPlaylistId!, name: name);
     } else {
-      final remoteRes = await _userPlaylistRemoteRepository.create(name: name);
-
-      if (remoteRes.isLeft) {
-        emit(state.copyWith(isSubmitting: false));
-
-        _toastNotifier.error(description: (l) => l.failedToCreatePlaylist);
-
-        return;
-      }
-
-      final localRes = await _saveUserPlaylistWithPlaylist(remoteRes.rightOrThrow);
-
-      emit(state.copyWith(isSubmitting: false));
-
-      localRes.fold(
-        () => _toastNotifier.error(description: (l) => l.failedToCreatePlaylist),
-        (r) {
-          _eventBus.fire(EventUserPlaylist.created(r));
-
-          _toastNotifier.success(description: (l) => l.playlistCreated(name));
-
-          _pageNavigator.pop();
-        },
-      );
+      _createPlaylist(name: name);
     }
   }
 
@@ -132,6 +109,35 @@ class MutatePlaylistCubit extends Cubit<MutatePlaylistState> {
         _eventBus.fire(EventUserPlaylist.updated(remoteRes.rightOrThrow));
 
         _toastNotifier.success(description: (l) => l.playlistUpdated(name));
+
+        _pageNavigator.pop();
+      },
+    );
+  }
+
+  Future<void> _createPlaylist({
+    required String name,
+  }) async {
+    final remoteRes = await _userPlaylistRemoteRepository.create(name: name);
+
+    if (remoteRes.isLeft) {
+      emit(state.copyWith(isSubmitting: false));
+
+      _toastNotifier.error(description: (l) => l.failedToCreatePlaylist);
+
+      return;
+    }
+
+    final localRes = await _saveUserPlaylistWithPlaylist(remoteRes.rightOrThrow);
+
+    emit(state.copyWith(isSubmitting: false));
+
+    localRes.fold(
+      () => _toastNotifier.error(description: (l) => l.failedToCreatePlaylist),
+      (r) {
+        _eventBus.fire(EventUserPlaylist.created(r));
+
+        _toastNotifier.success(description: (l) => l.playlistCreated(name));
 
         _pageNavigator.pop();
       },
