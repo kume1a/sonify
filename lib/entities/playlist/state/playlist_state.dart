@@ -120,6 +120,8 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
     return super.close();
   }
 
+  Future<void> onRefresh() => loadStateAndEmit();
+
   Future<void> loadStateAndEmit({bool emitLoading = true}) async {
     final beforeState = state.copyWith();
 

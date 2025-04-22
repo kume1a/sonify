@@ -52,24 +52,27 @@ class _Content extends StatelessWidget {
 
     return Scaffold(
       body: AudioPlayerPanel(
-        body: CustomScrollView(
-          slivers: [
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: PlaylistAppBar(
-                maxExtent: mediaQuery.padding.top + mediaQuery.size.height * .35,
-                minExtent: mediaQuery.padding.top + 56,
-                playlistId: args.playlistId,
+        body: RefreshIndicator(
+          onRefresh: context.playlistCubit.onRefresh,
+          child: CustomScrollView(
+            slivers: [
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: PlaylistAppBar(
+                  maxExtent: mediaQuery.padding.top + mediaQuery.size.height * .35,
+                  minExtent: mediaQuery.padding.top + 56,
+                  playlistId: args.playlistId,
+                ),
               ),
-            ),
-            const SliverPadding(
-              padding: EdgeInsets.fromLTRB(16, 42, 16, 16),
-              sliver: SliverToBoxAdapter(
-                child: PlaylistSearchContainer(),
+              const SliverPadding(
+                padding: EdgeInsets.fromLTRB(16, 42, 16, 16),
+                sliver: SliverToBoxAdapter(
+                  child: PlaylistSearchContainer(),
+                ),
               ),
-            ),
-            const PlaylistItemsOrImportStatus(),
-          ],
+              const PlaylistItemsOrImportStatus(),
+            ],
+          ),
         ),
       ),
     );
