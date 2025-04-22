@@ -3,6 +3,7 @@ import 'package:common_utilities/common_utilities.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
@@ -15,19 +16,31 @@ import '../../../pages/main/model/event_main_navigation.dart';
 import '../../../pages/search_playlist_audios_page.dart';
 import '../../../shared/bottom_sheet/bottom_sheet_manager.dart';
 import '../../../shared/bottom_sheet/select_option/select_option.dart';
-import '../../../shared/cubit/entity_loader_cubit.dart';
 import '../../../shared/dialog/dialog_manager.dart';
 import '../../../shared/ui/toast_notifier.dart';
 import '../../../shared/util/utils.dart';
 import '../../../shared/values/assets.dart';
 import '../model/event_playlist_audio.dart';
 import '../model/event_user_playlist.dart';
+import '../util/playlist_popups.dart';
 
-typedef PlaylistState = SimpleDataState<Playlist>;
+part 'playlist_state.freezed.dart';
+
+@freezed
+class PlaylistState with _$PlaylistState {
+  const factory PlaylistState({
+    required SimpleDataState<Playlist> playlist,
+    String? userPlaylistId,
+  }) = _PlaylistState;
+
+  factory PlaylistState.initial() => PlaylistState(
+        playlist: SimpleDataState.idle(),
+      );
+}
 
 extension PlaylistStateX on PlaylistState {
   bool get isPlaylistPlayable {
-    return maybeWhen(
+    return playlist.maybeWhen(
       success: (data) =>
           data.audioImportStatus == ProcessStatus.completed &&
           data.audioCount == data.totalAudioCount &&
@@ -42,9 +55,9 @@ extension PlaylistCubitX on BuildContext {
 }
 
 @injectable
-final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
+final class PlaylistCubit extends Cubit<PlaylistState> {
   PlaylistCubit(
-    this._playlistCachedRepository,
+    this._playlistLocalRepository,
     this._userAudioLocalRepository,
     this._userAudioRemoteRepository,
     this._bottomSheetManager,
@@ -57,11 +70,13 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     this._spotifyAccessTokenProvider,
     this._playlistAudioRemoteRepository,
     this._playlistAudioLocalRepository,
+    this._userPlaylistLocalRepository,
     this._dialogManager,
-  );
+    this._playlistPopups,
+  ) : super(PlaylistState.initial());
 
   final UserAudioLocalRepository _userAudioLocalRepository;
-  final PlaylistLocalRepository _playlistCachedRepository;
+  final PlaylistLocalRepository _playlistLocalRepository;
   final UserAudioRemoteRepository _userAudioRemoteRepository;
   final BottomSheetManager _bottomSheetManager;
   final EventBus _eventBus;
@@ -73,7 +88,9 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   final SpotifyAccessTokenProvider _spotifyAccessTokenProvider;
   final PlaylistAudioRemoteRepository _playlistAudioRemoteRepository;
   final PlaylistAudioLocalRepository _playlistAudioLocalRepository;
+  final UserPlaylistLocalRepository _userPlaylistLocalRepository;
   final DialogManager _dialogManager;
+  final PlaylistPopups _playlistPopups;
 
   String? _playlistId;
 
@@ -92,7 +109,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
 
     _playlistUpdatedEventChannel.startListening();
 
-    loadEntityAndEmit();
+    loadStateAndEmit();
   }
 
   @override
@@ -103,16 +120,78 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     return super.close();
   }
 
-  @override
-  Future<Playlist?> loadEntity() async {
+  Future<void> loadStateAndEmit({bool emitLoading = true}) async {
+    final beforeState = state.copyWith();
+
+    if (emitLoading) {
+      emit(state.copyWith(
+        playlist: SimpleDataState.loading(),
+        userPlaylistId: null,
+      ));
+    }
+
+    final optionalState = await loadState();
+
+    if (isClosed) {
+      return;
+    }
+
+    if (optionalState == null) {
+      emit(beforeState);
+      return;
+    }
+
+    emit(optionalState);
+  }
+
+  Future<PlaylistState?> loadState() async {
     if (_playlistId == null) {
       Logger.root.warning('PlaylistCubit.loadEntity: _playlistId is null');
       return null;
     }
 
-    final res = await _playlistCachedRepository.getById(_playlistId!);
+    final authUserId = await _authUserInfoProvider.getId();
 
-    return res.dataOrNull;
+    if (authUserId == null) {
+      Logger.root.warning('PlaylistCubit.loadEntity: authUserId is null');
+      return null;
+    }
+
+    final playlistRes = await _playlistLocalRepository.getById(_playlistId!);
+
+    if (playlistRes.isErr) {
+      Logger.root.warning('PlaylistCubit.loadEntity: failed to get playlist');
+      return null;
+    }
+
+    if (playlistRes.dataOrThrow == null) {
+      Logger.root.warning('PlaylistCubit.loadEntity: playlist is null');
+      return null;
+    }
+
+    final nonNullPlaylist = playlistRes.dataOrThrow!;
+
+    final userPlaylistRes = await _userPlaylistLocalRepository.getByUserIdAndPlaylistId(
+      playlistId: _playlistId!,
+      userId: authUserId,
+    );
+
+    if (userPlaylistRes.isErr) {
+      Logger.root.warning('PlaylistCubit.loadEntity: failed to get user playlist');
+      return null;
+    }
+
+    if (userPlaylistRes.dataOrThrow == null) {
+      Logger.root.warning('PlaylistCubit.loadEntity: userPlaylist is null');
+      return null;
+    }
+
+    final nonNullUserPlaylist = userPlaylistRes.dataOrThrow!;
+
+    return PlaylistState(
+      playlist: SimpleDataState.success(nonNullPlaylist),
+      userPlaylistId: nonNullUserPlaylist.id,
+    );
   }
 
   void onSearchContainerPressed() {
@@ -127,10 +206,17 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   }
 
   Future<void> onPlaylistMenuPressed() async {
-    final playlist = state.getOrNull;
+    final playlist = state.playlist.getOrNull;
+
+    if (playlist == null) {
+      Logger.root.warning('PlaylistCubit.onPlaylistMenuPressed: playlist is null');
+      return;
+    }
+
+    final isPlaylistOwnedByAuthUser = state.userPlaylistId != null;
 
     final selectedOption = await _bottomSheetManager.openOptionSelector<int>(
-      header: (l) => playlist?.name ?? l.playlist,
+      header: (_) => playlist.name,
       options: [
         SelectOption(
           value: 0,
@@ -138,16 +224,18 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
           iconAssetName: Assets.svgDownload,
           isActive: state.isPlaylistPlayable,
         ),
-        SelectOption(
-          value: 1,
-          label: (l) => l.editPlaylistDetails,
-          iconAssetName: Assets.svgPencil,
-        ),
-        SelectOption(
-          value: 2,
-          label: (l) => l.deletePlaylist,
-          iconAssetName: Assets.svgTrashCan,
-        ),
+        if (isPlaylistOwnedByAuthUser)
+          SelectOption(
+            value: 1,
+            label: (l) => l.editPlaylistDetails,
+            iconAssetName: Assets.svgPencil,
+          ),
+        if (isPlaylistOwnedByAuthUser)
+          SelectOption(
+            value: 2,
+            label: (l) => l.deletePlaylist,
+            iconAssetName: Assets.svgTrashCan,
+          ),
       ],
     );
 
@@ -164,7 +252,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   }
 
   Future<void> onRetryImportPlaylist() async {
-    final playlist = state.getOrNull;
+    final playlist = state.playlist.getOrNull;
     if (playlist == null || playlist.spotifyId == null) {
       Logger.root.warning('PlaylistCubit.onRetryImportPlaylist: playlist or spotifyId is null');
       return;
@@ -192,7 +280,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
           description: (l) => l.importingSpotifyPlaylist,
         );
 
-        emit(SimpleDataState.success(r));
+        loadStateAndEmit();
       },
     );
   }
@@ -288,7 +376,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   }
 
   void _triggerDownloadPlaylist() {
-    final playlist = state.getOrNull;
+    final playlist = state.playlist.getOrNull;
 
     if (playlist == null) {
       Logger.root.warning('PlaylistCubit.onDownloadPlaylistPressed: playlist is null');
@@ -324,16 +412,18 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   }
 
   void _triggerEditPlaylistDetails() {
-    if (_playlistId == null) {
-      Logger.root.warning('PlaylistCubit.onEditPlaylistDetailsPressed: _playlistId is null');
+    final userPlaylistId = state.userPlaylistId;
+
+    if (userPlaylistId == null) {
+      Logger.root.warning('PlaylistCubit.onEditPlaylistDetailsPressed: userPlaylistId is null');
       return;
     }
 
-    _toastNotifier.info(description: (l) => l.notImplementedYet);
+    _playlistPopups.showMutatePlaylistDialog(userPlaylistId: userPlaylistId);
   }
 
   Future<void> _triggerDeletePlaylist() async {
-    final playlist = state.getOrNull;
+    final playlist = state.playlist.getOrNull;
 
     if (playlist == null) {
       Logger.root.warning('PlaylistCubit.onDeletePlaylistPressed: playlist is null');
@@ -354,7 +444,7 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
   void _onPlaylistAudioEvent(EventPlaylistAudio event) {
     event.when(
       downloaded: (playlistAudio) async {
-        final newState = await state.map((playlist) {
+        final newPlaylistState = await state.playlist.map((playlist) {
           return playlist.copyWith(
             playlistAudios: playlist.playlistAudios?.replace(
               (e) => e.id == playlistAudio.id,
@@ -363,18 +453,20 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
           );
         });
 
-        emit(newState);
+        emit(state.copyWith(playlist: newPlaylistState));
       },
     );
   }
 
   Future<void> _onPlaylistChanged(Playlist newPlaylist) async {
     if (newPlaylist.audioImportStatus != ProcessStatus.completed) {
-      emit(SimpleDataState.success(newPlaylist));
+      emit(state.copyWith(
+        playlist: SimpleDataState.success(newPlaylist),
+      ));
       return;
     }
 
-    loadEntityAndEmit();
+    loadStateAndEmit();
   }
 
   Future<void> _triggerDeleteUserAudio(PlaylistAudio playlistAudio) async {
@@ -394,19 +486,23 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     }
 
     await _playlistAudioLocalRepository.deleteById(playlistAudio.id!).awaitFold(
-      () => _toastNotifier.error(description: (l) => l.failedToDelete, title: (l) => l.error),
+      () => _toastNotifier.error(
+        description: (l) => l.failedToDelete,
+        title: (l) => l.error,
+      ),
       () async {
-        final newState = await state.map((playlist) {
-          if (playlist.playlistAudios == null) {
+        final newPlaylistState = await state.playlist.map((playlist) {
+          final playlistAudios = playlist.playlistAudios;
+          if (playlistAudios == null) {
             return null;
           }
 
-          final playlistAudios = List.of(playlist.playlistAudios!)..remove(playlistAudio);
-
-          return playlist.copyWith(playlistAudios: playlistAudios);
+          return playlist.copyWith(
+            playlistAudios: List.of(playlistAudios)..remove(playlistAudio),
+          );
         });
 
-        emit(newState);
+        emit(state.copyWith(playlist: newPlaylistState));
 
         _eventBus.fire(const EventPlayAudio.reloadNowPlayingPlaylist());
       },
@@ -417,13 +513,16 @@ final class PlaylistCubit extends EntityLoaderCubit<Playlist> {
     event.when(
       created: (_) {},
       updated: (userPlaylist) {
-        if (userPlaylist.playlistId == state.getOrNull?.id) {
-          loadEntityAndEmit();
+        if (userPlaylist.playlistId == state.playlist.getOrNull?.id) {
+          loadStateAndEmit();
         }
       },
       deleted: (userPlaylist) {
-        if (userPlaylist.playlistId == state.getOrNull?.id) {
-          emit(SimpleDataState.failure());
+        if (userPlaylist.playlistId == state.playlist.getOrNull?.id) {
+          emit(state.copyWith(
+            playlist: SimpleDataState.failure(),
+            userPlaylistId: null,
+          ));
         }
       },
     );

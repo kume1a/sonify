@@ -18,7 +18,7 @@ class MutatePlaylistDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<MutatePlaylistCubit>(),
+      create: (_) => getIt<MutatePlaylistCubit>()..init(userPlaylistId: userPlaylistId),
       child: _Content(
         userPlaylistId: userPlaylistId,
       ),

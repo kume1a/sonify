@@ -115,4 +115,19 @@ class UserPlaylistLocalRepositoryImpl with ResultWrap implements UserPlaylistLoc
       return res != null ? _userPlaylistMapper.entityToModel(res) : null;
     });
   }
+
+  @override
+  Future<Result<UserPlaylist?>> getByUserIdAndPlaylistId({
+    required String userId,
+    required String playlistId,
+  }) {
+    return wrapWithResult(() async {
+      final res = await _userPlaylistEntityDao.getByUserIdAndPlaylistId(
+        userId: userId,
+        playlistId: playlistId,
+      );
+
+      return res != null ? _userPlaylistMapper.entityToModel(res) : null;
+    });
+  }
 }

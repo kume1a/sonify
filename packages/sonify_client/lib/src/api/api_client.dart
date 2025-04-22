@@ -127,7 +127,7 @@ abstract class ApiClient {
   @PATCH('/v1/userplaylist/{id}')
   Future<UserPlaylistDto> updateUserPlaylistById(
     @Path('id') String id,
-    UpdateUserPlaylistBody body,
+    @Body() UpdateUserPlaylistBody body,
   );
 
   @DELETE('/v1/userplaylist/{id}')

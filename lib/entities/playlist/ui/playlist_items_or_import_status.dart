@@ -18,7 +18,7 @@ class PlaylistItemsOrImportStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PlaylistCubit, PlaylistState>(
       builder: (_, state) {
-        return state.maybeWhen(
+        return state.playlist.maybeWhen(
           orElse: () => const SliverToBoxAdapter(),
           loading: () => PulsingFade.sliver(
             child: SliverList.builder(

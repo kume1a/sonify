@@ -156,7 +156,7 @@ class _MenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PlaylistCubit, PlaylistState>(
-      builder: (context, state) => state.maybeWhen(
+      builder: (_, state) => state.playlist.maybeWhen(
         orElse: () => SizedBox.shrink(),
         success: (_) => IconButton(
           icon: SvgPicture.asset(
@@ -180,9 +180,11 @@ class _PlaylistImage extends StatelessWidget {
 
     return BlocBuilder<PlaylistCubit, PlaylistState>(
       builder: (_, state) {
-        return state.hasData
+        final playlist = state.playlist.getOrNull;
+
+        return playlist != null
             ? CachedNetworkImage(
-                imageUrl: state.getOrThrow.thumbnailUrl ?? '',
+                imageUrl: playlist.thumbnailUrl ?? '',
                 fit: BoxFit.cover,
                 placeholder: (_, __) => ColoredBox(color: theme.colorScheme.secondaryContainer),
                 errorWidget: (_, __, ___) => ColoredBox(color: theme.colorScheme.secondaryContainer),
@@ -202,11 +204,11 @@ class _PlaylistTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return BlocBuilder<PlaylistCubit, PlaylistState>(
       builder: (_, state) {
-        return state.maybeWhen(
+        return state.playlist.maybeWhen(
           success: (data) => Text(
             data.name,
             maxLines: 2,
