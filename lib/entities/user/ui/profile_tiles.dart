@@ -72,10 +72,7 @@ class ImporSpotifyPlaylistsTile extends StatelessWidget {
         return _ProfileTile(
           iconAssetName: Assets.svgImport,
           label: l.importSpotifyPlaylists,
-          onPressed: state.importSpotifyPlaylistsState.whenOrNull(
-            idle: () => context.importSpotifyPlaylistsCubit.onImportSpotifyPlaylists,
-            failed: (_) => context.importSpotifyPlaylistsCubit.onImportSpotifyPlaylists,
-          ),
+          onPressed: context.importSpotifyPlaylistsCubit.onImportSpotifyPlaylists,
           end: state.importSpotifyPlaylistsState.whenOrNull(
             executing: () => const SmallCircularProgressIndicator(),
             failed: (err) => Icon(Icons.error, color: theme.colorScheme.error),
