@@ -88,6 +88,26 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
     _pageNavigator.toMyLibrarySearch();
   }
 
+  Future<void> onSortByPressed() async {
+    final selectedOption = await _bottomSheetManager.openOptionSelector<int>(
+      header: (l) => l.sortBy,
+      options: [
+        SelectOption(
+          value: 0,
+          label: (l) => l.name,
+        ),
+        SelectOption(
+          value: 1,
+          label: (l) => l.createDate,
+        ),
+      ],
+    );
+
+    if (selectedOption == null) {
+      return;
+    }
+  }
+
   Future<void> onAudioMenuPressed(UserAudio userAudio) async {
     if (userAudio.audio?.id == null) {
       Logger.root.warning('MyLibraryAudiosCubit.onAudioMenuPressed: audio id is null');

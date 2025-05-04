@@ -191,5 +191,7 @@
       }
     }
   },
-  "notImplementedYet": "Not implemented yet"
+  "notImplementedYet": "Not implemented yet",
+  "createDate": "Create date",
+  "sortBy": "Sort by"
 }

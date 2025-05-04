@@ -138,7 +138,7 @@ class _Content extends HookWidget {
                         controller: scrollController,
                         slivers: [
                           SliverPadding(
-                            padding: horizontalPadding,
+                            padding: horizontalPadding.copyWith(right: 10.w),
                             sliver: const SliverToBoxAdapter(
                               child: MyLibraryHeader(),
                             ),
