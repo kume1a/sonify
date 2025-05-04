@@ -22,24 +22,49 @@ class MyLibraryList extends StatelessWidget {
         return state.maybeWhen(
           orElse: () => const SliverToBoxAdapter(),
           loading: () => const SliverToBoxAdapter(child: Center(child: SmallCircularProgressIndicator())),
-          success: (data) => SliverList.builder(
-            itemCount: data.length + 1,
-            itemBuilder: (_, index) {
-              if (index == data.length) {
-                return SizedBox(height: AudioListItem.height + 12.h);
-              }
+          success: (data) {
+            if (data.isEmpty) {
+              return _EmptyIndicator();
+            }
 
-              final userAudio = data[index];
+            return SliverList.builder(
+              itemCount: data.length + 1,
+              itemBuilder: (_, index) {
+                if (index == data.length) {
+                  return SizedBox(height: AudioListItem.height + 12.h);
+                }
 
-              return LocalUserAudioListItem(
-                userAudio: userAudio,
-                padding: itemPadding,
-                onMenuPressed: () => context.myLibraryAudiosCubit.onAudioMenuPressed(userAudio),
-              );
-            },
-          ),
+                final userAudio = data[index];
+
+                return LocalUserAudioListItem(
+                  userAudio: userAudio,
+                  padding: itemPadding,
+                  onMenuPressed: () => context.myLibraryAudiosCubit.onAudioMenuPressed(userAudio),
+                );
+              },
+            );
+          },
         );
       },
+    );
+  }
+}
+
+class _EmptyIndicator extends StatelessWidget {
+  const _EmptyIndicator();
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.only(top: 12.h),
+        child: Center(
+          child: Text(
+            'No local audio files found',
+            style: TextStyle(fontSize: 14.sp),
+          ),
+        ),
+      ),
     );
   }
 }
