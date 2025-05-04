@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../play_audio/model/audio_sort_by_option.dart';
 import 'user_preferences_store.dart';
 
 @LazySingleton(as: UserPreferencesStore)
@@ -17,6 +18,8 @@ class SharedprefsUserPreferencesStore implements UserPreferencesStore {
   static const _keyIsSaveShuffleStateEnabled = 'is_save_shuffle_state_enabled';
   static const _keyIsSearchHistoryEnabled = 'is_search_history_enabled';
   static const _keyMaxConcurrentDownloadCount = 'max_concurrent_download_count';
+  static const _keyAudioSortByOption = 'audio_sort_by_option';
+  static const _keyIsSaveAudioSortByOptionEnabled = 'is_save_audio_sort_by_option_enabled';
 
   @override
   Future<bool> isRepeatEnabled() {
@@ -91,6 +94,34 @@ class SharedprefsUserPreferencesStore implements UserPreferencesStore {
   }
 
   @override
+  Future<AudioSortByOption> getAudioSortByOption() {
+    final value = _sharedPreferences.getInt(_keyAudioSortByOption);
+
+    if (value == null) {
+      return Future.value(AudioSortByOption.name);
+    }
+
+    return Future.value(AudioSortByOption.values[value]);
+  }
+
+  @override
+  Future<bool> isSaveAudioSortByOptionEnabled() {
+    final value = _sharedPreferences.getBool(_keyIsSaveAudioSortByOptionEnabled);
+
+    return Future.value(value ?? false);
+  }
+
+  @override
+  Future<void> setAudioSortByOption(AudioSortByOption value) {
+    return _sharedPreferences.setInt(_keyAudioSortByOption, value.index);
+  }
+
+  @override
+  Future<void> setSaveAudioSortByOptionEnabled(bool value) {
+    return _sharedPreferences.setBool(_keyIsSaveAudioSortByOptionEnabled, value);
+  }
+
+  @override
   Future<void> clear() {
     return Future.wait([
       _sharedPreferences.remove(_keyIsRepeatEnabled),
@@ -99,6 +130,8 @@ class SharedprefsUserPreferencesStore implements UserPreferencesStore {
       _sharedPreferences.remove(_keyIsSaveShuffleStateEnabled),
       _sharedPreferences.remove(_keyIsSearchHistoryEnabled),
       _sharedPreferences.remove(_keyMaxConcurrentDownloadCount),
+      _sharedPreferences.remove(_keyAudioSortByOption),
+      _sharedPreferences.remove(_keyIsSaveAudioSortByOptionEnabled),
     ]);
   }
 }

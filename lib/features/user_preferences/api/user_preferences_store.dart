@@ -1,3 +1,5 @@
+import '../../play_audio/model/audio_sort_by_option.dart';
+
 abstract interface class UserPreferencesStore {
   Future<bool> isShuffleEnabled();
 
@@ -22,6 +24,14 @@ abstract interface class UserPreferencesStore {
   Future<int> getMaxConcurrentDownloadCount();
 
   Future<void> setMaxConcurrentDownloadCount(int value);
+
+  Future<AudioSortByOption> getAudioSortByOption();
+
+  Future<void> setAudioSortByOption(AudioSortByOption value);
+
+  Future<void> setSaveAudioSortByOptionEnabled(bool value);
+
+  Future<bool> isSaveAudioSortByOptionEnabled();
 
   Future<void> clear();
 }

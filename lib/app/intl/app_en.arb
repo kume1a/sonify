@@ -208,5 +208,6 @@
       }
     }
   },
-  "noDownloadedAudiosToDelete": "No downloaded audios to delete"
+  "noDownloadedAudiosToDelete": "No downloaded audios to delete",
+  "saveAudioSortBy": "Save audio sort by"
 }

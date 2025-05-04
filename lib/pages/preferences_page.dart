@@ -40,6 +40,7 @@ class _Content extends StatelessWidget {
             children: const [
               SaveShuffleStatePrefTile(),
               SaveRepeatStatePrefTile(),
+              SaveAudioSortByPrefTile(),
               // EnableSearchHistoryPreferenceTile(),
               MaxConcurrentDownloadCountPrefTile(),
             ],

@@ -51,6 +51,29 @@ class SaveRepeatStatePrefTile extends StatelessWidget {
   }
 }
 
+class SaveAudioSortByPrefTile extends StatelessWidget {
+  const SaveAudioSortByPrefTile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
+    return BlocBuilder<UserPreferencesCubit, UserPreferencesState>(
+      buildWhen: (previous, current) => previous.isSaveAudioSortByEnabled != current.isSaveAudioSortByEnabled,
+      builder: (_, state) {
+        return state.isSaveAudioSortByEnabled.maybeWhen(
+          orElse: () => const SizedBox.shrink(),
+          success: (value) => _BoolPreferenceTile(
+            label: l.saveAudioSortBy,
+            value: value,
+            onChanged: context.userPreferencesCubit.onToggleSaveAudioSortBy,
+          ),
+        );
+      },
+    );
+  }
+}
+
 class EnableSearchHistoryPrefTile extends StatelessWidget {
   const EnableSearchHistoryPrefTile({super.key});
 
