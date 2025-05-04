@@ -103,4 +103,36 @@ class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepo
 
     return deleteRes;
   }
+
+  @override
+  Future<EmptyResult> deleteAllByUserId(String userId) async {
+    final allAudioIdsRes = await wrapWithResult(() => _userAudioEntityDao.getAllAudioIdsByUserId(userId));
+    if (allAudioIdsRes.isErr) {
+      return EmptyResult.err();
+    }
+
+    final futures = allAudioIdsRes.dataOrThrow.map((audioId) async {
+      final deleteRes = await wrapWithEmptyResult(
+        () => _userAudioEntityDao.deleteByUserIdAndAudioId(
+          audioId: audioId,
+          userId: userId,
+        ),
+      );
+
+      if (deleteRes.isErr) {
+        return EmptyResult.err();
+      }
+
+      return _deleteUnusedLocalAudio.deleteById(audioId);
+    });
+
+    final results = await Future.wait(futures);
+
+    return results.every((res) => res.isSuccess) ? EmptyResult.success() : EmptyResult.err();
+  }
+
+  @override
+  Future<Result<int>> getCountByUserId(String userId) {
+    return wrapWithResult(() => _userAudioEntityDao.getCountByUserId(userId));
+  }
 }

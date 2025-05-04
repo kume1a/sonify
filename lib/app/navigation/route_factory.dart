@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../pages/auth_page.dart';
+import '../../pages/dev_tools_page.dart';
 import '../../pages/downloads_page.dart';
 import '../../pages/email_sign_in_page.dart';
 import '../../pages/import_local_music_page.dart';
@@ -31,6 +32,7 @@ Route<dynamic> routeFactory(RouteSettings settings) {
     Routes.myLibrarySearch => _createMyLibrarySearchRoute(settings),
     Routes.searchPlaylistAudios => _createSearchPlaylistAudiosRoute(settings),
     Routes.preferences => _createPreferencesRoute(settings),
+    Routes.devTools => _createDevToolsRoute(settings),
     _ => throw Exception('route $settings is not supported'),
   };
 }
@@ -130,6 +132,13 @@ Route _createMainRoute(RouteSettings settings) {
 Route _createPreferencesRoute(RouteSettings settings) {
   return MaterialPageRoute(
     builder: (_) => const PreferencesPage(),
+    settings: settings,
+  );
+}
+
+Route _createDevToolsRoute(RouteSettings settings) {
+  return MaterialPageRoute(
+    builder: (_) => const DeveloperToolsPage(),
     settings: settings,
   );
 }

@@ -28,4 +28,8 @@ class ProfileTilesCubit extends Cubit<Unit> {
   void onImportLocalAudioFilesTilePressed() {
     _pageNavigator.toImportLocalMusic();
   }
+
+  void onDevToolsTilePressed() {
+    _pageNavigator.toDevTools();
+  }
 }

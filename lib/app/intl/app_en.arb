@@ -194,5 +194,19 @@
   "notImplementedYet": "Not implemented yet",
   "createDate": "Create date",
   "sortBy": "Sort by",
-  "maxConcurrentDownloadCount": "Max concurrent download count"
+  "maxConcurrentDownloadCount": "Max concurrent download count",
+  "deleteAllDownloadedUserAudios": "Delete all downloaded user audios",
+  "developerTools": "Developer tools",
+  "successfullyDeletedAllDownloadedUserAudios": "Successfully deleted all downloaded user audios",
+  "failedToDeleteAllDownloadedUserAudios": "Failed to delete all downloaded user audios",
+  "confirmToDelete": "Confirm to delete",
+  "deleteAllDownloadedUserAudiosConfirmation": "Are you sure you want to delete all downloaded user audios ({audioCount})? This action cannot be undone.",
+  "@deleteAllDownloadedUserAudiosConfirmation": {
+    "placeholders": {
+      "audioCount": {
+        "type": "int"
+      }
+    }
+  },
+  "noDownloadedAudiosToDelete": "No downloaded audios to delete"
 }

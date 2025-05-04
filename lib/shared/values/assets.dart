@@ -40,6 +40,7 @@ abstract final class Assets {
   static const svgTrashCan = '$_icons/trash_can.svg';
   static const svgChevronDown = '$_icons/chevron_down.svg';
   static const svgPencil = '$_icons/pencil.svg';
+  static const svgHammer = '$_icons/hammer.svg';
 
   static const imageBlackMetalWall = '$_images/black_metal_wall.jpg';
 }

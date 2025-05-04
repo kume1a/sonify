@@ -99,6 +99,21 @@ class ChangeServerUrlOriginTile extends StatelessWidget {
   }
 }
 
+class DevToolsTile extends StatelessWidget {
+  const DevToolsTile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
+    return _ProfileTile(
+      iconAssetName: Assets.svgHammer,
+      label: l.developerTools,
+      onPressed: context.profileTilesCubit.onDevToolsTilePressed,
+    );
+  }
+}
+
 class SignOutTile extends StatelessWidget {
   const SignOutTile({super.key});
 

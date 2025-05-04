@@ -54,6 +54,8 @@ class PageNavigator {
 
   void toPreferences() => GlobalNavigator.pushNamed(Routes.preferences);
 
+  void toDevTools() => GlobalNavigator.pushNamed(Routes.devTools);
+
   void popTillMain() {
     GlobalNavigator.popUntil((route) => route.settings.name == Routes.main);
   }

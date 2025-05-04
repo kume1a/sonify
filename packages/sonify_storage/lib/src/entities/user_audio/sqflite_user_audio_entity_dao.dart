@@ -233,4 +233,28 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
 
     return res.map((e) => e[UserAudio_.audioId] as String).firstOrNull;
   }
+
+  @override
+  Future<int> getCountByUserId(String userId) async {
+    final res = await _db.query(
+      UserAudio_.tn,
+      columns: ['COUNT(1)'],
+      where: '${UserAudio_.userId} = ?',
+      whereArgs: [userId],
+    );
+
+    return Sqflite.firstIntValue(res) ?? 0;
+  }
+
+  @override
+  Future<void> deleteByUserIdAndAudioId({
+    required String userId,
+    required String audioId,
+  }) {
+    return _db.delete(
+      UserAudio_.tn,
+      where: '${UserAudio_.userId} = ? AND ${UserAudio_.audioId} = ?',
+      whereArgs: [userId, audioId],
+    );
+  }
 }

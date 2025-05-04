@@ -28,4 +28,11 @@ abstract interface class UserAudioEntityDao {
   Future<List<String>> getAudioIdsByIds(List<String> ids);
 
   Future<String?> getAudioIdById(String id);
+
+  Future<int> getCountByUserId(String userId);
+
+  Future<void> deleteByUserIdAndAudioId({
+    required String userId,
+    required String audioId,
+  });
 }

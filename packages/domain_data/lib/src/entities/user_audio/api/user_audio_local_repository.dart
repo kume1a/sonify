@@ -10,6 +10,8 @@ abstract interface class UserAudioLocalRepository {
 
   Future<Result<List<String>>> getAllAudioIdsByUserId(String userId);
 
+  Future<Result<int>> getCountByUserId(String userId);
+
   Future<Result<UserAudio>> save(UserAudio audio);
 
   Future<Result<int>> deleteByAudioIds(List<String> ids);
@@ -20,4 +22,6 @@ abstract interface class UserAudioLocalRepository {
   });
 
   Future<EmptyResult> deleteById(String id);
+
+  Future<EmptyResult> deleteAllByUserId(String userId);
 }
