@@ -14,12 +14,14 @@ class UserPreferencesState with _$UserPreferencesState {
     required SimpleDataState<bool> isSaveShuffleStateEnabled,
     required SimpleDataState<bool> isSaveRepeatStateEnabled,
     required SimpleDataState<bool> isSearchHistoryEnabled,
+    required SimpleDataState<int> maxConcurrentDownloadCount,
   }) = _UserPreferencesState;
 
   factory UserPreferencesState.initial() => UserPreferencesState(
         isSaveShuffleStateEnabled: SimpleDataState.idle(),
         isSaveRepeatStateEnabled: SimpleDataState.idle(),
         isSearchHistoryEnabled: SimpleDataState.idle(),
+        maxConcurrentDownloadCount: SimpleDataState.idle(),
       );
 }
 
@@ -47,11 +49,13 @@ class UserPreferencesCubit extends Cubit<UserPreferencesState> {
     final isSaveShuffleStateEnabled = await _userPreferencesStore.isSaveShuffleStateEnabled();
     final isSaveRepeatStateEnabled = await _userPreferencesStore.isSaveRepeatStateEnabled();
     final isSearchHistoryEnabled = await _userPreferencesStore.isSearchHistoryEnabled();
+    final maxConcurrentDownloadCount = await _userPreferencesStore.getMaxConcurrentDownloadCount();
 
     emit(state.copyWith(
       isSaveShuffleStateEnabled: SimpleDataState.success(isSaveShuffleStateEnabled),
       isSaveRepeatStateEnabled: SimpleDataState.success(isSaveRepeatStateEnabled),
       isSearchHistoryEnabled: SimpleDataState.success(isSearchHistoryEnabled),
+      maxConcurrentDownloadCount: SimpleDataState.success(maxConcurrentDownloadCount),
     ));
   }
 
@@ -68,5 +72,10 @@ class UserPreferencesCubit extends Cubit<UserPreferencesState> {
   Future<void> onToggleSearchHistory(bool value) async {
     emit(state.copyWith(isSearchHistoryEnabled: SimpleDataState.success(value)));
     await _userPreferencesStore.setSearchHistoryEnabled(value);
+  }
+
+  Future<void> onChangeMaxConcurrentDownloadCount(int newValue) async {
+    emit(state.copyWith(maxConcurrentDownloadCount: SimpleDataState.success(newValue)));
+    _userPreferencesStore.setMaxConcurrentDownloadCount(newValue);
   }
 }

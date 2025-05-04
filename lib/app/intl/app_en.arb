@@ -193,5 +193,6 @@
   },
   "notImplementedYet": "Not implemented yet",
   "createDate": "Create date",
-  "sortBy": "Sort by"
+  "sortBy": "Sort by",
+  "maxConcurrentDownloadCount": "Max concurrent download count"
 }

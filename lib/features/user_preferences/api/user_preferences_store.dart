@@ -19,5 +19,9 @@ abstract interface class UserPreferencesStore {
 
   Future<void> setSearchHistoryEnabled(bool value);
 
+  Future<int> getMaxConcurrentDownloadCount();
+
+  Future<void> setMaxConcurrentDownloadCount(int value);
+
   Future<void> clear();
 }

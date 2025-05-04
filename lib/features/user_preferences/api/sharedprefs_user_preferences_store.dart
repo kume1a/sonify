@@ -16,6 +16,7 @@ class SharedprefsUserPreferencesStore implements UserPreferencesStore {
   static const _keyIsSaveRepeatStateEnabled = 'is_save_repeat_state_enabled';
   static const _keyIsSaveShuffleStateEnabled = 'is_save_shuffle_state_enabled';
   static const _keyIsSearchHistoryEnabled = 'is_search_history_enabled';
+  static const _keyMaxConcurrentDownloadCount = 'max_concurrent_download_count';
 
   @override
   Future<bool> isRepeatEnabled() {
@@ -78,6 +79,18 @@ class SharedprefsUserPreferencesStore implements UserPreferencesStore {
   }
 
   @override
+  Future<int> getMaxConcurrentDownloadCount() {
+    final value = _sharedPreferences.getInt(_keyMaxConcurrentDownloadCount);
+
+    return Future.value(value ?? 1);
+  }
+
+  @override
+  Future<void> setMaxConcurrentDownloadCount(int value) {
+    return _sharedPreferences.setInt(_keyMaxConcurrentDownloadCount, value);
+  }
+
+  @override
   Future<void> clear() {
     return Future.wait([
       _sharedPreferences.remove(_keyIsRepeatEnabled),
@@ -85,6 +98,7 @@ class SharedprefsUserPreferencesStore implements UserPreferencesStore {
       _sharedPreferences.remove(_keyIsSaveRepeatStateEnabled),
       _sharedPreferences.remove(_keyIsSaveShuffleStateEnabled),
       _sharedPreferences.remove(_keyIsSearchHistoryEnabled),
+      _sharedPreferences.remove(_keyMaxConcurrentDownloadCount),
     ]);
   }
 }

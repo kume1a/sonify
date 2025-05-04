@@ -9,6 +9,7 @@ import 'package:logging/logging.dart';
 import 'package:synchronized/synchronized.dart';
 
 import '../../dynamic_client/api/dynamic_api_url_provider.dart';
+import '../../user_preferences/api/user_preferences_store.dart';
 import '../api/download_task_downloader.dart';
 import '../api/on_download_task_downloaded.dart';
 import '../model/downloads_event.dart';
@@ -29,11 +30,10 @@ class DownloadsCubit extends Cubit<List<DownloadTask>> {
     this._downloadedTaskLocalRepository,
     this._authUserInfoProvider,
     this._dynamicApiUrlProvider,
+    this._userPreferencesStore,
   ) : super([]) {
     _init();
   }
-
-  static const _maxConcurrentDownloads = 5;
 
   final EventBus _eventBus;
   final DownloadTaskMapper _downloadTaskMapper;
@@ -42,6 +42,7 @@ class DownloadsCubit extends Cubit<List<DownloadTask>> {
   final DownloadedTaskLocalRepository _downloadedTaskLocalRepository;
   final AuthUserInfoProvider _authUserInfoProvider;
   final DynamicApiUrlProvider _dynamicApiUrlProvider;
+  final UserPreferencesStore _userPreferencesStore;
 
   final List<Lock> _downloadLocks = [];
   final _stateLock = Lock();
@@ -50,11 +51,6 @@ class DownloadsCubit extends Cubit<List<DownloadTask>> {
   final _subscriptionComposite = SubscriptionComposite();
 
   Future<void> _init() async {
-    _downloadLocks.clear();
-    for (int i = 0; i < _maxConcurrentDownloads; i++) {
-      _downloadLocks.add(Lock());
-    }
-
     _timer = Timer.periodic(
       const Duration(seconds: 4),
       (_) => _downloadFromQueue(),
@@ -73,6 +69,24 @@ class DownloadsCubit extends Cubit<List<DownloadTask>> {
     _subscriptionComposite.closeAll();
 
     return super.close();
+  }
+
+  Future<void> _resizeDownloadLocks() async {
+    final maxConcurrentDownloadCount = await _userPreferencesStore.getMaxConcurrentDownloadCount();
+
+    if (_downloadLocks.length == maxConcurrentDownloadCount) {
+      return;
+    }
+
+    if (maxConcurrentDownloadCount > _downloadLocks.length) {
+      for (int i = _downloadLocks.length; i < maxConcurrentDownloadCount; i++) {
+        _downloadLocks.add(Lock());
+      }
+    } else {
+      for (int i = _downloadLocks.length; i > maxConcurrentDownloadCount; i--) {
+        _downloadLocks.removeLast();
+      }
+    }
   }
 
   Future<void> retryFailedDownloadTask(DownloadTask task) async {
@@ -150,12 +164,16 @@ class DownloadsCubit extends Cubit<List<DownloadTask>> {
   }
 
   Future<void> _downloadFromQueue() async {
+    await _resizeDownloadLocks();
+
+    final downloadLockCount = _downloadLocks.length;
+
     final downloadTasks = await _stateLock.synchronized(
-      () => state.where((e) => e.isIdle).take(_maxConcurrentDownloads).toList(),
+      () => state.where((e) => e.isIdle).take(downloadLockCount).toList(),
     );
 
-    for (final lock in _downloadLocks) {
-      if (lock.locked) {
+    for (final downloadLock in _downloadLocks) {
+      if (downloadLock.locked) {
         continue;
       }
 
@@ -165,7 +183,7 @@ class DownloadsCubit extends Cubit<List<DownloadTask>> {
 
       final downloadTask = downloadTasks.removeAt(0);
 
-      lock.synchronized(() => _downloadFirstFromQueue(downloadTask));
+      downloadLock.synchronized(() => _downloadFirstFromQueue(downloadTask));
     }
   }
 

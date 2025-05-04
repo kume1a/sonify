@@ -38,9 +38,10 @@ class _Content extends StatelessWidget {
         child: AudioPlayerPanel(
           body: ListView(
             children: const [
-              SaveShuffleStatePreferenceTile(),
-              SaveRepeatStatePreferenceTile(),
-              EnableSearchHistoryPreferenceTile(),
+              SaveShuffleStatePrefTile(),
+              SaveRepeatStatePrefTile(),
+              // EnableSearchHistoryPreferenceTile(),
+              MaxConcurrentDownloadCountPrefTile(),
             ],
           ),
         ),
