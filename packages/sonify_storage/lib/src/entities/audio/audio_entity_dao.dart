@@ -6,4 +6,6 @@ abstract interface class AudioEntityDao {
   Future<List<AudioEntity>> getByIds(List<String> ids);
 
   Future<AudioEntity?> getById(String id);
+
+  Future<void> nullOutLocalPathAndLocalThumbnailPathById(String id);
 }

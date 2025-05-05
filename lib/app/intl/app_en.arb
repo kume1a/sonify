@@ -208,6 +208,18 @@
       }
     }
   },
-  "noDownloadedAudiosToDelete": "No downloaded audios to delete",
-  "saveAudioSortBy": "Save audio sort by"
+  "noDownloadedUserAudiosToDelete": "No downloaded user audios to delete",
+  "noDownloadedPlaylistAudioFilesToDelete": "No downloaded playlist audio files to delete",
+  "saveAudioSortBy": "Save audio sort by",
+  "deleteAllDownloadedPlaylistAudioFilesConfirmation": "Are you sure you want to delete all downloaded playlist audio files ({audioCount})? This action cannot be undone.",
+  "@deleteAllDownloadedPlaylistAudioFilesConfirmation": {
+    "placeholders": {
+      "audioCount": {
+        "type": "int"
+      }
+    }
+  },
+  "successfullyDeletedAllDownloadedPlaylistAudioFiles": "Successfully deleted all downloaded playlist audio files",
+  "failedToDeleteAllDownloadedPlaylistAudioFiles": "Failed to delete all downloaded playlist audio files",
+  "deleteAllDownloadedPlaylistAudioFiles": "Delete all downloaded playlist audio files"
 }

@@ -39,6 +39,7 @@ class _Content extends StatelessWidget {
           body: ListView(
             children: const [
               DeleteAllDownloadedUserAudiosDevToolTile(),
+              DeleteAllDownloadedPlaylistAudioFilesDevToolTile(),
             ],
           ),
         ),

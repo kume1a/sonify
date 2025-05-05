@@ -19,4 +19,8 @@ abstract interface class PlaylistAudioLocalRepository {
     required String playlistId,
     String? searchQuery,
   });
+
+  Future<EmptyResult> deleteAllDownloadedAudioLocalFilesByUserId(String userId);
+
+  Future<Result<int>> countOnlyLocalPathPresentByUserId(String userId);
 }

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:common_models/common_models.dart';
+import 'package:logging/logging.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
 import '../../audio/util/delete_unused_local_audio.dart';
@@ -12,12 +15,14 @@ class PlaylistAudioLocalRepositoryImpl with ResultWrap implements PlaylistAudioL
     this._playlistAudioMapper,
     this._dbBatchProviderFactory,
     this._deleteUnusedLocalAudio,
+    this._audioEntityDao,
   );
 
   final PlaylistAudioEntityDao _playlistAudioEntityDao;
   final PlaylistAudioMapper _playlistAudioMapper;
   final DbBatchProviderFactory _dbBatchProviderFactory;
   final DeleteUnusedLocalAudio _deleteUnusedLocalAudio;
+  final AudioEntityDao _audioEntityDao;
 
   @override
   Future<Result<PlaylistAudio>> create(PlaylistAudio playlistAudio) {
@@ -109,5 +114,57 @@ class PlaylistAudioLocalRepositoryImpl with ResultWrap implements PlaylistAudioL
 
       return res.map(_playlistAudioMapper.entityToModel).toList();
     });
+  }
+
+  @override
+  Future<EmptyResult> deleteAllDownloadedAudioLocalFilesByUserId(String userId) async {
+    final allPlaylistAudios = await wrapWithResult(() => _playlistAudioEntityDao.getAllByUserId(userId));
+    if (allPlaylistAudios.isErr) {
+      return EmptyResult.err();
+    }
+
+    final futures = allPlaylistAudios.dataOrThrow.map((playlistaudio) async {
+      final audio = playlistaudio.audio;
+
+      if (audio == null || audio.id == null) {
+        Logger.root.info('Audio is null or audio ID is null for playlist audio: ${playlistaudio.id}');
+        return EmptyResult.err();
+      }
+
+      if (audio.localPath != null) {
+        final deleteLocalFileRes = await wrapWithEmptyResult(
+          () => File(audio.localPath!).delete(),
+        );
+
+        if (deleteLocalFileRes.isErr) {
+          return EmptyResult.err();
+        }
+      }
+
+      if (audio.localThumbnailPath != null) {
+        final deleteLocalThumbnailRes = await wrapWithEmptyResult(
+          () => File(audio.localThumbnailPath!).delete(),
+        );
+
+        if (deleteLocalThumbnailRes.isErr) {
+          return EmptyResult.err();
+        }
+      }
+
+      return wrapWithEmptyResult(
+        () => _audioEntityDao.nullOutLocalPathAndLocalThumbnailPathById(playlistaudio.audioId!),
+      );
+    });
+
+    final results = await Future.wait(futures);
+
+    return results.every((res) => res.isSuccess) ? EmptyResult.success() : EmptyResult.err();
+  }
+
+  @override
+  Future<Result<int>> countOnlyLocalPathPresentByUserId(String userId) {
+    return wrapWithResult(
+      () => _playlistAudioEntityDao.countOnlyLocalPathPresentByUserId(userId),
+    );
   }
 }

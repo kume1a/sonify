@@ -30,4 +30,8 @@ abstract interface class PlaylistAudioEntityDao {
   Future<List<String>> getAudioIdsByIds(List<String> ids);
 
   Future<String?> getAudioIdById(String id);
+
+  Future<List<PlaylistAudioEntity>> getAllByUserId(String userId);
+
+  Future<int> countOnlyLocalPathPresentByUserId(String userId);
 }

@@ -13,7 +13,21 @@ class DeleteAllDownloadedUserAudiosDevToolTile extends StatelessWidget {
 
     return ListTile(
       title: Text(l.deleteAllDownloadedUserAudios),
-      onTap: context.read<DevToolsCubit>().deleteAllDownloadedUserAudios,
+      onTap: context.read<DevToolsCubit>().onDeleteAllDownloadedUserAudios,
+    );
+  }
+}
+
+class DeleteAllDownloadedPlaylistAudioFilesDevToolTile extends StatelessWidget {
+  const DeleteAllDownloadedPlaylistAudioFilesDevToolTile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
+    return ListTile(
+      title: Text(l.deleteAllDownloadedPlaylistAudioFiles),
+      onTap: context.read<DevToolsCubit>().onDeleteAllDownloadedPlaylistAudioFilesPressed,
     );
   }
 }

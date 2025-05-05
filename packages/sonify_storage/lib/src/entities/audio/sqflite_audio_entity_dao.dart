@@ -56,4 +56,17 @@ class SqliteAudioEntityDao implements AudioEntityDao {
 
     return query.map((e) => _audioEntityMapper.mapToEntity(e)).firstOrNull;
   }
+
+  @override
+  Future<void> nullOutLocalPathAndLocalThumbnailPathById(String id) async {
+    await _db.update(
+      Audio_.tn,
+      {
+        Audio_.localPath: null,
+        Audio_.localThumbnailPath: null,
+      },
+      where: '${Audio_.id} = ?',
+      whereArgs: [id],
+    );
+  }
 }

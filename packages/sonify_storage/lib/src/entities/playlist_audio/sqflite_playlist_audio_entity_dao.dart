@@ -173,4 +173,55 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
 
     return result.isNotEmpty ? result.first[PlaylistAudio_.audioId] as String : null;
   }
+
+  @override
+  Future<List<PlaylistAudioEntity>> getAllByUserId(String userId) async {
+    final res = await _db.rawQuery(
+      '''
+        SELECT 
+          ${PlaylistAudio_.tn}.${PlaylistAudio_.id},
+          ${PlaylistAudio_.tn}.${PlaylistAudio_.createdAtMillis},
+          ${PlaylistAudio_.tn}.${PlaylistAudio_.playlistId},
+          ${PlaylistAudio_.tn}.${PlaylistAudio_.audioId},
+
+          ${Audio_.tn}.${Audio_.id} AS ${Audio_.joinedId},
+          ${Audio_.tn}.${Audio_.createdAtMillis} AS ${Audio_.joinedCreatedAtMillis},
+          ${Audio_.tn}.${Audio_.title} AS ${Audio_.joinedTitle},
+          ${Audio_.tn}.${Audio_.durationMs} AS ${Audio_.joinedDurationMs},
+          ${Audio_.tn}.${Audio_.path} AS ${Audio_.joinedPath},
+          ${Audio_.tn}.${Audio_.localPath} AS ${Audio_.joinedLocalPath},
+          ${Audio_.tn}.${Audio_.author} AS ${Audio_.joinedAuthor},
+          ${Audio_.tn}.${Audio_.sizeBytes} AS ${Audio_.joinedSizeBytes},
+          ${Audio_.tn}.${Audio_.youtubeVideoId} AS ${Audio_.joinedYoutubeVideoId},
+          ${Audio_.tn}.${Audio_.spotifyId} AS ${Audio_.joinedSpotifyId},
+          ${Audio_.tn}.${Audio_.thumbnailPath} AS ${Audio_.joinedThumbnailPath},
+          ${Audio_.tn}.${Audio_.thumbnailUrl} AS ${Audio_.joinedThumbnailUrl},
+          ${Audio_.tn}.${Audio_.localThumbnailPath} AS ${Audio_.joinedLocalThumbnailPath}
+        FROM ${PlaylistAudio_.tn}
+        LEFT JOIN ${Audio_.tn} ON ${PlaylistAudio_.tn}.${PlaylistAudio_.audioId} = ${Audio_.tn}.${Audio_.id}
+        LEFT JOIN ${UserPlaylist_.tn} ON ${PlaylistAudio_.tn}.${PlaylistAudio_.playlistId} = ${UserPlaylist_.tn}.${UserPlaylist_.playlistId}
+        WHERE ${UserPlaylist_.tn}.${UserPlaylist_.userId} = ?;
+      ''',
+      [userId],
+    );
+
+    return res.map(_playlistAudioEntityMapper.mapToEntity).toList();
+  }
+
+  @override
+  Future<int> countOnlyLocalPathPresentByUserId(String userId) async {
+    final res = await _db.rawQuery(
+      '''
+        SELECT COUNT(1) as count
+        FROM ${PlaylistAudio_.tn}
+        LEFT JOIN ${UserPlaylist_.tn} ON ${PlaylistAudio_.tn}.${PlaylistAudio_.playlistId} = ${UserPlaylist_.tn}.${UserPlaylist_.playlistId}
+        LEFT JOIN ${Audio_.tn} ON ${PlaylistAudio_.tn}.${PlaylistAudio_.audioId} = ${Audio_.tn}.${Audio_.id}
+        WHERE ${UserPlaylist_.tn}.${UserPlaylist_.userId} = ?
+          AND ${Audio_.tn}.${Audio_.localPath} IS NOT NULL;
+      ''',
+      [userId],
+    );
+
+    return Sqflite.firstIntValue(res) ?? 0;
+  }
 }

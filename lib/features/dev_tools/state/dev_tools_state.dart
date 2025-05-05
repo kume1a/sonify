@@ -17,16 +17,18 @@ class DevToolsCubit extends Cubit<Unit> {
   DevToolsCubit(
     this._authUserInfoProvider,
     this._userAudioLocalRepository,
+    this._playlistAudioLocalRepository,
     this._toastNotifier,
     this._dialogManager,
   ) : super(unit);
 
   final AuthUserInfoProvider _authUserInfoProvider;
   final UserAudioLocalRepository _userAudioLocalRepository;
+  final PlaylistAudioLocalRepository _playlistAudioLocalRepository;
   final ToastNotifier _toastNotifier;
   final DialogManager _dialogManager;
 
-  Future<void> deleteAllDownloadedUserAudios() async {
+  Future<void> onDeleteAllDownloadedUserAudios() async {
     final userId = await _authUserInfoProvider.getId();
     if (userId == null) {
       Logger.root.info('User ID is null, cannot delete downloaded audios.');
@@ -40,7 +42,7 @@ class DevToolsCubit extends Cubit<Unit> {
     }
 
     if (userAudioCount.dataOrThrow == 0) {
-      _dialogManager.showStatusDialog(content: (l) => l.noDownloadedAudiosToDelete);
+      _dialogManager.showStatusDialog(content: (l) => l.noDownloadedUserAudiosToDelete);
       return;
     }
 
@@ -63,6 +65,47 @@ class DevToolsCubit extends Cubit<Unit> {
       () => _toastNotifier.success(
         title: (l) => l.success,
         description: (l) => l.successfullyDeletedAllDownloadedUserAudios,
+      ),
+    );
+  }
+
+  Future<void> onDeleteAllDownloadedPlaylistAudioFilesPressed() async {
+    final userId = await _authUserInfoProvider.getId();
+    if (userId == null) {
+      Logger.root.info('User ID is null, cannot delete downloaded audios.');
+      return;
+    }
+
+    final playlistAudioCount = await _playlistAudioLocalRepository.countOnlyLocalPathPresentByUserId(userId);
+    if (playlistAudioCount.isErr) {
+      Logger.root.info('Failed to get playlist audio count');
+      return;
+    }
+
+    if (playlistAudioCount.dataOrThrow == 0) {
+      _dialogManager.showStatusDialog(content: (l) => l.noDownloadedPlaylistAudioFilesToDelete);
+      return;
+    }
+
+    final didConfirm = await _dialogManager.showConfirmationDialog(
+      title: (l) => l.confirmToDelete,
+      caption: (l) => l.deleteAllDownloadedPlaylistAudioFilesConfirmation(playlistAudioCount.dataOrThrow),
+    );
+
+    if (!didConfirm) {
+      return;
+    }
+
+    final deleteRes = await _playlistAudioLocalRepository.deleteAllDownloadedAudioLocalFilesByUserId(userId);
+
+    deleteRes.fold(
+      () => _toastNotifier.error(
+        title: (l) => l.error,
+        description: (l) => l.failedToDeleteAllDownloadedPlaylistAudioFiles,
+      ),
+      () => _toastNotifier.success(
+        title: (l) => l.success,
+        description: (l) => l.successfullyDeletedAllDownloadedPlaylistAudioFiles,
       ),
     );
   }

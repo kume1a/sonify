@@ -161,12 +161,14 @@ abstract class DiDomainModelModule {
     PlaylistAudioMapper playlistAudioMapper,
     DbBatchProviderFactory dbBatchProviderFactory,
     DeleteUnusedLocalAudio deleteUnusedLocalAudio,
+    AudioEntityDao audioEntityDao,
   ) {
     return PlaylistAudioLocalRepositoryImpl(
       playlistAudioEntityDao,
       playlistAudioMapper,
       dbBatchProviderFactory,
       deleteUnusedLocalAudio,
+      audioEntityDao,
     );
   }
 
