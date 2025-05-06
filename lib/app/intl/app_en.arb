@@ -225,5 +225,16 @@
   "addAllDownloadedToMyLibrary": "Add all downloaded to my library",
   "noDownloadedAudioToAddToMyLibrary": "No downloaded audio to add to my library",
   "failedToAddDownloadedAudiosToMyLibrary": "Failed to add downloaded audios to my library",
-  "addedDownloadedAudiosToMyLibrary": "Added downloaded audios to my library"
+  "addedDownloadedAudiosToMyLibrary": "Added downloaded audios to my library",
+  "downloadSummary": "Total Downloads: {totalCount} (In Progress: {inProgressCount})",
+  "@downloadSummary": {
+    "placeholders": {
+      "totalCount": {
+        "type": "int"
+      },
+      "inProgressCount": {
+        "type": "int"
+      }
+    }
+  }
 }

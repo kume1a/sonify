@@ -22,6 +22,7 @@ class DownloadTasksList extends StatelessWidget {
         }
 
         return ListView.builder(
+          padding: const EdgeInsets.only(bottom: 16),
           itemCount: state.length,
           itemBuilder: (_, index) => _Item(task: state[index]),
         );
