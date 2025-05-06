@@ -482,4 +482,15 @@ abstract class DiDomainModelModule {
       playlistLocalRepository,
     );
   }
+
+  @lazySingleton
+  CreateAndLocalRemoteUserAudios createAndLocalRemoteUserAudiosUseCase(
+    UserAudioRemoteRepository userAudioRemoteRepository,
+    UserAudioLocalRepository userAudioLocalRepository,
+  ) {
+    return CreateAndLocalRemoteUserAudios(
+      userAudioRemoteRepository,
+      userAudioLocalRepository,
+    );
+  }
 }

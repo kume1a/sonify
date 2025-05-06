@@ -2,7 +2,6 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../db/sqlite_helpers.dart';
 import '../../db/tables.dart';
-import '../../shared/constant.dart';
 import '../../shared/util.dart';
 import '../../shared/wrapped.dart';
 import 'user_audio_entity.dart';
@@ -19,7 +18,7 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
   final UserAudioEntityMapper _userAudioEntityMapper;
 
   @override
-  Future<String> insert(UserAudioEntity entity) async {
+  Future<UserAudioEntity> insert(UserAudioEntity entity) async {
     final insertEntity = entity.copyWith(
       id: Wrapped(entity.id ?? newDBId()),
     );
@@ -32,7 +31,30 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
 
-    return insertEntity.id ?? kInvalidId;
+    return insertEntity;
+  }
+
+  @override
+  Future<List<UserAudioEntity>> insertMany(List<UserAudioEntity> entities) async {
+    final insertEntities = entities.map((entity) {
+      return entity.copyWith(
+        id: Wrapped(entity.id ?? newDBId()),
+      );
+    }).toList();
+
+    final entityMaps = insertEntities.map(_userAudioEntityMapper.entityToMap).toList();
+
+    return _db.transaction((txn) async {
+      for (final entityMap in entityMaps) {
+        await txn.insert(
+          UserAudio_.tn,
+          entityMap,
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+
+      return insertEntities;
+    });
   }
 
   @override

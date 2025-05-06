@@ -59,7 +59,6 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
   PlaylistCubit(
     this._playlistLocalRepository,
     this._userAudioLocalRepository,
-    this._userAudioRemoteRepository,
     this._bottomSheetManager,
     this._eventBus,
     this._toastNotifier,
@@ -73,11 +72,11 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
     this._userPlaylistLocalRepository,
     this._dialogManager,
     this._playlistPopups,
+    this._createAndLocalRemoteUserAudios,
   ) : super(PlaylistState.initial());
 
   final UserAudioLocalRepository _userAudioLocalRepository;
   final PlaylistLocalRepository _playlistLocalRepository;
-  final UserAudioRemoteRepository _userAudioRemoteRepository;
   final BottomSheetManager _bottomSheetManager;
   final EventBus _eventBus;
   final ToastNotifier _toastNotifier;
@@ -91,6 +90,7 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
   final UserPlaylistLocalRepository _userPlaylistLocalRepository;
   final DialogManager _dialogManager;
   final PlaylistPopups _playlistPopups;
+  final CreateAndLocalRemoteUserAudios _createAndLocalRemoteUserAudios;
 
   String? _playlistId;
 
@@ -238,6 +238,11 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
             label: (l) => l.deletePlaylist,
             iconAssetName: Assets.svgTrashCan,
           ),
+        SelectOption(
+          value: 3,
+          label: (l) => l.addAllDownloadedToMyLibrary,
+          iconAssetName: Assets.svgPlus,
+        ),
       ],
     );
 
@@ -249,6 +254,7 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
       0 => _triggerDownloadPlaylist(),
       1 => _triggerEditPlaylistDetails(),
       2 => _triggerDeletePlaylist(),
+      3 => _triggerAddAllDownloadedToMyLibrary(),
       _ => null,
     };
   }
@@ -285,6 +291,11 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
         loadStateAndEmit();
       },
     );
+  }
+
+  void onAddToThisPlaylistPressed() {
+    _eventBus.fire(EventMainNavigation(pageIndex: 1));
+    _pageNavigator.popTillMain();
   }
 
   Future<void> onPlaylistAudioMenuPressed(PlaylistAudio playlistAudio) async {
@@ -354,26 +365,16 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
     _toastNotifier.info(description: (l) => l.downloadStarted);
   }
 
-  Future<void> _triggerAddAudioToMyLibrary(PlaylistAudio playlistAudio) {
-    return _userAudioRemoteRepository.createManyForAuthUser(
-      audioIds: [playlistAudio.audio!.id!],
-    ).awaitFold(
-      (err) => _toastNotifier.error(description: (l) => err.translate(l)),
-      (r) async {
-        if (r.isEmpty) {
-          Logger.root
-              .warning('PlaylistCubit.onPlaylistAudioMenuPressed: user audios created but result is empty');
-          return;
-        }
+  Future<void> _triggerAddAudioToMyLibrary(PlaylistAudio playlistAudio) async {
+    final audioId = playlistAudio.audio?.id;
+    if (audioId == null) {
+      Logger.root.warning('PlaylistCubit.onPlaylistAudioMenuPressed: audioId is null');
+      return Future.value();
+    }
 
-        final localUserAudio = await _userAudioLocalRepository.save(r.first);
-        if (localUserAudio.isErr) {
-          _toastNotifier.error(description: (l) => l.failedToAddToMyLibrary);
-          return;
-        }
-
-        _toastNotifier.info(description: (l) => l.addedToMyLibrary);
-      },
+    return _createAndLocalRemoteUserAudios.createManyForAuthUser(audioIds: [audioId]).awaitFold(
+      () => _toastNotifier.error(description: (l) => l.failedToAddToMyLibrary),
+      () => _toastNotifier.info(description: (l) => l.addedToMyLibrary),
     );
   }
 
@@ -511,6 +512,35 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
     );
   }
 
+  Future<void> _triggerAddAllDownloadedToMyLibrary() async {
+    final playlist = state.playlist.getOrNull;
+    if (playlist == null) {
+      Logger.root.warning('PlaylistCubit.onPlaylistAudioMenuPressed: playlist is null');
+      return;
+    }
+
+    final playlistAudios = playlist.playlistAudios;
+    if (playlistAudios == null || playlistAudios.isEmpty) {
+      Logger.root.warning('PlaylistCubit.onPlaylistAudioMenuPressed: playlistAudios is null or empty');
+      return;
+    }
+
+    final downloadedPlaylistAudios = playlistAudios.where((e) => e.audio?.localPath != null).toList();
+    if (downloadedPlaylistAudios.isEmpty) {
+      _toastNotifier.info(description: (l) => l.noDownloadedAudioToAddToMyLibrary);
+      return;
+    }
+
+    final audioIds = downloadedPlaylistAudios.map((e) => e.audio?.id).nonNulls.toList();
+
+    final res = await _createAndLocalRemoteUserAudios.createManyForAuthUser(audioIds: audioIds);
+
+    res.fold(
+      () => _toastNotifier.error(description: (l) => l.failedToAddDownloadedAudiosToMyLibrary),
+      () => _toastNotifier.info(description: (l) => l.addedDownloadedAudiosToMyLibrary),
+    );
+  }
+
   void _onUserPlaylistEvent(EventUserPlaylist event) {
     event.when(
       created: (_) {},
@@ -528,10 +558,5 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
         }
       },
     );
-  }
-
-  void onAddToThisPlaylistPressed() {
-    _eventBus.fire(EventMainNavigation(pageIndex: 1));
-    _pageNavigator.popTillMain();
   }
 }

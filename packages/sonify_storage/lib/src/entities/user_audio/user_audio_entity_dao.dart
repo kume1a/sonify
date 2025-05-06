@@ -1,7 +1,9 @@
 import 'user_audio_entity.dart';
 
 abstract interface class UserAudioEntityDao {
-  Future<String> insert(UserAudioEntity entity);
+  Future<UserAudioEntity> insert(UserAudioEntity entity);
+
+  Future<List<UserAudioEntity>> insertMany(List<UserAudioEntity> entities);
 
   Future<List<UserAudioEntity>> getAll({
     required String userId,

@@ -27,7 +27,7 @@ class SaveLocalUserAudioWithAudio {
 
     final savedAudio = savedAudioRes.dataOrThrow;
 
-    final savedUserAudio = await _userAudioLocalRepository.save(
+    final savedUserAudio = await _userAudioLocalRepository.create(
       userAudio.copyWith(
         audioId: savedAudio.id,
         audio: savedAudio,

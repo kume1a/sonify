@@ -43,13 +43,13 @@ class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepo
   }
 
   @override
-  Future<Result<UserAudio>> save(UserAudio userAudio) async {
+  Future<Result<UserAudio>> create(UserAudio userAudio) async {
     return wrapWithResult(() async {
-      final userAudioEntity = _userAudioMapper.modelToEntity(userAudio);
+      final mappedEntity = _userAudioMapper.modelToEntity(userAudio);
 
-      final userAudioEntityId = await _userAudioEntityDao.insert(userAudioEntity);
+      final insertedEntity = await _userAudioEntityDao.insert(mappedEntity);
 
-      return userAudio.copyWith(id: userAudioEntityId);
+      return _userAudioMapper.entityToModel(insertedEntity);
     });
   }
 
@@ -134,5 +134,16 @@ class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepo
   @override
   Future<Result<int>> getCountByUserId(String userId) {
     return wrapWithResult(() => _userAudioEntityDao.getCountByUserId(userId));
+  }
+
+  @override
+  Future<Result<List<UserAudio>>> createMany(List<UserAudio> userAudios) {
+    return wrapWithResult(() async {
+      final entities = userAudios.map(_userAudioMapper.modelToEntity).toList();
+
+      final insertedEntities = await _userAudioEntityDao.insertMany(entities);
+
+      return insertedEntities.map(_userAudioMapper.entityToModel).toList();
+    });
   }
 }

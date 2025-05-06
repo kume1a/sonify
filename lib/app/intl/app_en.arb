@@ -221,5 +221,9 @@
   },
   "successfullyDeletedAllDownloadedPlaylistAudioFiles": "Successfully deleted all downloaded playlist audio files",
   "failedToDeleteAllDownloadedPlaylistAudioFiles": "Failed to delete all downloaded playlist audio files",
-  "deleteAllDownloadedPlaylistAudioFiles": "Delete all downloaded playlist audio files"
+  "deleteAllDownloadedPlaylistAudioFiles": "Delete all downloaded playlist audio files",
+  "addAllDownloadedToMyLibrary": "Add all downloaded to my library",
+  "noDownloadedAudioToAddToMyLibrary": "No downloaded audio to add to my library",
+  "failedToAddDownloadedAudiosToMyLibrary": "Failed to add downloaded audios to my library",
+  "addedDownloadedAudiosToMyLibrary": "Added downloaded audios to my library"
 }
