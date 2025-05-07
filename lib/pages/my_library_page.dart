@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:common_widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logging/logging.dart';
 
 import '../app/di/register_dependencies.dart';
 import '../entities/audio/state/my_library_audios_state.dart';
@@ -47,6 +50,11 @@ class TileVisibilityInfo {
   final bool isVisible;
   final bool isAboveViewportCenter;
   final bool isBelowViewportCenter;
+
+  @override
+  String toString() {
+    return 'TileVisibilityInfo{isVisible: $isVisible, isAboveViewportCenter: $isAboveViewportCenter, isBelowViewportCenter: $isBelowViewportCenter}';
+  }
 }
 
 class _Content extends HookWidget {
@@ -69,6 +77,11 @@ class _Content extends HookWidget {
 
     useEffect(
       () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final initialIndex = context.read<NowPlayingAudioCubit>().state.nowPlayingAudioIndex;
+          nowPlayingAudioIndex.value = initialIndex;
+        });
+
         void updateVisibility() {
           final viewportStartOffset = scrollController.offset;
           final viewportEndOffset = viewportStartOffset + scrollController.position.viewportDimension;
@@ -97,16 +110,20 @@ class _Content extends HookWidget {
           }
         }
 
+        Timer? debounceTimer;
+
         void onScroll() {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            updateVisibility();
-          });
+          if (debounceTimer?.isActive ?? false) {
+            debounceTimer!.cancel();
+          }
+          debounceTimer = Timer(const Duration(milliseconds: 100), updateVisibility);
         }
 
         scrollController.addListener(onScroll);
 
         return () {
           scrollController.removeListener(onScroll);
+          debounceTimer?.cancel();
         };
       },
       [scrollController, nowPlayingAudioIndex],
