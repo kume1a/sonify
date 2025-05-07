@@ -26,12 +26,14 @@ class UserPlaylistLocalRepositoryImpl with ResultWrap implements UserPlaylistLoc
     return wrapWithEmptyResult(() async {
       final batchProvider = _dbBatchProviderFactory.newBatchProvider();
 
-      for (final userPlaylist in userPlaylists) {
-        _userPlaylistEntityDao.insert(
-          _userPlaylistMapper.modelToEntity(userPlaylist),
-          batchProvider: batchProvider,
-        );
-      }
+      await Future.wait(
+        userPlaylists.map(
+          (userPlaylist) => _userPlaylistEntityDao.insert(
+            _userPlaylistMapper.modelToEntity(userPlaylist),
+            batchProvider: batchProvider,
+          ),
+        ),
+      );
 
       await batchProvider.commit();
     });
@@ -93,18 +95,10 @@ class UserPlaylistLocalRepositoryImpl with ResultWrap implements UserPlaylistLoc
   }
 
   @override
-  Future<EmptyResult> deleteById(String id) async {
-    final userPlaylist = await wrapWithResult(() => _userPlaylistEntityDao.getById(id));
-    if (userPlaylist.isErr) {
-      return EmptyResult.err();
-    }
-
-    final playlistId = userPlaylist.dataOrThrow?.playlistId;
-    if (playlistId == null) {
-      return EmptyResult.err();
-    }
-
-    return wrapWithEmptyResult(() => _userPlaylistEntityDao.deleteById(id));
+  Future<EmptyResult> deleteById(String id, {DbBatchProvider? batchProvider}) async {
+    return wrapWithEmptyResult(
+      () => _userPlaylistEntityDao.deleteById(id, batchProvider: batchProvider),
+    );
   }
 
   @override

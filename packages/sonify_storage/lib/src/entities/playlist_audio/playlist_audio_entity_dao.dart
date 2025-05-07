@@ -34,4 +34,9 @@ abstract interface class PlaylistAudioEntityDao {
   Future<List<PlaylistAudioEntity>> getAllByUserId(String userId);
 
   Future<int> countOnlyLocalPathPresentByUserId(String userId);
+
+  Future<void> deleteByPlaylistId(
+    String playlistId, {
+    DbBatchProvider? batchProvider,
+  });
 }

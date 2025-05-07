@@ -493,4 +493,21 @@ abstract class DiDomainModelModule {
       userAudioLocalRepository,
     );
   }
+
+  @lazySingleton
+  DeleteUserPlaylistWithItems deleteUserPlaylistWithItems(
+    UserPlaylistRemoteRepository userPlaylistRemoteRepository,
+    PlaylistLocalRepository playlistLocalRepository,
+    UserPlaylistLocalRepository userPlaylistLocalRepository,
+    PlaylistAudioLocalRepository playlistAudioLocalRepository,
+    DbBatchProviderFactory dbBatchProviderFactory,
+  ) {
+    return DeleteUserPlaylistWithItems(
+      userPlaylistRemoteRepository,
+      playlistLocalRepository,
+      userPlaylistLocalRepository,
+      playlistAudioLocalRepository,
+      dbBatchProviderFactory,
+    );
+  }
 }

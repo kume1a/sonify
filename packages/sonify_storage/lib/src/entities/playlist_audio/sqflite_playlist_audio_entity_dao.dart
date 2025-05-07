@@ -224,4 +224,24 @@ class SqflitePlaylistAudioEntityDao implements PlaylistAudioEntityDao {
 
     return Sqflite.firstIntValue(res) ?? 0;
   }
+
+  @override
+  Future<void> deleteByPlaylistId(
+    String playlistId, {
+    DbBatchProvider? batchProvider,
+  }) async {
+    if (batchProvider != null) {
+      batchProvider.get.delete(
+        PlaylistAudio_.tn,
+        where: '${PlaylistAudio_.playlistId} = ?',
+        whereArgs: [playlistId],
+      );
+    } else {
+      await _db.delete(
+        PlaylistAudio_.tn,
+        where: '${PlaylistAudio_.playlistId} = ?',
+        whereArgs: [playlistId],
+      );
+    }
+  }
 }

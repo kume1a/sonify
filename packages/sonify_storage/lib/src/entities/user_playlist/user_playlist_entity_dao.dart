@@ -16,7 +16,7 @@ abstract interface class UserPlaylistEntityDao {
 
   Future<UserPlaylistEntity?> getById(String id);
 
-  Future<void> deleteById(String id);
+  Future<void> deleteById(String id, {DbBatchProvider? batchProvider});
 
   Future<UserPlaylistEntity?> getByUserIdAndPlaylistId({
     required String userId,

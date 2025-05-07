@@ -123,12 +123,20 @@ class SqfliteUserPlaylistEntityDao implements UserPlaylistEntityDao {
   }
 
   @override
-  Future<void> deleteById(String id) {
-    return _db.delete(
-      UserPlaylist_.tn,
-      where: '${UserPlaylist_.id} = ?',
-      whereArgs: [id],
-    );
+  Future<void> deleteById(String id, {DbBatchProvider? batchProvider}) async {
+    if (batchProvider != null) {
+      batchProvider.get.delete(
+        UserPlaylist_.tn,
+        where: '${UserPlaylist_.id} = ?',
+        whereArgs: [id],
+      );
+    } else {
+      await _db.delete(
+        UserPlaylist_.tn,
+        where: '${UserPlaylist_.id} = ?',
+        whereArgs: [id],
+      );
+    }
   }
 
   @override

@@ -247,5 +247,7 @@
       }
     }
   },
-  "title": "Title"
+  "title": "Title",
+  "failedToDeletePlaylist": "Failed to delete playlist",
+  "playlistDeleted": "Playlist deleted"
 }

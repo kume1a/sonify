@@ -73,6 +73,7 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
     this._dialogManager,
     this._playlistPopups,
     this._createAndLocalRemoteUserAudios,
+    this._deleteUserPlaylistWithItems,
   ) : super(PlaylistState.initial());
 
   final UserAudioLocalRepository _userAudioLocalRepository;
@@ -91,6 +92,7 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
   final DialogManager _dialogManager;
   final PlaylistPopups _playlistPopups;
   final CreateAndLocalRemoteUserAudios _createAndLocalRemoteUserAudios;
+  final DeleteUserPlaylistWithItems _deleteUserPlaylistWithItems;
 
   String? _playlistId;
 
@@ -295,7 +297,7 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
 
   void onAddToThisPlaylistPressed() {
     _eventBus.fire(EventMainNavigation(pageIndex: 1));
-    _pageNavigator.popTillMain();
+    _pageNavigator.popUntilMain();
   }
 
   Future<void> onPlaylistAudioMenuPressed(PlaylistAudio playlistAudio) async {
@@ -426,6 +428,11 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
   }
 
   Future<void> _triggerDeletePlaylist() async {
+    if (state.userPlaylistId == null) {
+      Logger.root.warning('PlaylistCubit.onDeletePlaylistPressed: userPlaylistId is null');
+      return;
+    }
+
     final playlist = state.playlist.getOrNull;
 
     if (playlist == null) {
@@ -441,7 +448,16 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
       return;
     }
 
-    _toastNotifier.info(description: (l) => l.notImplementedYet);
+    _deleteUserPlaylistWithItems(userPlaylistId: state.userPlaylistId!).awaitFold(
+      () => _toastNotifier.error(description: (l) => l.failedToDeletePlaylist),
+      (userPlaylist) {
+        _toastNotifier.info(description: (l) => l.playlistDeleted);
+
+        _pageNavigator.popUntilMain();
+
+        _eventBus.fire(EventUserPlaylist.deleted(userPlaylist));
+      },
+    );
   }
 
   void _onPlaylistAudioEvent(EventPlaylistAudio event) {

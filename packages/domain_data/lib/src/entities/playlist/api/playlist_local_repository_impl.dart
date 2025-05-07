@@ -78,4 +78,14 @@ class PlaylistLocalRepositoryImpl with ResultWrap implements PlaylistLocalReposi
       await _playlistEntityDao.updateById(id: id, name: name);
     });
   }
+
+  @override
+  Future<EmptyResult> deleteById(
+    String playlistId, {
+    DbBatchProvider? batchProvider,
+  }) {
+    return wrapWithEmptyResult(
+      () => _playlistEntityDao.deleteById(playlistId, batchProvider: batchProvider),
+    );
+  }
 }

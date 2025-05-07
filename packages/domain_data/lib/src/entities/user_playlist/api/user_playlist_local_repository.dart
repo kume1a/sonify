@@ -1,4 +1,5 @@
 import 'package:common_models/common_models.dart';
+import 'package:sonify_storage/sonify_storage.dart';
 
 import '../model/user_playlist.dart';
 
@@ -18,7 +19,10 @@ abstract interface class UserPlaylistLocalRepository {
     String? name,
   });
 
-  Future<EmptyResult> deleteById(String id);
+  Future<EmptyResult> deleteById(
+    String id, {
+    DbBatchProvider? batchProvider,
+  });
 
   Future<Result<UserPlaylist?>> getById(String id);
 

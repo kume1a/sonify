@@ -1,4 +1,5 @@
 import 'package:common_models/common_models.dart';
+import 'package:sonify_storage/sonify_storage.dart';
 
 import '../model/playlist_audio.dart';
 
@@ -23,4 +24,9 @@ abstract interface class PlaylistAudioLocalRepository {
   Future<EmptyResult> deleteAllDownloadedAudioLocalFilesByUserId(String userId);
 
   Future<Result<int>> countOnlyLocalPathPresentByUserId(String userId);
+
+  Future<EmptyResult> deleteByPlaylistId(
+    String playlistId, {
+    DbBatchProvider? batchProvider,
+  });
 }

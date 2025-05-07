@@ -167,4 +167,14 @@ class PlaylistAudioLocalRepositoryImpl with ResultWrap implements PlaylistAudioL
       () => _playlistAudioEntityDao.countOnlyLocalPathPresentByUserId(userId),
     );
   }
+
+  @override
+  Future<EmptyResult> deleteByPlaylistId(
+    String playlistId, {
+    DbBatchProvider? batchProvider,
+  }) {
+    return wrapWithEmptyResult(
+      () => _playlistAudioEntityDao.deleteByPlaylistId(playlistId, batchProvider: batchProvider),
+    );
+  }
 }
