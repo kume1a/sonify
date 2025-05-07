@@ -53,6 +53,7 @@ class _Content extends StatelessWidget {
                     Text(userPlaylistId != null ? l.editPlaylistDetails : l.createPlaylist),
                     const SizedBox(height: 16),
                     TextFormField(
+                      controller: context.mutatePlaylistCubit.nameFieldController,
                       autocorrect: false,
                       decoration: InputDecoration(
                         hintText: l.name,

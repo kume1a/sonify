@@ -49,6 +49,8 @@ class MutatePlaylistCubit extends Cubit<MutatePlaylistState> {
   final PageNavigator _pageNavigator;
   final EventBus _eventBus;
 
+  final nameFieldController = TextEditingController();
+
   String? _userPlaylistId;
 
   void init({required String? userPlaylistId}) {
@@ -108,7 +110,7 @@ class MutatePlaylistCubit extends Cubit<MutatePlaylistState> {
       () {
         _eventBus.fire(EventUserPlaylist.updated(remoteRes.rightOrThrow));
 
-        _toastNotifier.success(description: (l) => l.playlistUpdated(name));
+        _toastNotifier.success(description: (l) => l.playlistUpdatedSuccessfully(name));
 
         _pageNavigator.pop();
       },
@@ -157,6 +159,7 @@ class MutatePlaylistCubit extends Cubit<MutatePlaylistState> {
           return;
         }
 
+        nameFieldController.text = r.playlist?.name ?? '';
         emit(state.copyWith(name: Name(r.playlist?.name ?? '')));
       },
     );

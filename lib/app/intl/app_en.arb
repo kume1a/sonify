@@ -145,8 +145,8 @@
   "failedToLoadPlaylist": "Failed to load playlist",
   "playlistNotFound": "Playlist not found",
   "failedToUpdatePlaylist": "Failed to update playlist",
-  "playlistUpdated": "Playlist updated to {name}",
-  "@playlistUpdated": {
+  "playlistUpdatedSuccessfully": "Playlist {name} updated successfully",
+  "@playlistUpdatedSuccessfully": {
     "placeholders": {
       "name": {
         "type": "String"
