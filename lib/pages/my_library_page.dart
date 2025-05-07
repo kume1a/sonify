@@ -9,6 +9,7 @@ import '../app/di/register_dependencies.dart';
 import '../entities/audio/state/my_library_audios_state.dart';
 import '../entities/audio/ui/my_library_alphabet.dart';
 import '../entities/audio/ui/my_library_list.dart';
+import '../entities/audio/ui/my_library_song_count.dart';
 import '../entities/playlist/ui/my_library_header.dart';
 import '../features/play_audio/state/audio_player_panel_state.dart';
 import '../features/play_audio/state/now_playing_audio_state.dart';
@@ -33,8 +34,9 @@ class MyLibraryPage extends StatelessWidget {
   }
 }
 
-final _spacingAfterHeader = 12.h;
-final _myLibraryHeaderHeght = MyLibraryHeader.height + _spacingAfterHeader;
+final _spacingAfterHeader = 4.h;
+final _songCountTextHeight = 16.h;
+final _myLibraryHeaderHeght = MyLibraryHeader.height + _spacingAfterHeader + _songCountTextHeight;
 
 class TileVisibilityInfo {
   const TileVisibilityInfo({
@@ -144,6 +146,10 @@ class _Content extends HookWidget {
                             ),
                           ),
                           SliverSizedBox(height: _spacingAfterHeader),
+                          SliverSizedBox(
+                            height: _songCountTextHeight,
+                            child: MyLibrarySongCount(),
+                          ),
                           MyLibraryList(
                             itemPadding: EdgeInsets.only(
                               left: 16.r,

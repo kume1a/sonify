@@ -237,5 +237,13 @@
       }
     }
   },
-  "allDownloadedAudiosAlreadyInMyLibrary": "All downloaded audios already in my library"
+  "allDownloadedAudiosAlreadyInMyLibrary": "All downloaded audios already in my library",
+  "songsCount": "{itemCount} songs",
+  "@songsCount": {
+    "placeholders": {
+      "itemCount": {
+        "type": "int"
+      }
+    }
+  }
 }
