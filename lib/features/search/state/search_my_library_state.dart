@@ -46,6 +46,7 @@ class SearchMyLibraryCubit extends Cubit<SearchMyLibraryState> {
       final res = await _userAudioLocalRepository.getAll(
         userId: authUserId,
         searchQuery: query,
+        sort: AudioSort.title,
       );
 
       emit(SearchMyLibraryState.fromResult(res));

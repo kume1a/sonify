@@ -14,6 +14,7 @@ import '../../../shared/util/app_lifecycle_observer.dart';
 import '../../../shared/util/connectivity_status.dart';
 import '../../../shared/util/utils.dart';
 import '../../../shared/values/constant.dart';
+import '../../user_preferences/api/user_preferences_store.dart';
 import '../api/now_playing_audio_info_store.dart';
 import '../model/event_play_audio.dart';
 import '../model/media_item_payload.dart';
@@ -64,6 +65,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     this._toastNotifier,
     this._filterPlayableAudios,
     this._eventBus,
+    this._userPreferencesStore,
   ) : super(NowPlayingAudioState.initial()) {
     _init();
   }
@@ -80,6 +82,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
   final ToastNotifier _toastNotifier;
   final FilterPlayableAudios _filterPlayableAudios;
   final EventBus _eventBus;
+  final UserPreferencesStore _userPreferencesStore;
 
   final _subscriptions = SubscriptionComposite();
   AppLifecycleObserver? _appLifecycleObserver;
@@ -318,7 +321,12 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     }
 
     if (playlistId == null) {
-      final localUserAudios = await _audioLocalRepository.getAll(userId: authUserId);
+      final storedAudioSort = await _userPreferencesStore.getAudioSort();
+
+      final localUserAudios = await _audioLocalRepository.getAll(
+        userId: authUserId,
+        sort: storedAudioSort,
+      );
 
       if (localUserAudios.isErr) {
         Logger.root.warning('PlaylistCubit._loadNowPlayingPlaylist: failed to get local user audios');

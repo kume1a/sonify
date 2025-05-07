@@ -1,4 +1,0 @@
-enum AudioSortByOption {
-  name,
-  createDate,
-}

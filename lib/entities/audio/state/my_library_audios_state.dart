@@ -9,7 +9,6 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../app/intl/extension/error_intl.dart';
 import '../../../app/navigation/page_navigator.dart';
-import '../../../features/play_audio/model/audio_sort_by_option.dart';
 import '../../../features/play_audio/model/event_play_audio.dart';
 import '../../../features/user_preferences/api/user_preferences_store.dart';
 import '../../../shared/bottom_sheet/bottom_sheet_manager.dart';
@@ -83,7 +82,12 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
       return null;
     }
 
-    final res = await _userAudioLocalRepository.getAll(userId: userId);
+    final storedAudioSort = await _userPreferencesStore.getAudioSort();
+
+    final res = await _userAudioLocalRepository.getAll(
+      userId: userId,
+      sort: storedAudioSort,
+    );
 
     return res.dataOrNull;
   }
@@ -93,22 +97,25 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
   }
 
   Future<void> onSortByPressed() async {
-    final isSaveAudioSortByOptionEnabled = await _userPreferencesStore.isSaveAudioSortByOptionEnabled();
+    final storedValue = await _userPreferencesStore.getAudioSort();
 
-    final storedValue = await _userPreferencesStore.getAudioSortByOption();
-
-    final selectedOption = await _bottomSheetManager.openOptionSelector<AudioSortByOption>(
+    final selectedOption = await _bottomSheetManager.openOptionSelector<AudioSort>(
       header: (l) => l.sortBy,
       options: [
         SelectOption(
-          value: AudioSortByOption.name,
-          label: (l) => l.name,
-          iconAssetName: storedValue == AudioSortByOption.name ? Assets.svgCheck : null,
+          value: AudioSort.title,
+          label: (l) => l.title,
+          iconAssetName: storedValue == AudioSort.title ? Assets.svgCheck : null,
         ),
         SelectOption(
-          value: AudioSortByOption.createDate,
-          label: (l) => l.createDate,
-          iconAssetName: storedValue == AudioSortByOption.createDate ? Assets.svgCheck : null,
+          value: AudioSort.createDateAsc,
+          label: (l) => l.createDateAsc,
+          iconAssetName: storedValue == AudioSort.createDateAsc ? Assets.svgCheck : null,
+        ),
+        SelectOption(
+          value: AudioSort.createDateDesc,
+          label: (l) => l.createDateDesc,
+          iconAssetName: storedValue == AudioSort.createDateDesc ? Assets.svgCheck : null,
         ),
       ],
     );
@@ -117,9 +124,10 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
       return;
     }
 
-    if (isSaveAudioSortByOptionEnabled) {
-      await _userPreferencesStore.setAudioSortByOption(selectedOption);
-    }
+    await _userPreferencesStore.setAudioSort(selectedOption);
+
+    _eventBus.fire(EventPlayAudio.reloadNowPlayingPlaylist(allowLocalAudioPlaylistReload: true));
+    loadEntityAndEmit(emitLoading: false);
   }
 
   Future<void> onAudioMenuPressed(UserAudio userAudio) async {

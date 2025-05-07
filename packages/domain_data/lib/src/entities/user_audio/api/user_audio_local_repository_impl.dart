@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:common_models/common_models.dart';
 import 'package:sonify_storage/sonify_storage.dart';
 
+import '../../../shared/enum.dart';
 import '../../audio/util/delete_unused_local_audio.dart';
 import '../model/user_audio.dart';
 import '../util/compare_audio_titles.dart';
@@ -22,6 +23,7 @@ class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepo
   @override
   Future<Result<List<UserAudio>>> getAll({
     required String userId,
+    required AudioSort sort,
     String? searchQuery,
   }) {
     return wrapWithResult(() async {
@@ -32,10 +34,23 @@ class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepo
 
       return audioEntities
           .sorted((a, b) {
-            final aTitle = a.audio?.title?.toLowerCase() ?? '';
-            final bTitle = b.audio?.title?.toLowerCase() ?? '';
+            switch (sort) {
+              case AudioSort.title:
+                final aTitle = a.audio?.title?.toLowerCase() ?? '';
+                final bTitle = b.audio?.title?.toLowerCase() ?? '';
 
-            return compareAudioTitles(aTitle, bTitle);
+                return compareAudioTitles(aTitle, bTitle);
+              case AudioSort.createDateAsc:
+                final aDate = a.createdAtMillis ?? 0;
+                final bDate = b.createdAtMillis ?? 0;
+
+                return aDate.compareTo(bDate);
+              case AudioSort.createDateDesc:
+                final aDate = a.createdAtMillis ?? 0;
+                final bDate = b.createdAtMillis ?? 0;
+
+                return bDate.compareTo(aDate);
+            }
           })
           .map(_userAudioMapper.entityToModel)
           .toList();

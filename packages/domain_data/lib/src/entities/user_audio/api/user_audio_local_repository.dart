@@ -1,10 +1,12 @@
 import 'package:common_models/common_models.dart';
 
+import '../../../shared/enum.dart';
 import '../model/user_audio.dart';
 
 abstract interface class UserAudioLocalRepository {
   Future<Result<List<UserAudio>>> getAll({
     required String userId,
+    required AudioSort sort,
     String? searchQuery,
   });
 

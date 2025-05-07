@@ -192,7 +192,8 @@
     }
   },
   "notImplementedYet": "Not implemented yet",
-  "createDate": "Create date",
+  "createDateAsc": "Create date ascending",
+  "createDateDesc": "Create date descending",
   "sortBy": "Sort by",
   "maxConcurrentDownloadCount": "Max concurrent download count",
   "deleteAllDownloadedUserAudios": "Delete all downloaded user audios",
@@ -245,5 +246,6 @@
         "type": "int"
       }
     }
-  }
+  },
+  "title": "Title"
 }

@@ -14,7 +14,6 @@ class UserPreferencesState with _$UserPreferencesState {
     required SimpleDataState<bool> isSaveShuffleStateEnabled,
     required SimpleDataState<bool> isSaveRepeatStateEnabled,
     required SimpleDataState<bool> isSearchHistoryEnabled,
-    required SimpleDataState<bool> isSaveAudioSortByEnabled,
     required SimpleDataState<int> maxConcurrentDownloadCount,
   }) = _UserPreferencesState;
 
@@ -22,7 +21,6 @@ class UserPreferencesState with _$UserPreferencesState {
         isSaveShuffleStateEnabled: SimpleDataState.idle(),
         isSaveRepeatStateEnabled: SimpleDataState.idle(),
         isSearchHistoryEnabled: SimpleDataState.idle(),
-        isSaveAudioSortByEnabled: SimpleDataState.idle(),
         maxConcurrentDownloadCount: SimpleDataState.idle(),
       );
 }
@@ -46,7 +44,6 @@ class UserPreferencesCubit extends Cubit<UserPreferencesState> {
       isSaveShuffleStateEnabled: SimpleDataState.loading(),
       isSaveRepeatStateEnabled: SimpleDataState.loading(),
       isSearchHistoryEnabled: SimpleDataState.loading(),
-      isSaveAudioSortByEnabled: SimpleDataState.loading(),
       maxConcurrentDownloadCount: SimpleDataState.loading(),
     ));
 
@@ -54,13 +51,11 @@ class UserPreferencesCubit extends Cubit<UserPreferencesState> {
     final isSaveRepeatStateEnabled = await _userPreferencesStore.isSaveRepeatStateEnabled();
     final isSearchHistoryEnabled = await _userPreferencesStore.isSearchHistoryEnabled();
     final maxConcurrentDownloadCount = await _userPreferencesStore.getMaxConcurrentDownloadCount();
-    final isSaveAudioSortByEnabled = await _userPreferencesStore.isSaveAudioSortByOptionEnabled();
 
     emit(state.copyWith(
       isSaveShuffleStateEnabled: SimpleDataState.success(isSaveShuffleStateEnabled),
       isSaveRepeatStateEnabled: SimpleDataState.success(isSaveRepeatStateEnabled),
       isSearchHistoryEnabled: SimpleDataState.success(isSearchHistoryEnabled),
-      isSaveAudioSortByEnabled: SimpleDataState.success(isSaveAudioSortByEnabled),
       maxConcurrentDownloadCount: SimpleDataState.success(maxConcurrentDownloadCount),
     ));
   }
@@ -78,11 +73,6 @@ class UserPreferencesCubit extends Cubit<UserPreferencesState> {
   Future<void> onToggleSearchHistory(bool value) async {
     emit(state.copyWith(isSearchHistoryEnabled: SimpleDataState.success(value)));
     await _userPreferencesStore.setSearchHistoryEnabled(value);
-  }
-
-  Future<void> onToggleSaveAudioSortBy(bool value) async {
-    emit(state.copyWith(isSaveAudioSortByEnabled: SimpleDataState.success(value)));
-    await _userPreferencesStore.setSaveAudioSortByOptionEnabled(value);
   }
 
   Future<void> onChangeMaxConcurrentDownloadCount(int newValue) async {
