@@ -261,7 +261,11 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
       return;
     }
 
-    await _audioHandler.pause();
+    final wasPlaying = state.playButtonState == PlaybackButtonState.playing;
+
+    if (wasPlaying) {
+      await _audioHandler.pause();
+    }
 
     await _ensurePlaylistEnqueued(
       playlistId: state.playlist?.id,
@@ -278,7 +282,10 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
 
       await _audioHandler.skipToQueueItem(audioIndex == -1 ? 0 : audioIndex);
       await _audioHandler.seek(beforePlayingAudioInfo.position);
-      _audioHandler.play();
+
+      if (wasPlaying) {
+        _audioHandler.play();
+      }
     }
   }
 
