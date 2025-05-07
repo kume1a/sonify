@@ -21,6 +21,10 @@ class MyLibrarySongCount extends StatelessWidget {
           orElse: () => 0,
         );
 
+        if (itemCount == 0) {
+          return const SizedBox.shrink();
+        }
+
         return Padding(
           padding: EdgeInsets.only(left: 16.w),
           child: Text(
