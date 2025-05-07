@@ -513,6 +513,12 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
   }
 
   Future<void> _triggerAddAllDownloadedToMyLibrary() async {
+    final userId = await _authUserInfoProvider.getId();
+    if (userId == null) {
+      Logger.root.warning('PlaylistCubit.onPlaylistAudioMenuPressed: userId is null');
+      return;
+    }
+
     final playlist = state.playlist.getOrNull;
     if (playlist == null) {
       Logger.root.warning('PlaylistCubit.onPlaylistAudioMenuPressed: playlist is null');
@@ -531,7 +537,31 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
       return;
     }
 
-    final audioIds = downloadedPlaylistAudios.map((e) => e.audio?.id).nonNulls.toList();
+    final notInUserLibraryPlaylistAudios = <PlaylistAudio>[];
+
+    for (final e in downloadedPlaylistAudios) {
+      final localUserAudioExistsRes = await _userAudioLocalRepository.existsByUserIdAndAudioId(
+        userId: userId,
+        audioId: e.audioId,
+      );
+
+      if (localUserAudioExistsRes.isErr) {
+        Logger.root
+            .warning('PlaylistCubit._triggerAddAllDownloadedToMyLibrary: failed to check user audio exists');
+        continue;
+      }
+
+      if (!localUserAudioExistsRes.dataOrThrow) {
+        notInUserLibraryPlaylistAudios.add(e);
+      }
+    }
+
+    if (notInUserLibraryPlaylistAudios.isEmpty) {
+      _toastNotifier.info(description: (l) => l.allDownloadedAudiosAlreadyInMyLibrary);
+      return;
+    }
+
+    final audioIds = notInUserLibraryPlaylistAudios.map((e) => e.audio?.id).nonNulls.toList();
 
     final res = await _createAndLocalRemoteUserAudios.createManyForAuthUser(audioIds: audioIds);
 

@@ -23,6 +23,11 @@ abstract interface class UserAudioLocalRepository {
     required String audioId,
   });
 
+  Future<Result<bool>> existsByUserIdAndAudioId({
+    required String userId,
+    required String audioId,
+  });
+
   Future<EmptyResult> deleteById(String id);
 
   Future<EmptyResult> deleteAllByUserId(String userId);

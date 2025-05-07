@@ -279,4 +279,19 @@ class SqfliteUserAudioEntityDao implements UserAudioEntityDao {
       whereArgs: [userId, audioId],
     );
   }
+
+  @override
+  Future<bool> existsByUserIdAndAudioId({
+    required String userId,
+    required String audioId,
+  }) async {
+    final res = await _db.query(
+      UserAudio_.tn,
+      columns: ['COUNT(1)'],
+      where: '${UserAudio_.userId} = ? AND ${UserAudio_.audioId} = ?',
+      whereArgs: [userId, audioId],
+    );
+
+    return Sqflite.firstIntValue(res) != 0;
+  }
 }

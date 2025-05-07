@@ -146,4 +146,17 @@ class UserAudioLocalRepositoryImpl with ResultWrap implements UserAudioLocalRepo
       return insertedEntities.map(_userAudioMapper.entityToModel).toList();
     });
   }
+
+  @override
+  Future<Result<bool>> existsByUserIdAndAudioId({
+    required String userId,
+    required String audioId,
+  }) {
+    return wrapWithResult(
+      () => _userAudioEntityDao.existsByUserIdAndAudioId(
+        userId: userId,
+        audioId: audioId,
+      ),
+    );
+  }
 }

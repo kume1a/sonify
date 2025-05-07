@@ -37,4 +37,9 @@ abstract interface class UserAudioEntityDao {
     required String userId,
     required String audioId,
   });
+
+  Future<bool> existsByUserIdAndAudioId({
+    required String userId,
+    required String audioId,
+  });
 }
