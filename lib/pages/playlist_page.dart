@@ -6,6 +6,7 @@ import '../entities/playlist/state/playlist_state.dart';
 import '../entities/playlist/ui/playlist_appbar.dart';
 import '../entities/playlist/ui/playlist_items_or_import_status.dart';
 import '../entities/playlist/ui/playlist_search_container.dart';
+import '../entities/playlist/ui/playlist_song_count.dart';
 import '../features/play_audio/state/audio_player_panel_state.dart';
 import '../features/play_audio/ui/audio_player_panel.dart';
 
@@ -69,6 +70,9 @@ class _Content extends StatelessWidget {
                 sliver: SliverToBoxAdapter(
                   child: PlaylistSearchContainer(),
                 ),
+              ),
+              SliverToBoxAdapter(
+                child: PlaylistSongCount(),
               ),
               const PlaylistItemsOrImportStatus(),
             ],
