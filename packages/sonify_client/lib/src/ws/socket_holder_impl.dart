@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:logging/logging.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
@@ -28,13 +29,23 @@ class SocketHolderImpl implements SocketHolder {
   @override
   Future<WebSocket?> get socket async => _lock.synchronized(() async => _socket ??= await _tryCreateSocket());
 
-  Future<WebSocket?> _tryCreateSocket() {
+  Future<WebSocket?> _tryCreateSocket() async {
     try {
-      return _createSocket();
+      final websocket = await _createSocket();
+
+      if (websocket == null) {
+        Logger.root.warning('WebSocket creation failed, access token is null');
+        return null;
+      }
+
+      Logger.root.fine('WebSocket created successfully');
+
+      return websocket;
     } catch (e, stack) {
-      log('$e, $stack');
+      Logger.root.info('$e, $stack');
     }
-    return Future.value();
+
+    return null;
   }
 
   Future<WebSocket?> _createSocket() async {
