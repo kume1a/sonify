@@ -146,14 +146,28 @@ class DownloadsCubit extends Cubit<List<DownloadTask>> {
   }
 
   Future<void> _enqueueDownloadTask(DownloadTask downloadTask) async {
-    final payloadIdentifier = downloadTask.payload.userAudio?.id ?? downloadTask.payload.playlistAudio?.id;
+    final userAudioId = downloadTask.payload.userAudio?.id;
+    final playlistAudioId = downloadTask.payload.playlistAudio?.id;
+    final userAudioYoutubeId = downloadTask.payload.userAudio?.audio?.youtubeVideoId;
+    final playlistAudioYoutubeId = downloadTask.payload.playlistAudio?.audio?.youtubeVideoId;
 
-    bool predicate(DownloadTask e) =>
-        e.payload.userAudio?.id == payloadIdentifier || e.payload.playlistAudio?.id == payloadIdentifier;
+    bool predicate(DownloadTask e) {
+      final eUserAudioId = e.payload.userAudio?.id;
+      final ePlaylistAudioId = e.payload.playlistAudio?.id;
+      final eUserAudioYoutubeId = e.payload.userAudio?.audio?.youtubeVideoId;
+      final ePlaylistAudioYoutubeId = e.payload.playlistAudio?.audio?.youtubeVideoId;
 
-    final isAlreadyInQueue = state.any(predicate) || state.any(predicate);
+      return (userAudioId != null && eUserAudioId == userAudioId) ||
+          (playlistAudioId != null && ePlaylistAudioId == playlistAudioId) ||
+          (userAudioYoutubeId != null && eUserAudioYoutubeId == userAudioYoutubeId) ||
+          (playlistAudioYoutubeId != null && ePlaylistAudioYoutubeId == playlistAudioYoutubeId);
+    }
+
+    final isAlreadyInQueue = state.any(predicate);
 
     if (isAlreadyInQueue) {
+      Logger.root.info(
+          'Download task with audio ID $userAudioId or $playlistAudioId or YouTube ID $userAudioYoutubeId or $playlistAudioYoutubeId is already in queue or downloading.');
       return;
     }
 
