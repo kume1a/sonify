@@ -15,7 +15,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  intl: ^0.19.0
+  intl: ^0.20.2
 
   # UI
   flutter_svg: ^2.0.17
@@ -116,8 +116,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-  # generate: true
+  generate: true
 
   assets:
     - env/
