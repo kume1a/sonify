@@ -31,7 +31,7 @@ abstract final class AppTheme {
       unselectedLabelStyle: TextStyle(fontSize: 12),
       backgroundColor: Palette.primaryContainer,
     ),
-    dialogTheme: DialogTheme(
+    dialogTheme: DialogThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       backgroundColor: Palette.primaryContainer,
     ),

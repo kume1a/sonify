@@ -44,7 +44,13 @@ class _Item extends StatelessWidget {
     final theme = Theme.of(context);
 
     return task.when(
-      idle: (id, uri, savePath, fileType, payload) => _DownloadTaskItem(payload: payload),
+      idle: (id, uri, savePath, fileType, payload) => _DownloadTaskItem(
+        payload: payload,
+        caption: Text(
+          payload.userAudio?.audio?.author ?? '',
+          style: TextStyle(fontSize: 12),
+        ),
+      ),
       failed: (id, uri, savePath, fileType, payload) => _DownloadTaskItem(
         payload: payload,
         caption: Text(
@@ -59,6 +65,10 @@ class _Item extends StatelessWidget {
       completed: (_, __, ___, ____, payload) => _DownloadTaskItem(
         payload: payload,
         end: Icon(Icons.done, color: theme.appThemeExtension?.success),
+        caption: Text(
+          payload.userAudio?.audio?.author ?? '',
+          style: TextStyle(fontSize: 12),
+        ),
       ),
       inProgress: (_, __, ___, progress, speedInBytesPerSecond, ____, payload) {
         final formattedProgress = '${(progress * 100).toStringAsFixed(1)}%';
@@ -105,39 +115,49 @@ class _DownloadTaskItem extends StatelessWidget {
   final Widget? caption;
   final Widget? end;
 
+  static const double _itemHeight = 64;
+  static const double _captionHeight = 24;
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (payload.hasImage)
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: Thumbnail(
-                size: const Size.square(36),
-                localThumbnailPath: payload.audioLocalThumbnailPath,
-                thumbnailPath: payload.audioThumbnailPath,
-                thumbnailUrl: payload.audioThumbnailUrl,
-                borderRadius: BorderRadius.circular(8),
+    return SizedBox(
+      height: _itemHeight,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (payload.hasImage)
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Thumbnail(
+                  size: const Size.square(36),
+                  localThumbnailPath: payload.audioLocalThumbnailPath,
+                  thumbnailPath: payload.audioThumbnailPath,
+                  thumbnailUrl: payload.audioThumbnailUrl,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    payload.audioTitle ?? '',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: _captionHeight,
+                    child: caption ?? const SizedBox.shrink(),
+                  ),
+                ],
               ),
             ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  payload.audioTitle ?? '',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                if (caption != null) caption!,
-              ],
-            ),
-          ),
-          if (end != null) end!,
-        ],
+            if (end != null) end!,
+          ],
+        ),
       ),
     );
   }

@@ -249,5 +249,14 @@
   },
   "title": "Title",
   "failedToDeletePlaylist": "Failed to delete playlist",
-  "playlistDeleted": "Playlist deleted"
+  "playlistDeleted": "Playlist deleted",
+  "leftToDownload": "{count} left to download",
+  "@leftToDownload": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "downloaded": "Downloaded"
 }

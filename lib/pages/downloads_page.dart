@@ -35,12 +35,15 @@ class _Content extends StatelessWidget {
       ),
       body: const AudioPlayerPanel(
         body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DownloadTasksListHeader(),
-              Expanded(child: DownloadTasksList()),
-            ],
+          child: Scrollbar(
+            thumbVisibility: true,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DownloadTasksListHeader(),
+                Expanded(child: DownloadTasksList()),
+              ],
+            ),
           ),
         ),
       ),
