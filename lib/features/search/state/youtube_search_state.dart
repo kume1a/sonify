@@ -1,4 +1,5 @@
 import 'package:common_models/common_models.dart';
+import 'package:common_utilities/common_utilities.dart';
 import 'package:domain_data/domain_data.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +7,6 @@ import 'package:injectable/injectable.dart';
 
 import '../../../app/navigation/page_navigator.dart';
 import '../../../pages/search_suggestions_page.dart';
-import '../../../shared/util/debounce.dart';
 
 typedef YoutubeSearchState = DataState<NetworkCallError, YoutubeSearchSuggestions>;
 
@@ -24,7 +24,7 @@ class YoutubeSearchCubit extends Cubit<YoutubeSearchState> {
   final YoutubeRemoteRepository _youtubeRemoteRepository;
   final PageNavigator _pageNavigator;
 
-  final Debounce _debounce = Debounce.fromMilliseconds(400);
+  final _debounce = Debounce.fromMilliseconds(400);
 
   final searchQueryController = TextEditingController();
 
