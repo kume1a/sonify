@@ -258,5 +258,13 @@
       }
     }
   },
-  "downloaded": "Downloaded"
+  "downloaded": "Downloaded",
+  "completed": "completed: {count}",
+  "@completed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

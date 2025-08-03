@@ -19,6 +19,7 @@ class DownloadTasksListHeader extends StatelessWidget {
         }
 
         int inProgressCount = 0;
+        int completedCount = 0;
         int totalCount = 0;
         int leftToDownload = 0;
 
@@ -27,7 +28,10 @@ class DownloadTasksListHeader extends StatelessWidget {
           if (task.isInProgress) {
             inProgressCount++;
           }
-          if (!task.isCompleted) {
+
+          if (task.isCompleted) {
+            completedCount++;
+          } else {
             leftToDownload++;
           }
         }
@@ -41,12 +45,16 @@ class DownloadTasksListHeader extends StatelessWidget {
                 l.downloadSummary(totalCount, inProgressCount),
               ),
               const SizedBox(height: 4),
-              Text(
-                l.leftToDownload(leftToDownload),
-                style: TextStyle(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontSize: 12,
-                ),
+              Row(
+                children: [
+                  Text(
+                    '${l.leftToDownload(leftToDownload)}${completedCount > 0 ? ' • ${l.completed(completedCount)}' : ''}',
+                    style: TextStyle(
+                      color: theme.colorScheme.onSurfaceVariant,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
