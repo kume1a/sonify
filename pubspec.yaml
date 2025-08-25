@@ -82,6 +82,8 @@ dependencies:
     path: ./packages/sonify_video_player
   domain_data:
     path: ./packages/domain_data
+  flappy_plane:
+    path: ./packages/flappy_plane
 
   global_navigator:
     git:

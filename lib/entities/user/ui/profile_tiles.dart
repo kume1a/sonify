@@ -114,6 +114,19 @@ class DevToolsTile extends StatelessWidget {
   }
 }
 
+class FlappyPlaneTile extends StatelessWidget {
+  const FlappyPlaneTile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return _ProfileTile(
+      iconAssetName: Assets.svgPlay,
+      label: 'Flappy Plane',
+      onPressed: context.profileTilesCubit.onFlappyPlaneTilePressed,
+    );
+  }
+}
+
 class SignOutTile extends StatelessWidget {
   const SignOutTile({super.key});
 

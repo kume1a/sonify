@@ -46,6 +46,7 @@ class _Content extends StatelessWidget {
           ImportLocalAudioFilesTile(),
           ImporSpotifyPlaylistsTile(),
           ChangeServerUrlOriginTile(),
+          FlappyPlaneTile(),
           if (kDebugMode) DevToolsTile(),
           SignOutTile(),
         ],

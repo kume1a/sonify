@@ -15,4 +15,5 @@ abstract class Routes {
   static const String searchPlaylistAudios = 'searchPlaylistAudios';
   static const String preferences = 'preferences';
   static const String devTools = 'devTools';
+  static const String flappyPlane = 'flappyPlane';
 }

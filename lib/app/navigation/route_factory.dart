@@ -4,6 +4,7 @@ import '../../pages/auth_page.dart';
 import '../../pages/dev_tools_page.dart';
 import '../../pages/downloads_page.dart';
 import '../../pages/email_sign_in_page.dart';
+import '../../pages/flappy_plane_page.dart';
 import '../../pages/import_local_music_page.dart';
 import '../../pages/main/main_page.dart';
 import '../../pages/my_library_page.dart';
@@ -33,6 +34,7 @@ Route<dynamic> routeFactory(RouteSettings settings) {
     Routes.searchPlaylistAudios => _createSearchPlaylistAudiosRoute(settings),
     Routes.preferences => _createPreferencesRoute(settings),
     Routes.devTools => _createDevToolsRoute(settings),
+    Routes.flappyPlane => _createFlappyPlaneRoute(settings),
     _ => throw Exception('route $settings is not supported'),
   };
 }
@@ -139,6 +141,13 @@ Route _createPreferencesRoute(RouteSettings settings) {
 Route _createDevToolsRoute(RouteSettings settings) {
   return MaterialPageRoute(
     builder: (_) => const DeveloperToolsPage(),
+    settings: settings,
+  );
+}
+
+Route _createFlappyPlaneRoute(RouteSettings settings) {
+  return MaterialPageRoute(
+    builder: (_) => FlappyPlanePage(),
     settings: settings,
   );
 }

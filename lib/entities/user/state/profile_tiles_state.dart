@@ -32,4 +32,8 @@ class ProfileTilesCubit extends Cubit<Unit> {
   void onDevToolsTilePressed() {
     _pageNavigator.toDevTools();
   }
+
+  void onFlappyPlaneTilePressed() {
+    _pageNavigator.toFlappyPlane();
+  }
 }

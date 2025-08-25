@@ -56,6 +56,8 @@ class PageNavigator {
 
   void toDevTools() => GlobalNavigator.pushNamed(Routes.devTools);
 
+  void toFlappyPlane() => GlobalNavigator.pushNamed(Routes.flappyPlane);
+
   void popUntilMain() {
     GlobalNavigator.popUntil((route) => route.settings.name == Routes.main);
   }
