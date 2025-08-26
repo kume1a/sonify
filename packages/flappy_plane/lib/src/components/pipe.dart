@@ -7,6 +7,7 @@ class Pipe extends SpriteComponent with HasGameReference<FlappyPlaneGame>, Colli
   final bool isTop;
   final double speed = 100;
   bool hasScored = false;
+  int pipeId = 0; // Identifier for pipe pairs
 
   Pipe({required Vector2 position, required Vector2 size, required this.isTop})
     : super(position: position, size: size);
@@ -23,8 +24,9 @@ class Pipe extends SpriteComponent with HasGameReference<FlappyPlaneGame>, Colli
       scale.y = -1;
     }
 
-    // Add collision detection
-    add(RectangleHitbox());
+    // Add collision detection with more accurate hitbox
+    final hitboxSize = Vector2(size.x * 0.8, size.y); // Slightly smaller hitbox for fairness
+    add(RectangleHitbox(size: hitboxSize, position: Vector2(size.x * 0.1, 0)));
   }
 
   @override
@@ -41,10 +43,15 @@ class Pipe extends SpriteComponent with HasGameReference<FlappyPlaneGame>, Colli
       }
 
       // Increase score when bird passes through the gap
-      if (!hasScored && position.x + size.x < game.bird.position.x) {
+      // Use the center of the bird instead of just position.x for more accurate scoring
+      final birdCenterX = game.bird.position.x + (game.bird.size.x / 2);
+      final pipeRight = position.x + size.x;
+
+      if (!hasScored && pipeRight < birdCenterX) {
         hasScored = true;
         if (!isTop) {
-          // Only count once per pipe pair
+          // Only count once per pipe pair - use bottom pipe
+          print('Bird passed pipe! Bird center: $birdCenterX, Pipe right: $pipeRight');
           game.increaseScore();
         }
       }

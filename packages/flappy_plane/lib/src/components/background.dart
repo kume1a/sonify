@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flame/components.dart';
 
 import '../flappy_plane_game.dart';
@@ -20,11 +18,11 @@ class Background extends Component with HasGameReference<FlappyPlaneGame> {
   Future<void> onLoad() async {
     layers = [];
 
-    // Create multiple layers with different speeds for parallax effect
+    // Restore the full city background experience with optimized settings
     for (int i = 0; i < backgroundImages.length; i++) {
       final layer = BackgroundLayer(
         imagePath: backgroundImages[i],
-        speed: 20 + (i * 15), // Different speeds for each layer
+        speed: 6 + (i * 3), // Slower, more manageable speeds
         depth: i,
       );
       await add(layer);
@@ -61,8 +59,16 @@ class BackgroundLayer extends SpriteComponent with HasGameReference<FlappyPlaneG
 
     await add(duplicate);
 
-    // Set opacity based on depth for layering effect
-    opacity = max(0.3, 1.0 - (depth * 0.15));
+    // Optimized city background with better opacity balance
+    if (depth == 0) {
+      opacity = 1.0; // Far background fully visible
+    } else if (depth <= 2) {
+      opacity = 0.9; // Mid layers mostly visible
+    } else if (depth <= 4) {
+      opacity = 0.7; // Building layers with good transparency
+    } else {
+      opacity = 0.5; // Foreground elements with transparency
+    }
   }
 
   @override

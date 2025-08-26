@@ -6,7 +6,6 @@ import 'package:flame/game.dart';
 
 import 'components/background.dart';
 import 'components/bird.dart';
-import 'components/ground.dart';
 import 'components/pipe.dart';
 
 enum GameState { mainMenu, playing, gameOver }
@@ -14,8 +13,7 @@ enum GameState { mainMenu, playing, gameOver }
 class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
   late Bird bird;
   late Background background;
-  late Ground ground;
-  Timer interval = Timer(1.5, repeat: true);
+  Timer interval = Timer(1.8, repeat: true); // Slightly slower spawn rate for better gameplay
   bool isHit = false;
   int score = 0;
   GameState gameState = GameState.mainMenu;
@@ -44,9 +42,6 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     bird = Bird();
     add(bird);
 
-    ground = Ground();
-    add(ground);
-
     interval.onTick = () => _spawnPipe();
 
     // Show main menu
@@ -57,21 +52,25 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     if (gameState != GameState.playing) return;
 
     final screenHeight = size.y;
-    final groundHeight = screenHeight * 0.2;
-    final availableHeight = screenHeight - groundHeight;
-    final pipeGap = 150.0;
+    final pipeGap = 120.0; // Classic Flappy Bird gap size
+    final pipeWidth = 80.0;
 
-    // Random position for the gap between pipes
-    final gapTop = Random().nextDouble() * (availableHeight - pipeGap - 100) + 50;
+    // Calculate safe bounds for pipe placement (leave room at top and bottom)
+    final safeMargin = 100.0;
+    final availableHeight = screenHeight - pipeGap - (2 * safeMargin);
+
+    // Random position for the gap between pipes with safe bounds
+    final gapTop = Random().nextDouble() * availableHeight + safeMargin;
     final gapBottom = gapTop + pipeGap;
 
+    // Create pipe pair
     // Top pipe
-    final topPipe = Pipe(position: Vector2(size.x, 0), size: Vector2(50, gapTop), isTop: true);
+    final topPipe = Pipe(position: Vector2(size.x, 0), size: Vector2(pipeWidth, gapTop), isTop: true);
 
     // Bottom pipe
     final bottomPipe = Pipe(
       position: Vector2(size.x, gapBottom),
-      size: Vector2(50, screenHeight - gapBottom - groundHeight),
+      size: Vector2(pipeWidth, screenHeight - gapBottom),
       isTop: false,
     );
 
@@ -138,6 +137,11 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
 
   void increaseScore() {
     score++;
+    print('Score increased to: $score'); // Debug print
+
+    // Force overlay update by removing and re-adding it
+    overlays.remove('Score');
+    overlays.add('Score');
   }
 
   @override
@@ -145,9 +149,9 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     super.update(dt);
     interval.update(dt);
 
-    // Check if bird hit the ground or went off screen
+    // Check if bird hit the bottom or went off screen top
     if (gameState == GameState.playing) {
-      if (bird.position.y > size.y - ground.size.y - bird.size.y || bird.position.y < 0) {
+      if (bird.position.y > size.y - bird.size.y || bird.position.y < 0) {
         gameOver();
       }
     }

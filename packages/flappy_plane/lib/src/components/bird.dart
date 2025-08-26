@@ -8,8 +8,8 @@ import 'pipe.dart';
 
 class Bird extends SpriteAnimationComponent with HasGameReference<FlappyPlaneGame>, CollisionCallbacks {
   double velocity = 0;
-  final double gravity = 980;
-  final double jumpForce = -300;
+  final double gravity = 860; // Slightly reduced gravity for smoother gameplay
+  final double jumpForce = -280; // Reduced for smoother jump
   final double maxVelocity = 300;
 
   @override
@@ -21,13 +21,13 @@ class Bird extends SpriteAnimationComponent with HasGameReference<FlappyPlaneGam
     final spriteAnimation = SpriteAnimation.spriteList([Sprite(sprite)], stepTime: 0.2);
 
     animation = spriteAnimation;
-    size = Vector2(40, 30);
+    size = Vector2(60, 45); // Increased size from 40x30
 
     // Flip the sprite horizontally to make it face right
     scale.x = -1;
 
-    // Add collision detection
-    add(RectangleHitbox());
+    // Add collision detection with smaller hitbox for better accuracy
+    add(RectangleHitbox(size: Vector2(50, 35)));
 
     // Position the bird
     reset();
@@ -42,8 +42,8 @@ class Bird extends SpriteAnimationComponent with HasGameReference<FlappyPlaneGam
   void flap() {
     velocity = jumpForce;
 
-    // Add a small rotation animation for visual effect
-    add(RotateEffect.to(-0.3, EffectController(duration: 0.1, curve: Curves.easeOut)));
+    // Add a smoother rotation animation for visual effect
+    add(RotateEffect.to(-0.2, EffectController(duration: 0.15, curve: Curves.easeOutCubic)));
   }
 
   @override
@@ -60,8 +60,9 @@ class Bird extends SpriteAnimationComponent with HasGameReference<FlappyPlaneGam
       // Update position
       position.y += velocity * dt;
 
-      // Rotate based on velocity for visual effect
-      angle = (velocity / maxVelocity) * 0.6;
+      // Rotate based on velocity for visual effect - smoother rotation
+      final targetAngle = (velocity / maxVelocity) * 0.4; // Reduced rotation amount
+      angle += (targetAngle - angle) * dt * 8; // Smooth interpolation
     }
   }
 
