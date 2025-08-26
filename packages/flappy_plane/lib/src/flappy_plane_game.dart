@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 
 import 'components/background.dart';
@@ -12,7 +11,7 @@ import 'components/pipe.dart';
 
 enum GameState { mainMenu, playing, gameOver }
 
-class FlappyPlaneGame extends FlameGame with HasCollisionDetection, TapDetector {
+class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
   late Bird bird;
   late Background background;
   late Ground ground;
@@ -80,8 +79,7 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection, TapDetector 
     add(bottomPipe);
   }
 
-  @override
-  void onTap() {
+  void handleTap() {
     if (gameState == GameState.mainMenu) {
       startGame();
     } else if (gameState == GameState.playing) {

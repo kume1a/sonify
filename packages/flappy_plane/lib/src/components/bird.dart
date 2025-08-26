@@ -17,11 +17,14 @@ class Bird extends SpriteAnimationComponent with HasGameReference<FlappyPlaneGam
     // Load the plane sprite using relative path (prefix is set in the game)
     final sprite = await game.images.load('plane.png');
 
-    // Create a simple animation by using the same sprite
+    // Create a simple animation by using the same sprite, flipped to face right
     final spriteAnimation = SpriteAnimation.spriteList([Sprite(sprite)], stepTime: 0.2);
 
     animation = spriteAnimation;
     size = Vector2(40, 30);
+
+    // Flip the sprite horizontally to make it face right
+    scale.x = -1;
 
     // Add collision detection
     add(RectangleHitbox());
