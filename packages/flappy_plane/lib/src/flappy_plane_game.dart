@@ -13,17 +13,15 @@ enum GameState { mainMenu, playing, gameOver }
 class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
   late Bird bird;
   late Background background;
-  Timer interval = Timer(1.8, repeat: true); // Slightly slower spawn rate for better gameplay
+  Timer interval = Timer(2.0, repeat: true);
   bool isHit = false;
   int score = 0;
   GameState gameState = GameState.mainMenu;
 
   @override
   Future<void> onLoad() async {
-    // Set the correct prefix for package assets - Flame will use this base path
     images.prefix = 'packages/flappy_plane/lib/assets/images/';
 
-    // Load and cache all images with relative paths
     await images.loadAll([
       'plane.png',
       'tower.png',
@@ -50,7 +48,7 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     if (gameState != GameState.playing) return;
 
     final screenHeight = size.y;
-    final pipeGap = 120.0; // Classic Flappy Bird gap size
+    final pipeGap = 220.0;
     final pipeWidth = 80.0;
 
     // Calculate safe bounds for pipe placement (leave room at top and bottom)
@@ -62,7 +60,7 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     final gapBottom = gapTop + pipeGap;
 
     // Create pipe pair
-    // Top pipe
+    // Top pipe - position at y=0 with the height going down to gapTop
     final topPipe = Pipe(position: Vector2(size.x, 0), size: Vector2(pipeWidth, gapTop), isTop: true);
 
     // Bottom pipe
@@ -82,7 +80,7 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     } else if (gameState == GameState.playing) {
       bird.flap();
     } else if (gameState == GameState.gameOver) {
-      resetGame(); // Re-enabled tap-to-restart for game over state
+      resetGame();
     }
   }
 
@@ -91,10 +89,12 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     overlays.remove('MainMenu');
     overlays.add('Score');
 
-    // Reset bird position and velocity
     bird.reset();
 
-    // Start spawning pipes
+    // Spawn the first pipe immediately
+    _spawnPipe();
+
+    // Start the timer for subsequent pipes
     interval.start();
   }
 
@@ -103,20 +103,14 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     overlays.remove('GameOver');
     overlays.remove('Score');
 
-    // Remove all pipes
     removeWhere((component) => component is Pipe);
 
-    // Reset score
     score = 0;
     isHit = false;
 
-    // Reset bird
     bird.reset();
-
-    // Stop spawning pipes
     interval.stop();
 
-    // Show main menu
     showMainMenu();
   }
 
@@ -135,9 +129,7 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
 
   void increaseScore() {
     score++;
-    print('Score increased to: $score'); // Debug print
 
-    // Force overlay update by removing and re-adding it
     overlays.remove('Score');
     overlays.add('Score');
   }
@@ -147,7 +139,6 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     super.update(dt);
     interval.update(dt);
 
-    // Check if bird hit the bottom or went off screen top
     if (gameState == GameState.playing) {
       if (bird.position.y > size.y - bird.size.y || bird.position.y < 0) {
         gameOver();
