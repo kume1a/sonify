@@ -11,6 +11,8 @@ class Bird extends SpriteAnimationComponent with HasGameReference<FlappyPlaneGam
   final double gravity = 860; // Slightly reduced gravity for smoother gameplay
   final double jumpForce = -350;
   final double maxVelocity = 300;
+  double timeSinceLastFlap = 0.0;
+  final double autoFallDelay = 0.3; // Time in seconds before auto-falling starts
 
   @override
   Future<void> onLoad() async {
@@ -34,13 +36,16 @@ class Bird extends SpriteAnimationComponent with HasGameReference<FlappyPlaneGam
   }
 
   void reset() {
-    position = Vector2(game.size.x * 0.2, game.size.y * 0.5);
+    // Position the bird slightly left of center (30% from left instead of 20%)
+    position = Vector2(game.size.x * 0.35, game.size.y * 0.5);
     velocity = 0;
     angle = 0;
+    timeSinceLastFlap = 0.0;
   }
 
   void flap() {
     velocity = jumpForce;
+    timeSinceLastFlap = 0.0; // Reset the timer when flapping
 
     // Add a smoother rotation animation for visual effect
     add(RotateEffect.to(-0.2, EffectController(duration: 0.15, curve: Curves.easeOutCubic)));
@@ -51,8 +56,17 @@ class Bird extends SpriteAnimationComponent with HasGameReference<FlappyPlaneGam
     super.update(dt);
 
     if (game.gameState == GameState.playing) {
-      // Apply gravity
-      velocity += gravity * dt;
+      // Update time since last flap
+      timeSinceLastFlap += dt;
+
+      // Apply gravity - stronger gravity after the auto-fall delay
+      double currentGravity = gravity;
+      if (timeSinceLastFlap > autoFallDelay) {
+        // Increase gravity slightly after no flap for a while (Flappy Bird behavior)
+        currentGravity = gravity * 1.2;
+      }
+
+      velocity += currentGravity * dt;
 
       // Limit velocity
       velocity = velocity.clamp(-maxVelocity, maxVelocity);
