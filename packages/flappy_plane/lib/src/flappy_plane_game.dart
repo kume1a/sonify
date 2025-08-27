@@ -33,7 +33,6 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
       'background/4.png',
       'background/5.png',
       'background/6.png',
-      'background/7.png',
     ]);
 
     background = Background();
@@ -44,7 +43,6 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
 
     interval.onTick = () => _spawnPipe();
 
-    // Show main menu
     showMainMenu();
   }
 

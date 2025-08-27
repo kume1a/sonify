@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
 The package includes the following assets:
 - `lib/assets/plane.png` - The plane sprite (bird)
 - `lib/assets/tower.png` - The tower sprite (pipes)
-- `lib/assets/background/1.png` to `lib/assets/background/7.png` - Background layers for parallax effect
+- `lib/assets/background/1.png` to `lib/assets/background/6.png` - Background layers for parallax effect
 
 ### Game Components
 

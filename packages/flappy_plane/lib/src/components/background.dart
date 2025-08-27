@@ -11,20 +11,14 @@ class Background extends Component with HasGameReference<FlappyPlaneGame> {
     'background/4.png',
     'background/5.png',
     'background/6.png',
-    'background/7.png',
   ];
 
   @override
   Future<void> onLoad() async {
     layers = [];
 
-    // Restore the full city background experience with optimized settings
     for (int i = 0; i < backgroundImages.length; i++) {
-      final layer = BackgroundLayer(
-        imagePath: backgroundImages[i],
-        speed: 6 + (i * 3), // Slower, more manageable speeds
-        depth: i,
-      );
+      final layer = BackgroundLayer(imagePath: backgroundImages[i], speed: 6 + (i * 3), depth: i);
       await add(layer);
       layers.add(layer);
     }
@@ -59,16 +53,16 @@ class BackgroundLayer extends SpriteComponent with HasGameReference<FlappyPlaneG
 
     await add(duplicate);
 
-    // Optimized city background with better opacity balance
-    if (depth == 0) {
-      opacity = 1.0; // Far background fully visible
-    } else if (depth <= 2) {
-      opacity = 0.9; // Mid layers mostly visible
-    } else if (depth <= 4) {
-      opacity = 0.7; // Building layers with good transparency
-    } else {
-      opacity = 0.5; // Foreground elements with transparency
-    }
+    // // Optimized city background with better opacity balance
+    // if (depth == 0) {
+    //   opacity = 1.0; // Far background fully visible
+    // } else if (depth <= 2) {
+    //   opacity = 0.9; // Mid layers mostly visible
+    // } else if (depth <= 4) {
+    //   opacity = 0.7; // Building layers with good transparency
+    // } else {
+    //   opacity = 0.5; // Foreground elements with transparency
+    // }
   }
 
   @override

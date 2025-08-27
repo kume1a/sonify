@@ -9,7 +9,7 @@ import 'pipe.dart';
 class Bird extends SpriteAnimationComponent with HasGameReference<FlappyPlaneGame>, CollisionCallbacks {
   double velocity = 0;
   final double gravity = 860; // Slightly reduced gravity for smoother gameplay
-  final double jumpForce = -280; // Reduced for smoother jump
+  final double jumpForce = -350;
   final double maxVelocity = 300;
 
   @override
@@ -21,13 +21,13 @@ class Bird extends SpriteAnimationComponent with HasGameReference<FlappyPlaneGam
     final spriteAnimation = SpriteAnimation.spriteList([Sprite(sprite)], stepTime: 0.2);
 
     animation = spriteAnimation;
-    size = Vector2(60, 45); // Increased size from 40x30
+    size = Vector2(100, 40);
 
     // Flip the sprite horizontally to make it face right
     scale.x = -1;
 
     // Add collision detection with smaller hitbox for better accuracy
-    add(RectangleHitbox(size: Vector2(50, 35)));
+    add(RectangleHitbox(size: Vector2(100, 40)));
 
     // Position the bird
     reset();
