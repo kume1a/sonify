@@ -8,7 +8,7 @@ import 'components/background.dart';
 import 'components/bird.dart';
 import 'components/pipe.dart';
 
-enum GameState { mainMenu, playing, gameOver }
+enum GameState { intro, mainMenu, playing, gameOver }
 
 class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
   late Bird bird;
@@ -16,7 +16,7 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
   Timer interval = Timer(2.0, repeat: true);
   bool isHit = false;
   int score = 0;
-  GameState gameState = GameState.mainMenu;
+  GameState gameState = GameState.intro;
 
   @override
   Future<void> onLoad() async {
@@ -25,6 +25,7 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     await images.loadAll([
       'plane.png',
       'tower.png',
+      'osama.png',
       'background/1.png',
       'background/2.png',
       'background/3.png',
@@ -41,7 +42,7 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
 
     interval.onTick = () => _spawnPipe();
 
-    showMainMenu();
+    showIntro();
   }
 
   void _spawnPipe() {
@@ -75,7 +76,9 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
   }
 
   void handleTap() {
-    if (gameState == GameState.mainMenu) {
+    if (gameState == GameState.intro) {
+      showMainMenu();
+    } else if (gameState == GameState.mainMenu) {
       startGame();
     } else if (gameState == GameState.playing) {
       bird.flap();
@@ -114,7 +117,13 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     showMainMenu();
   }
 
+  void showIntro() {
+    overlays.add('Intro');
+  }
+
   void showMainMenu() {
+    gameState = GameState.mainMenu;
+    overlays.remove('Intro');
     overlays.add('MainMenu');
   }
 

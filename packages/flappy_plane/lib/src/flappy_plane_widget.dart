@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'flappy_plane_game.dart';
 import 'screens/game_over_screen.dart';
+import 'screens/intro_screen.dart';
 import 'screens/main_menu_screen.dart';
 import 'screens/score_display.dart';
 
@@ -31,6 +32,7 @@ class _FlappyPlaneWidgetState extends State<FlappyPlaneWidget> {
       child: GameWidget<FlappyPlaneGame>.controlled(
         gameFactory: () => game,
         overlayBuilderMap: {
+          'Intro': (context, game) => IntroScreen(onStart: () => game.showMainMenu()),
           'MainMenu': (context, game) => MainMenuScreen(onStart: () => game.startGame()),
           'GameOver': (context, game) =>
               GameOverScreen(score: game.score, onRestart: () => game.resetGame(), onGoBack: widget.onGoBack),
