@@ -7,7 +7,9 @@ import 'screens/main_menu_screen.dart';
 import 'screens/score_display.dart';
 
 class FlappyPlaneWidget extends StatefulWidget {
-  const FlappyPlaneWidget({super.key});
+  final VoidCallback? onGoBack;
+
+  const FlappyPlaneWidget({super.key, this.onGoBack});
 
   @override
   State<FlappyPlaneWidget> createState() => _FlappyPlaneWidgetState();
@@ -30,7 +32,8 @@ class _FlappyPlaneWidgetState extends State<FlappyPlaneWidget> {
         gameFactory: () => game,
         overlayBuilderMap: {
           'MainMenu': (context, game) => MainMenuScreen(onStart: () => game.startGame()),
-          'GameOver': (context, game) => GameOverScreen(score: game.score, onRestart: () => game.resetGame()),
+          'GameOver': (context, game) =>
+              GameOverScreen(score: game.score, onRestart: () => game.resetGame(), onGoBack: widget.onGoBack),
           'Score': (context, game) => ScoreDisplay(score: game.score),
         },
       ),

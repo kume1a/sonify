@@ -82,7 +82,7 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     } else if (gameState == GameState.playing) {
       bird.flap();
     } else if (gameState == GameState.gameOver) {
-      resetGame();
+      resetGame(); // Re-enabled tap-to-restart for game over state
     }
   }
 
