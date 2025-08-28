@@ -4,6 +4,8 @@ import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 
+import '../constants/assets.dart';
+
 class Explosion extends SpriteAnimationComponent with HasGameReference {
   static const int frameCount = 12;
   static const double frameDuration = 0.1;
@@ -16,7 +18,7 @@ class Explosion extends SpriteAnimationComponent with HasGameReference {
 
   @override
   Future<void> onLoad() async {
-    final image = await game.images.load('explosion_atlas.png');
+    final image = await game.images.load(FlappyPlaneAssets.explosionAtlasPng);
 
     final frameWidth = image.width / frameCount;
     final frameHeight = image.height.toDouble();
@@ -35,7 +37,7 @@ class Explosion extends SpriteAnimationComponent with HasGameReference {
     anchor = Anchor.center;
 
     if (!_hasPlayed) {
-      FlameAudio.play('explosion.mp3', volume: 0.3);
+      FlameAudio.play(FlappyPlaneAssets.explosionMp3, volume: 0.3);
       _hasPlayed = true;
     }
 

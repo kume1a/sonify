@@ -1,24 +1,21 @@
 import 'package:flame/components.dart';
 
+import '../constants/assets.dart';
 import '../flappy_plane_game.dart';
 
 class Background extends Component with HasGameReference<FlappyPlaneGame> {
   late List<BackgroundLayer> layers;
-  final List<String> backgroundImages = [
-    'background/1.png',
-    'background/2.png',
-    'background/3.png',
-    'background/4.png',
-    'background/5.png',
-    'background/6.png',
-  ];
 
   @override
   Future<void> onLoad() async {
     layers = [];
 
-    for (int i = 0; i < backgroundImages.length; i++) {
-      final layer = BackgroundLayer(imagePath: backgroundImages[i], speed: 6 + (i * 3), depth: i);
+    for (int i = 0; i < FlappyPlaneAssets.backgroundImages.length; i++) {
+      final layer = BackgroundLayer(
+        imagePath: FlappyPlaneAssets.backgroundImages[i],
+        speed: 6 + (i * 3),
+        depth: i,
+      );
       await add(layer);
       layers.add(layer);
     }

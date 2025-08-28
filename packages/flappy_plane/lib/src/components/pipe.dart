@@ -1,6 +1,7 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
+import '../constants/assets.dart';
 import '../flappy_plane_game.dart';
 
 class Pipe extends SpriteComponent with HasGameReference<FlappyPlaneGame>, CollisionCallbacks {
@@ -14,7 +15,7 @@ class Pipe extends SpriteComponent with HasGameReference<FlappyPlaneGame>, Colli
 
   @override
   Future<void> onLoad() async {
-    final sprite = await game.images.load('tower.png');
+    final sprite = await game.images.load(FlappyPlaneAssets.towerPng);
 
     this.sprite = Sprite(sprite);
 

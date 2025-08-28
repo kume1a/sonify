@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants/assets.dart';
+
 class IntroScreen extends StatelessWidget {
   final VoidCallback onStart;
 
@@ -29,12 +31,7 @@ class IntroScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 24, color: Colors.red, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
-              Image.asset(
-                'packages/flappy_plane/lib/assets/images/osama.png',
-                width: 200,
-                height: 200,
-                fit: BoxFit.cover,
-              ),
+              Image.asset(FlappyPlaneAssets.osamaFullPath, width: 200, height: 200, fit: BoxFit.cover),
               const Spacer(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 60),

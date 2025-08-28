@@ -3,6 +3,7 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
 
+import '../constants/assets.dart';
 import '../flappy_plane_game.dart';
 import 'pipe.dart';
 
@@ -21,7 +22,7 @@ class Bird extends SpriteAnimationComponent with HasGameReference<FlappyPlaneGam
 
   @override
   Future<void> onLoad() async {
-    final sprite = await game.images.load('plane.png');
+    final sprite = await game.images.load(FlappyPlaneAssets.planePng);
 
     final spriteAnimation = SpriteAnimation.spriteList([Sprite(sprite)], stepTime: 0.2);
 

@@ -2,6 +2,7 @@ import 'package:domain_data/domain_data.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../user_preference_constants.dart';
 import 'user_preferences_store.dart';
 
 @LazySingleton(as: UserPreferencesStore)
@@ -24,35 +25,35 @@ class SharedprefsUserPreferencesStore implements UserPreferencesStore {
   Future<bool> isRepeatEnabled() {
     final value = _sharedPreferences.getBool(_keyIsRepeatEnabled);
 
-    return Future.value(value ?? false);
+    return Future.value(value ?? UserPreferenceConstants.defaultIsRepeatEnabled);
   }
 
   @override
   Future<bool> isSaveRepeatStateEnabled() {
     final value = _sharedPreferences.getBool(_keyIsSaveRepeatStateEnabled);
 
-    return Future.value(value ?? false);
+    return Future.value(value ?? UserPreferenceConstants.defaultIsSaveRepeatStateEnabled);
   }
 
   @override
   Future<bool> isSaveShuffleStateEnabled() {
     final value = _sharedPreferences.getBool(_keyIsSaveShuffleStateEnabled);
 
-    return Future.value(value ?? false);
+    return Future.value(value ?? UserPreferenceConstants.defaultIsSaveShuffleStateEnabled);
   }
 
   @override
   Future<bool> isSearchHistoryEnabled() {
     final value = _sharedPreferences.getBool(_keyIsSearchHistoryEnabled);
 
-    return Future.value(value ?? false);
+    return Future.value(value ?? UserPreferenceConstants.defaultIsSearchHistoryEnabled);
   }
 
   @override
   Future<bool> isShuffleEnabled() {
     final value = _sharedPreferences.getBool(_keyIsShuffleEnabled);
 
-    return Future.value(value ?? false);
+    return Future.value(value ?? UserPreferenceConstants.defaultIsShuffleEnabled);
   }
 
   @override
@@ -84,7 +85,7 @@ class SharedprefsUserPreferencesStore implements UserPreferencesStore {
   Future<int> getMaxConcurrentDownloadCount() {
     final value = _sharedPreferences.getInt(_keyMaxConcurrentDownloadCount);
 
-    return Future.value(value ?? 1);
+    return Future.value(value ?? UserPreferenceConstants.defaultMaxConcurrentDownloadCount);
   }
 
   @override
@@ -97,7 +98,7 @@ class SharedprefsUserPreferencesStore implements UserPreferencesStore {
     final value = _sharedPreferences.getInt(_keyAudioSort);
 
     if (value == null) {
-      return Future.value(AudioSort.title);
+      return Future.value(UserPreferenceConstants.defaultAudioSort);
     }
 
     return Future.value(AudioSort.values[value]);

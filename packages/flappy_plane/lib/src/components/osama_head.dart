@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 
+import '../constants/assets.dart';
+
 class OsamaHead extends SpriteComponent with HasGameReference {
   static const double _fadeDuration = 1.0;
   static const double _displayDuration = 2.0;
@@ -14,7 +16,7 @@ class OsamaHead extends SpriteComponent with HasGameReference {
 
   @override
   Future<void> onLoad() async {
-    sprite = await Sprite.load('osama_head.png');
+    sprite = await Sprite.load(FlappyPlaneAssets.osamaHeadPng);
 
     size = Vector2(200, 200);
     position = Vector2((game.size.x - size.x) / 2, (game.size.y - size.y) / 3);
@@ -27,7 +29,7 @@ class OsamaHead extends SpriteComponent with HasGameReference {
 
     _isVisible = true;
 
-    FlameAudio.play('alahuakbar.mp3');
+    FlameAudio.play(FlappyPlaneAssets.alahuakbarMp3);
 
     _fadeIn();
   }

@@ -11,6 +11,7 @@ import 'components/bird.dart';
 import 'components/explosion.dart';
 import 'components/osama_head.dart';
 import 'components/pipe.dart';
+import 'constants/assets.dart';
 
 enum GameState { intro, mainMenu, playing, gameOver }
 
@@ -24,22 +25,10 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
 
   @override
   Future<void> onLoad() async {
-    images.prefix = 'packages/flappy_plane/lib/assets/images/';
-    FlameAudio.audioCache.prefix = 'packages/flappy_plane/lib/assets/sound/';
+    images.prefix = FlappyPlaneAssets.imagePrefix;
+    FlameAudio.audioCache.prefix = FlappyPlaneAssets.soundPrefix;
 
-    await images.loadAll([
-      'plane.png',
-      'tower.png',
-      'osama.png',
-      'osama_head.png',
-      'explosion_atlas.png',
-      'background/1.png',
-      'background/2.png',
-      'background/3.png',
-      'background/4.png',
-      'background/5.png',
-      'background/6.png',
-    ]);
+    await images.loadAll(FlappyPlaneAssets.allImages);
 
     background = Background();
     add(background);
