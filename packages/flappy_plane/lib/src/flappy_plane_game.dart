@@ -4,9 +4,11 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame_audio/flame_audio.dart';
+import 'package:flutter/material.dart';
 
 import 'components/background.dart';
 import 'components/bird.dart';
+import 'components/explosion.dart';
 import 'components/osama_head.dart';
 import 'components/pipe.dart';
 
@@ -30,6 +32,7 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
       'tower.png',
       'osama.png',
       'osama_head.png',
+      'explosion_atlas.png',
       'background/1.png',
       'background/2.png',
       'background/3.png',
@@ -113,6 +116,7 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     overlays.remove('Score');
 
     removeWhere((component) => component is Pipe);
+    removeWhere((component) => component is Explosion);
 
     score = 0;
     isHit = false;
@@ -133,13 +137,28 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     overlays.add('MainMenu');
   }
 
-  void gameOver() {
+  void gameOver([Vector2? collisionPoint]) {
     if (gameState == GameState.gameOver) return;
 
     gameState = GameState.gameOver;
     interval.stop();
     overlays.remove('Score');
-    overlays.add('GameOver');
+
+    // Create explosion at collision point if provided
+    if (collisionPoint != null) {
+      createExplosion(collisionPoint, () {
+        // Show game over overlay after explosion completes
+        overlays.add('GameOver');
+      });
+    } else {
+      // No explosion, show game over immediately
+      overlays.add('GameOver');
+    }
+  }
+
+  void createExplosion(Vector2 position, [VoidCallback? onComplete]) {
+    final explosion = Explosion(position: position, onComplete: onComplete);
+    add(explosion);
   }
 
   void increaseScore() {
@@ -155,8 +174,18 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     interval.update(dt);
 
     if (gameState == GameState.playing) {
-      if (bird.position.y > size.y - bird.size.y || bird.position.y < 0) {
-        gameOver();
+      if (!bird.isCrashed && (bird.position.y > size.y - bird.size.y || bird.position.y < 0)) {
+        // Calculate explosion point at the tip/nose of the plane for boundary collision
+        final explosionPoint = Vector2(
+          bird.position.x + bird.size.x * 0.1, // Near the nose
+          bird.position.y + bird.size.y / 2, // Center vertically
+        );
+
+        // Set crashed state
+        bird.isCrashed = true;
+        bird.angularVelocity = 2.0;
+
+        gameOver(explosionPoint);
       }
     }
   }
