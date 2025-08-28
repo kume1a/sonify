@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 import 'components/background.dart';
 import 'components/bird.dart';
@@ -21,6 +22,7 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
   @override
   Future<void> onLoad() async {
     images.prefix = 'packages/flappy_plane/lib/assets/images/';
+    FlameAudio.audioCache.prefix = 'packages/flappy_plane/lib/assets/sound/';
 
     await images.loadAll([
       'plane.png',
