@@ -4,8 +4,8 @@ import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 
 class OsamaHead extends SpriteComponent with HasGameReference {
-  static const double _fadeDuration = 1.0; // Duration for fade in/out in seconds
-  static const double _displayDuration = 2.0; // Duration to display the head
+  static const double _fadeDuration = 1.0;
+  static const double _displayDuration = 2.0;
 
   bool _isVisible = false;
   Timer? _fadeTimer;
@@ -39,7 +39,6 @@ class OsamaHead extends SpriteComponent with HasGameReference {
     _fadeTimer = Timer(
       _fadeDuration,
       onTick: () {
-        // Fade in complete, start display timer
         _displayTimer = Timer(
           _displayDuration,
           onTick: () {
@@ -60,7 +59,6 @@ class OsamaHead extends SpriteComponent with HasGameReference {
     _fadeTimer = Timer(
       _fadeDuration,
       onTick: () {
-        // Fade out complete, hide the component
         _isVisible = false;
         opacity = 0.0;
         removeFromParent();
@@ -77,19 +75,15 @@ class OsamaHead extends SpriteComponent with HasGameReference {
     _fadeTimer?.update(dt);
     _displayTimer?.update(dt);
 
-    // Update opacity based on current state and timer progress
     if (_fadeTimer != null && _fadeTimer!.isRunning()) {
       double progress = _fadeTimer!.progress;
 
       if (_isFadingOut) {
-        // Fade out
         opacity = 1.0 - progress;
       } else {
-        // Fade in
         opacity = progress;
       }
     } else if (_displayTimer != null && _displayTimer!.isRunning()) {
-      // Fully visible during display period
       opacity = 1.0;
     }
   }

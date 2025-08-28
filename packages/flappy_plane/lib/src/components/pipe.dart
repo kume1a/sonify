@@ -20,8 +20,7 @@ class Pipe extends SpriteComponent with HasGameReference<FlappyPlaneGame>, Colli
 
     if (isTop) {
       scale.y = -1;
-      // For top pipe, anchor at topLeft and adjust position
-      position.y += size.y; // Move down by the height since we're flipping
+      position.y += size.y;
     }
 
     final hitboxSize = Vector2(size.x * 0.8, size.y);

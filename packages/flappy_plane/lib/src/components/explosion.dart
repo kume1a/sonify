@@ -5,8 +5,8 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 
 class Explosion extends SpriteAnimationComponent with HasGameReference {
-  static const int frameCount = 12; // Number of frames in the explosion atlas
-  static const double frameDuration = 0.1; // Duration per frame in seconds
+  static const int frameCount = 12;
+  static const double frameDuration = 0.1;
 
   bool _hasPlayed = false;
   Timer? _removalTimer;
@@ -16,14 +16,11 @@ class Explosion extends SpriteAnimationComponent with HasGameReference {
 
   @override
   Future<void> onLoad() async {
-    // Load the explosion atlas
     final image = await game.images.load('explosion_atlas.png');
 
-    // Calculate frame dimensions (assuming horizontal strip layout)
     final frameWidth = image.width / frameCount;
     final frameHeight = image.height.toDouble();
 
-    // Create sprites for each frame
     final List<Sprite> sprites = [];
     for (int i = 0; i < frameCount; i++) {
       sprites.add(
@@ -31,26 +28,21 @@ class Explosion extends SpriteAnimationComponent with HasGameReference {
       );
     }
 
-    // Create the animation
     animation = SpriteAnimation.spriteList(sprites, stepTime: frameDuration, loop: false);
 
-    // Set size (adjust as needed)
     size = Vector2(120, 120);
 
-    // Center the explosion on the collision point
     anchor = Anchor.center;
 
-    // Play explosion sound with lower volume
     if (!_hasPlayed) {
       FlameAudio.play('explosion.mp3', volume: 0.3);
       _hasPlayed = true;
     }
 
-    // Set up removal timer
     _removalTimer = Timer(
-      frameCount * frameDuration + 0.1, // Add small buffer
+      frameCount * frameDuration + 0.1,
       onTick: () {
-        onComplete?.call(); // Call completion callback before removal
+        onComplete?.call();
         removeFromParent();
       },
     );

@@ -61,19 +61,14 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     final pipeGap = 220.0;
     final pipeWidth = 80.0;
 
-    // Calculate safe bounds for pipe placement (leave room at top and bottom)
     final safeMargin = 100.0;
     final availableHeight = screenHeight - pipeGap - (2 * safeMargin);
 
-    // Random position for the gap between pipes with safe bounds
     final gapTop = Random().nextDouble() * availableHeight + safeMargin;
     final gapBottom = gapTop + pipeGap;
 
-    // Create pipe pair
-    // Top pipe - position at y=0 with the height going down to gapTop
     final topPipe = Pipe(position: Vector2(size.x, 0), size: Vector2(pipeWidth, gapTop), isTop: true);
 
-    // Bottom pipe
     final bottomPipe = Pipe(
       position: Vector2(size.x, gapBottom),
       size: Vector2(pipeWidth, screenHeight - gapBottom),
@@ -144,14 +139,11 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     interval.stop();
     overlays.remove('Score');
 
-    // Create explosion at collision point if provided
     if (collisionPoint != null) {
       createExplosion(collisionPoint, () {
-        // Show game over overlay after explosion completes
         overlays.add('GameOver');
       });
     } else {
-      // No explosion, show game over immediately
       overlays.add('GameOver');
     }
   }
@@ -175,13 +167,11 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
 
     if (gameState == GameState.playing) {
       if (!bird.isCrashed && (bird.position.y > size.y - bird.size.y || bird.position.y < 0)) {
-        // Calculate explosion point at the tip/nose of the plane for boundary collision
         final explosionPoint = Vector2(
-          bird.position.x + bird.size.x * 0.1, // Near the nose
-          bird.position.y + bird.size.y / 2, // Center vertically
+          bird.position.x + bird.size.x * 0.1,
+          bird.position.y + bird.size.y / 2,
         );
 
-        // Set crashed state
         bird.isCrashed = true;
         bird.angularVelocity = 2.0;
 

@@ -13,10 +13,8 @@ class Ground extends RectangleComponent with HasGameReference<FlappyPlaneGame>, 
     size = Vector2(screenSize.x, groundHeight);
     position = Vector2(0, screenSize.y - groundHeight);
 
-    // Make it a brown/tan color for ground
     paint = Paint()..color = const Color(0xFF8B4513);
 
-    // Add collision detection
     add(RectangleHitbox());
   }
 }

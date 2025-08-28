@@ -35,11 +35,9 @@ class BackgroundLayer extends SpriteComponent with HasGameReference<FlappyPlaneG
 
   @override
   Future<void> onLoad() async {
-    // Load the background sprite
     final image = await game.images.load(imagePath);
     sprite = Sprite(image);
 
-    // Scale to fit the screen height
     final screenSize = game.size;
     final imageWidth = image.width.toDouble();
     final imageHeight = image.height.toDouble();
@@ -48,21 +46,9 @@ class BackgroundLayer extends SpriteComponent with HasGameReference<FlappyPlaneG
     size = Vector2(imageWidth * scale, screenSize.y);
     position = Vector2(0, 0);
 
-    // Create a duplicate for seamless scrolling
     duplicate = SpriteComponent(sprite: sprite, size: size, position: Vector2(size.x, 0));
 
     await add(duplicate);
-
-    // // Optimized city background with better opacity balance
-    // if (depth == 0) {
-    //   opacity = 1.0; // Far background fully visible
-    // } else if (depth <= 2) {
-    //   opacity = 0.9; // Mid layers mostly visible
-    // } else if (depth <= 4) {
-    //   opacity = 0.7; // Building layers with good transparency
-    // } else {
-    //   opacity = 0.5; // Foreground elements with transparency
-    // }
   }
 
   @override
@@ -70,11 +56,9 @@ class BackgroundLayer extends SpriteComponent with HasGameReference<FlappyPlaneG
     super.update(dt);
 
     if (game.gameState == GameState.playing) {
-      // Move both sprites to the left
       position.x -= speed * dt;
       duplicate.position.x -= speed * dt;
 
-      // Reset position when sprite goes off screen for seamless loop
       if (position.x <= -size.x) {
         position.x = duplicate.position.x + size.x;
       }

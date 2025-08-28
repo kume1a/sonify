@@ -12,7 +12,7 @@ class GameOverScreen extends StatelessWidget {
     return Material(
       color: Colors.black54,
       child: GestureDetector(
-        onTap: onRestart, // Tap anywhere outside to restart
+        onTap: onRestart,
         child: Center(
           child: GestureDetector(
             onTap: () {}, // Prevent tap propagation from the popup itself
@@ -33,7 +33,6 @@ class GameOverScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   Text('Score: $score', style: const TextStyle(fontSize: 28, color: Colors.white)),
                   const SizedBox(height: 30),
-                  // Go Back Button in the middle
                   if (onGoBack != null)
                     GestureDetector(
                       onTap: onGoBack,
@@ -51,7 +50,6 @@ class GameOverScreen extends StatelessWidget {
                       ),
                     ),
                   const SizedBox(height: 30),
-                  // Caption about tapping outside
                   const Text(
                     'Tap outside to try again',
                     style: TextStyle(fontSize: 18, color: Colors.white70),
