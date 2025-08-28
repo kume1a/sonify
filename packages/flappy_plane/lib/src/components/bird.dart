@@ -76,18 +76,23 @@ class Bird extends SpriteAnimationComponent with HasGameReference<FlappyPlaneGam
       final targetAngle = (velocity / maxVelocity) * 0.4;
       angle += (targetAngle - angle) * dt * 8;
     } else if (isCrashed) {
-      velocity += crashGravity * dt;
-      velocity = velocity.clamp(-maxCrashVelocity, maxCrashVelocity);
+      // Check if the plane has hit the ground
+      final groundY = game.size.y - size.y;
 
-      position.y += velocity * dt;
+      if (position.y < groundY) {
+        // Still falling
+        velocity += crashGravity * dt;
+        velocity = velocity.clamp(-maxCrashVelocity, maxCrashVelocity);
+        position.y += velocity * dt;
 
-      angularVelocity += 3.0 * dt;
-      angle += angularVelocity * dt;
-
-      if (position.y > game.size.y - size.y) {
-        position.y = game.size.y - size.y;
+        angularVelocity += 3.0 * dt;
+        angle += angularVelocity * dt;
+      } else {
+        // Hit the ground, stop all movement
+        position.y = groundY;
         velocity = 0;
-        angularVelocity *= 0.8;
+        angularVelocity = 0;
+        // Keep the final rotation angle, don't reset it
       }
     }
   }
@@ -100,6 +105,9 @@ class Bird extends SpriteAnimationComponent with HasGameReference<FlappyPlaneGam
 
       isCrashed = true;
       angularVelocity = 2.0;
+
+      // Move the bird to the front so it renders on top of pipes
+      game.bringBirdToFront();
 
       game.gameOver(explosionPoint);
       return true;

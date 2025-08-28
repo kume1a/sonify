@@ -149,6 +149,12 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
     overlays.add('Score');
   }
 
+  void bringBirdToFront() {
+    // Remove the bird from its current position and add it back to render on top
+    remove(bird);
+    add(bird);
+  }
+
   @override
   void update(double dt) {
     super.update(dt);
