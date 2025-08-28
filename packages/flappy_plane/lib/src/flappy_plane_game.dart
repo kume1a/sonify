@@ -7,6 +7,7 @@ import 'package:flame_audio/flame_audio.dart';
 
 import 'components/background.dart';
 import 'components/bird.dart';
+import 'components/osama_head.dart';
 import 'components/pipe.dart';
 
 enum GameState { intro, mainMenu, playing, gameOver }
@@ -14,7 +15,7 @@ enum GameState { intro, mainMenu, playing, gameOver }
 class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
   late Bird bird;
   late Background background;
-  Timer interval = Timer(2.0, repeat: true);
+  Timer interval = Timer(2.75, repeat: true);
   bool isHit = false;
   int score = 0;
   GameState gameState = GameState.intro;
@@ -28,6 +29,7 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
       'plane.png',
       'tower.png',
       'osama.png',
+      'osama_head.png',
       'background/1.png',
       'background/2.png',
       'background/3.png',
@@ -41,6 +43,8 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
 
     bird = Bird();
     add(bird);
+
+    _spawnPipe();
 
     interval.onTick = () => _spawnPipe();
 
@@ -96,10 +100,10 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
 
     bird.reset();
 
-    // Spawn the first pipe immediately
-    _spawnPipe();
+    final osamaHead = OsamaHead();
+    add(osamaHead);
+    osamaHead.show();
 
-    // Start the timer for subsequent pipes
     interval.start();
   }
 
