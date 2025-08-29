@@ -30,7 +30,6 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.24.0'  # Use a specific stable version
           architecture: x64
           cache: true
 
