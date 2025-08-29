@@ -202,7 +202,7 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
     await _userAudioLocalRepository.deleteById(userAudio.id!).awaitFold(
       () => _toastNotifier.error(description: (l) => l.failedToDelete, title: (l) => l.error),
       () async {
-        final audios = await state.map((data) => List.of(data)..remove(userAudio));
+        final audios = state.map((data) => List.of(data)..remove(userAudio));
 
         emit(audios);
 

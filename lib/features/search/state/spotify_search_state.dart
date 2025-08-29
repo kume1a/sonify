@@ -111,7 +111,7 @@ class SpotifySearchCubit extends Cubit<SpotifySearchState> {
           description: (l) => l.importingSpotifyPlaylist,
         );
 
-        final newState = await state.map((data) {
+        final newState = state.map((data) {
           final newPlaylists = data.playlists.replace(
             (e) => e.spotifyId == playlistSearchResult.spotifyId,
             (searchedPlaylist) => searchedPlaylist.copyWith(playlistId: r.id),
