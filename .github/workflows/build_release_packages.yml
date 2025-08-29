@@ -36,19 +36,28 @@ jobs:
       - name: Extract version from pubspec.yaml
         run: echo "VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')" >> $GITHUB_ENV
 
-      - run: flutter pub get
-
       - name: Install flutterfire cli
         run: dart pub global activate flutterfire_cli
 
-      - name: Check Xcode and iOS SDKs
-        run: |
-          xcode-select --print-path
-          xcodebuild -version
-          xcodebuild -showsdks | grep iOS
-
-      - run: pod repo update
+      - name: Clean iOS build cache
         working-directory: ios
+        run: |
+          rm -rf Pods/
+          rm -rf .symlinks/
+          rm -rf Flutter/Flutter.framework
+          rm -rf Flutter/Flutter.podspec
+          rm -f Podfile.lock
+
+      - name: Update dependencies and get
+        run: |
+          flutter pub upgrade
+          flutter clean
+          flutter pub get
+
+      - name: Install pods with updated Firebase versions
+        working-directory: ios
+        run: |
+          pod install --repo-update --clean-install
 
       - name: build runner in root
         run: dart run build_runner build
