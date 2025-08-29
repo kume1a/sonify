@@ -7,7 +7,7 @@ on:
 jobs:
   build-packages:
     name: IPA & APK Build
-    runs-on: macos-latest
+    runs-on: macos-14
     environment: production
     steps:
       - uses: actions/checkout@v3
@@ -41,6 +41,12 @@ jobs:
       - name: Install flutterfire cli
         run: dart pub global activate flutterfire_cli
 
+      - name: Check Xcode and iOS SDKs
+        run: |
+          xcode-select --print-path
+          xcodebuild -version
+          xcodebuild -showsdks | grep iOS
+
       - run: pod repo update
         working-directory: ios
 
@@ -55,6 +61,16 @@ jobs:
         working-directory: ./packages/domain_data
         run: dart run build_runner build
 
+      - name: List available iOS destinations
+        run: |
+          xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -showdestinations -quiet
+        continue-on-error: true
+
+      - name: Configure Xcode for generic iOS device
+        run: |
+          cd ios
+          xcodebuild -workspace Runner.xcworkspace -scheme Runner -destination "generic/platform=iOS" -configuration Release CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO clean
+
       - name: Build IPA
         run: |
           flutter build ios --release --no-codesign \
@@ -65,6 +81,8 @@ jobs:
             --dart-define=GOOGLE_AUTH_CLIENT_ID_IOS=${{ secrets.GOOGLE_AUTH_CLIENT_ID_IOS }} \
             --dart-define=GOOGLE_AUTH_CLIENT_ID_WEB=${{ secrets.GOOGLE_AUTH_CLIENT_ID_WEB }} \
             --dart-define=SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}
+        env:
+          FLUTTER_IOS_DESTINATION: "generic/platform=iOS"
 
       - name: Create Payload folder
         run: mkdir Payload
