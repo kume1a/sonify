@@ -463,7 +463,7 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
   void _onPlaylistAudioEvent(EventPlaylistAudio event) {
     event.when(
       downloaded: (playlistAudio) async {
-        final newPlaylistState = await state.playlist.map((playlist) {
+        final newPlaylistState = state.playlist.map((playlist) {
           return playlist.copyWith(
             playlistAudios: playlist.playlistAudios?.replace(
               (e) => e.id == playlistAudio.id,
@@ -510,7 +510,7 @@ final class PlaylistCubit extends Cubit<PlaylistState> {
         title: (l) => l.error,
       ),
       () async {
-        final newPlaylistState = await state.playlist.map((playlist) {
+        final newPlaylistState = state.playlist.map((playlist) {
           final playlistAudios = playlist.playlistAudios;
           if (playlistAudios == null) {
             return null;
