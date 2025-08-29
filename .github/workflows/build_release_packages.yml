@@ -7,7 +7,7 @@ on:
 jobs:
   build-packages:
     name: IPA & APK Build
-    runs-on: macos-13  # Use macOS 13 for better Firebase compatibility
+    runs-on: macos-latest  # Use latest macOS for newest Xcode/Swift
     environment: production
     steps:
       - uses: actions/checkout@v3
@@ -30,6 +30,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          flutter-version: '3.24.0'  # Use a specific stable version
           architecture: x64
           cache: true
 
@@ -41,8 +42,14 @@ jobs:
 
       - name: Check Xcode and Swift versions
         run: |
+          # List available Xcode versions
+          ls -la /Applications/ | grep Xcode
+          # Use the latest Xcode version available
+          sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
           xcodebuild -version
           swift --version
+          # Show available iOS SDKs
+          xcodebuild -showsdks | grep iOS
 
       - name: Clean iOS build cache
         working-directory: ios
@@ -53,16 +60,21 @@ jobs:
           rm -rf Flutter/Flutter.podspec
           rm -f Podfile.lock
 
-      - name: Update dependencies and get
+      - name: Get dependencies
         run: |
-          flutter pub upgrade
-          flutter clean
           flutter pub get
+          # Show current Firebase versions for debugging
+          flutter pub deps | grep firebase
 
       - name: Install pods with updated Firebase versions
         working-directory: ios
         run: |
-          pod install --repo-update --clean-install
+          # Remove existing pods and lockfile
+          rm -rf Pods/ Podfile.lock
+          # Show pod repo info
+          pod --version
+          # Install with explicit dependency resolution
+          pod install --repo-update --clean-install --verbose
 
       - name: build runner in root
         run: dart run build_runner build
