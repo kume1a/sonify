@@ -7,7 +7,7 @@ on:
 jobs:
   build-packages:
     name: IPA & APK Build
-    runs-on: macos-14
+    runs-on: macos-13  # Use macOS 13 for better Firebase compatibility
     environment: production
     steps:
       - uses: actions/checkout@v3
@@ -38,6 +38,11 @@ jobs:
 
       - name: Install flutterfire cli
         run: dart pub global activate flutterfire_cli
+
+      - name: Check Xcode and Swift versions
+        run: |
+          xcodebuild -version
+          swift --version
 
       - name: Clean iOS build cache
         working-directory: ios
@@ -92,6 +97,8 @@ jobs:
             --dart-define=SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}
         env:
           FLUTTER_IOS_DESTINATION: "generic/platform=iOS"
+          SWIFT_VERSION: "5.0"
+          ENABLE_BITCODE: "NO"
 
       - name: Create Payload folder
         run: mkdir Payload
