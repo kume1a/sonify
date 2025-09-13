@@ -6,6 +6,6 @@ abstract final class UserPreferenceConstants {
   static const defaultIsSaveShuffleStateEnabled = false;
   static const defaultIsSearchHistoryEnabled = false;
   static const defaultIsShuffleEnabled = false;
-  static const defaultMaxConcurrentDownloadCount = 10;
+  static const defaultMaxConcurrentDownloadCount = 5;
   static const defaultAudioSort = AudioSort.title;
 }

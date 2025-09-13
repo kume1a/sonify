@@ -82,7 +82,7 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
       return null;
     }
 
-    final storedAudioSort = await _userPreferencesStore.getAudioSort();
+    final storedAudioSort = _userPreferencesStore.getAudioSort();
 
     final res = await _userAudioLocalRepository.getAll(
       userId: userId,
@@ -97,7 +97,7 @@ final class MyLibraryAudiosCubit extends EntityLoaderCubit<List<UserAudio>> {
   }
 
   Future<void> onSortByPressed() async {
-    final storedValue = await _userPreferencesStore.getAudioSort();
+    final storedValue = _userPreferencesStore.getAudioSort();
 
     final selectedOption = await _bottomSheetManager.openOptionSelector<AudioSort>(
       header: (l) => l.sortBy,

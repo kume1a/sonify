@@ -328,7 +328,7 @@ class NowPlayingAudioCubit extends Cubit<NowPlayingAudioState> {
     }
 
     if (playlistId == null) {
-      final storedAudioSort = await _userPreferencesStore.getAudioSort();
+      final storedAudioSort = _userPreferencesStore.getAudioSort();
 
       final localUserAudios = await _audioLocalRepository.getAll(
         userId: authUserId,
