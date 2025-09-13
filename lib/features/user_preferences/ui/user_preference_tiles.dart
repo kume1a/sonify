@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../app/intl/app_localizations.dart';
 import '../state/user_preferences_state.dart';
+import '../user_preference_constants.dart';
 
 class SaveShuffleStatePrefTile extends StatelessWidget {
   const SaveShuffleStatePrefTile({super.key});
@@ -93,7 +94,10 @@ class MaxConcurrentDownloadCountPrefTile extends StatelessWidget {
             trailing: DropdownButton<int>(
               dropdownColor: theme.colorScheme.primaryContainer,
               value: value,
-              items: List.generate(10, (index) => index + 1).map((count) {
+              items: List.generate(
+                UserPreferenceConstants.defaultMaxConcurrentDownloadCount,
+                (index) => index + 1,
+              ).map((count) {
                 return DropdownMenuItem(
                   value: count,
                   child: Text(count.toString()),
