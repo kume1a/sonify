@@ -106,7 +106,7 @@ class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
       isShuffleEnabled: SimpleDataState.success(!beforeShuffleModeEnabled),
     ));
 
-    final isSaveShuffleStateEnabled = await _userPreferencesStore.isSaveShuffleStateEnabled();
+    final isSaveShuffleStateEnabled = _userPreferencesStore.isSaveShuffleStateEnabled();
     if (isSaveShuffleStateEnabled) {
       await _userPreferencesStore.setShuffleEnabled(!beforeShuffleModeEnabled);
     }
@@ -128,7 +128,7 @@ class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
       isRepeatEnabled: SimpleDataState.success(!beforeRepeatModeEnabled),
     ));
 
-    final isSaveRepeatStateEnabled = await _userPreferencesStore.isSaveRepeatStateEnabled();
+    final isSaveRepeatStateEnabled = _userPreferencesStore.isSaveRepeatStateEnabled();
     if (isSaveRepeatStateEnabled) {
       await _userPreferencesStore.setRepeatEnabled(!beforeRepeatModeEnabled);
     }
@@ -198,10 +198,10 @@ class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
   }
 
   Future<void> _loadInitialPreferences() async {
-    final isSaveShuffleStateEnabled = await _userPreferencesStore.isSaveShuffleStateEnabled();
+    final isSaveShuffleStateEnabled = _userPreferencesStore.isSaveShuffleStateEnabled();
 
     if (isSaveShuffleStateEnabled) {
-      final isShuffleEnabled = await _userPreferencesStore.isShuffleEnabled();
+      final isShuffleEnabled = _userPreferencesStore.isShuffleEnabled();
 
       _audioHandler.setShuffleMode(
         isShuffleEnabled ? AudioServiceShuffleMode.all : AudioServiceShuffleMode.none,
@@ -212,9 +212,9 @@ class AudioPlayerControlsCubit extends Cubit<AudioPlayerControlsState> {
       ));
     }
 
-    final isSaveRepeatStateEnabled = await _userPreferencesStore.isSaveRepeatStateEnabled();
+    final isSaveRepeatStateEnabled = _userPreferencesStore.isSaveRepeatStateEnabled();
     if (isSaveRepeatStateEnabled) {
-      final isRepeatEnabled = await _userPreferencesStore.isRepeatEnabled();
+      final isRepeatEnabled = _userPreferencesStore.isRepeatEnabled();
 
       _audioHandler.setRepeatMode(
         isRepeatEnabled ? AudioServiceRepeatMode.one : AudioServiceRepeatMode.none,

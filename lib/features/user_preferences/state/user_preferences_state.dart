@@ -47,10 +47,10 @@ class UserPreferencesCubit extends Cubit<UserPreferencesState> {
       maxConcurrentDownloadCount: SimpleDataState.loading(),
     ));
 
-    final isSaveShuffleStateEnabled = await _userPreferencesStore.isSaveShuffleStateEnabled();
-    final isSaveRepeatStateEnabled = await _userPreferencesStore.isSaveRepeatStateEnabled();
-    final isSearchHistoryEnabled = await _userPreferencesStore.isSearchHistoryEnabled();
-    final maxConcurrentDownloadCount = await _userPreferencesStore.getMaxConcurrentDownloadCount();
+    final isSaveShuffleStateEnabled = _userPreferencesStore.isSaveShuffleStateEnabled();
+    final isSaveRepeatStateEnabled = _userPreferencesStore.isSaveRepeatStateEnabled();
+    final isSearchHistoryEnabled = _userPreferencesStore.isSearchHistoryEnabled();
+    final maxConcurrentDownloadCount = _userPreferencesStore.getMaxConcurrentDownloadCount();
 
     emit(state.copyWith(
       isSaveShuffleStateEnabled: SimpleDataState.success(isSaveShuffleStateEnabled),

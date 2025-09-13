@@ -8,6 +8,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 import 'package:synchronized/synchronized.dart';
 
+import '../../../shared/util/utils.dart';
 import '../../dynamic_client/api/dynamic_api_url_provider.dart';
 import '../../user_preferences/api/user_preferences_store.dart';
 import '../api/download_task_downloader.dart';
@@ -52,7 +53,7 @@ class DownloadsCubit extends Cubit<List<DownloadTask>> {
 
   Future<void> _init() async {
     _timer = Timer.periodic(
-      const Duration(seconds: 4),
+      const Duration(seconds: 3),
       (_) => _downloadFromQueue(),
     );
 
@@ -72,7 +73,7 @@ class DownloadsCubit extends Cubit<List<DownloadTask>> {
   }
 
   Future<void> _resizeDownloadLocks() async {
-    final maxConcurrentDownloadCount = await _userPreferencesStore.getMaxConcurrentDownloadCount();
+    final maxConcurrentDownloadCount = _userPreferencesStore.getMaxConcurrentDownloadCount();
 
     if (_downloadLocks.length == maxConcurrentDownloadCount) {
       return;
@@ -157,10 +158,10 @@ class DownloadsCubit extends Cubit<List<DownloadTask>> {
       final eUserAudioYoutubeId = e.payload.userAudio?.audio?.youtubeVideoId;
       final ePlaylistAudioYoutubeId = e.payload.playlistAudio?.audio?.youtubeVideoId;
 
-      return (userAudioId != null && eUserAudioId == userAudioId) ||
-          (playlistAudioId != null && ePlaylistAudioId == playlistAudioId) ||
-          (userAudioYoutubeId != null && eUserAudioYoutubeId == userAudioYoutubeId) ||
-          (playlistAudioYoutubeId != null && ePlaylistAudioYoutubeId == playlistAudioYoutubeId);
+      return (userAudioId.notNullOrEmpty && eUserAudioId == userAudioId) ||
+          (playlistAudioId.notNullOrEmpty && ePlaylistAudioId == playlistAudioId) ||
+          (eUserAudioYoutubeId.notNullOrEmpty && eUserAudioYoutubeId == userAudioYoutubeId) ||
+          (playlistAudioYoutubeId.notNullOrEmpty && ePlaylistAudioYoutubeId == playlistAudioYoutubeId);
     }
 
     final isAlreadyInQueue = state.any(predicate);
