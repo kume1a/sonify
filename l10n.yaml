@@ -1,7 +1,6 @@
 arb-dir: lib/app/intl
 template-arb-file: app_en.arb
 output-localization-file: app_localizations.dart
-synthetic-package: false
 
 nullable-getter: false
 suppress-warnings: true
