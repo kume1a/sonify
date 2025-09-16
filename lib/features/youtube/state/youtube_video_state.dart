@@ -59,20 +59,31 @@ class YoutubeVideoCubit extends Cubit<YoutubeVideoState> {
   }
 
   Future<void> _loadVideo(String videoId) async {
-    emit(state.copyWith(
-      video: SimpleDataState.loading(),
-      highQualityStreamInfo: SimpleDataState.loading(),
-    ));
+    try {
+      emit(state.copyWith(
+        video: SimpleDataState.loading(),
+        highQualityStreamInfo: SimpleDataState.loading(),
+      ));
 
-    final video = await _youtubeRemoteRepository.getVideo(videoId: videoId);
-    final highestBitrateVideo = await _youtubeRemoteRepository.getHighestQualityStreamInfo(videoId: videoId);
+      final video = await _youtubeRemoteRepository.getVideo(videoId: videoId);
+      final highestBitrateVideo =
+          await _youtubeRemoteRepository.getHighestQualityStreamInfo(videoId: videoId);
 
-    emit(state.copyWith(
-      videoUri: highestBitrateVideo.dataOrNull?.url,
-      video: SimpleDataState.fromResult(video),
-      highQualityStreamInfo: SimpleDataState.fromResult(highestBitrateVideo),
-      isDownloadAvailable: video.isSuccess,
-    ));
+      emit(state.copyWith(
+        videoUri: highestBitrateVideo.dataOrNull?.url,
+        video: SimpleDataState.fromResult(video),
+        highQualityStreamInfo: SimpleDataState.fromResult(highestBitrateVideo),
+        isDownloadAvailable: video.isSuccess,
+      ));
+    } catch (error, stackTrace) {
+      Logger.root.severe('Error loading YouTube video: $error', error, stackTrace);
+
+      emit(state.copyWith(
+        video: SimpleDataState.failure(),
+        highQualityStreamInfo: SimpleDataState.failure(),
+        isDownloadAvailable: false,
+      ));
+    }
   }
 
   Future<void> onDownloadAudio() async {

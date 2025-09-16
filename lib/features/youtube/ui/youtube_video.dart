@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 import 'package:sonify_video_player/sonify_video_player.dart';
 import 'package:video_player/video_player.dart';
 
@@ -39,24 +40,36 @@ class _YoutubeVideoState extends State<YoutubeVideo> {
   }
 
   Future<void> _reinitializePlayer(YoutubeVideoState state) async {
-    if (state.videoUri == null) {
-      return;
+    try {
+      if (state.videoUri == null) {
+        return;
+      }
+
+      await _videoPlayerController?.dispose();
+      _sonifyVideoPlayerController?.dispose();
+
+      _videoPlayerController = VideoPlayerController.networkUrl(state.videoUri!);
+      await _videoPlayerController!.initialize();
+
+      _sonifyVideoPlayerController = SonifyVideoPlayerController(
+        videoPlayerController: _videoPlayerController!,
+        // autoPlay: true,
+        looping: true,
+        hideControlsTimer: const Duration(seconds: 2, milliseconds: 500),
+      );
+
+      setState(() {});
+    } catch (error, stackTrace) {
+      Logger.root.severe('Error initializing video player: $error');
+      Logger.root.severe('Stack trace: $stackTrace');
+
+      await _videoPlayerController?.dispose();
+      _videoPlayerController = null;
+      _sonifyVideoPlayerController?.dispose();
+      _sonifyVideoPlayerController = null;
+
+      setState(() {});
     }
-
-    await _videoPlayerController?.dispose();
-    _sonifyVideoPlayerController?.dispose();
-
-    _videoPlayerController = VideoPlayerController.networkUrl(state.videoUri!);
-    await _videoPlayerController!.initialize();
-
-    _sonifyVideoPlayerController = SonifyVideoPlayerController(
-      videoPlayerController: _videoPlayerController!,
-      // autoPlay: true,
-      looping: true,
-      hideControlsTimer: const Duration(seconds: 2, milliseconds: 500),
-    );
-
-    setState(() {});
   }
 }
 
