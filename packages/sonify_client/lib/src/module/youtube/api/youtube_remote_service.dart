@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:common_models/common_models.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -21,8 +19,6 @@ abstract interface class YoutubeRemoteService {
   Future<Either<NetworkCallError, YoutubeSearchSuggestionsDto>> getYoutubeSuggestions(String keyword);
 
   Future<Result<List<Video>>> search(String query);
-
-  Future<Result<UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams(String videoId);
 
   Future<Result<VideoStreamInfo>> getHighestQualityStreamInfo(String videoId);
 
