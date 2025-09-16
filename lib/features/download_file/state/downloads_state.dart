@@ -9,6 +9,7 @@ import 'package:logging/logging.dart';
 import 'package:synchronized/synchronized.dart';
 
 import '../../../shared/util/utils.dart';
+import '../../auth/model/auth_event.dart';
 import '../../dynamic_client/api/dynamic_api_url_provider.dart';
 import '../../user_preferences/api/user_preferences_store.dart';
 import '../api/download_task_downloader.dart';
@@ -52,13 +53,14 @@ class DownloadsCubit extends Cubit<List<DownloadTask>> {
   final _subscriptionComposite = SubscriptionComposite();
 
   Future<void> _init() async {
-    _timer = Timer.periodic(
-      const Duration(seconds: 3),
-      (_) => _downloadFromQueue(),
-    );
+    _restartDownloadTimer();
 
     _subscriptionComposite.add(
       _eventBus.on<DownloadsEvent>().listen(_onDownloadsEvent),
+    );
+
+    _subscriptionComposite.add(
+      _eventBus.on<AuthEvent>().listen(_onAuthEvent),
     );
 
     _loadDownloadedTasks();
@@ -143,7 +145,31 @@ class DownloadsCubit extends Cubit<List<DownloadTask>> {
       return;
     }
 
-    await _enqueueDownloadTask(downloadTask);
+    return _enqueueDownloadTask(downloadTask);
+  }
+
+  Future<void> _onAuthEvent(AuthEvent event) async {
+    await event.when(
+      userSignedOut: () => _clearAllDownloads(),
+      userSignedIn: () => _restartDownloadTimer(),
+    );
+  }
+
+  Future<void> _clearAllDownloads() async {
+    await _stateLock.synchronized(() {
+      _timer?.cancel();
+      _timer = null;
+
+      emit([]);
+    });
+  }
+
+  Future<void> _restartDownloadTimer() async {
+    _timer?.cancel();
+    _timer = Timer.periodic(
+      const Duration(seconds: 3),
+      (_) => _downloadFromQueue(),
+    );
   }
 
   Future<void> _enqueueDownloadTask(DownloadTask downloadTask) async {
