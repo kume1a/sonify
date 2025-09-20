@@ -31,7 +31,7 @@ class IntroScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 24, color: Colors.red, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
-              Image.asset(FlappyPlaneAssets.osamaFullPath, width: 200, height: 200, fit: BoxFit.cover),
+              Image.asset(Assets.osamaFullPath, width: 200, height: 200, fit: BoxFit.cover),
               const Spacer(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 60),

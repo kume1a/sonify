@@ -35,18 +35,12 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
   Future<void> onLoad() async {
     await super.onLoad();
 
-    images.prefix = CoinGrabAssets.imagePrefix;
+    images.prefix = Assets.imagePrefix;
 
-    // Load all images
-    await images.loadAll(CoinGrabAssets.allImages);
+    await images.loadAll(Assets.allImages);
 
-    // Load item spritesheet
-    itemSpriteSheet = SpriteSheet(
-      image: await images.load(CoinGrabAssets.itemSpritesPng),
-      srcSize: Vector2(64, 64),
-    );
+    itemSpriteSheet = SpriteSheet(image: await images.load(Assets.itemSpritesheet), srcSize: Vector2(64, 64));
 
-    // Initialize player at bottom center
     player = Player(
       position: Vector2(size.x / 2 - Player.playerWidth / 2, size.y - Player.playerHeight - 20),
     );

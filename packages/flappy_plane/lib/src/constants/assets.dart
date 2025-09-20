@@ -1,6 +1,5 @@
-/// Asset constants for the Flappy Plane game
-class FlappyPlaneAssets {
-  FlappyPlaneAssets._();
+class Assets {
+  Assets._();
 
   // Asset path prefixes
   static const String _imagePrefix = 'packages/flappy_plane/lib/assets/images/';
@@ -21,7 +20,6 @@ class FlappyPlaneAssets {
   static const String background5Png = 'background/5.png';
   static const String background6Png = 'background/6.png';
 
-  // Background images list
   static const List<String> backgroundImages = [
     background1Png,
     background2Png,
@@ -31,7 +29,6 @@ class FlappyPlaneAssets {
     background6Png,
   ];
 
-  // All image assets list
   static const List<String> allImages = [
     planePng,
     towerPng,

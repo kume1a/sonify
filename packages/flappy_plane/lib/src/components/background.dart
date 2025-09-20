@@ -10,12 +10,8 @@ class Background extends Component with HasGameReference<FlappyPlaneGame> {
   Future<void> onLoad() async {
     layers = [];
 
-    for (int i = 0; i < FlappyPlaneAssets.backgroundImages.length; i++) {
-      final layer = BackgroundLayer(
-        imagePath: FlappyPlaneAssets.backgroundImages[i],
-        speed: 6 + (i * 3),
-        depth: i,
-      );
+    for (int i = 0; i < Assets.backgroundImages.length; i++) {
+      final layer = BackgroundLayer(imagePath: Assets.backgroundImages[i], speed: 6 + (i * 3), depth: i);
       await add(layer);
       layers.add(layer);
     }

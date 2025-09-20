@@ -34,10 +34,10 @@ class Player extends SpriteAnimationGroupComponent<PlayerAnimationState>
 
   Future<Map<PlayerAnimationState, SpriteAnimation>> _loadAnimations() async {
     try {
-      print('Loading character sprites from: ${CoinGrabAssets.characterSpritesPng}');
+      print('Loading character sprites from: ${Assets.characterSpritesheet}');
 
       // 1. Load the sprite sheet image from game assets
-      final spriteSheetImage = await game.images.load(CoinGrabAssets.characterSpritesPng);
+      final spriteSheetImage = await game.images.load(Assets.characterSpritesheet);
 
       print(
         'Sprite sheet loaded successfully. Image size: ${spriteSheetImage.width}x${spriteSheetImage.height}',

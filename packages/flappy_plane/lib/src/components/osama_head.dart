@@ -16,7 +16,7 @@ class OsamaHead extends SpriteComponent with HasGameReference {
 
   @override
   Future<void> onLoad() async {
-    sprite = await Sprite.load(FlappyPlaneAssets.osamaHeadPng);
+    sprite = await Sprite.load(Assets.osamaHeadPng);
 
     size = Vector2(200, 200);
     position = Vector2((game.size.x - size.x) / 2, (game.size.y - size.y) / 3);
@@ -29,7 +29,7 @@ class OsamaHead extends SpriteComponent with HasGameReference {
 
     _isVisible = true;
 
-    FlameAudio.play(FlappyPlaneAssets.alahuakbarMp3);
+    FlameAudio.play(Assets.alahuakbarMp3);
 
     _fadeIn();
   }
