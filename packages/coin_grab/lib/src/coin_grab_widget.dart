@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'coin_grab_game.dart';
+import 'screens/game_over_screen.dart';
+import 'screens/intro_screen.dart';
+import 'screens/main_menu_screen.dart';
+import 'screens/score_display.dart';
 
-/// A Flutter widget that displays the coin grab game
 class CoinGrabWidget extends StatefulWidget {
   final VoidCallback? onGoBack;
 
@@ -29,26 +32,49 @@ class _CoinGrabWidgetState extends State<CoinGrabWidget> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Game widget
+          // Game widget with overlays
           GestureDetector(
+            onTap: () => game.handleTap(),
             onPanStart: (details) {
-              final renderBox = context.findRenderObject() as RenderBox?;
-              if (renderBox != null) {
-                final localPosition = renderBox.globalToLocal(details.globalPosition);
-                game.handleDragStart(localPosition.dx);
+              if (game.gameState == GameState.playing) {
+                final renderBox = context.findRenderObject() as RenderBox?;
+                if (renderBox != null) {
+                  final localPosition = renderBox.globalToLocal(details.globalPosition);
+                  game.handleDragStart(localPosition.dx);
+                }
               }
             },
             onPanUpdate: (details) {
-              final renderBox = context.findRenderObject() as RenderBox?;
-              if (renderBox != null) {
-                final localPosition = renderBox.globalToLocal(details.globalPosition);
-                game.handleDragUpdate(localPosition.dx);
+              if (game.gameState == GameState.playing) {
+                final renderBox = context.findRenderObject() as RenderBox?;
+                if (renderBox != null) {
+                  final localPosition = renderBox.globalToLocal(details.globalPosition);
+                  game.handleDragUpdate(localPosition.dx);
+                }
               }
             },
             onPanEnd: (details) {
-              game.handleDragEnd();
+              if (game.gameState == GameState.playing) {
+                game.handleDragEnd();
+              }
             },
-            child: GameWidget(game: game),
+            child: GameWidget<CoinGrabGame>.controlled(
+              gameFactory: () => game,
+              overlayBuilderMap: {
+                'Intro': (context, game) => IntroScreen(onStart: () => game.showMainMenu()),
+                'MainMenu': (context, game) => MainMenuScreen(onStart: () => game.startGame()),
+                'GameOver': (context, game) => GameOverScreen(
+                  score: game.score,
+                  onRestart: () => game.resetGame(),
+                  onGoBack: widget.onGoBack,
+                ),
+                'Score': (context, game) => ScoreDisplay(
+                  score: game.score,
+                  missedItems: game.missedItems,
+                  maxMissedItems: CoinGrabGame.maxMissedItems,
+                ),
+              },
+            ),
           ),
 
           // Keyboard listener for desktop controls
@@ -57,6 +83,8 @@ class _CoinGrabWidgetState extends State<CoinGrabWidget> {
             child: KeyboardListener(
               focusNode: FocusNode(),
               onKeyEvent: (KeyEvent event) {
+                if (game.gameState != GameState.playing) return;
+
                 final keysPressed = <LogicalKeyboardKey>{};
 
                 if (event is KeyDownEvent) {
@@ -91,17 +119,6 @@ class _CoinGrabWidgetState extends State<CoinGrabWidget> {
               child: Container(), // Empty container just to capture keyboard focus
             ),
           ),
-
-          // Back button
-          if (widget.onGoBack != null)
-            Positioned(
-              top: MediaQuery.of(context).padding.top + 10,
-              left: 10,
-              child: IconButton(
-                onPressed: widget.onGoBack,
-                icon: const Icon(Icons.arrow_back, color: Colors.white, size: 30),
-              ),
-            ),
         ],
       ),
     );

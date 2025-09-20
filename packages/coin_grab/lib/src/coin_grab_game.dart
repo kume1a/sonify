@@ -1,26 +1,29 @@
 import 'dart:math';
 
-import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/sprite.dart';
-import 'package:flutter/material.dart' show Color, TextStyle, FontWeight;
 
 import 'components/collectible_item.dart';
 import 'components/items.dart';
 import 'components/player.dart';
 import 'constants/assets.dart';
 
-/// Main game world that manages all game logic
+enum GameState { intro, mainMenu, playing, gameOver }
+
 class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHandlerComponents {
   late Player player;
-  late TextComponent scoreText;
   late SpriteSheet itemSpriteSheet;
 
   int score = 0;
   double spawnTimer = 0.0;
   double currentSpawnInterval = 2.0; // Start spawning every 2 seconds
   double difficultyTimer = 0.0;
+  GameState gameState = GameState.intro;
+
+  // Game over conditions
+  int missedItems = 0;
+  static const int maxMissedItems = 10; // Game over after missing 10 items
 
   // Game balance
   static const double minSpawnInterval = 0.3;
@@ -32,7 +35,6 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
   Future<void> onLoad() async {
     await super.onLoad();
 
-    // Set asset prefixes like flappy plane
     images.prefix = CoinGrabAssets.imagePrefix;
 
     // Load all images
@@ -51,20 +53,15 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
     player.setGameWidth(size.x);
     add(player);
 
-    // Initialize score display
-    scoreText = TextComponent(
-      text: 'Score: 0',
-      position: Vector2(20, 20),
-      textRenderer: TextPaint(
-        style: const TextStyle(color: Color(0xFFFFFFFF), fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    );
-    add(scoreText);
+    showIntro();
   }
 
   @override
   void update(double dt) {
     super.update(dt);
+
+    // Only spawn items and run difficulty timer when playing
+    if (gameState != GameState.playing) return;
 
     // Handle item spawning
     spawnTimer += dt;
@@ -158,8 +155,88 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
   /// Called when player collects an item
   void onItemCollected(CollectibleItem item) {
     score += item.points;
-    scoreText.text = 'Score: $score';
     player.celebrate();
     item.onCollected();
+
+    // Update score overlay
+    overlays.remove('Score');
+    overlays.add('Score');
+  }
+
+  /// Called when an item is missed (falls off screen)
+  void onItemMissed() {
+    if (gameState != GameState.playing) return;
+
+    missedItems++;
+    if (missedItems >= maxMissedItems) {
+      gameOver();
+    }
+  }
+
+  // Game state management methods
+  void showIntro() {
+    gameState = GameState.intro;
+    overlays.add('Intro');
+  }
+
+  void showMainMenu() {
+    gameState = GameState.mainMenu;
+    overlays.remove('Intro');
+    overlays.add('MainMenu');
+  }
+
+  void startGame() {
+    gameState = GameState.playing;
+    overlays.remove('MainMenu');
+    overlays.add('Score');
+
+    // Reset game state
+    score = 0;
+    missedItems = 0;
+    spawnTimer = 0.0;
+    currentSpawnInterval = 2.0;
+    difficultyTimer = 0.0;
+
+    // Clear any existing items
+    removeWhere((component) => component is CollectibleItem);
+
+    // Reset player position
+    player.position.x = size.x / 2 - Player.playerWidth / 2;
+    player.setIdle();
+  }
+
+  void gameOver() {
+    if (gameState == GameState.gameOver) return;
+
+    gameState = GameState.gameOver;
+    overlays.remove('Score');
+    overlays.add('GameOver');
+  }
+
+  void resetGame() {
+    gameState = GameState.mainMenu;
+    overlays.remove('GameOver');
+
+    // Clear all items
+    removeWhere((component) => component is CollectibleItem);
+
+    showMainMenu();
+  }
+
+  void handleTap() {
+    switch (gameState) {
+      case GameState.intro:
+        showMainMenu();
+        break;
+      case GameState.mainMenu:
+        startGame();
+        break;
+      case GameState.gameOver:
+        resetGame();
+        break;
+      case GameState.playing:
+        // No tap handling during gameplay for coin grab
+        break;
+    }
   }
 }

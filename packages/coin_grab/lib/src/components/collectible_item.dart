@@ -29,6 +29,10 @@ abstract class CollectibleItem extends SpriteComponent with HasCollisionDetectio
     // Remove item if it falls off screen
     final game = findGame();
     if (game != null && position.y > game.size.y) {
+      // Notify the game that an item was missed
+      if (game is CoinGrabGame) {
+        game.onItemMissed();
+      }
       removeFromParent();
     }
   }
