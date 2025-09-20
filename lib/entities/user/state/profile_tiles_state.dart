@@ -36,4 +36,8 @@ class ProfileTilesCubit extends Cubit<Unit> {
   void onFlappyPlaneTilePressed() {
     _pageNavigator.toFlappyPlane();
   }
+
+  void onCoinGrabTilePressed() {
+    _pageNavigator.toCoinGrab();
+  }
 }

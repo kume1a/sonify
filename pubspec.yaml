@@ -84,6 +84,8 @@ dependencies:
     path: ./packages/domain_data
   flappy_plane:
     path: ./packages/flappy_plane
+  coin_grab:
+    path: ./packages/coin_grab
 
   global_navigator:
     git:

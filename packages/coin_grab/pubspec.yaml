@@ -21,5 +21,4 @@ dev_dependencies:
 flutter:
   assets:
     - lib/assets/images/
-    - lib/assets/images/background/
     - lib/assets/sound/

@@ -127,6 +127,19 @@ class FlappyPlaneTile extends StatelessWidget {
   }
 }
 
+class CoinGrabTile extends StatelessWidget {
+  const CoinGrabTile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return _ProfileTile(
+      iconAssetName: Assets.svgPlay,
+      label: 'Coin Grab',
+      onPressed: context.profileTilesCubit.onCoinGrabTilePressed,
+    );
+  }
+}
+
 class SignOutTile extends StatelessWidget {
   const SignOutTile({super.key});
 

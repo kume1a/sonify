@@ -1,3 +1,3 @@
 library;
 
-// export 'src/flappy_plane_widget.dart';
+export 'src/coin_grab_widget.dart';
