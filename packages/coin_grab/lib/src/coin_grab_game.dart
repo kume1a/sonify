@@ -42,10 +42,11 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
     itemSpriteSheet = SpriteSheet(image: await images.load(Assets.itemSpritesheet), srcSize: Vector2(64, 64));
 
     player = Player(
-      position: Vector2(size.x / 2 - Player.playerWidth / 2, size.y - Player.playerHeight - 20),
+      // Position is at center due to Anchor.center
+      position: Vector2(size.x / 2, size.y - Player.playerHeight / 2 - 20),
     );
     player.setGameWidth(size.x);
-    add(player);
+    await add(player);
 
     showIntro();
   }
@@ -112,49 +113,58 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
   }
 
   /// Handle drag input for player movement
-  double? _dragStartX;
-  double? _initialPlayerX;
+  double? _lastDragX;
 
   void handleDragStart(double dragX) {
-    _dragStartX = dragX;
-    _initialPlayerX = player.position.x;
+    _lastDragX = dragX;
   }
 
   void handleDragUpdate(double currentDragX) {
-    if (_dragStartX != null && _initialPlayerX != null) {
-      // Calculate how much the finger has moved horizontally
-      final dragDelta = currentDragX - _dragStartX!;
+    // Prevent drag movement during game over
+    if (gameState == GameState.gameOver) return;
 
-      // Move the player by the same amount, keeping within bounds
-      final newPlayerX = (_initialPlayerX! + dragDelta).clamp(0.0, size.x - player.size.x);
+    if (_lastDragX != null) {
+      // Calculate movement since last frame (instant direction detection)
+      final dragDelta = currentDragX - _lastDragX!;
+      final dragSpeed = dragDelta.abs();
+
+      // Move the player by the delta amount, keeping within bounds (accounting for centered anchor)
+      final newPlayerX = (player.position.x + dragDelta).clamp(player.size.x / 2, size.x - player.size.x / 2);
       player.position.x = newPlayerX;
 
-      // Update animation based on movement direction
-      if (dragDelta > 2.0) {
-        player.setMovingRight();
-      } else if (dragDelta < -2.0) {
-        player.setMovingLeft();
+      // Update animation based on movement direction and speed
+      // Use running animation for fast drags (greater than 2.0 pixels per frame)
+      final isRunning = dragSpeed > 2.0;
+
+      // Immediate direction detection - flip as soon as direction changes
+      if (dragDelta > 0.1) {
+        player.setMovingRight(isRunning: isRunning);
+      } else if (dragDelta < -0.1) {
+        player.setMovingLeft(isRunning: isRunning);
       } else {
         player.setIdle();
       }
+
+      // Update last position for next frame
+      _lastDragX = currentDragX;
     }
   }
 
   void handleDragEnd() {
-    _dragStartX = null;
-    _initialPlayerX = null;
+    _lastDragX = null;
     player.setIdle();
   }
 
   /// Called when player collects an item
   void onItemCollected(CollectibleItem item) {
     score += item.points;
+    print('Item collected! Type: ${item.itemType}, Points: ${item.points}, Total Score: $score');
     player.celebrate();
     item.onCollected();
 
-    // Update score overlay
+    // Force overlay refresh by removing and re-adding with a short delay
     overlays.remove('Score');
-    overlays.add('Score');
+    Future.microtask(() => overlays.add('Score'));
   }
 
   /// Called when an item is missed (falls off screen)
@@ -162,6 +172,12 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
     if (gameState != GameState.playing) return;
 
     missedItems++;
+    print('Item missed! Total missed: $missedItems / $maxMissedItems');
+
+    // Update score overlay to reflect missed count change
+    overlays.remove('Score');
+    Future.microtask(() => overlays.add('Score'));
+
     if (missedItems >= maxMissedItems) {
       gameOver();
     }
@@ -194,8 +210,8 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
     // Clear any existing items
     removeWhere((component) => component is CollectibleItem);
 
-    // Reset player position
-    player.position.x = size.x / 2 - Player.playerWidth / 2;
+    // Reset player position (centered due to Anchor.center)
+    player.position.x = size.x / 2;
     player.setIdle();
   }
 

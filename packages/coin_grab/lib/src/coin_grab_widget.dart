@@ -66,10 +66,30 @@ class _CoinGrabWidgetState extends State<CoinGrabWidget> {
                   onRestart: () => game.resetGame(),
                   onGoBack: widget.onGoBack,
                 ),
-                'Score': (context, game) => ScoreDisplay(
-                  score: game.score,
-                  missedItems: game.missedItems,
-                  maxMissedItems: CoinGrabGame.maxMissedItems,
+                'Score': (context, game) => Stack(
+                  children: [
+                    ScoreDisplay(
+                      score: game.score,
+                      missedItems: game.missedItems,
+                      maxMissedItems: CoinGrabGame.maxMissedItems,
+                    ),
+                    // Debug score display in corner
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          'DEBUG: S:${game.score} M:${game.missedItems}/${CoinGrabGame.maxMissedItems}',
+                          style: const TextStyle(color: Colors.yellow, fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               },
             ),

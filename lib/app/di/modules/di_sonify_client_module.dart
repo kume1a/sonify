@@ -2,7 +2,6 @@ import 'package:common_utilities/common_utilities.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logging/logging.dart';
 import 'package:sonify_client/sonify_client.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -16,8 +15,8 @@ abstract class DiSonifyClientModule {
   @Named(InjectionToken.noInterceptorDio)
   Dio dio() {
     return NetworkClientFactory.createNoInterceptorDio(
-      logPrint: Logger.root.finest,
-      // logPrint: null,
+      // logPrint: Logger.root.finest,
+      logPrint: null,
     );
   }
 
@@ -30,8 +29,8 @@ abstract class DiSonifyClientModule {
     return NetworkClientFactory.createAuthenticatedDio(
       authTokenStore: authTokenStore,
       afterExit: afterSignOut.call,
-      logPrint: Logger.root.finest,
-      // logPrint: null,
+      // logPrint: Logger.root.finest,
+      logPrint: null,
     );
   }
 
