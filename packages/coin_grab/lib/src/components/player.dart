@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
@@ -34,29 +36,28 @@ class Player extends SpriteAnimationGroupComponent<PlayerAnimationState>
 
   Future<Map<PlayerAnimationState, SpriteAnimation>> _loadAnimations() async {
     try {
-      print('Loading character sprites from: ${Assets.characterSpritesheet}');
+      log('Loading character sprites from: ${Assets.characterSpritesheet}');
 
-      // 1. Load the sprite sheet image from game assets
       final spriteSheetImage = await game.images.load(Assets.characterSpritesheet);
 
-      print(
+      log(
         'Sprite sheet loaded successfully. Image size: ${spriteSheetImage.width}x${spriteSheetImage.height}',
       );
 
       // 2. Calculate exact frame dimensions
-      // 1024x1024 sheet divided into 13x13 grid
+      // 1024x1024 sheet divided into 5x2 grid
       final int sheetWidth = spriteSheetImage.width;
       final int sheetHeight = spriteSheetImage.height;
-      const int gridCols = 13;
-      const int gridRows = 13;
+      const int gridCols = 5;
+      const int gridRows = 2;
 
       final double frameWidth = sheetWidth / gridCols;
       final double frameHeight = sheetHeight / gridRows;
       const double stepTime = 0.15;
 
-      print('Sheet dimensions: ${sheetWidth}x$sheetHeight');
-      print('Grid: ${gridCols}x$gridRows');
-      print('Frame dimensions: ${frameWidth}x$frameHeight');
+      log('Sheet dimensions: ${sheetWidth}x$sheetHeight');
+      log('Grid: ${gridCols}x$gridRows');
+      log('Frame dimensions: ${frameWidth}x$frameHeight');
 
       // Idle animation - using first frame (position 0,0)
       final idleSprites = [
@@ -88,7 +89,7 @@ class Player extends SpriteAnimationGroupComponent<PlayerAnimationState>
       ];
       final celebrationAnimation = SpriteAnimation.spriteList(celebrationSprites, stepTime: 0.2);
 
-      print('All animations created successfully');
+      log('All animations created successfully');
 
       return {
         PlayerAnimationState.idle: idleAnimation,
@@ -96,14 +97,14 @@ class Player extends SpriteAnimationGroupComponent<PlayerAnimationState>
         PlayerAnimationState.celebration: celebrationAnimation,
       };
     } catch (e) {
-      print('Failed to load character sprites: $e');
-      print('Stack trace: ${StackTrace.current}');
+      log('Failed to load character sprites: $e');
+      log('Stack trace: ${StackTrace.current}');
       return _createFallbackAnimations();
     }
   }
 
   Map<PlayerAnimationState, SpriteAnimation> _createFallbackAnimations() {
-    print('Creating fallback animations - sprites failed to load');
+    log('Creating fallback animations - sprites failed to load');
 
     // Since we can't create colored sprites easily, let's try to use a simple approach
     // Create animations that will make the hitbox visible by using an empty sprite list
