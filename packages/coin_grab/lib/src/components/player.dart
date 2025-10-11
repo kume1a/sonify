@@ -14,9 +14,10 @@ class Player extends SpriteAnimationGroupComponent<PlayerAnimationState>
     with CollisionCallbacks, HasGameReference<CoinGrabGame> {
   static const double walkSpeed = 200.0;
   static const double runSpeed = 350.0;
-  // Calculate proper aspect ratio - assuming sprite is roughly square but allowing for proper proportions
-  static const double playerWidth = 56.0; // Increased width for better aspect ratio
-  static const double playerHeight = 64.0; // Increased height to maintain character proportions
+  // Maintain proper aspect ratio from sprite (126×185)
+  // Aspect ratio: 126/185 ≈ 0.68
+  static const double playerHeight = 80.0; // Base height for good visibility
+  static const double playerWidth = playerHeight * (126.0 / 185.0); // ≈ 54.5, maintains aspect ratio
 
   late double _gameWidth;
   double _horizontalMovement = 0.0;
