@@ -7,7 +7,7 @@ class Assets {
 
   // Image assets
   static const String characterSpritesheet = 'character_spritesheet.png';
-  static const String itemSpritesheet = 'coingrab_items.png';
+  static const String itemSpritesheet = 'item_spritesheet.png';
 
   static const List<String> allImages = [characterSpritesheet, itemSpritesheet];
 
