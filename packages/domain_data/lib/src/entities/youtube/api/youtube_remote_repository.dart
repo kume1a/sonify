@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:common_models/common_models.dart';
 import 'package:sonify_client/sonify_client.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -24,10 +22,6 @@ abstract interface class YoutubeRemoteRepository {
 
   Future<Result<List<Video>>> search({
     required String query,
-  });
-
-  Future<Result<UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams({
-    required String videoId,
   });
 
   Future<Result<VideoStreamInfo>> getHighestQualityStreamInfo({

@@ -25,10 +25,10 @@ class FlappyPlaneGame extends FlameGame with HasCollisionDetection {
 
   @override
   Future<void> onLoad() async {
-    images.prefix = FlappyPlaneAssets.imagePrefix;
-    FlameAudio.audioCache.prefix = FlappyPlaneAssets.soundPrefix;
+    images.prefix = Assets.imagePrefix;
+    FlameAudio.audioCache.prefix = Assets.soundPrefix;
 
-    await images.loadAll(FlappyPlaneAssets.allImages);
+    await images.loadAll(Assets.allImages);
 
     background = Background();
     add(background);

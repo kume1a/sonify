@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../pages/auth_page.dart';
+import '../../pages/coin_grab_page.dart';
 import '../../pages/dev_tools_page.dart';
 import '../../pages/downloads_page.dart';
 import '../../pages/email_sign_in_page.dart';
@@ -35,6 +36,7 @@ Route<dynamic> routeFactory(RouteSettings settings) {
     Routes.preferences => _createPreferencesRoute(settings),
     Routes.devTools => _createDevToolsRoute(settings),
     Routes.flappyPlane => _createFlappyPlaneRoute(settings),
+    Routes.coinGrab => _createCoinGrabRoute(settings),
     _ => throw Exception('route $settings is not supported'),
   };
 }
@@ -148,6 +150,13 @@ Route _createDevToolsRoute(RouteSettings settings) {
 Route _createFlappyPlaneRoute(RouteSettings settings) {
   return MaterialPageRoute(
     builder: (_) => FlappyPlanePage(),
+    settings: settings,
+  );
+}
+
+Route _createCoinGrabRoute(RouteSettings settings) {
+  return MaterialPageRoute(
+    builder: (_) => CoinGrabPage(),
     settings: settings,
   );
 }

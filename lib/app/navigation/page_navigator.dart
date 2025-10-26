@@ -58,6 +58,8 @@ class PageNavigator {
 
   void toFlappyPlane() => GlobalNavigator.pushNamed(Routes.flappyPlane);
 
+  void toCoinGrab() => GlobalNavigator.pushNamed(Routes.coinGrab);
+
   void popUntilMain() {
     GlobalNavigator.popUntil((route) => route.settings.name == Routes.main);
   }

@@ -6,6 +6,7 @@ import 'package:sonify_client/sonify_client.dart';
 import '../../../app/navigation/page_navigator.dart';
 import '../../spotifyauth/api/spotify_creds_store.dart';
 import '../../user_preferences/api/user_preferences_store.dart';
+import '../model/auth_event.dart';
 import 'after_sign_out.dart';
 
 @LazySingleton(as: AfterSignOut)
@@ -18,6 +19,7 @@ class AfterSignOutImpl implements AfterSignOut {
     this._userSyncDatumLocalRepository,
     this._socketHolderProvider,
     this._userPreferencesStore,
+    this._eventBus,
   );
 
   final PageNavigator _pageNavigator;
@@ -27,9 +29,12 @@ class AfterSignOutImpl implements AfterSignOut {
   final UserSyncDatumLocalRepository _userSyncDatumLocalRepository;
   final DisposableProvider<SocketHolder> _socketHolderProvider;
   final UserPreferencesStore _userPreferencesStore;
+  final EventBus _eventBus;
 
   @override
   Future<void> call() async {
+    _eventBus.fire(const AuthEvent.userSignedOut());
+
     await Future.wait([
       _authTokenStore.clear(),
       _spotifyCredsStore.clear(),

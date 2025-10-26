@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:common_models/common_models.dart';
 import 'package:common_network_components/common_network_components.dart';
 import 'package:sonify_client/sonify_client.dart';
@@ -69,13 +67,6 @@ class YoutubeRemoteRepositoryImpl with SafeHttpRequestWrap implements YoutubeRem
     required String videoId,
   }) async {
     return _youtubeRemoteService.getVideo(videoId);
-  }
-
-  @override
-  Future<Result<UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams({
-    required String videoId,
-  }) async {
-    return _youtubeRemoteService.getAudioOnlyStreams(videoId);
   }
 
   @override

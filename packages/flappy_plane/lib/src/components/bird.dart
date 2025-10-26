@@ -22,7 +22,7 @@ class Bird extends SpriteAnimationComponent with HasGameReference<FlappyPlaneGam
 
   @override
   Future<void> onLoad() async {
-    final sprite = await game.images.load(FlappyPlaneAssets.planePng);
+    final sprite = await game.images.load(Assets.planePng);
 
     final spriteAnimation = SpriteAnimation.spriteList([Sprite(sprite)], stepTime: 0.2);
 

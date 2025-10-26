@@ -15,7 +15,7 @@ class Pipe extends SpriteComponent with HasGameReference<FlappyPlaneGame>, Colli
 
   @override
   Future<void> onLoad() async {
-    final sprite = await game.images.load(FlappyPlaneAssets.towerPng);
+    final sprite = await game.images.load(Assets.towerPng);
 
     this.sprite = Sprite(sprite);
 

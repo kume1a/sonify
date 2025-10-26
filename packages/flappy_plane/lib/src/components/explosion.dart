@@ -18,7 +18,7 @@ class Explosion extends SpriteAnimationComponent with HasGameReference {
 
   @override
   Future<void> onLoad() async {
-    final image = await game.images.load(FlappyPlaneAssets.explosionAtlasPng);
+    final image = await game.images.load(Assets.explosionAtlasPng);
 
     final frameWidth = image.width / frameCount;
     final frameHeight = image.height.toDouble();
@@ -37,7 +37,7 @@ class Explosion extends SpriteAnimationComponent with HasGameReference {
     anchor = Anchor.center;
 
     if (!_hasPlayed) {
-      FlameAudio.play(FlappyPlaneAssets.explosionMp3, volume: 0.3);
+      FlameAudio.play(Assets.explosionMp3, volume: 0.3);
       _hasPlayed = true;
     }
 

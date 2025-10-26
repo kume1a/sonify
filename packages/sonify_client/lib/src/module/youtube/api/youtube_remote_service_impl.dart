@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:common_models/common_models.dart';
 import 'package:common_network_components/common_network_components.dart';
 import 'package:common_utilities/common_utilities.dart';
@@ -128,22 +126,16 @@ class YoutubeRemoteServiceImpl with SafeHttpRequestWrap, ResultWrap implements Y
   }
 
   @override
-  Future<Result<UnmodifiableListView<AudioOnlyStreamInfo>>> getAudioOnlyStreams(
-    String videoId,
-  ) async {
-    return wrapWithResult(() async {
-      final manifest = await _yt.videos.streams.getManifest(videoId);
-
-      return manifest.audioOnly;
-    });
-  }
-
-  @override
   Future<Result<VideoStreamInfo>> getHighestQualityStreamInfo(
     String videoId,
   ) async {
     return wrapWithResult(() async {
       final manifest = await _yt.videos.streams.getManifest(videoId);
+
+      final highestBitrateMuxed = manifest.muxed.sortByBitrate().lastOrNull;
+      if (highestBitrateMuxed != null) {
+        return highestBitrateMuxed;
+      }
 
       return manifest.video.withHighestBitrate();
     });
