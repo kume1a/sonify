@@ -39,7 +39,7 @@ class Player extends SpriteAnimationGroupComponent<PlayerAnimationState>
     final hitbox = RectangleHitbox();
 
     // Enable debug mode to show hitbox outline
-    hitbox.debugMode = true;
+    hitbox.debugMode = false;
     await add(hitbox);
 
     log('Player hitbox loaded: full size, auto-positioned');

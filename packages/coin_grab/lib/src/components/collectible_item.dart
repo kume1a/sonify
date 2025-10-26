@@ -2,6 +2,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 import '../coin_grab_game.dart';
+import 'background.dart';
 import 'player.dart';
 
 abstract class CollectibleItem extends SpriteComponent
@@ -29,7 +30,7 @@ abstract class CollectibleItem extends SpriteComponent
     final hitbox = RectangleHitbox(size: size * 0.9, position: size * 0.05);
 
     // Enable debug mode to show hitbox outline
-    hitbox.debugMode = true;
+    hitbox.debugMode = false;
     await add(hitbox);
 
     print('Item hitbox loaded: type=$itemType, size=${hitbox.size}, position=${hitbox.position}');
@@ -45,15 +46,18 @@ abstract class CollectibleItem extends SpriteComponent
     // Make the item fall
     position.y += fallSpeed * dt;
 
-    // Remove item if it falls off screen
+    // Remove item if it reaches the ground level (don't show items going into the ground)
     final game = findGame();
-    if (game != null && position.y > game.size.y) {
-      // Only count as missed if not already collected
-      if (game is CoinGrabGame && !_isCollected) {
-        _isCollected = true; // Mark as processed to prevent duplicate miss counting
-        game.onItemMissed();
+    if (game != null) {
+      final groundLevel = game.size.y - BrickGround.groundHeight;
+      if (position.y >= groundLevel) {
+        // Only count as missed if not already collected
+        if (game is CoinGrabGame && !_isCollected) {
+          _isCollected = true; // Mark as processed to prevent duplicate miss counting
+          game.onItemMissed();
+        }
+        removeFromParent();
       }
-      removeFromParent();
     }
   }
 

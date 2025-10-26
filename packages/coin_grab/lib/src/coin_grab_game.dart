@@ -4,6 +4,7 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/sprite.dart';
 
+import 'components/background.dart';
 import 'components/collectible_item.dart';
 import 'components/items.dart';
 import 'components/player.dart';
@@ -21,10 +22,6 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
   double difficultyTimer = 0.0;
   GameState gameState = GameState.intro;
 
-  // Game over conditions
-  int missedItems = 0;
-  static const int maxMissedItems = 10; // Game over after missing 10 items
-
   // Game balance
   static const double minSpawnInterval = 0.3;
   static const double difficultyIncreaseInterval = 10.0; // Increase difficulty every 10 seconds
@@ -39,11 +36,27 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
 
     await images.loadAll(Assets.allImages);
 
-    itemSpriteSheet = SpriteSheet(image: await images.load(Assets.itemSpritesheet), srcSize: Vector2(64, 64));
+    // Load the new 3x2 sprite sheet (128x128 cells)
+    // Row 0: Brick Wall (0,0), Gold Coin (1,0), Gold Bar (2,0)
+    // Row 1: Bacon (0,1), Dollar (1,1), Empty (2,1)
+    // getSprite(row, col) - row first, then column
+    itemSpriteSheet = SpriteSheet(
+      image: await images.load(Assets.itemSpritesheet),
+      srcSize: Vector2(128, 128),
+    );
+
+    // Add blue gradient sky background
+    final skyBackground = SkyBackground(gameSize: size);
+    await add(skyBackground);
+
+    // Add brick ground
+    final brickSprite = itemSpriteSheet.getSprite(0, 0); // brick at row 0, col 0
+    final brickGround = BrickGround(brickSprite: brickSprite, gameSize: size);
+    await add(brickGround);
 
     player = Player(
-      // Position is at center due to Anchor.center
-      position: Vector2(size.x / 2, size.y - Player.playerHeight / 2 - 20),
+      // Position player on top of the ground, moved down a few pixels
+      position: Vector2(size.x / 2, size.y - BrickGround.groundHeight - Player.playerHeight / 2 + 10),
     );
     player.setGameWidth(size.x);
     await add(player);
@@ -78,26 +91,24 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
     final position = Vector2(x, -64); // Start above screen
 
     CollectibleItem item;
-    final itemType = random.nextInt(10); // 0-9 for different probabilities
+    final itemType = random.nextInt(100); // 0-99 for different probabilities
 
-    if (itemType < 7) {
-      // 70% chance for coins
-      item = Coin(
-        sprite: itemSpriteSheet.getSprite(0, 0), // First coin sprite
-        position: position,
-      );
-    } else if (itemType < 9) {
-      // 20% chance for gems
-      item = Gem(
-        sprite: itemSpriteSheet.getSprite(4, 0), // Gem sprite
-        position: position,
-      );
+    if (itemType < 50) {
+      // 50% chance for gold coins
+      // Gold Coin at row 0, col 1
+      item = GoldCoin(sprite: itemSpriteSheet.getSprite(0, 1), position: position);
+    } else if (itemType < 75) {
+      // 25% chance for dollar bills
+      // Dollar at row 1, col 1
+      item = DollarBill(sprite: itemSpriteSheet.getSprite(1, 1), position: position);
+    } else if (itemType < 90) {
+      // 15% chance for gold bars
+      // Gold Bar at row 0, col 2
+      item = GoldBar(sprite: itemSpriteSheet.getSprite(0, 2), position: position);
     } else {
-      // 10% chance for money bags
-      item = MoneyBag(
-        sprite: itemSpriteSheet.getSprite(8, 0), // Money bag sprite
-        position: position,
-      );
+      // 10% chance for bacon (death)
+      // Bacon at row 1, col 0
+      item = Bacon(sprite: itemSpriteSheet.getSprite(1, 0), position: position);
     }
 
     add(item);
@@ -157,6 +168,14 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
 
   /// Called when player collects an item
   void onItemCollected(CollectibleItem item) {
+    // Check if it's bacon - instant game over
+    if (item is Bacon) {
+      print('Bacon caught! Game Over!');
+      gameOver();
+      return;
+    }
+
+    // Otherwise add points
     score += item.points;
     print('Item collected! Type: ${item.itemType}, Points: ${item.points}, Total Score: $score');
     player.celebrate();
@@ -169,18 +188,8 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
 
   /// Called when an item is missed (falls off screen)
   void onItemMissed() {
+    // Items can fall off screen without penalty (only bacon causes game over when caught)
     if (gameState != GameState.playing) return;
-
-    missedItems++;
-    print('Item missed! Total missed: $missedItems / $maxMissedItems');
-
-    // Update score overlay to reflect missed count change
-    overlays.remove('Score');
-    Future.microtask(() => overlays.add('Score'));
-
-    if (missedItems >= maxMissedItems) {
-      gameOver();
-    }
   }
 
   // Game state management methods
@@ -202,7 +211,6 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
 
     // Reset game state
     score = 0;
-    missedItems = 0;
     spawnTimer = 0.0;
     currentSpawnInterval = 2.0;
     difficultyTimer = 0.0;
