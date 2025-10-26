@@ -21,7 +21,13 @@ class MainMenuScreen extends StatelessWidget {
                   fontSize: 48,
                   fontWeight: FontWeight.bold,
                   color: Colors.yellow,
-                  shadows: [Shadow(blurRadius: 10.0, color: Colors.black, offset: Offset(2.0, 2.0))],
+                  shadows: [
+                    Shadow(
+                      blurRadius: 10.0,
+                      color: Colors.black,
+                      offset: Offset(2.0, 2.0),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 20),
@@ -30,7 +36,13 @@ class MainMenuScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.white,
-                  shadows: [Shadow(blurRadius: 5.0, color: Colors.black, offset: Offset(1.0, 1.0))],
+                  shadows: [
+                    Shadow(
+                      blurRadius: 5.0,
+                      color: Colors.black,
+                      offset: Offset(1.0, 1.0),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 60),
@@ -39,7 +51,13 @@ class MainMenuScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 24,
                   color: Colors.white,
-                  shadows: [Shadow(blurRadius: 5.0, color: Colors.black, offset: Offset(1.0, 1.0))],
+                  shadows: [
+                    Shadow(
+                      blurRadius: 5.0,
+                      color: Colors.black,
+                      offset: Offset(1.0, 1.0),
+                    ),
+                  ],
                 ),
               ),
             ],

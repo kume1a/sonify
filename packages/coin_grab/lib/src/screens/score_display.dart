@@ -18,7 +18,13 @@ class ScoreDisplay extends StatelessWidget {
             fontSize: 36,
             fontWeight: FontWeight.bold,
             color: Colors.white,
-            shadows: [Shadow(blurRadius: 10.0, color: Colors.black, offset: Offset(2.0, 2.0))],
+            shadows: [
+              Shadow(
+                blurRadius: 10.0,
+                color: Colors.black,
+                offset: Offset(2.0, 2.0),
+              ),
+            ],
           ),
         ),
       ),

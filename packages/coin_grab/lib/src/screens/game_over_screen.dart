@@ -5,7 +5,12 @@ class GameOverScreen extends StatelessWidget {
   final VoidCallback onRestart;
   final VoidCallback? onGoBack;
 
-  const GameOverScreen({super.key, required this.score, required this.onRestart, this.onGoBack});
+  const GameOverScreen({
+    super.key,
+    required this.score,
+    required this.onRestart,
+    this.onGoBack,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,24 +33,41 @@ class GameOverScreen extends StatelessWidget {
                 children: [
                   const Text(
                     'Game Over',
-                    style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold, color: Colors.red),
+                    style: TextStyle(
+                      fontSize: 42,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
                   ),
                   const SizedBox(height: 20),
-                  Text('Final Score: $score', style: const TextStyle(fontSize: 28, color: Colors.white)),
+                  Text(
+                    'Final Score: $score',
+                    style: const TextStyle(fontSize: 28, color: Colors.white),
+                  ),
                   const SizedBox(height: 30),
                   if (onGoBack != null)
                     GestureDetector(
                       onTap: onGoBack,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 32,
+                          vertical: 16,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.grey.shade700,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey.shade400, width: 2),
+                          border: Border.all(
+                            color: Colors.grey.shade400,
+                            width: 2,
+                          ),
                         ),
                         child: const Text(
                           'Go Back',
-                          style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),

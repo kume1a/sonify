@@ -12,7 +12,7 @@ abstract class CollectibleItem extends SpriteComponent
   final int points;
   final double fallSpeed;
   final String itemType;
-  bool _isCollected = false; // Prevent duplicate collision processing
+  bool _isCollected = false;
 
   CollectibleItem({
     required this.points,
@@ -27,15 +27,9 @@ abstract class CollectibleItem extends SpriteComponent
   Future<void> onLoad() async {
     await super.onLoad();
 
-    // Add a generous hitbox for reliable collision detection
-    // Use 90% of sprite size, centered
     final hitbox = RectangleHitbox(size: size * 0.9, position: size * 0.05);
-
-    // Enable debug mode to show hitbox outline
     hitbox.debugMode = false;
     await add(hitbox);
-
-    print('Item hitbox loaded: type=$itemType, size=${hitbox.size}, position=${hitbox.position}');
   }
 
   @override
@@ -44,21 +38,16 @@ abstract class CollectibleItem extends SpriteComponent
     if (game != null) {
       final groundLevel = game.size.y - BrickGround.groundHeight;
 
-      // Clip the sprite at ground level
       if (position.y + size.y > groundLevel) {
-        // Calculate how much of the sprite is above ground
         final visibleHeight = groundLevel - position.y;
 
         if (visibleHeight > 0) {
-          // Only render the part above ground
           canvas.save();
           canvas.clipRect(ui.Rect.fromLTWH(0, 0, size.x, visibleHeight));
           super.render(canvas);
           canvas.restore();
         }
-        // If visibleHeight <= 0, don't render at all
       } else {
-        // Fully above ground, render normally
         super.render(canvas);
       }
     } else {
@@ -70,20 +59,16 @@ abstract class CollectibleItem extends SpriteComponent
   void update(double dt) {
     super.update(dt);
 
-    // Skip processing if already collected
     if (_isCollected) return;
 
-    // Make the item fall
     position.y += fallSpeed * dt;
 
-    // Remove item when it's fully past the ground level
     final game = findGame();
     if (game != null) {
       final groundLevel = game.size.y - BrickGround.groundHeight;
       if (position.y >= groundLevel + size.y) {
-        // Only count as missed if not already collected
         if (game is CoinGrabGame && !_isCollected) {
-          _isCollected = true; // Mark as processed to prevent duplicate miss counting
+          _isCollected = true;
           game.onItemMissed();
         }
         removeFromParent();
@@ -95,21 +80,15 @@ abstract class CollectibleItem extends SpriteComponent
   void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollisionStart(intersectionPoints, other);
 
-    // Handle collision with player
     if (other is Player && !_isCollected) {
-      _isCollected = true; // Mark as collected immediately to prevent duplicate processing
-      print('✓ COLLISION DETECTED! Item: $itemType, Points: $points');
+      _isCollected = true;
 
       final game = findGame();
       if (game is CoinGrabGame) {
-        print('✓ Calling game.onItemCollected()');
         game.onItemCollected(this);
-      } else {
-        print('✗ Game not found or not CoinGrabGame');
       }
     }
   }
 
-  /// Called when this item is collected
   void onCollected();
 }

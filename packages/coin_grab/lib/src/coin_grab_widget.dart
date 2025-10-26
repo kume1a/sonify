@@ -37,7 +37,9 @@ class _CoinGrabWidgetState extends State<CoinGrabWidget> {
               if (game.gameState == GameState.playing) {
                 final renderBox = context.findRenderObject() as RenderBox?;
                 if (renderBox != null) {
-                  final localPosition = renderBox.globalToLocal(details.globalPosition);
+                  final localPosition = renderBox.globalToLocal(
+                    details.globalPosition,
+                  );
                   game.handleDragStart(localPosition.dx);
                 }
               }
@@ -46,7 +48,9 @@ class _CoinGrabWidgetState extends State<CoinGrabWidget> {
               if (game.gameState == GameState.playing) {
                 final renderBox = context.findRenderObject() as RenderBox?;
                 if (renderBox != null) {
-                  final localPosition = renderBox.globalToLocal(details.globalPosition);
+                  final localPosition = renderBox.globalToLocal(
+                    details.globalPosition,
+                  );
                   game.handleDragUpdate(localPosition.dx);
                 }
               }
@@ -59,8 +63,10 @@ class _CoinGrabWidgetState extends State<CoinGrabWidget> {
             child: GameWidget<CoinGrabGame>.controlled(
               gameFactory: () => game,
               overlayBuilderMap: {
-                'Intro': (context, game) => IntroScreen(onStart: () => game.showMainMenu()),
-                'MainMenu': (context, game) => MainMenuScreen(onStart: () => game.startGame()),
+                'Intro': (context, game) =>
+                    IntroScreen(onStart: () => game.showMainMenu()),
+                'MainMenu': (context, game) =>
+                    MainMenuScreen(onStart: () => game.startGame()),
                 'GameOver': (context, game) => GameOverScreen(
                   score: game.score,
                   onRestart: () => game.resetGame(),
