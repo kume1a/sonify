@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
@@ -37,6 +39,34 @@ abstract class CollectibleItem extends SpriteComponent
   }
 
   @override
+  void render(ui.Canvas canvas) {
+    final game = findGame();
+    if (game != null) {
+      final groundLevel = game.size.y - BrickGround.groundHeight;
+
+      // Clip the sprite at ground level
+      if (position.y + size.y > groundLevel) {
+        // Calculate how much of the sprite is above ground
+        final visibleHeight = groundLevel - position.y;
+
+        if (visibleHeight > 0) {
+          // Only render the part above ground
+          canvas.save();
+          canvas.clipRect(ui.Rect.fromLTWH(0, 0, size.x, visibleHeight));
+          super.render(canvas);
+          canvas.restore();
+        }
+        // If visibleHeight <= 0, don't render at all
+      } else {
+        // Fully above ground, render normally
+        super.render(canvas);
+      }
+    } else {
+      super.render(canvas);
+    }
+  }
+
+  @override
   void update(double dt) {
     super.update(dt);
 
@@ -46,11 +76,11 @@ abstract class CollectibleItem extends SpriteComponent
     // Make the item fall
     position.y += fallSpeed * dt;
 
-    // Remove item if it reaches the ground level (don't show items going into the ground)
+    // Remove item when it's fully past the ground level
     final game = findGame();
     if (game != null) {
       final groundLevel = game.size.y - BrickGround.groundHeight;
-      if (position.y >= groundLevel) {
+      if (position.y >= groundLevel + size.y) {
         // Only count as missed if not already collected
         if (game is CoinGrabGame && !_isCollected) {
           _isCollected = true; // Mark as processed to prevent duplicate miss counting
