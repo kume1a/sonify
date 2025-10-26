@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/sprite.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 import 'components/background.dart';
 import 'components/collectible_item.dart';
@@ -35,6 +36,9 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
     images.prefix = Assets.imagePrefix;
 
     await images.loadAll(Assets.allImages);
+
+    // Load audio - set prefix for audio files
+    FlameAudio.audioCache.prefix = Assets.soundPrefix;
 
     // Load the new 3x2 sprite sheet (128x128 cells)
     // Row 0: Brick Wall (0,0), Gold Coin (1,0), Gold Bar (2,0)
@@ -221,6 +225,9 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
     // Reset player position (centered due to Anchor.center)
     player.position.x = size.x / 2;
     player.setIdle();
+
+    // Start background music
+    FlameAudio.bgm.play(Assets.havaNagilaMusic, volume: 0.5);
   }
 
   void gameOver() {
@@ -229,6 +236,9 @@ class CoinGrabGame extends FlameGame with HasCollisionDetection, HasKeyboardHand
     gameState = GameState.gameOver;
     overlays.remove('Score');
     overlays.add('GameOver');
+
+    // Stop background music
+    FlameAudio.bgm.stop();
   }
 
   void resetGame() {
